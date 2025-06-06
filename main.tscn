@@ -1,0 +1,109 @@
+[gd_scene load_steps=6 format=3 uid="uid://ypc1vna0wora"]
+
+[ext_resource type="Script" uid="uid://ej1fucvealik" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://p3bk4ty75tj2" path="res://icon.svg" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://dsy3k4jrbub84" path="res://snake_character_body_2d.gd" id="2_h2yge"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f50pn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ij6vw"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
+
+[node name="Snake_CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(1063, 538)
+script = ExtResource("2_h2yge")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Snake_CharacterBody2D"]
+scale = Vector2(2.5, 2.5)
+shape = SubResource("RectangleShape2D_f50pn")
+
+[node name="Snake_Sprite2D" type="Sprite2D" parent="Snake_CharacterBody2D"]
+modulate = Color(0, 1, 0, 1)
+self_modulate = Color(0, 1, 0, 1)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_ig7tw")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = 2.0
+offset_right = -1.0
+offset_bottom = 2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Greeting_Text" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -120.0
+offset_right = 120.0
+offset_bottom = 23.0
+grow_horizontal = 2
+scale = Vector2(1.5, 1.5)
+text = "Hello all, welcome to Snake!"
+horizontal_alignment = 1
+
+[node name="Background-Color-Rect" type="ColorRect" parent="Control"]
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = -3.0
+offset_right = 3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.435294, 0.109804, 0.576471, 1)
+
+[node name="Play Button" type="Button" parent="Control"]
+custom_minimum_size = Vector2(10, 20)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = -15.5
+offset_right = 140.0
+offset_bottom = 24.5
+grow_vertical = 2
+scale = Vector2(2, 2)
+text = "Play"
+
+[node name="Quit Button" type="Button" parent="Control"]
+custom_minimum_size = Vector2(10, 20)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 40.0
+offset_top = 84.5
+offset_right = 140.0
+offset_bottom = 124.5
+grow_vertical = 2
+scale = Vector2(2, 2)
+text = "Quit"
+
+[node name="CharacterBody2D2" type="CharacterBody2D" parent="."]
+position = Vector2(1018, 685)
+
+[node name="Food_CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D2"]
+position = Vector2(-196, -146)
+scale = Vector2(2.5, 2.5)
+shape = SubResource("RectangleShape2D_ij6vw")
+
+[node name="Food_Sprite2D" type="Sprite2D" parent="CharacterBody2D2"]
+modulate = Color(0.926299, 2.5028e-06, 1.54018e-06, 1)
+position = Vector2(-196, -146)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_ig7tw")

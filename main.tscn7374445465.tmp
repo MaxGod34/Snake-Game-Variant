@@ -1,0 +1,78 @@
+[gd_scene load_steps=5 format=3 uid="uid://ypc1vna0wora"]
+
+[ext_resource type="Script" uid="uid://ej1fucvealik" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://p3bk4ty75tj2" path="res://icon.svg" id="1_ig7tw"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f50pn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ij6vw"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
+
+[node name="Snake_CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Snake_CharacterBody2D"]
+scale = Vector2(2.5, 2.5)
+shape = SubResource("RectangleShape2D_f50pn")
+
+[node name="Camera2D" type="Camera2D" parent="Snake_CharacterBody2D"]
+
+[node name="Snake_Sprite2D" type="Sprite2D" parent="Snake_CharacterBody2D"]
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_ig7tw")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -576.0
+offset_top = -324.0
+offset_right = -576.0
+offset_bottom = -324.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Greeting_Text" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -176.0
+offset_right = 64.0
+offset_bottom = 23.0
+grow_horizontal = 2
+scale = Vector2(1.5, 1.5)
+text = "Hello all, welcome to Snake!"
+horizontal_alignment = 1
+
+[node name="Background-Color-Rect" type="ColorRect" parent="Control"]
+z_index = -2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.435294, 0.109804, 0.576471, 1)
+
+[node name="Play Button" type="Button" parent="Control"]
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="CharacterBody2D2" type="CharacterBody2D" parent="."]
+
+[node name="Food_CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D2"]
+position = Vector2(-196, -146)
+scale = Vector2(2.5, 2.5)
+shape = SubResource("RectangleShape2D_ij6vw")
+
+[node name="Food_Sprite2D" type="Sprite2D" parent="CharacterBody2D2"]
+modulate = Color(0.926299, 2.5028e-06, 1.54018e-06, 1)
+position = Vector2(-196, -146)
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("1_ig7tw")
