@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://swq6rk5shvqy"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_318k2"]
+size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fwjnq"]
+
+[node name="SnakeBody" type="Area2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 0.164706, 1)
+texture = SubResource("PlaceholderTexture2D_318k2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_fwjnq")

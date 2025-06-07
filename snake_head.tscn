@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bblrs0njpa5u0"]
+
+[ext_resource type="Script" uid="uid://cl1mtl2tjul3d" path="res://snake_head.gd" id="1_1ssvg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1ssvg"]
+size = Vector2(64, 64)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1ssvg"]
+size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gkmwg"]
+size = Vector2(64, 64)
+
+[node name="SnakeHead" type="CharacterBody2D"]
+modulate = Color(1, 1, 0.0901961, 1)
+script = ExtResource("1_1ssvg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1ssvg")
+
+[node name="MoveTimer" type="Timer" parent="."]
+wait_time = 0.224
+autostart = true
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.553612, 0.6895, 0.319475, 1)
+texture = SubResource("PlaceholderTexture2D_1ssvg")
+
+[node name="HeadArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HeadArea"]
+shape = SubResource("RectangleShape2D_gkmwg")
