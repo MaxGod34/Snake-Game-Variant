@@ -1,5 +1,3 @@
-# FILE: snake_head.gd (Reworked Version)
-
 extends CharacterBody2D
 
 signal moved(previous_position: Vector2)
@@ -7,7 +5,7 @@ signal ate_fruit(fruit)
 
 # --- Properties ---
 var tile_size: int = 64
-var move_speed: float = 0.25
+var move_speed: float = 0.1
 var current_direction: Vector2 = Vector2.RIGHT
 var can_change_direction: bool = true
 
@@ -17,11 +15,9 @@ var can_change_direction: bool = true
 # --- Godot Functions ---
 
 func _ready():
-	# This script is now self-starting.
-	# It configures AND starts its own timer.
 	move_timer.wait_time = move_speed
 	move_timer.timeout.connect(on_move_timer_timeout)
-	move_timer.start() # <-- KEY CHANGE: The head starts itself.
+	move_timer.start()
 
 func _unhandled_input(event: InputEvent):
 	if not can_change_direction:
@@ -51,5 +47,7 @@ func on_move_timer_timeout():
 
 # This function is connected to the child Area2D's `area_entered` signal
 func _on_head_area_area_entered(area):
+	print("Head detector touched something! The object was: ", area) # <-- ADD THIS LINE
+
 	if area is Fruit:
-		ate_fruit.emit(area)
+		emit_signal("ate_fruit", area)

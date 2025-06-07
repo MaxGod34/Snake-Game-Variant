@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cl1mtl2tjul3d" path="res://snake_head.gd" id="1_1ssvg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ssvg"]
-size = Vector2(64, 64)
+size = Vector2(32, 32)
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_1ssvg"]
 size = Vector2(64, 64)
@@ -30,3 +30,5 @@ texture = SubResource("PlaceholderTexture2D_1ssvg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HeadArea"]
 shape = SubResource("RectangleShape2D_gkmwg")
+
+[connection signal="area_entered" from="HeadArea" to="." method="_on_head_area_area_entered"]
