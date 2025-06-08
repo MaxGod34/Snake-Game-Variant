@@ -1,19 +1,22 @@
+#I have comments interspliced as I'm doing shit cuz I keep forgetting when I try to literally
+#do the exact thing I just did lol
+
 extends Node2D
 
-@export var initial_snake_length: int = 3
+@export var initial_snake_length: int = 1
 @export var tile_size: int = 32
 
 var tile_offset: Vector2
-var grid_width = 40
-var grid_height = 30
+var grid_width = 40	# 1280 / 32 = 40
+var grid_height = 30 # 960 / 32 = 30	so we have an area of 1200 blocks
 
 var snake_body_segments: Array[Node2D] = []
 
 var head: CharacterBody2D
 
-var head_scene = preload("res://snake_head.tscn")
-var body_scene = preload("res://snake_body.tscn")
-var fruit_scene = preload("res://fruit.tscn")
+var head_scene = preload("res://Scenes/snake_head.tscn")
+var body_scene = preload("res://Scenes/snake_body.tscn")
+var fruit_scene = preload("res://Scenes/fruit.tscn")
 
 func _ready():
 	tile_offset = Vector2(tile_size / 2, tile_size / 2)
@@ -37,6 +40,7 @@ func _ready():
 	
 	spawn_fruit()
 	head.move_timer.start()
+	update_score_display()
 
 func on_snake_head_moved(head_previous_position: Vector2):
 	if snake_body_segments.is_empty():
@@ -65,31 +69,68 @@ func grow_snake():
 	print("Growing snake.")
 	
 	var new_segment = body_scene.instantiate()
+	var new_segment_position: Vector2 # Holds the chosen position
+
+	# Check if the snake has a body yet.
+	if snake_body_segments.is_empty():
+		# If there is no body, place the new segment at the head's current position but one space back
+		# The movement code on the next frame will automatically move it to the correct spot behind the head.
+		new_segment_position = head.global_position - (head.current_direction * tile_size)
+	else:
+		# If there is already a body, use the old logic and place it at the tail's position.
+		var current_tail = snake_body_segments.back()
+		new_segment_position = current_tail.global_position
+
+	# Now, set the position and add the new segment
+	new_segment.global_position = new_segment_position
 	
-	var current_tail = snake_body_segments.back()
-	
-	new_segment.global_position = current_tail.global_position
+	# We also need to give it the correct alternating color
+	var color_a: Color = Color("00ffff") # Cyan
+	var color_b: Color = Color("ffff00") # Yellow
+	if snake_body_segments.size() % 2 == 0:
+		new_segment.get_node("FillSprite").modulate = color_a
+	else:
+		new_segment.get_node("FillSprite").modulate = color_b
 	
 	call_deferred("add_child", new_segment)
 	snake_body_segments.append(new_segment)
+	update_score_display()
 	
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
 	fruit.queue_free()
 	grow_snake()
 	spawn_fruit()
+	
+	if head.can_reverse:
+		head.can_reverse = false
 
 func add_body_segment_at(position: Vector2):
-	var segment = body_scene.instantiate()
-	segment.position = position
-	add_child(segment)
-	snake_body_segments.append(segment)
+	var new_segment = create_colored_segment(position)
+	add_child(new_segment)
+	snake_body_segments.append(new_segment)
 	
 func game_over():
 	head.move_timer.stop()
 	print("Game Over!")
-	
+	$UI/GameOverScreen.visible = true
 
+func update_score_display():
+	var score = (snake_body_segments.size() + 1)
+	$UI/ScoreLabel.text = "Score: " + str(score) 
+
+	
+func create_colored_segment(position: Vector2) -> Node2D:
+	var segment = body_scene.instantiate()
+	segment.position = position
+	#Change these values for the alternating snake pattern
+	var color_a = Color("8A00C4") #Purple-neon
+	var color_b = Color("BA8E23") #Dark Yellow
+	if snake_body_segments.size() % 5 == 0 and snake_body_segments.size() != 1:
+		segment.get_node("FillSprite").modulate = color_b
+	else:
+		segment.get_node("FillSprite").modulate = color_a
+	return segment
 
 func positions_are_equal(pos1: Vector2, pos2: Vector2) -> bool:
 	if pos1.distance_to(pos2) < 0.1:

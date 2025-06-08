@@ -5,10 +5,13 @@ signal ate_fruit(fruit)
 signal hit_self
 
 # --- Properties ---
+@export var head_color: Color = Color.LIME
+
 var tile_size: int = 32
 var move_speed: float = 0.1
 var current_direction: Vector2 = Vector2.RIGHT
 var can_change_direction: bool = true
+var can_reverse: bool = true
 var main: Node2D
 
 @onready var move_timer: Timer = $MoveTimer
@@ -17,6 +20,7 @@ var main: Node2D
 # --- Godot Functions ---
 
 func _ready():
+	get_node("FillSprite").modulate = head_color
 	move_timer.wait_time = move_speed
 	move_timer.timeout.connect(on_move_timer_timeout)
 	move_timer.start()
@@ -27,14 +31,25 @@ func _unhandled_input(event: InputEvent):
 		return
 
 	var new_direction = current_direction
-	if event.is_action_pressed("ui_up") and current_direction != Vector2.DOWN:
-		new_direction = Vector2.UP
-	elif event.is_action_pressed("ui_down") and current_direction != Vector2.UP:
-		new_direction = Vector2.DOWN
-	elif event.is_action_pressed("ui_left") and current_direction != Vector2.RIGHT:
-		new_direction = Vector2.LEFT
-	elif event.is_action_pressed("ui_right") and current_direction != Vector2.LEFT:
-		new_direction = Vector2.RIGHT
+	#This is our backstop in case there is only one snake length
+	if can_reverse:
+		if event.is_action_pressed("ui_up"):
+			new_direction = Vector2.UP
+		elif event.is_action_pressed("ui_down"):
+			new_direction = Vector2.DOWN
+		elif event.is_action_pressed("ui_left"):
+			new_direction = Vector2.LEFT
+		elif event.is_action_pressed("ui_right"):
+			new_direction = Vector2.RIGHT
+	else: #This will be our regular movement logic that doesn't allow reversing
+		if event.is_action_pressed("ui_up") and current_direction != Vector2.DOWN:
+			new_direction = Vector2.UP
+		elif event.is_action_pressed("ui_down") and current_direction != Vector2.UP:
+			new_direction = Vector2.DOWN
+		elif event.is_action_pressed("ui_left") and current_direction != Vector2.RIGHT:
+			new_direction = Vector2.LEFT
+		elif event.is_action_pressed("ui_right") and current_direction != Vector2.LEFT:
+			new_direction = Vector2.RIGHT
 	
 	if new_direction != current_direction:
 		current_direction = new_direction

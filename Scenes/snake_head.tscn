@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://bblrs0njpa5u0"]
+
+[ext_resource type="Script" uid="uid://cl1mtl2tjul3d" path="res://Scripts/snake_head.gd" id="1_bbogs"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_2n2nm"]
+[ext_resource type="Texture2D" uid="uid://psq4jgvn6heq" path="res://Assets/snake_border.png" id="3_agune"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1ssvg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gkmwg"]
+
+[node name="SnakeHead" type="CharacterBody2D"]
+script = ExtResource("1_bbogs")
+
+[node name="FillSprite" type="Sprite2D" parent="."]
+self_modulate = Color(0.890196, 1, 1, 1)
+texture_filter = 1
+texture = ExtResource("2_2n2nm")
+
+[node name="BorderSprite" type="Sprite2D" parent="."]
+self_modulate = Color(0.890196, 1, 1, 1)
+texture_filter = 1
+texture = ExtResource("3_agune")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1ssvg")
+
+[node name="MoveTimer" type="Timer" parent="."]
+wait_time = 0.224
+autostart = true
+
+[node name="HeadArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HeadArea"]
+shape = SubResource("RectangleShape2D_gkmwg")
+
+[connection signal="area_entered" from="HeadArea" to="." method="_on_head_area_area_entered"]
