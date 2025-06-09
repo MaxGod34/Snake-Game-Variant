@@ -46,7 +46,6 @@ func _ready():
 	head.hit_self.connect(game_over)
 	# 2.5. Connect our other signals
 	$PauseMenu.resume_game.connect(toggle_pause)
-	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu)
 
 	# 3. Create the initial body
 	var behind_direction = -head.current_direction
@@ -74,6 +73,11 @@ func toggle_pause():
 		#actually pause the game
 		get_tree().paused = true
 		$PauseMenu.visible = true
+
+func show_upgrade_menu():
+	head.move_timer.stop() #this doesn't pause the game, it just stops the snake movement
+	$UI/UpgradeMenu.update_skill_points()
+	$UI/UpgradeMenu.visible = true
 
 func _on_quit_to_menu():
 	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
@@ -135,12 +139,35 @@ func grow_snake():
 	call_deferred("add_child", new_segment)
 	snake_body_segments.append(new_segment)
 	update_score_display()
+
+func check_for_level_up():
+	var current_score = snake_body_segments.size() + 1
 	
+	if current_score >= GameManager.score_needed_for_next_level:
+		print("Level Up! Score is: ", current_score)
+		# change these later, placeholder values for time being
+		GameManager.player_level += 1
+		GameManager.skill_points += 1
+		
+		GameManager.score_needed_for_next_level += 5
+		
+		show_upgrade_menu()
+
+func _on_upgrade_menu_resume_game_pressed():
+	$UI/UpgradeMenu.visible = false
+	head.move_timer.start()
+
+func _on_upgrade_menu_upgrade_selected(upgrade_name):
+	print("Player chose upgrade: ", upgrade_name)
+	#come back later
+	_on_upgrade_menu_resume_game_pressed()
+
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
 	fruit.queue_free()
 	grow_snake()
 	spawn_fruit()
+	check_for_level_up()
 	
 	if head.can_reverse:
 		head.can_reverse = false
