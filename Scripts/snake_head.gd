@@ -8,7 +8,7 @@ signal hit_self
 @export var head_color: Color = Color.LIME
 
 var tile_size: int = 32
-var move_speed: float = 0.1
+var move_speed: float = 0.2
 var current_direction: Vector2 = Vector2.RIGHT
 var can_change_direction: bool = true
 var can_reverse: bool = true

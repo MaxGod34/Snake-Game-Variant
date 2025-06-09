@@ -9,6 +9,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gkmwg"]
 
 [node name="SnakeHead" type="CharacterBody2D"]
+process_mode = 1
 script = ExtResource("1_bbogs")
 
 [node name="FillSprite" type="Sprite2D" parent="."]

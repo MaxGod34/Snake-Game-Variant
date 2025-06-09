@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=3 uid="uid://bsbynsvorx5r4"]
+
+[ext_resource type="Script" uid="uid://bnna3qnjiu84k" path="res://Scripts/difficulty_select.gd" id="1_gcggo"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gcggo"]
+bg_color = Color(0.368152, 0.392626, 0.17012, 0.305882)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+expand_margin_left = 8.0
+expand_margin_top = 5.0
+expand_margin_right = 8.0
+expand_margin_bottom = 5.0
+
+[node name="DifficultySelect" type="CanvasLayer"]
+script = ExtResource("1_gcggo")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152941, 0, 0.176471, 1)
+
+[node name="SelectDifficultyLabel" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.33
+anchor_right = 0.5
+anchor_bottom = 0.33
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 42
+text = "Select Difficulty"
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 100
+
+[node name="NormalButton" type="Button" parent="CenterContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.183629, 0.619397, 0.592657, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+text = "Normal"
+
+[node name="HardButton" type="Button" parent="CenterContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+text = "Hard"
+
+[node name="BackButton" type="Button" parent="CenterContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.817971, 0.786407, 1, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+text = "Back"
+
+[connection signal="pressed" from="CenterContainer/HBoxContainer/NormalButton" to="." method="_on_normal_button_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/HardButton" to="." method="_on_hard_button_pressed"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

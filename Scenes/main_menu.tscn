@@ -1,0 +1,92 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1b0eh8evirnx"]
+
+[ext_resource type="Script" uid="uid://beoi5cxhq4jhd" path="res://Scripts/main_menu.gd" id="1_1ehe0"]
+[ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="1_48xlc"]
+[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/snake_chart_logo.png" id="2_1ehe0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ce3w2"]
+bg_color = Color(0.576471, 0.427451, 0.0705882, 0.145098)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[node name="MainMenu" type="CanvasLayer"]
+script = ExtResource("1_1ehe0")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152941, 0, 0.176471, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.5
+anchor_right = 0.1
+anchor_bottom = 0.5
+offset_top = -145.0
+offset_right = 240.0
+offset_bottom = 145.0
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="SnakeBreakLogo" type="TextureRect" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("1_48xlc")
+
+[node name="GameTitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 64
+text = "SNAKe
+breaK"
+horizontal_alignment = 1
+
+[node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.705882, 0.243137, 0.411765, 1)
+theme_override_constants/outline_size = 24
+theme_override_constants/line_spacing = 64
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_ce3w2")
+text = "Play"
+
+[node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.705882, 0.243137, 0.411765, 1)
+theme_override_constants/outline_size = 24
+theme_override_constants/line_spacing = 64
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_ce3w2")
+text = "Options"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.705882, 0.243137, 0.411765, 1)
+theme_override_constants/outline_size = 24
+theme_override_constants/line_spacing = 64
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_ce3w2")
+text = "Quit"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.25
+anchor_right = 0.9
+anchor_bottom = 0.75
+grow_horizontal = 0
+grow_vertical = 2
+texture = ExtResource("2_1ehe0")
+
+[connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

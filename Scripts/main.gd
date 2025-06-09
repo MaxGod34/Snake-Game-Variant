@@ -12,13 +12,27 @@ var grid_height = 30 # 960 / 32 = 30	so we have an area of 1200 blocks
 
 var snake_body_segments: Array[Node2D] = []
 
+var is_game_over: bool = false
+
 var head: CharacterBody2D
 
 var head_scene = preload("res://Scenes/snake_head.tscn")
 var body_scene = preload("res://Scenes/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/fruit.tscn")
+var pause_scene = preload("res://Scenes/pause_menu.tscn")
+
+signal game_is_over(score)
 
 func _ready():
+	#difficulty modifiers
+	if GameManager.current_difficulty == "hard":
+		head_scene.instantiate().move_speed = 0.15
+		initial_snake_length = 5
+	else:
+		head_scene.instantiate().move_speed = 0.25
+		initial_snake_length = 1
+	
+	
 	tile_offset = Vector2(tile_size / 2, tile_size / 2)
 	# 1. Create the head
 	head = head_scene.instantiate()
@@ -30,6 +44,9 @@ func _ready():
 	head.moved.connect(on_snake_head_moved)
 	head.ate_fruit.connect(on_snake_ate_food)
 	head.hit_self.connect(game_over)
+	# 2.5. Connect our other signals
+	$PauseMenu.resume_game.connect(toggle_pause)
+	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu)
 
 	# 3. Create the initial body
 	var behind_direction = -head.current_direction
@@ -41,6 +58,29 @@ func _ready():
 	spawn_fruit()
 	head.move_timer.start()
 	update_score_display()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel") and not is_game_over:
+		toggle_pause()
+
+func toggle_pause():
+	if get_tree().paused:
+		get_tree().paused = false
+		$PauseMenu.visible = false
+	else:
+		#update score when pause is pressed
+		var current_score = snake_body_segments.size() + 1
+		$PauseMenu.display_score(current_score)
+		#actually pause the game
+		get_tree().paused = true
+		$PauseMenu.visible = true
+
+func _on_quit_to_menu():
+	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
+
+func on_quit_to_menu_pressed():
+	get_tree().paused = false
+	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
 
 func on_snake_head_moved(head_previous_position: Vector2):
 	if snake_body_segments.is_empty():
@@ -57,18 +97,27 @@ func spawn_fruit():
 	print("Spawning a fruit.")
 	
 	var fruit = fruit_scene.instantiate()
+	var potential_position: Vector2
+	var is_safe_position = false
 	
-	var x_pos = randi() % grid_width
-	var y_pos = randi() % grid_height
+	while not is_safe_position:
+		var x_pos = randi() % grid_width
+		var y_pos = randi() % grid_height
+		var random_grid_pos = Vector2(x_pos, y_pos)
+		
+		potential_position = (random_grid_pos * tile_size) + tile_offset
+		if not is_position_occupied(potential_position) and not positions_are_equal(potential_position, head.global_position):
+			is_safe_position = true
+			#this will break us out of the loop once it is set to true
 	
-	fruit.position = Vector2(x_pos, y_pos) * tile_size + tile_offset
+	
+	fruit.position = potential_position
 	call_deferred("add_child", fruit)
-	print("fruit spawned")
+	print("fruit spawned at a safe location")
 	
 func grow_snake():
 	print("Growing snake.")
 	
-	var new_segment = body_scene.instantiate()
 	var new_segment_position: Vector2 # Holds the chosen position
 
 	# Check if the snake has a body yet.
@@ -80,17 +129,8 @@ func grow_snake():
 		# If there is already a body, use the old logic and place it at the tail's position.
 		var current_tail = snake_body_segments.back()
 		new_segment_position = current_tail.global_position
-
-	# Now, set the position and add the new segment
-	new_segment.global_position = new_segment_position
 	
-	# We also need to give it the correct alternating color
-	var color_a: Color = Color("00ffff") # Cyan
-	var color_b: Color = Color("ffff00") # Yellow
-	if snake_body_segments.size() % 2 == 0:
-		new_segment.get_node("FillSprite").modulate = color_a
-	else:
-		new_segment.get_node("FillSprite").modulate = color_b
+	var new_segment = create_colored_segment(new_segment_position)
 	
 	call_deferred("add_child", new_segment)
 	snake_body_segments.append(new_segment)
@@ -111,13 +151,17 @@ func add_body_segment_at(position: Vector2):
 	snake_body_segments.append(new_segment)
 	
 func game_over():
+	is_game_over = true
 	head.move_timer.stop()
 	print("Game Over!")
 	$UI/GameOverScreen.visible = true
+	var final_score = snake_body_segments.size() + 1
+	game_is_over.emit(final_score)
+
 
 func update_score_display():
 	var score = (snake_body_segments.size() + 1)
-	$UI/ScoreLabel.text = "Score: " + str(score) 
+	$UI/ScoreLabel.text = "Score: " + str(score)
 
 	
 func create_colored_segment(position: Vector2) -> Node2D:
@@ -126,7 +170,7 @@ func create_colored_segment(position: Vector2) -> Node2D:
 	#Change these values for the alternating snake pattern
 	var color_a = Color("8A00C4") #Purple-neon
 	var color_b = Color("BA8E23") #Dark Yellow
-	if snake_body_segments.size() % 5 == 0 and snake_body_segments.size() != 1:
+	if (snake_body_segments.size() + 2) % 5 == 0:
 		segment.get_node("FillSprite").modulate = color_b
 	else:
 		segment.get_node("FillSprite").modulate = color_a

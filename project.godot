@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="Snake Game Variant"
-run/main_scene="uid://ypc1vna0wora"
+run/main_scene="uid://c1b0eh8evirnx"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://Assets/icon.svg"
+
+[autoload]
+
+GameManager="*res://Scripts/game_manager.gd"
 
 [display]
 

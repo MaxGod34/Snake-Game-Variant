@@ -1,0 +1,108 @@
+[gd_scene load_steps=6 format=3 uid="uid://big1tpxvk7yl2"]
+
+[ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="1_hdmo1"]
+[ext_resource type="Script" uid="uid://bxwdpl2h4wbwu" path="res://Scripts/pause_menu.gd" id="1_k0w1u"]
+[ext_resource type="PackedScene" uid="uid://de1uou8sdpxr8" path="res://Scenes/options_menu.tscn" id="3_1och7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wyi4u"]
+content_margin_left = 5.0
+content_margin_top = 5.0
+content_margin_right = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.6, 0.6, 0.6, 0.121569)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+expand_margin_left = 10.0
+expand_margin_top = 10.0
+expand_margin_right = 10.0
+expand_margin_bottom = 10.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nwcfo"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+visible = false
+script = ExtResource("1_k0w1u")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.552941)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.052
+anchor_right = 0.2
+anchor_bottom = 1.0
+offset_left = 156.0
+offset_top = 195.0
+offset_right = -164.0
+offset_bottom = -225.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_wyi4u")
+text = "Pause Menu"
+
+[node name="ScoreLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_nwcfo")
+text = "Score: 1"
+horizontal_alignment = 1
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_wyi4u")
+text = "Resume"
+
+[node name="OptionsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_wyi4u")
+text = "Options"
+
+[node name="QuitToMenuButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_wyi4u")
+text = "Quit to Menu"
+
+[node name="GameLogo" type="TextureRect" parent="."]
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.5
+anchor_right = 0.75
+anchor_bottom = 0.5
+grow_vertical = 2
+texture = ExtResource("1_hdmo1")
+
+[node name="OptionsMenuPanel" parent="." instance=ExtResource("3_1och7")]
+visible = false
+is_sub_panel = true
+
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/QuitToMenuButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/QuitToMenuButton" to="." method="_on_quit_to_menu_button_pressed"]
+[connection signal="back_pressed" from="OptionsMenuPanel" to="." method="_on_options_menu_panel_back_pressed"]

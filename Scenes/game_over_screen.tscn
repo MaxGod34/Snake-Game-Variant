@@ -1,23 +1,17 @@
-[gd_scene load_steps=7 format=3 uid="uid://dd5oeyqdq4rj3"]
+[gd_scene load_steps=11 format=3 uid="uid://dd5oeyqdq4rj3"]
 
-[ext_resource type="Script" uid="uid://detorffqmcsnv" path="res://Scenes/game_over_screen.gd" id="1_0gua7"]
+[ext_resource type="Script" uid="uid://detorffqmcsnv" path="res://Scripts/game_over_screen.gd" id="1_0gua7"]
+[ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="2_jb6in"]
+[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Scenes/button_hover_template.tres" id="3_kk8k2"]
+[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Scenes/base_button_template.tres" id="3_y8man"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kk8k2"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_wydum"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y8man"]
 bg_color = Color(0.427451, 0.172549, 0, 0.576471)
-border_color = Color(0.8, 0.8, 0.8, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-expand_margin_left = 8.0
-expand_margin_top = 5.0
-expand_margin_right = 8.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0gua7"]
-bg_color = Color(0.992157, 0.647059, 0.662745, 0.623529)
 border_color = Color(0.8, 0.8, 0.8, 0)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
@@ -40,21 +34,21 @@ expand_margin_top = 5.0
 expand_margin_right = 8.0
 expand_margin_bottom = 5.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wydum"]
-bg_color = Color(0.203922, 0.25098, 0.0431373, 0.521569)
-border_color = Color(0.8, 0.8, 0.8, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-expand_margin_left = 8.0
-expand_margin_top = 5.0
-expand_margin_right = 8.0
-expand_margin_bottom = 5.0
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y8man"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e5yba"]
 
 [node name="GameOverScreen" type="CanvasLayer"]
 visible = false
 script = ExtResource("1_0gua7")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.105882, 0.105882, 0.105882, 0.435294)
 
 [node name="Label" type="Label" parent="."]
 anchors_preset = -1
@@ -69,20 +63,57 @@ theme_override_font_sizes/font_size = 64
 text = "GAME OVER!"
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="."]
+[node name="SnakeBreakLogo" type="TextureRect" parent="."]
 anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.75
-anchor_right = 0.5
-anchor_bottom = 0.75
+anchor_left = 0.67
+anchor_top = 0.5
+anchor_right = 0.67
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
+texture = ExtResource("2_jb6in")
+
+[node name="ScoreLabel" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.45
+anchor_right = 0.25
+anchor_bottom = 0.5
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxFlat_kk8k2")
+text = "Score: 1"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.75
+anchor_right = 0.75
+anchor_bottom = 0.75
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="RestartButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
 theme_override_font_sizes/font_size = 36
 theme_override_styles/focus = SubResource("StyleBoxEmpty_wydum")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_y8man")
-theme_override_styles/hover = SubResource("StyleBoxFlat_0gua7")
+theme_override_styles/hover = ExtResource("3_kk8k2")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_jb6in")
-theme_override_styles/normal = SubResource("StyleBoxFlat_wydum")
+theme_override_styles/normal = ExtResource("3_y8man")
 text = "Restart"
 
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[node name="QuitButton" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_y8man")
+theme_override_styles/hover = ExtResource("3_kk8k2")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_e5yba")
+theme_override_styles/normal = ExtResource("3_y8man")
+text = "Quit to Menu"
+
+[connection signal="pressed" from="HBoxContainer/RestartButton" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

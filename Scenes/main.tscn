@@ -1,9 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=4 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="PackedScene" uid="uid://dd5oeyqdq4rj3" path="res://Scenes/game_over_screen.tscn" id="2_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://big1tpxvk7yl2" path="res://Scenes/pause_menu.tscn" id="3_8gbba"]
 
 [node name="Main" type="Node2D"]
+process_mode = 3
 script = ExtResource("1_jjgbg")
 
 [node name="Background-Color-Rect" type="ColorRect" parent="."]
@@ -40,3 +42,9 @@ theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
 theme_override_font_sizes/font_size = 28
 text = "Score: 1"
 horizontal_alignment = 1
+
+[node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
+
+[connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
+[connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
+[connection signal="quit_to_menu" from="PauseMenu" to="." method="on_quit_to_menu_pressed"]
