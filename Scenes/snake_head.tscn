@@ -15,6 +15,7 @@ script = ExtResource("1_bbogs")
 [node name="FillSprite" type="Sprite2D" parent="."]
 self_modulate = Color(0.890196, 1, 1, 1)
 texture_filter = 1
+scale = Vector2(0.95, 0.95)
 texture = ExtResource("2_2n2nm")
 
 [node name="BorderSprite" type="Sprite2D" parent="."]

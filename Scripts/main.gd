@@ -6,13 +6,15 @@ extends Node2D
 @export var initial_snake_length: int = 1
 @export var tile_size: int = 32
 
+# Grid properties, including offset due to centering of the blocks
 var tile_offset: Vector2
 var grid_width = 40	# 1280 / 32 = 40
 var grid_height = 30 # 960 / 32 = 30	so we have an area of 1200 blocks
-
 var snake_body_segments: Array[Node2D] = []
 
+# Boolean Flags
 var is_game_over: bool = false
+var upgrade_menu_is_pending: bool = false
 
 var head: CharacterBody2D
 
@@ -76,7 +78,7 @@ func toggle_pause():
 
 func show_upgrade_menu():
 	head.move_timer.stop() #this doesn't pause the game, it just stops the snake movement
-	$UI/UpgradeMenu.update_skill_points()
+	$UI/UpgradeMenu.update_all_displays()
 	$UI/UpgradeMenu.visible = true
 
 func _on_quit_to_menu():
@@ -96,6 +98,10 @@ func on_snake_head_moved(head_previous_position: Vector2):
 		var old_position = segment.global_position
 		segment.global_position = target_position
 		target_position = old_position
+	if upgrade_menu_is_pending:
+		#menu is pending
+		upgrade_menu_is_pending = false # Reset the flag
+		show_upgrade_menu()				# Now we show the menu
 		
 func spawn_fruit():
 	print("Spawning a fruit.")
@@ -122,36 +128,40 @@ func spawn_fruit():
 func grow_snake():
 	print("Growing snake.")
 	
-	var new_segment_position: Vector2 # Holds the chosen position
-
+	for i in range(GameManager.fruit_reward):
+		var new_segment_position: Vector2 
 	# Check if the snake has a body yet.
-	if snake_body_segments.is_empty():
+		if snake_body_segments.is_empty() and i == 0:
 		# If there is no body, place the new segment at the head's current position but one space back
 		# The movement code on the next frame will automatically move it to the correct spot behind the head.
-		new_segment_position = head.global_position - (head.current_direction * tile_size)
-	else:
+			new_segment_position = head.global_position - (head.current_direction * tile_size)
+		else:
 		# If there is already a body, use the old logic and place it at the tail's position.
-		var current_tail = snake_body_segments.back()
-		new_segment_position = current_tail.global_position
-	
-	var new_segment = create_colored_segment(new_segment_position)
-	
-	call_deferred("add_child", new_segment)
-	snake_body_segments.append(new_segment)
+			var current_tail = snake_body_segments.back()
+			new_segment_position = current_tail.global_position
+		
+		var new_segment = create_colored_segment(new_segment_position)
+		call_deferred("add_child", new_segment)
+		snake_body_segments.append(new_segment)
+
 	update_score_display()
 
 func check_for_level_up():
+	var leveled_up_this_frame = false # Flag to check for multi-leveling in one fruit grab
 	var current_score = snake_body_segments.size() + 1
 	
-	if current_score >= GameManager.score_needed_for_next_level:
+	while current_score >= GameManager.score_needed_for_next_level:
 		print("Level Up! Score is: ", current_score)
-		# change these later, placeholder values for time being
+		# Award level and skill point(s)
 		GameManager.player_level += 1
 		GameManager.skill_points += 1
-		
+		# Set the next level goal
 		GameManager.score_needed_for_next_level += 5
-		
-		show_upgrade_menu()
+		# Set a flag to know we should show the menu at a "later" time
+		leveled_up_this_frame = true
+	# After looping through this while loop, if we level up, set the flag that is waiting
+	if leveled_up_this_frame:
+		upgrade_menu_is_pending = true
 
 func _on_upgrade_menu_resume_game_pressed():
 	$UI/UpgradeMenu.visible = false
@@ -159,7 +169,19 @@ func _on_upgrade_menu_resume_game_pressed():
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
-	#come back later
+	# Upgrades implemented: Speed and Fruit Reward
+	# Speed Upgrade logic only
+	if upgrade_name == "increase_speed":
+		if GameManager.speed_upgrade_level < 10:
+			GameManager.speed_upgrade_level += 1
+			head.move_timer.wait_time *= 0.9
+			print("New snake speed (wait time): ", head.move_timer.wait_time)
+	# Fruit Reward Upgrade logic only
+	elif upgrade_name == "increase_fruit_reward":
+		if GameManager.fruit_reward < 10:
+			GameManager.fruit_reward += 1
+			print("New fruit reward (fruit reward): ", GameManager.fruit_reward)
+			
 	_on_upgrade_menu_resume_game_pressed()
 
 func on_snake_ate_food(fruit):

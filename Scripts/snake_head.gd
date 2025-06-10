@@ -41,7 +41,7 @@ func _unhandled_input(event: InputEvent):
 			new_direction = Vector2.LEFT
 		elif event.is_action_pressed("ui_right"):
 			new_direction = Vector2.RIGHT
-	else: #This will be our regular movement logic that doesn't allow reversing
+	else: #This will be the regular movement logic that doesn't allow reversing
 		if event.is_action_pressed("ui_up") and current_direction != Vector2.DOWN:
 			new_direction = Vector2.UP
 		elif event.is_action_pressed("ui_down") and current_direction != Vector2.UP:
