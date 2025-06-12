@@ -234,6 +234,9 @@ func level_up():
 		GameManager.score_needed_for_next_level += 10
 	else:
 		GameManager.score_needed_for_next_level += 5
+	#RECHARGE BURROW IF UNLOCKED
+	if GameManager.burrow_unlocked:
+		GameManager.burrow_is_charged = true
 
 func _on_upgrade_menu_resume_game_pressed():
 	$UI/UpgradeMenu.visible = false
@@ -260,12 +263,17 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			var reward_mod = GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
 			GameManager.fruit_reward += reward_mod
 			print("New fruit reward (fruit reward): ", GameManager.fruit_reward)
-	
+	# Max Fruits Upgrade Logic only
 	elif upgrade_name == "increase_max_fruits":
 		if GameManager.max_fruits_on_screen < 11:
 			GameManager.max_fruits_on_screen += 1
 			spawn_fruit()
 			print("New max fruits (max fruits): ", GameManager.max_fruits_on_screen)
+	# Burrow Ability Upgrade Logic only 2 flags
+	elif upgrade_name == "unlock_burrow":
+		GameManager.burrow_unlocked = true
+		GameManager.burrow_is_charged = true
+		print("Burrow Ability Unlocked!")
 	
 	_on_upgrade_menu_resume_game_pressed()
 

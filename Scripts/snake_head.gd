@@ -54,24 +54,52 @@ func _unhandled_input(event: InputEvent):
 	if new_direction != current_direction:
 		current_direction = new_direction
 		can_change_direction = false
+		
+	#----------Ability Activation----------#
+	if event.is_action_pressed("activate_ability"):
+		# Check if we can use the ability
+		if GameManager.burrow_unlocked and GameManager.burrow_is_charged:
+			print("Button Activated")
+			GameManager.burrow_is_active = true
+			# Visual feedback for the player
+			get_node("FillSprite").modulate = Color.WHITE
 
 # --- Signal Handlers ---
 
 func on_move_timer_timeout():
-	# First, calculate where we WANT to go, but don't move yet.
+	# Look at the next position
 	var next_position = global_position + (current_direction * tile_size)
 
 	# --- LOOK BEFORE YOU LEAP ---
-	
-	# 1. Ask the Main script if the next spot is occupied by our body.
 	if main.is_position_occupied(next_position):
 		emit_signal("hit_self")
-		return # Stop here! Don't move.
+		return
 
-	# 2. NEW: Ask the Main script if the next spot is a wall.
+	# THE NEW BURROW LOGIC
 	if main.is_position_out_of_bounds(next_position):
-		emit_signal("hit_self") # Hitting a wall is a game over, same as hitting self.
-		return 					# Stop here! Don't move.
+		# First, check if burrow is active
+		if GameManager.burrow_is_active:
+			# It is! Let's teleport.
+			var grid_pos = (next_position / tile_size).round()
+			
+			# Horizontal Wrap
+			if grid_pos.x < 0: grid_pos.x = main.grid_width - 1
+			if grid_pos.x >= main.grid_width: grid_pos.x = 0
+			
+			# Vertical Wrap
+			if grid_pos.y < 0: grid_pos.y = main.grid_height - 1
+			if grid_pos.y >= main.grid_height: grid_pos.y = 0
+			
+			# Set the new position and consume the ability
+			next_position = (grid_pos * tile_size) + main.tile_offset
+			GameManager.burrow_is_active = false
+			GameManager.burrow_is_charged = false
+			# Return snake head to its normal color after it has teleported
+			get_node("FillSprite").modulate = head_color
+		else:
+			# If burrow is not active, it's a normal game over.
+			emit_signal("hit_self")
+			return
 
 	# If we made it here, the path is clear. It is now safe to move.
 	var previous_position = global_position
@@ -79,7 +107,6 @@ func on_move_timer_timeout():
 	
 	# Tells the Main script that we have successfully moved.
 	moved.emit(previous_position)
-	
 	can_change_direction = true
 
 

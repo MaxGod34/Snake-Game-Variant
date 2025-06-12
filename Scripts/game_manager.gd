@@ -55,6 +55,11 @@ var class_data = {
 var speed_upgrade_level = 0
 var fruit_reward = 1
 var max_fruits_on_screen = 1
+#--------Burrow Uprade Shit--------#
+var burrow_unlocked = false
+var burrow_is_charged = false
+var burrow_is_active = false
+
 
 func go_to_scene(scene_path):
 	get_tree().change_scene_to_file(scene_path)
@@ -71,6 +76,10 @@ func start_game():
 	speed_upgrade_level = 0
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
+	#--------Burrow Uprade Shit--------#
+	burrow_unlocked = false
+	burrow_is_charged = false
+	burrow_is_active = false
 	
 	get_tree().paused = false
 	go_to_scene("res://Scenes/main.tscn")

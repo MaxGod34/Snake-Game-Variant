@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=18 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://dckg2uoiur60b" path="res://Scenes/button_disabled_template.tres" id="2_11363"]
@@ -36,6 +36,12 @@ corner_radius_bottom_left = 20
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2hr16"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mpwqm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v4egn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d1lbs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m70ya"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lhh40"]
 
@@ -86,7 +92,7 @@ layout_mode = 2
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 custom_minimum_size = Vector2(640, 640)
 layout_mode = 2
-theme_override_constants/separation = 100
+theme_override_constants/separation = 32
 
 [node name="HBoxContainerTopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -367,6 +373,33 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[node name="AbilityTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Abilities:"
+horizontal_alignment = 1
+
+[node name="BurrowAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 250
+
+[node name="BurrowButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BurrowAbilityRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_hover_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_focus_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_d1lbs")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_m70ya")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Burrow Ability (5 SP)"
+icon_alignment = 1
+
 [node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -381,4 +414,5 @@ text = "Resume"
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton" to="." method="_on_speed_upgrade_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton" to="." method="_on_fruit_reward_upgrade_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton" to="." method="_on_max_fruits_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/BurrowAbilityRow/BurrowButton" to="." method="_on_burrow_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]

@@ -4,10 +4,8 @@ signal upgrade_selected(upgrade_name)
 signal resume_game_pressed
 
 
-
 func _on_resume_button_pressed() -> void:
 	emit_signal("resume_game_pressed")
-
 
 func _on_speed_upgrade_button_pressed() -> void:
 	if GameManager.skill_points > 0:
@@ -25,6 +23,9 @@ func update_all_displays():
 	update_speed_indicator()
 	update_fruit_reward_indicator()
 	update_max_fruits_indicator()
+	# Disables button after it is unlocked
+	$CenterContainer/PanelContainer/VBoxContainer/BurrowAbilityRow/BurrowButton\
+	.visible = not GameManager.burrow_unlocked
 func update_skill_points():
 	var current_sp = GameManager.skill_points
 	$CenterContainer/PanelContainer/VBoxContainer/HBoxContainerTopRow/SkillPointLabel\
@@ -69,8 +70,15 @@ func update_max_fruits_indicator():
 	var button = get_node("CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton")
 	button.disabled = GameManager.max_fruits_on_screen >= 10
 
-
+# To-Do Add in burrow indicator update function
 func _on_max_fruits_button_pressed() -> void:
 	if GameManager.skill_points >= 2:
 		GameManager.skill_points -= 2
 		emit_signal("upgrade_selected", "increase_max_fruits")
+
+
+
+func _on_burrow_button_pressed() -> void:
+	if GameManager.skill_points >= 5:
+		GameManager.skill_points -= 5
+		emit_signal("upgrade_selected", "unlock_burrow")
