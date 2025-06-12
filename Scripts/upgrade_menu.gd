@@ -3,82 +3,71 @@ extends CanvasLayer
 signal upgrade_selected(upgrade_name)
 signal resume_game_pressed
 
-
-func _on_resume_button_pressed() -> void:
-	emit_signal("resume_game_pressed")
-
-func _on_speed_upgrade_button_pressed() -> void:
-	if GameManager.skill_points > 0:
-		GameManager.skill_points -= 1
-		emit_signal("upgrade_selected", "increase_speed")
-
-func _on_fruit_reward_upgrade_button_pressed() -> void:
-	if GameManager.skill_points > 0 and GameManager.fruit_reward < 11:
-		GameManager.skill_points -= 1	#subtract skill point cost
-		emit_signal("upgrade_selected", "increase_fruit_reward")
+func _ready():
+	# Connect all buttons to the SAME function, but pass a unique argument
+	$CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_speed"))
+	$CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_fruit_reward"))
+	$CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_max_fruits"))
+	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_burrow_charges"))
+	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_phase_charges"))
+	$CenterContainer/PanelContainer/VBoxContainer/ResumeButton.pressed.connect(_on_resume_button_pressed)
 
 func update_all_displays():
-	# main refresh function
-	update_skill_points()
-	update_speed_indicator()
-	update_fruit_reward_indicator()
-	update_max_fruits_indicator()
-	# Disables button after it is unlocked
-	$CenterContainer/PanelContainer/VBoxContainer/BurrowAbilityRow/BurrowButton\
-	.visible = not GameManager.burrow_unlocked
-func update_skill_points():
-	var current_sp = GameManager.skill_points
-	$CenterContainer/PanelContainer/VBoxContainer/HBoxContainerTopRow/SkillPointLabel\
-	.text = "Skill Points Available: " + str(current_sp)
-func update_speed_indicator():
-	var current_level = GameManager.speed_upgrade_level
-	var filled_color = Color.LIME_GREEN
-	var empty_color = Color.DIM_GRAY
-	
-	for i in range(1, 11):
-		var block = get_node("CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedIndicatorContainer/Block" + str(i))
-		
-		if i <= current_level:
-			block.color = filled_color
-		else:
-			block.color = empty_color
-	# Disable the button after it is maxed out
-	var button = get_node("CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton")
-	button.disabled = (current_level >= 10)
-func update_fruit_reward_indicator():
-	var visual_level = GameManager.fruit_reward - 1
-	var container = get_node("CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitIndicatorContainer")
-	# iterate through and set each color
-	for i in range(1, 11):
-		var block = container.get_node("Block" + str(i))
-		if i <= visual_level:
-			block.color = Color.RED
-		else:
-			block.color = Color.DIM_GRAY
-	# Disable the button after it is maxed out
-	var button = get_node("CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton")
-	button.disabled = (GameManager.fruit_reward >= 11)
-func update_max_fruits_indicator():
-	var visual_level = GameManager.max_fruits_on_screen - 1
-	var container = get_node("CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer")
-	for i in range(1, 11):
-		var block = container.get_node("Block" + str(i))
-		if i <= visual_level:
-			block.color = Color.hex(0xfcc4b0) #fcc4b0 color hex
-		else:
-			block.color = Color.DIM_GRAY
-	var button = get_node("CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton")
-	button.disabled = GameManager.max_fruits_on_screen >= 10
+	update_skill_points_label()
+	# We now use full, correct node paths to find each button.
+	# Replace these paths with the actual paths from your scene tree!
+	var vbox = $CenterContainer/PanelContainer/VBoxContainer
+	update_button_display("increase_speed", vbox.get_node("SpeedUpgradeRow/SpeedUpgradeButton"), GameManager.speed_upgrade_level)
+	update_button_display("increase_fruit_reward", vbox.get_node("FruitUpgradeRow/FruitRewardUpgradeButton"), GameManager.fruit_reward - 1)
+	update_button_display("increase_max_fruits", vbox.get_node("MaxFruitsUpgradeRow/MaxFruitsButton"), GameManager.max_fruits_on_screen - 1)
+	update_button_display("increase_burrow_charges", vbox.get_node("AbilityRow1/H/BurrowAbilityRow/BurrowButton"), GameManager.burrow_level)
+	update_button_display("increase_phase_charges", vbox.get_node("AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton"), GameManager.phase_shift_level)
 
-# To-Do Add in burrow indicator update function
-func _on_max_fruits_button_pressed() -> void:
-	if GameManager.skill_points >= 2:
-		GameManager.skill_points -= 2
-		emit_signal("upgrade_selected", "increase_max_fruits")
+# A single, powerful function to update any upgrade row
+func update_button_display(upgrade_key, button_node, current_level):
+	var rules = GameManager.upgrade_data[upgrade_key]
+	var display_name = rules["display_name"]
+	# You will need an indicator container for each row.
+	var indicator_container = button_node.get_parent().get_node("IndicatorContainer")
+
+	if current_level >= rules["max_level"]:
+		button_node.text = display_name + " (MAX)"
+		button_node.disabled = true
+	else:
+		var cost = rules["costs"][current_level]
+		button_node.text = display_name + " (" + str(cost) + " SP)"
+		button_node.disabled = false
+
+	# Update indicator blocks
+	# Ensure your max_level in the data dictionary matches the number of blocks you have.
+	var max_indicator_blocks = indicator_container.get_child_count()
+	for i in range(1, max_indicator_blocks + 1):
+		var block = indicator_container.get_node("Block" + str(i))
+		block.visible = (i <= rules["max_level"])
+		if block.visible:
+			block.color = Color.GOLD if i <= current_level else Color.GRAY
 
 
+func update_skill_points_label():
+	# Make sure this path is correct for your scene!
+	$CenterContainer/PanelContainer/VBoxContainer/HBoxContainerTopRow/SkillPointLabel.text = "Skill Points Available: " + str(GameManager.skill_points)
 
-func _on_burrow_button_pressed() -> void:
-	if GameManager.skill_points >= 5:
-		GameManager.skill_points -= 5
-		emit_signal("upgrade_selected", "unlock_burrow")
+func _on_resume_button_pressed():
+	emit_signal("resume_game_pressed")
+
+# A single, powerful function to handle any button press
+func _on_upgrade_button_pressed(upgrade_key):
+	var current_level # Get the correct level to check against
+	if upgrade_key == "increase_fruit_reward": current_level = GameManager.fruit_reward - 1
+	elif upgrade_key == "increase_max_fruits": current_level = GameManager.max_fruits_on_screen - 1
+	elif upgrade_key == "increase_burrow_charges": current_level = GameManager.burrow_level
+	elif upgrade_key == "increase_phase_charges": current_level = GameManager.phase_shift_level
+	else: current_level = GameManager.speed_upgrade_level
+
+	var rules = GameManager.upgrade_data[upgrade_key]
+	if current_level < rules["max_level"]:
+		var cost = rules["costs"][current_level]
+		if GameManager.skill_points >= cost:
+			GameManager.skill_points -= cost
+			emit_signal("upgrade_selected", upgrade_key)
+			update_all_displays() # Refresh UI immediately after purchase

@@ -81,7 +81,5 @@ visible = false
 
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
 [connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
-[connection signal="resume_game_pressed" from="UI/UpgradeMenu" to="." method="_on_upgrade_menu_resume_game_pressed"]
-[connection signal="upgrade_selected" from="UI/UpgradeMenu" to="." method="_on_upgrade_menu_upgrade_selected"]
 [connection signal="continue_pressed" from="UI/GardenCompleteScreen" to="." method="_on_garden_complete_continue_pressed"]
 [connection signal="quit_to_menu" from="PauseMenu" to="." method="on_quit_to_menu_pressed"]

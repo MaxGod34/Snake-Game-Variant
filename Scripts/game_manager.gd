@@ -1,11 +1,12 @@
 extends Node
 
 
-var player_level = 1
-var skill_points = 0
-var score_needed_for_next_level = 5
-var score_at_level_start = 0
 
+#------Session State---------#
+var chosen_difficulty = "normal"
+var chosen_class = "speedster"
+
+#------Garden Progression----#
 var current_garden = 1
 var garden_data = {
 	1: {"name": "The First Step", "score_goal": 50},
@@ -15,8 +16,24 @@ var garden_data = {
 	5: {"name": "The Endless Eden", "score_goal": 666}
 }
 
-var chosen_difficulty = "normal"
-var chosen_class = "speedster"
+#-----Player Stats--------#
+var player_level = 1
+var skill_points = 0
+var score_needed_for_next_level = 5
+var score_at_level_start = 0
+
+#----Upgrade Data Tracking----#
+var speed_upgrade_level = 0
+var fruit_reward = 1
+var max_fruits_on_screen = 1
+		#--------Burrow Uprade Shit--------#
+var burrow_level = 0
+var burrow_charges = 0
+		#-------New Phase Shift Upgrade Shit------#
+var phase_shift_level = 0
+var phase_shift_charges = 0
+
+
 var difficulty_data = {
 	"easy": {"speed_multiplier": 1.0, "goal_multiplier": 0.8},
 	"normal": {"speed_multiplier": 1.0, "goal_multiplier": 0.9},
@@ -52,13 +69,39 @@ var class_data = {
 	}
 }
 
-var speed_upgrade_level = 0
-var fruit_reward = 1
-var max_fruits_on_screen = 1
-#--------Burrow Uprade Shit--------#
-var burrow_unlocked = false
-var burrow_is_charged = false
+#----Active Ability Flags----#
 var burrow_is_active = false
+var is_phasing = false 
+
+# Dictionary for upgrades costs and rules
+var upgrade_data = {
+	"increase_speed": {
+		"display_name": "Slighter Sauce",
+		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 
+		"max_level": 10
+	},
+	"increase_fruit_reward": {
+		"display_name": "Elephant-Sized Portions",
+		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+		"max_level": 10
+	},
+	"increase_max_fruits": {
+		"display_name": "More Mice!",
+		"costs": [2, 2, 4, 4, 6, 6, 8, 8, 10, 10],
+		"max_level": 10
+	},
+	"increase_burrow_charges": { # Changed from "unlock_burrow"
+		"display_name": "Burrow Ability",
+		"costs": [5, 5, 5], # Cost for each additional charge
+		"max_level": 3
+	},
+	"increase_phase_charges": {
+		"display_name": "Phase Shift Ability",
+		"costs": [3, 4, 5],
+		"max_level": 3
+	}
+}
+
 
 
 func go_to_scene(scene_path):
@@ -77,9 +120,10 @@ func start_game():
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
 	#--------Burrow Uprade Shit--------#
-	burrow_unlocked = false
-	burrow_is_charged = false
-	burrow_is_active = false
+	burrow_charges = 0
+	burrow_level = 0
+	phase_shift_level = 0
+	phase_shift_level = 0
 	
 	get_tree().paused = false
 	go_to_scene("res://Scenes/main.tscn")

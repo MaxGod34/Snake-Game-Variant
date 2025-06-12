@@ -27,33 +27,35 @@ var pause_scene = preload("res://Scenes/pause_menu.tscn")
 signal game_is_over(score)
 
 func _ready():
-	# Get Diff. and Class choice
+	 # --- GAME SETUP ---
 	var difficulty = GameManager.chosen_difficulty
 	var p_class = GameManager.chosen_class
-	# Get the dictionaries
 	var diff_data = GameManager.difficulty_data[difficulty]
 	var class_data = GameManager.class_data[p_class]
-	# Calculate Final Values
+	
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
-
 	
 	tile_offset = Vector2(tile_size / 2, tile_size / 2)
-	# 1. Create the head
+	
+	# --- CREATE HEAD ---
 	head = head_scene.instantiate()
-	head.move_speed = start_speed
+	head.move_speed = start_speed # FIX: Apply the calculated speed to the real head instance.
 	head.position = Vector2(10, 8) * tile_size + tile_offset
 	head.main = self
 	add_child(head)
 	
-	# 2. Connect to the head's signals
+	# --- CONNECT SIGNALS ---
 	head.moved.connect(on_snake_head_moved)
 	head.ate_fruit.connect(on_snake_ate_food)
 	head.hit_self.connect(game_over)
-	# 2.5. Connect our other signals
 	$PauseMenu.resume_game.connect(toggle_pause)
+	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
+	# FIX: Connect the upgrade menu signal here as well.
+	$UI/UpgradeMenu.upgrade_selected.connect(_on_upgrade_menu_upgrade_selected)
+	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 
-	# 3. Create the initial body
+	# --- CREATE INITIAL BODY & FRUIT ---
 	var behind_direction = -head.current_direction
 	for i in range(initial_snake_length - 1):
 		var grid_pos = (Vector2(10, 8) + (behind_direction * (i + 1)))
@@ -63,10 +65,11 @@ func _ready():
 	for i in range(GameManager.max_fruits_on_screen):
 		spawn_fruit()
 	
-	head.move_timer.start()
+	# --- FINAL SETUP & START ---
 	update_score_display()
 	update_hud()
 	apply_persistent_upgrades()
+	head.move_timer.start()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not is_game_over:
@@ -88,7 +91,8 @@ func apply_persistent_upgrades():
 	# Re-apply speed upgrades
 	for i in range(GameManager.speed_upgrade_level):
 		if head.move_timer.wait_time > 0.05:
-			head.move_timer.wait_time *= 0.9
+			var speed_mod = GameManager.class_data[GameManager.chosen_class]["speed_upgrade_mod"]
+			head.move_timer.wait_time *= speed_mod
 
 func show_upgrade_menu():
 	head.move_timer.stop() #this doesn't pause the game, it just stops the snake movement
@@ -123,10 +127,7 @@ func update_hud():
 	xp_bar.value = current_score
 	
 
-func _on_quit_to_menu():
-	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
-
-func on_quit_to_menu_pressed():
+func _on_quit_to_menu_pressed():
 	get_tree().paused = false
 	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
 
@@ -235,8 +236,10 @@ func level_up():
 	else:
 		GameManager.score_needed_for_next_level += 5
 	#RECHARGE BURROW IF UNLOCKED
-	if GameManager.burrow_unlocked:
-		GameManager.burrow_is_charged = true
+	if GameManager.burrow_level > 0:
+		GameManager.burrow_charges = GameManager.burrow_level
+	if GameManager.phase_shift_level > 0:
+		GameManager.phase_shift_charges = GameManager.phase_shift_level
 
 func _on_upgrade_menu_resume_game_pressed():
 	$UI/UpgradeMenu.visible = false
@@ -269,13 +272,18 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.max_fruits_on_screen += 1
 			spawn_fruit()
 			print("New max fruits (max fruits): ", GameManager.max_fruits_on_screen)
-	# Burrow Ability Upgrade Logic only 2 flags
-	elif upgrade_name == "unlock_burrow":
-		GameManager.burrow_unlocked = true
-		GameManager.burrow_is_charged = true
-		print("Burrow Ability Unlocked!")
+	# Burrow Ability Upgrade Logic 
+	elif upgrade_name == "increase_burrow_charges":
+		GameManager.burrow_level += 1
+		GameManager.burrow_charges += 1
+		print("Burrow Charge + 1!")
+	# Phase Shift Ability Upgrade Logic
+	elif upgrade_name == "increase_phase_charges":
+		GameManager.phase_shift_level += 1
+		GameManager.phase_shift_charges += 1
+		print("Phase Shift Charge + 1!")
 	
-	_on_upgrade_menu_resume_game_pressed()
+	_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
 
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")

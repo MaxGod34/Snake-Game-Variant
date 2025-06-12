@@ -30,9 +30,14 @@ shape = SubResource("RectangleShape2D_1ssvg")
 wait_time = 0.224
 autostart = true
 
+[node name="PhaseTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
 [node name="HeadArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HeadArea"]
 shape = SubResource("RectangleShape2D_gkmwg")
 
+[connection signal="timeout" from="PhaseTimer" to="." method="_on_phase_timer_timeout"]
 [connection signal="area_entered" from="HeadArea" to="." method="_on_head_area_area_entered"]

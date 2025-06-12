@@ -16,6 +16,7 @@ var main: Node2D
 
 @onready var move_timer: Timer = $MoveTimer
 @onready var head_area: Area2D = $HeadArea
+@onready var phase_timer: Timer = $PhaseTimer
 
 # --- Godot Functions ---
 
@@ -23,7 +24,6 @@ func _ready():
 	get_node("FillSprite").modulate = head_color
 	move_timer.wait_time = move_speed
 	move_timer.timeout.connect(on_move_timer_timeout)
-	move_timer.start()
 	
 
 func _unhandled_input(event: InputEvent):
@@ -56,14 +56,22 @@ func _unhandled_input(event: InputEvent):
 		can_change_direction = false
 		
 	#----------Ability Activation----------#
-	if event.is_action_pressed("activate_ability"):
+	#Burrow
+	if event.is_action_pressed("activate_ability_burrow"):
 		# Check if we can use the ability
-		if GameManager.burrow_unlocked and GameManager.burrow_is_charged:
+		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
 			print("Button Activated")
 			GameManager.burrow_is_active = true
 			# Visual feedback for the player
 			get_node("FillSprite").modulate = Color.WHITE
-
+			# Decrement in case they have multiple
+			GameManager.burrow_charges -= 1
+	#Phase Shift Ability
+	if event.is_action_pressed("activate_phase_shift") and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
+		GameManager.is_phasing = true
+		GameManager.phase_shift_charges -= 1
+		phase_timer.start()
+		get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
 # --- Signal Handlers ---
 
 func on_move_timer_timeout():
@@ -71,7 +79,7 @@ func on_move_timer_timeout():
 	var next_position = global_position + (current_direction * tile_size)
 
 	# --- LOOK BEFORE YOU LEAP ---
-	if main.is_position_occupied(next_position):
+	if not GameManager.is_phasing and main.is_position_occupied(next_position):
 		emit_signal("hit_self")
 		return
 
@@ -111,9 +119,12 @@ func on_move_timer_timeout():
 
 
 func _on_head_area_area_entered(area):
-	print("Head detector touched something! The object was: ", area)
-	
 	if area is Fruit:
 		emit_signal("ate_fruit", area)
-	elif area is SnakeBody:
+	elif not GameManager.is_phasing and area is SnakeBody:
 		emit_signal("hit_self")
+
+
+func _on_phase_timer_timeout() -> void:
+	GameManager.is_phasing = false
+	get_node("FillSprite").modulate = head_color
