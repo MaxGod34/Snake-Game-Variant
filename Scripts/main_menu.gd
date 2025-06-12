@@ -2,7 +2,7 @@ extends CanvasLayer
 
 
 func _on_play_button_pressed() -> void:
-	GameManager.go_to_scene("res://Scenes/difficulty_select.tscn")
+	GameManager.go_to_scene("res://Scenes/class_select.tscn")
 
 
 func _on_options_button_pressed() -> void:

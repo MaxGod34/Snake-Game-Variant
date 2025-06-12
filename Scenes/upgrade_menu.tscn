@@ -1,6 +1,7 @@
-[gd_scene load_steps=18 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=19 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
+[ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/panel_container_prototype1.tres" id="2_6gn5s"]
 [ext_resource type="StyleBox" uid="uid://dckg2uoiur60b" path="res://Scenes/button_disabled_template.tres" id="2_11363"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_le8vw"]
@@ -74,6 +75,7 @@ expand_margin_left = 20.0
 expand_margin_right = 20.0
 
 [node name="UpgradeMenu" type="CanvasLayer"]
+visible = false
 script = ExtResource("1_ltp0x")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -88,11 +90,13 @@ grow_vertical = 2
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
 custom_minimum_size = Vector2(1080, 800)
 layout_mode = 2
+theme_override_styles/panel = ExtResource("2_6gn5s")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 custom_minimum_size = Vector2(640, 640)
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 28
+alignment = 1
 
 [node name="HBoxContainerTopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
@@ -128,11 +132,13 @@ layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_hover_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_focus_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_constants/outline_size = 14
 theme_override_constants/h_separation = 0
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_11363")
@@ -208,7 +214,7 @@ size_flags_vertical = 4
 
 [node name="FruitUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 56
 alignment = 1
 
 [node name="FruitRewardUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
@@ -216,16 +222,18 @@ layout_mode = 2
 theme_override_colors/font_disabled_color = Color(1, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_11363")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_6gn5s")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
-text = "Elephant-Sized Proportions (1 SP)"
+text = "Elephant-Sized Portions (1 SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
 custom_minimum_size = Vector2(20, 20)
@@ -302,10 +310,12 @@ layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_colors/font_hover_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0.987029, 0.769693, 0.689322, 1)
 theme_override_colors/font_focus_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_colors/font_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_2hr16")
@@ -406,10 +416,12 @@ layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_colors/font_hover_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_colors/font_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_d1lbs")
@@ -450,10 +462,12 @@ layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.368627, 0.356863, 0.545098, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.368627, 0.356863, 0.545098, 1)
 theme_override_colors/font_hover_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0.368001, 0.356213, 0.544022, 1)
 theme_override_colors/font_focus_color = Color(0.368627, 0.356863, 0.545098, 1)
 theme_override_colors/font_pressed_color = Color(0.368627, 0.356863, 0.545098, 1)
-theme_override_font_sizes/font_size = 24
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_d1lbs")
@@ -488,7 +502,9 @@ size_flags_vertical = 4
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_font_sizes/font_size = 32
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 28
 theme_override_styles/focus = SubResource("StyleBoxEmpty_lhh40")
 theme_override_styles/hover = SubResource("StyleBoxFlat_2hr16")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_lpopj")

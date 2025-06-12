@@ -123,7 +123,28 @@ theme_override_styles/pressed = ExtResource("1_36rpi")
 theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
 text = "Back"
 
+[node name="DescriptionLabel" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.7
+anchor_right = 0.5
+anchor_bottom = 0.7
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 22
+text = "
+"
+
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/SpeedsterButton" to="." method="_on_speedster_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/SpeedsterButton" to="." method="_on_speedster_button_mouse_exited"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/SpeedsterButton" to="." method="_on_speedster_button_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/WarlockButton" to="." method="_on_warlock_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/WarlockButton" to="." method="_on_warlock_button_mouse_exited"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/WarlockButton" to="." method="_on_warlock_button_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/InchwormButton" to="." method="_on_inchworm_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/InchwormButton" to="." method="_on_inchworm_button_mouse_exited"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/InchwormButton" to="." method="_on_inchworm_button_pressed"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

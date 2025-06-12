@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kry3j"]
-bg_color = Color(0.596078, 1, 0.596078, 1)
+bg_color = Color(0.596078, 1, 0.596078, 0.588235)
 
 [node name="Main" type="Node2D"]
 process_mode = 3
@@ -43,7 +43,7 @@ anchor_right = 1.0
 anchor_bottom = 0.25
 grow_horizontal = 0
 rotation = 0.785398
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
 theme_override_font_sizes/font_size = 28
 text = "Score: 1"
 horizontal_alignment = 1
@@ -57,7 +57,7 @@ anchor_bottom = 0.112
 offset_right = 101.0
 offset_bottom = 39.0
 rotation = -0.785398
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
 theme_override_font_sizes/font_size = 28
 text = "Level: 1"
 
@@ -73,7 +73,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
 show_percentage = false
 
 [node name="UpgradeMenu" parent="UI" instance=ExtResource("3_jjvhh")]
-visible = false
 
 [node name="GardenCompleteScreen" parent="UI" instance=ExtResource("4_kry3j")]
 
@@ -82,4 +81,4 @@ visible = false
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
 [connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
 [connection signal="continue_pressed" from="UI/GardenCompleteScreen" to="." method="_on_garden_complete_continue_pressed"]
-[connection signal="quit_to_menu" from="PauseMenu" to="." method="on_quit_to_menu_pressed"]
+[connection signal="quit_to_menu" from="PauseMenu" to="." method="_on_quit_to_menu_pressed"]
