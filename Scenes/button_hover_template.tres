@@ -1,12 +1,16 @@
 [gd_resource type="StyleBoxFlat" format=3 uid="uid://cgghkcom1apru"]
 
 [resource]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
 bg_color = Color(0.992157, 0.647059, 0.662745, 0.623529)
 border_color = Color(0.8, 0.8, 0.8, 0)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
 expand_margin_left = 8.0
 expand_margin_top = 5.0
 expand_margin_right = 8.0

@@ -11,6 +11,7 @@ script = ExtResource("1_o20pv")
 
 [node name="FillSprite" type="Sprite2D" parent="."]
 texture_filter = 1
+scale = Vector2(0.95, 0.95)
 texture = ExtResource("2_j64f1")
 
 [node name="BorderSprite" type="Sprite2D" parent="."]

@@ -16,6 +16,7 @@ var main: Node2D
 
 @onready var move_timer: Timer = $MoveTimer
 @onready var head_area: Area2D = $HeadArea
+@onready var phase_timer: Timer = $PhaseTimer
 
 # --- Godot Functions ---
 
@@ -23,7 +24,6 @@ func _ready():
 	get_node("FillSprite").modulate = head_color
 	move_timer.wait_time = move_speed
 	move_timer.timeout.connect(on_move_timer_timeout)
-	move_timer.start()
 	
 
 func _unhandled_input(event: InputEvent):
@@ -41,7 +41,7 @@ func _unhandled_input(event: InputEvent):
 			new_direction = Vector2.LEFT
 		elif event.is_action_pressed("ui_right"):
 			new_direction = Vector2.RIGHT
-	else: #This will be our regular movement logic that doesn't allow reversing
+	else: #This will be the regular movement logic that doesn't allow reversing
 		if event.is_action_pressed("ui_up") and current_direction != Vector2.DOWN:
 			new_direction = Vector2.UP
 		elif event.is_action_pressed("ui_down") and current_direction != Vector2.UP:
@@ -54,24 +54,60 @@ func _unhandled_input(event: InputEvent):
 	if new_direction != current_direction:
 		current_direction = new_direction
 		can_change_direction = false
-
+		
+	#----------Ability Activation----------#
+	#Burrow
+	if event.is_action_pressed("activate_ability_burrow"):
+		# Check if we can use the ability
+		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
+			print("Button Activated")
+			GameManager.burrow_is_active = true
+			# Visual feedback for the player
+			get_node("FillSprite").modulate = Color.WHITE
+			# Decrement in case they have multiple
+			GameManager.burrow_charges -= 1
+	#Phase Shift Ability
+	if event.is_action_pressed("activate_phase_shift") and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
+		GameManager.is_phasing = true
+		GameManager.phase_shift_charges -= 1
+		phase_timer.start()
+		get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
 # --- Signal Handlers ---
 
 func on_move_timer_timeout():
-	# First, calculate where we WANT to go, but don't move yet.
+	# Look at the next position
 	var next_position = global_position + (current_direction * tile_size)
 
 	# --- LOOK BEFORE YOU LEAP ---
-	
-	# 1. Ask the Main script if the next spot is occupied by our body.
-	if main.is_position_occupied(next_position):
+	if not GameManager.is_phasing and main.is_position_occupied(next_position):
 		emit_signal("hit_self")
-		return # Stop here! Don't move.
+		return
 
-	# 2. NEW: Ask the Main script if the next spot is a wall.
+	# THE NEW BURROW LOGIC
 	if main.is_position_out_of_bounds(next_position):
-		emit_signal("hit_self") # Hitting a wall is a game over, same as hitting self.
-		return 					# Stop here! Don't move.
+		# First, check if burrow is active
+		if GameManager.burrow_is_active:
+			# It is! Let's teleport.
+			var grid_pos = (next_position / tile_size).round()
+			
+			# Horizontal Wrap
+			if grid_pos.x < 0: grid_pos.x = main.grid_width - 1
+			if grid_pos.x >= main.grid_width: grid_pos.x = 0
+			
+			# Vertical Wrap
+			if grid_pos.y < 0: grid_pos.y = main.grid_height - 1
+			if grid_pos.y >= main.grid_height: grid_pos.y = 0
+			
+			# Set the new position and consume the ability
+			next_position = (grid_pos * tile_size) + main.tile_offset
+			GameManager.burrow_is_active = false
+			GameManager.burrow_is_charged = false
+			# Return snake head to its normal color after it has teleported
+			get_node("FillSprite").modulate = head_color
+		else:
+			# If burrow is not active, it's a normal game over.
+			emit_signal("hit_self")
+			return
 
 	# If we made it here, the path is clear. It is now safe to move.
 	var previous_position = global_position
@@ -79,14 +115,16 @@ func on_move_timer_timeout():
 	
 	# Tells the Main script that we have successfully moved.
 	moved.emit(previous_position)
-	
 	can_change_direction = true
 
 
 func _on_head_area_area_entered(area):
-	print("Head detector touched something! The object was: ", area)
-	
 	if area is Fruit:
 		emit_signal("ate_fruit", area)
-	elif area is SnakeBody:
+	elif not GameManager.is_phasing and area is SnakeBody:
 		emit_signal("hit_self")
+
+
+func _on_phase_timer_timeout() -> void:
+	GameManager.is_phasing = false
+	get_node("FillSprite").modulate = head_color

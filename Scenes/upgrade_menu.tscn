@@ -1,0 +1,496 @@
+[gd_scene load_steps=18 format=3 uid="uid://c4g22t44wwwae"]
+
+[ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
+[ext_resource type="StyleBox" uid="uid://dckg2uoiur60b" path="res://Scenes/button_disabled_template.tres" id="2_11363"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_le8vw"]
+content_margin_left = 40.0
+content_margin_top = 20.0
+content_margin_right = 40.0
+content_margin_bottom = 20.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+expand_margin_left = 20.0
+expand_margin_top = 20.0
+expand_margin_right = 20.0
+expand_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltp0x"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_11363"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_6gn5s"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f5dmy"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.6, 0.113725, 0.6, 0.168627)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f5dmy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2hr16"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mpwqm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v4egn"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_d1lbs"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_m70ya"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lhh40"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hr16"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.4, 0.0392157, 0.372549, 0.2)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_left = 20.0
+expand_margin_right = 20.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lpopj"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mpwqm"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.262745, 0.603922, 1, 0.160784)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+expand_margin_left = 20.0
+expand_margin_right = 20.0
+
+[node name="UpgradeMenu" type="CanvasLayer"]
+script = ExtResource("1_ltp0x")
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(1080, 800)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+custom_minimum_size = Vector2(640, 640)
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="HBoxContainerTopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainerTopRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0.552962, 1.35969e-06, 4.81307e-07, 1)
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
+text = "Level up! Choose an Upgrade"
+
+[node name="SkillPointLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainerTopRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0.552962, 1.35969e-06, 4.81307e-07, 1)
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
+text = "Skill Points: 0"
+
+[node name="SpeedUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 180
+alignment = 1
+
+[node name="SpeedUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_hover_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_focus_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_constants/h_separation = 0
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_11363")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_6gn5s")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Slither Sauce (1 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="FruitUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="FruitRewardUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(1, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(1, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_11363")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_6gn5s")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Elephant-Sized Proportions (1 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MaxFruitsUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 206
+alignment = 1
+
+[node name="MaxFruitsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_hover_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_color = Color(0.987029, 0.769693, 0.689322, 1)
+theme_override_colors/font_focus_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_2hr16")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mpwqm")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "More Mice! (2 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="AbilityRow1" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="AbilityTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0.552941, 0, 0, 1)
+theme_override_constants/outline_size = 28
+theme_override_font_sizes/font_size = 32
+text = "Abilities:"
+horizontal_alignment = 1
+
+[node name="H" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1"]
+layout_mode = 2
+theme_override_constants/separation = 72
+alignment = 1
+
+[node name="BurrowAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BurrowButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_hover_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_focus_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_colors/font_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_d1lbs")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_m70ya")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Burrow Ability (5 SP)"
+icon_alignment = 1
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PhaseShiftAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="PhaseShiftButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_colors/font_hover_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_colors/font_color = Color(0.368001, 0.356213, 0.544022, 1)
+theme_override_colors/font_focus_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_colors/font_pressed_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_d1lbs")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_m70ya")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Phase Shift Ability (5 SP)"
+icon_alignment = 1
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = SubResource("StyleBoxEmpty_lhh40")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2hr16")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_lpopj")
+theme_override_styles/normal = SubResource("StyleBoxFlat_mpwqm")
+text = "Resume"
