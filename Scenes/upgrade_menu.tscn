@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=15 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://dckg2uoiur60b" path="res://Scenes/button_disabled_template.tres" id="2_11363"]
@@ -30,6 +30,12 @@ corner_radius_top_left = 20
 corner_radius_top_right = 20
 corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_f5dmy"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2hr16"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mpwqm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lhh40"]
 
@@ -112,12 +118,12 @@ theme_override_constants/separation = 106
 
 [node name="SpeedUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow"]
 layout_mode = 2
-theme_override_colors/font_disabled_color = Color(1, 0.631373, 0.984314, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 0.631373, 0.984314, 1)
-theme_override_colors/font_hover_color = Color(1, 0.631373, 0.984314, 1)
-theme_override_colors/font_color = Color(1, 0.631213, 0.984427, 1)
-theme_override_colors/font_focus_color = Color(1, 0.631373, 0.984314, 1)
-theme_override_colors/font_pressed_color = Color(1, 0.631373, 0.984314, 1)
+theme_override_colors/font_disabled_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_hover_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_focus_color = Color(0.196078, 0.803922, 0.196078, 1)
+theme_override_colors/font_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_constants/h_separation = 0
 theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
@@ -277,6 +283,90 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[node name="MaxFruitsUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 72
+
+[node name="MaxFruitsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_hover_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_color = Color(0.987029, 0.769693, 0.689322, 1)
+theme_override_colors/font_focus_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_2hr16")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_mpwqm")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Increase Max Fruit (2 SP)"
+
+[node name="MaxFruitsIndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsIndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
 [node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
@@ -290,4 +380,5 @@ text = "Resume"
 
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton" to="." method="_on_speed_upgrade_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton" to="." method="_on_fruit_reward_upgrade_button_pressed"]
+[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton" to="." method="_on_max_fruits_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]

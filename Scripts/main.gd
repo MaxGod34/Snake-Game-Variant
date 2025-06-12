@@ -15,6 +15,7 @@ var snake_body_segments: Array[Node2D] = []
 # Boolean Flags
 var is_game_over: bool = false
 var upgrade_menu_is_pending: bool = false
+var garden_complete_is_pending: bool = false
 
 var head: CharacterBody2D
 
@@ -26,18 +27,21 @@ var pause_scene = preload("res://Scenes/pause_menu.tscn")
 signal game_is_over(score)
 
 func _ready():
-	#difficulty modifiers
-	if GameManager.current_difficulty == "hard":
-		head_scene.instantiate().move_speed = 0.15
-		initial_snake_length = 5
-	else:
-		head_scene.instantiate().move_speed = 0.25
-		initial_snake_length = 1
-	
+	# Get Diff. and Class choice
+	var difficulty = GameManager.chosen_difficulty
+	var p_class = GameManager.chosen_class
+	# Get the dictionaries
+	var diff_data = GameManager.difficulty_data[difficulty]
+	var class_data = GameManager.class_data[p_class]
+	# Calculate Final Values
+	initial_snake_length = class_data["start_length"]
+	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
+
 	
 	tile_offset = Vector2(tile_size / 2, tile_size / 2)
 	# 1. Create the head
 	head = head_scene.instantiate()
+	head.move_speed = start_speed
 	head.position = Vector2(10, 8) * tile_size + tile_offset
 	head.main = self
 	add_child(head)
@@ -56,9 +60,13 @@ func _ready():
 		var segment_pos = (grid_pos * tile_size) + tile_offset
 		add_body_segment_at(segment_pos)
 	
-	spawn_fruit()
+	for i in range(GameManager.max_fruits_on_screen):
+		spawn_fruit()
+	
 	head.move_timer.start()
 	update_score_display()
+	update_hud()
+	apply_persistent_upgrades()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not is_game_over:
@@ -76,10 +84,44 @@ func toggle_pause():
 		get_tree().paused = true
 		$PauseMenu.visible = true
 
+func apply_persistent_upgrades():
+	# Re-apply speed upgrades
+	for i in range(GameManager.speed_upgrade_level):
+		if head.move_timer.wait_time > 0.05:
+			head.move_timer.wait_time *= 0.9
+
 func show_upgrade_menu():
 	head.move_timer.stop() #this doesn't pause the game, it just stops the snake movement
 	$UI/UpgradeMenu.update_all_displays()
 	$UI/UpgradeMenu.visible = true
+
+func show_garden_complete_screen():
+	head.move_timer.stop()
+	var garden_id = GameManager.current_garden
+	var garden_name = GameManager.garden_data[garden_id]["name"]
+	var score = snake_body_segments.size() + 1
+	var is_final_garden = (garden_id == 5)
+	var is_final_win = (is_final_garden and score >= 666)
+	
+	$UI/GardenCompleteScreen.setup(garden_name, score, is_final_garden, is_final_win)
+	$UI/GardenCompleteScreen.visible = true
+
+func update_hud():
+	# Update Level
+	$UI/LevelLabel.text = "Level: " + str(GameManager.player_level)
+
+	# Update Progress Bar
+	var current_score = snake_body_segments.size() + 1
+	var xp_bar = $UI/XPProgressBar
+	
+	# Set range for the bar
+	xp_bar.max_value = GameManager.score_needed_for_next_level
+	# The bar starts at the previous goal!
+	xp_bar.min_value = GameManager.score_at_level_start
+	
+	# Set the Bar's current fill value
+	xp_bar.value = current_score
+	
 
 func _on_quit_to_menu():
 	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
@@ -146,26 +188,62 @@ func grow_snake():
 
 	update_score_display()
 
-func check_for_level_up():
-	var leveled_up_this_frame = false # Flag to check for multi-leveling in one fruit grab
+func update_progression():
+	
 	var current_score = snake_body_segments.size() + 1
+	# Level Up Check
+	var leveled_up_this_frame = false # Flag to check for multi-leveling in one fruit grab
 	
 	while current_score >= GameManager.score_needed_for_next_level:
 		print("Level Up! Score is: ", current_score)
 		# Award level and skill point(s)
-		GameManager.player_level += 1
-		GameManager.skill_points += 1
-		# Set the next level goal
-		GameManager.score_needed_for_next_level += 5
+		level_up()
 		# Set a flag to know we should show the menu at a "later" time
 		leveled_up_this_frame = true
 	# After looping through this while loop, if we level up, set the flag that is waiting
 	if leveled_up_this_frame:
 		upgrade_menu_is_pending = true
+	
+	# Garden Completion Check
+	var current_garden_id = GameManager.current_garden
+	var current_goal = GameManager.garden_data[current_garden_id]["score_goal"]
+	if current_score >= current_goal:
+		#Beat the garden
+		print("Garden ", current_garden_id, " complete! Pending screen.")
+		#Show garden function coming soon
+		garden_complete_is_pending = true
+
+func level_up():
+	print("Level up!")
+	#Before we calculate the next goal, we need to save the current one
+	GameManager.score_at_level_start = GameManager.score_needed_for_next_level
+	
+	GameManager.player_level += 1
+	
+	#SP SCALE
+	if GameManager.player_level >= 10:
+		GameManager.skill_points += 3
+	elif GameManager.player_level >= 5:
+		GameManager.skill_points += 2
+	else:
+		GameManager.skill_points += 1
+	#EXP/SCORE SCALE
+	if GameManager.player_level >= 10:
+		GameManager.score_needed_for_next_level += 15
+	elif GameManager.player_level >= 5:
+		GameManager.score_needed_for_next_level += 10
+	else:
+		GameManager.score_needed_for_next_level += 5
 
 func _on_upgrade_menu_resume_game_pressed():
 	$UI/UpgradeMenu.visible = false
-	head.move_timer.start()
+	if garden_complete_is_pending:
+		# if yes, show garden screen instead of resuming
+		garden_complete_is_pending = false
+		show_garden_complete_screen()
+	else:
+		# Resume Game if no
+		head.move_timer.start()
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
@@ -178,10 +256,17 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			print("New snake speed (wait time): ", head.move_timer.wait_time)
 	# Fruit Reward Upgrade logic only
 	elif upgrade_name == "increase_fruit_reward":
-		if GameManager.fruit_reward < 10:
-			GameManager.fruit_reward += 1
+		if GameManager.fruit_reward < 11:
+			var reward_mod = GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
+			GameManager.fruit_reward += reward_mod
 			print("New fruit reward (fruit reward): ", GameManager.fruit_reward)
-			
+	
+	elif upgrade_name == "increase_max_fruits":
+		if GameManager.max_fruits_on_screen < 11:
+			GameManager.max_fruits_on_screen += 1
+			spawn_fruit()
+			print("New max fruits (max fruits): ", GameManager.max_fruits_on_screen)
+	
 	_on_upgrade_menu_resume_game_pressed()
 
 func on_snake_ate_food(fruit):
@@ -189,7 +274,8 @@ func on_snake_ate_food(fruit):
 	fruit.queue_free()
 	grow_snake()
 	spawn_fruit()
-	check_for_level_up()
+	update_progression()
+	update_hud()
 	
 	if head.can_reverse:
 		head.can_reverse = false
@@ -245,3 +331,13 @@ func is_position_out_of_bounds(check_pos: Vector2) -> bool:
 	   grid_pos.y < 0 or grid_pos.y > grid_height:
 		return true
 	return false
+
+
+func _on_garden_complete_continue_pressed() -> void:
+	var garden_id = GameManager.current_garden
+	var score = snake_body_segments.size() + 1
+	if garden_id == 5 and score >= 666:
+		GameManager.go_to_scene("res://Scenes/main_menu.tscn")
+	else:
+		GameManager.current_garden += 1
+		get_tree().reload_current_scene()
