@@ -1,13 +1,33 @@
-[gd_scene load_steps=7 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=10 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_21xkr"]
 [ext_resource type="PackedScene" uid="uid://dd5oeyqdq4rj3" path="res://Scenes/game_over_screen.tscn" id="2_bo1nx"]
 [ext_resource type="PackedScene" uid="uid://big1tpxvk7yl2" path="res://Scenes/pause_menu.tscn" id="3_8gbba"]
 [ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/upgrade_menu.tscn" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
 
+[sub_resource type="Gradient" id="Gradient_6bp64"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0, 0.431373, 0.054902, 1, 0.133333, 0.133333, 0.133333, 1, 0.133333, 0.133333, 0.133333, 1)
+metadata/_snap_enabled = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_21xkr"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0, 1, 0, 1)
+border_blend = true
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kry3j"]
 bg_color = Color(0.596078, 1, 0.596078, 0.588235)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
 
 [node name="Main" type="Node2D"]
 process_mode = 3
@@ -26,9 +46,33 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0.133333, 0.133333, 0.133333, 1)
 
+[node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
+amount = 50
+texture = ExtResource("2_21xkr")
+lifetime = 0.33
+speed_scale = 0.25
+randomness = 0.26
+lifetime_randomness = 0.23
+emission_shape = 3
+emission_rect_extents = Vector2(1280, 960)
+direction = Vector2(100, -10)
+spread = 0.0
+initial_velocity_min = 10.0
+initial_velocity_max = 25.0
+angular_velocity_min = -10.0
+scale_amount_min = 0.15
+scale_amount_max = 0.2
+color = Color(0.8, 0.733333, 0, 1)
+color_ramp = SubResource("Gradient_6bp64")
+
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = 1
 anchor_mode = 0
+
+[node name="BoundaryIndicator" type="Panel" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_21xkr")
 
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 0
@@ -37,37 +81,37 @@ layer = 0
 
 [node name="ScoreLabel" type="Label" parent="UI"]
 anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 0.04
-anchor_right = 1.0
-anchor_bottom = 0.25
+anchor_left = 0.75
+anchor_top = 0.925
+anchor_right = 0.9
+anchor_bottom = 0.975
 grow_horizontal = 0
-rotation = 0.785398
 theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 text = "Score: 1"
 horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="UI"]
 anchors_preset = -1
-anchor_left = 0.036
-anchor_top = 0.112
-anchor_right = 0.036
-anchor_bottom = 0.112
-offset_right = 101.0
-offset_bottom = 39.0
-rotation = -0.785398
+anchor_left = 0.005
+anchor_top = 0.925
+anchor_right = 0.209
+anchor_bottom = 0.975
 theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 text = "Level: 1"
+horizontal_alignment = 1
 
 [node name="XPProgressBar" type="ProgressBar" parent="UI"]
 anchors_preset = -1
-anchor_left = 0.016
-anchor_top = 0.203
-anchor_right = 0.2
-anchor_bottom = 0.224
-rotation = -0.785398
+anchor_left = 0.2
+anchor_top = 0.925
+anchor_right = 0.419
+anchor_bottom = 0.975
 theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
 theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
 show_percentage = false
@@ -75,6 +119,20 @@ show_percentage = false
 [node name="UpgradeMenu" parent="UI" instance=ExtResource("3_jjvhh")]
 
 [node name="GardenCompleteScreen" parent="UI" instance=ExtResource("4_kry3j")]
+
+[node name="Label" type="Label" parent="UI"]
+anchors_preset = -1
+anchor_left = 0.45
+anchor_top = 0.925
+anchor_right = 0.75
+anchor_bottom = 0.975
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+text = "Player: "
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 

@@ -1,10 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://c1b0eh8evirnx"]
+[gd_scene load_steps=9 format=3 uid="uid://c1b0eh8evirnx"]
 
 [ext_resource type="Script" uid="uid://beoi5cxhq4jhd" path="res://Scripts/main_menu.gd" id="1_1ehe0"]
 [ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="1_48xlc"]
 [ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/snake_chart_logo.png" id="2_1ehe0"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_opfnp"]
 [ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Scenes/button_hover_template.tres" id="3_n45e2"]
 [ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Scenes/base_button_template.tres" id="4_opfnp"]
+
+[sub_resource type="Gradient" id="Gradient_cp0ys"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0, 0.431373, 0.054902, 1, 0.133333, 0.133333, 0.133333, 1, 0.133333, 0.133333, 0.133333, 1)
+metadata/_snap_enabled = true
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cp0ys"]
 
@@ -18,6 +24,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.152941, 0, 0.176471, 1)
+
+[node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
+amount = 50
+texture = ExtResource("2_opfnp")
+lifetime = 0.33
+speed_scale = 0.25
+randomness = 0.26
+lifetime_randomness = 0.23
+emission_shape = 3
+emission_rect_extents = Vector2(1280, 960)
+direction = Vector2(100, -10)
+spread = 0.0
+initial_velocity_min = 10.0
+initial_velocity_max = 25.0
+angular_velocity_min = -10.0
+scale_amount_min = 0.15
+scale_amount_max = 0.2
+color = Color(0.8, 0.733333, 0, 1)
+color_ramp = SubResource("Gradient_cp0ys")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 anchors_preset = -1

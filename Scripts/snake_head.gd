@@ -101,7 +101,7 @@ func on_move_timer_timeout():
 			# Set the new position and consume the ability
 			next_position = (grid_pos * tile_size) + main.tile_offset
 			GameManager.burrow_is_active = false
-			GameManager.burrow_is_charged = false
+			GameManager.burrow_charges -= 1
 			# Return snake head to its normal color after it has teleported
 			get_node("FillSprite").modulate = head_color
 		else:

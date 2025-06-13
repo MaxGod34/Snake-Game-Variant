@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=22 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/panel_container_prototype1.tres" id="2_6gn5s"]
@@ -37,6 +37,12 @@ corner_radius_bottom_left = 20
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2hr16"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mpwqm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_60tjm"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ttpbb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fm0cu"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_v4egn"]
 
@@ -88,7 +94,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(1080, 800)
+custom_minimum_size = Vector2(1120, 840)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_6gn5s")
 
@@ -214,7 +220,7 @@ size_flags_vertical = 4
 
 [node name="FruitUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 56
+theme_override_constants/separation = 36
 alignment = 1
 
 [node name="FruitRewardUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
@@ -387,9 +393,56 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[node name="PerimeterUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 500
+alignment = 1
+
+[node name="PerimeterUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 28
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover = SubResource("StyleBoxEmpty_ttpbb")
+theme_override_styles/pressed = SubResource("StyleBoxEmpty_fm0cu")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Edge Lord (3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
 [node name="AbilityRow1" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 40
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="AbilityTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1"]
@@ -403,7 +456,7 @@ horizontal_alignment = 1
 
 [node name="H" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1"]
 layout_mode = 2
-theme_override_constants/separation = 72
+theme_override_constants/separation = 20
 alignment = 1
 
 [node name="BurrowAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H"]
@@ -479,6 +532,7 @@ icon_alignment = 1
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow"]
 layout_mode = 2
 theme_override_constants/separation = 16
+alignment = 2
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
 custom_minimum_size = Vector2(32, 32)

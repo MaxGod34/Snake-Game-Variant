@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://bsbynsvorx5r4"]
+[gd_scene load_steps=8 format=3 uid="uid://bsbynsvorx5r4"]
 
 [ext_resource type="Script" uid="uid://bnna3qnjiu84k" path="res://Scripts/difficulty_select.gd" id="1_gcggo"]
 [ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Scenes/button_hover_template.tres" id="2_jnktv"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="3_7lp5y"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jnktv"]
 
@@ -21,6 +22,11 @@ expand_margin_right = 8.0
 expand_margin_bottom = 5.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7lp5y"]
+
+[sub_resource type="Gradient" id="Gradient_4x1yg"]
+offsets = PackedFloat32Array(0, 0.6, 1)
+colors = PackedColorArray(0, 0.431373, 0.054902, 1, 0.133333, 0.133333, 0.133333, 1, 0.133333, 0.133333, 0.133333, 1)
+metadata/_snap_enabled = true
 
 [node name="DifficultySelect" type="CanvasLayer"]
 script = ExtResource("1_gcggo")
@@ -145,6 +151,25 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 22
 text = "
 "
+
+[node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
+amount = 50
+texture = ExtResource("3_7lp5y")
+lifetime = 0.33
+speed_scale = 0.25
+randomness = 0.26
+lifetime_randomness = 0.23
+emission_shape = 3
+emission_rect_extents = Vector2(1280, 960)
+direction = Vector2(100, -10)
+spread = 0.0
+initial_velocity_min = 10.0
+initial_velocity_max = 25.0
+angular_velocity_min = -10.0
+scale_amount_min = 0.15
+scale_amount_max = 0.2
+color = Color(0.8, 0.733333, 0, 1)
+color_ramp = SubResource("Gradient_4x1yg")
 
 [connection signal="mouse_entered" from="CenterContainer/HBoxContainer/EasyButton" to="." method="_on_easy_button_mouse_entered"]
 [connection signal="mouse_exited" from="CenterContainer/HBoxContainer/EasyButton" to="." method="_on_easy_button_mouse_exited"]

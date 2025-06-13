@@ -5,12 +5,14 @@ extends Node2D
 
 @export var initial_snake_length: int = 1
 @export var tile_size: int = 32
+var snake_body_segments: Array[Node2D] = []
 
 # Grid properties, including offset due to centering of the blocks
 var tile_offset: Vector2
-var grid_width = 40	# 1280 / 32 = 40
-var grid_height = 30 # 960 / 32 = 30	so we have an area of 1200 blocks
-var snake_body_segments: Array[Node2D] = []
+var grid_width: int
+var grid_height: int
+
+
 
 # Boolean Flags
 var is_game_over: bool = false
@@ -36,6 +38,8 @@ func _ready():
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
 	
+	# Bounds and Tile Offset cuz center origin omfg i'll kms
+	update_boundary_visuals()
 	tile_offset = Vector2(tile_size / 2, tile_size / 2)
 	
 	# --- CREATE HEAD ---
@@ -272,6 +276,12 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.max_fruits_on_screen += 1
 			spawn_fruit()
 			print("New max fruits (max fruits): ", GameManager.max_fruits_on_screen)
+	# Increase Grid Size Upgrade Logic
+	elif upgrade_name == "increase_grid_size":
+		if GameManager.grid_size_level < 4:
+			GameManager.grid_size_level += 1
+			update_boundary_visuals()
+			print("New grid size: (l x w): ", GameManager.grid_size_data[GameManager.grid_size_level])
 	# Burrow Ability Upgrade Logic 
 	elif upgrade_name == "increase_burrow_charges":
 		GameManager.burrow_level += 1
@@ -357,3 +367,11 @@ func _on_garden_complete_continue_pressed() -> void:
 	else:
 		GameManager.current_garden += 1
 		get_tree().reload_current_scene()
+
+func update_boundary_visuals():
+	var current_grid_size = GameManager.grid_size_data[GameManager.grid_size_level]
+	grid_width = int(current_grid_size.x)
+	grid_height = int(current_grid_size.y)
+	
+	var boundary_container = $BoundaryIndicator
+	boundary_container.size = Vector2(grid_width * tile_size, grid_height * tile_size)

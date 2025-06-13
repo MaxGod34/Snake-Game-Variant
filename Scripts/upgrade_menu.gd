@@ -8,6 +8,7 @@ func _ready():
 	$CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_speed"))
 	$CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_fruit_reward"))
 	$CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_max_fruits"))
+	$CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/PerimeterUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_grid_size"))
 	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_burrow_charges"))
 	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_phase_charges"))
 	$CenterContainer/PanelContainer/VBoxContainer/ResumeButton.pressed.connect(_on_resume_button_pressed)
@@ -20,6 +21,7 @@ func update_all_displays():
 	update_button_display("increase_speed", vbox.get_node("SpeedUpgradeRow/SpeedUpgradeButton"), GameManager.speed_upgrade_level)
 	update_button_display("increase_fruit_reward", vbox.get_node("FruitUpgradeRow/FruitRewardUpgradeButton"), GameManager.fruit_reward - 1)
 	update_button_display("increase_max_fruits", vbox.get_node("MaxFruitsUpgradeRow/MaxFruitsButton"), GameManager.max_fruits_on_screen - 1)
+	update_button_display("increase_grid_size", vbox.get_node("PerimeterUpgradeRow/PerimeterUpgradeButton"), GameManager.grid_size_level)
 	update_button_display("increase_burrow_charges", vbox.get_node("AbilityRow1/H/BurrowAbilityRow/BurrowButton"), GameManager.burrow_level)
 	update_button_display("increase_phase_charges", vbox.get_node("AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton"), GameManager.phase_shift_level)
 
@@ -60,6 +62,7 @@ func _on_upgrade_button_pressed(upgrade_key):
 	var current_level # Get the correct level to check against
 	if upgrade_key == "increase_fruit_reward": current_level = GameManager.fruit_reward - 1
 	elif upgrade_key == "increase_max_fruits": current_level = GameManager.max_fruits_on_screen - 1
+	elif upgrade_key == "increase_grid_size": current_level = GameManager.grid_size_level
 	elif upgrade_key == "increase_burrow_charges": current_level = GameManager.burrow_level
 	elif upgrade_key == "increase_phase_charges": current_level = GameManager.phase_shift_level
 	else: current_level = GameManager.speed_upgrade_level

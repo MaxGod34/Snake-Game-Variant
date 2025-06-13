@@ -15,7 +15,14 @@ var garden_data = {
 	4: {"name": "The Serpent's Maze", "score_goal": 420},
 	5: {"name": "The Endless Eden", "score_goal": 666}
 }
-
+#--------Perimeter Upgrade Sizes-------#
+var grid_size_data = [
+	Vector2(20, 15), # Level 0
+	Vector2(24, 18), # Level 1
+	Vector2(28, 21), # Level 2
+	Vector2(32, 24), # Level 3
+	Vector2(40, 30)  # Level 4 (MAX)
+]
 #-----Player Stats--------#
 var player_level = 1
 var skill_points = 0
@@ -32,7 +39,8 @@ var burrow_charges = 0
 		#-------New Phase Shift Upgrade Shit------#
 var phase_shift_level = 0
 var phase_shift_charges = 0
-
+		#-------Perimeter Upgrade Shit-----------#
+var grid_size_level = 0
 
 var difficulty_data = {
 	"easy": {"speed_multiplier": 1.0, "goal_multiplier": 0.8},
@@ -99,6 +107,11 @@ var upgrade_data = {
 		"display_name": "Phase Shift Ability",
 		"costs": [3, 4, 5],
 		"max_level": 3
+	},
+	"increase_grid_size": {
+		"display_name": "Edge Lord",
+		"costs": [3, 6, 9, 12],
+		"max_level": 4
 	}
 }
 
