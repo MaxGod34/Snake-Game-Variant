@@ -3,15 +3,15 @@ extends CanvasLayer
 #------On button press--------#
 func _on_speedster_button_pressed() -> void:
 	GameManager.chosen_class = "speedster"
-	GameManager.go_to_scene("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
 func _on_warlock_button_pressed() -> void:
 	GameManager.chosen_class = "warlock"
-	GameManager.go_to_scene("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
 func _on_inchworm_button_pressed() -> void:
 	GameManager.chosen_class = "inchworm"
-	GameManager.go_to_scene("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
 func _on_back_button_pressed() -> void:
-	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
+	SceneTransition.transition_to("res://Scenes/main_menu.tscn")
 
 #---------Description Pop-up Text-----#
 func _on_speedster_button_mouse_entered() -> void:

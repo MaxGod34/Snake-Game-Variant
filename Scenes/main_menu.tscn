@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="1_48xlc"]
 [ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/snake_chart_logo.png" id="2_1ehe0"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_opfnp"]
-[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Scenes/button_hover_template.tres" id="3_n45e2"]
-[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Scenes/base_button_template.tres" id="4_opfnp"]
+[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="3_n45e2"]
+[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Assets/Styles/base_button_template.tres" id="4_opfnp"]
 
 [sub_resource type="Gradient" id="Gradient_cp0ys"]
 offsets = PackedFloat32Array(0, 0.6, 1)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=11 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_21xkr"]
@@ -20,6 +20,8 @@ border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0, 1, 0, 1)
 border_blend = true
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_21xkr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kry3j"]
 bg_color = Color(0.596078, 1, 0.596078, 0.588235)
@@ -79,60 +81,185 @@ layer = 0
 
 [node name="GameOverScreen" parent="UI" instance=ExtResource("2_bo1nx")]
 
-[node name="ScoreLabel" type="Label" parent="UI"]
-anchors_preset = -1
-anchor_left = 0.75
-anchor_top = 0.925
-anchor_right = 0.9
-anchor_bottom = 0.975
-grow_horizontal = 0
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-text = "Score: 1"
-horizontal_alignment = 1
-
-[node name="LevelLabel" type="Label" parent="UI"]
-anchors_preset = -1
-anchor_left = 0.005
-anchor_top = 0.925
-anchor_right = 0.209
-anchor_bottom = 0.975
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-text = "Level: 1"
-horizontal_alignment = 1
-
-[node name="XPProgressBar" type="ProgressBar" parent="UI"]
-anchors_preset = -1
-anchor_left = 0.2
-anchor_top = 0.925
-anchor_right = 0.419
-anchor_bottom = 0.975
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
-theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
-show_percentage = false
-
 [node name="UpgradeMenu" parent="UI" instance=ExtResource("3_jjvhh")]
 
 [node name="GardenCompleteScreen" parent="UI" instance=ExtResource("4_kry3j")]
 
-[node name="Label" type="Label" parent="UI"]
+[node name="CountdownLabel" type="Label" parent="UI"]
+visible = false
+clip_contents = true
 anchors_preset = -1
-anchor_left = 0.45
+anchor_left = 0.5
+anchor_top = 0.66
+anchor_right = 0.5
+anchor_bottom = 0.66
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 48
+text = "SNAKE OFF!"
+
+[node name="HUDContainer" type="Panel" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_21xkr")
+
+[node name="ScoreLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.005
+anchor_top = 0.875
+anchor_right = 0.15
+anchor_bottom = 0.925
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 32
+text = "Score: 1"
+horizontal_alignment = 1
+
+[node name="LevelLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.005
 anchor_top = 0.925
-anchor_right = 0.75
+anchor_right = 0.15
 anchor_bottom = 0.975
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 32
+text = "Level: 1"
+horizontal_alignment = 1
+
+[node name="XPProgressBar" type="ProgressBar" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.16
+anchor_top = 0.94
+anchor_right = 0.5
+anchor_bottom = 0.96
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
+show_percentage = false
+
+[node name="PlayerNameLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.175
+anchor_top = 0.88
+anchor_right = 0.5
+anchor_bottom = 0.925
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
-text = "Player: "
+text = "Player: Crash_Test_Dummy_sigma"
+
+[node name="GameClassSelectedLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.9
+anchor_right = 0.75
+anchor_bottom = 0.9
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 32
+text = "Class: Warlock"
+horizontal_alignment = 1
+
+[node name="DifficultySelectedLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55
+anchor_top = 0.925
+anchor_right = 0.75
+anchor_bottom = 0.975
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 32
+text = "Difficulty: Easy"
+horizontal_alignment = 1
+
+[node name="GardenCurrentNumberLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.875
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 32
+text = "Garden 1 / 5"
+horizontal_alignment = 1
+
+[node name="GardenCurrentNameLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.75
+anchor_top = 0.925
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 32
+text = "\"The Snake Pit\""
+horizontal_alignment = 1
+
+[node name="BurrowChargeLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.785
+anchor_right = 0.225
+anchor_bottom = 0.82
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 28
+text = "Burrow Charges: 0"
+horizontal_alignment = 3
+
+[node name="PhaseChargeLabel" type="Label" parent="UI/HUDContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.825
+anchor_right = 0.225
+anchor_bottom = 0.86
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.368627, 0.356863, 0.545098, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 28
+text = "Phase Charges: 0"
+horizontal_alignment = 3
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 

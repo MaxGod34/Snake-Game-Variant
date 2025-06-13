@@ -66,10 +66,12 @@ func _unhandled_input(event: InputEvent):
 			get_node("FillSprite").modulate = Color.WHITE
 			# Decrement in case they have multiple
 			GameManager.burrow_charges -= 1
+			main.update_hud()
 	#Phase Shift Ability
 	if event.is_action_pressed("activate_phase_shift") and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
 		GameManager.is_phasing = true
 		GameManager.phase_shift_charges -= 1
+		main.update_hud()
 		phase_timer.start()
 		get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
 # --- Signal Handlers ---

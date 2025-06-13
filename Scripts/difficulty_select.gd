@@ -10,7 +10,7 @@ func _on_hard_button_pressed() -> void:
 	GameManager.chosen_difficulty = "hard"
 	GameManager.start_game()
 func _on_back_button_pressed() -> void:
-	GameManager.go_to_scene("res://Scenes/class_select.tscn")
+	SceneTransition.transition_to("res://Scenes/class_select.tscn")
 
 func _ready() -> void:
 	$ClassInfoLabel.text = "Class: " + GameManager.chosen_class.capitalize()

@@ -2,11 +2,11 @@ extends CanvasLayer
 
 
 func _on_play_button_pressed() -> void:
-	GameManager.go_to_scene("res://Scenes/class_select.tscn")
+	SceneTransition.transition_to("res://Scenes/class_select.tscn")
 
 
 func _on_options_button_pressed() -> void:
-	GameManager.go_to_scene("res://Scenes/options_menu.tscn")
+	SceneTransition.transition_to("res://Scenes/options_menu.tscn")
 
 
 func _on_quit_button_pressed() -> void:

@@ -28,7 +28,6 @@ shape = SubResource("RectangleShape2D_1ssvg")
 
 [node name="MoveTimer" type="Timer" parent="."]
 wait_time = 0.224
-autostart = true
 
 [node name="PhaseTimer" type="Timer" parent="."]
 wait_time = 2.0

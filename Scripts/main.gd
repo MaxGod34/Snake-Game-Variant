@@ -1,11 +1,8 @@
-#I have comments interspliced as I'm doing shit cuz I keep forgetting when I try to literally
-#do the exact thing I just did lol
-
 extends Node2D
 
 @export var initial_snake_length: int = 1
 @export var tile_size: int = 32
-var snake_body_segments: Array[Node2D] = []
+
 
 # Grid properties, including offset due to centering of the blocks
 var tile_offset: Vector2
@@ -13,12 +10,12 @@ var grid_width: int
 var grid_height: int
 
 
-
 # Boolean Flags
 var is_game_over: bool = false
 var upgrade_menu_is_pending: bool = false
 var garden_complete_is_pending: bool = false
 
+var snake_body_segments: Array[Node2D] = []
 var head: CharacterBody2D
 
 var head_scene = preload("res://Scenes/snake_head.tscn")
@@ -45,39 +42,47 @@ func _ready():
 	# --- CREATE HEAD ---
 	head = head_scene.instantiate()
 	head.move_speed = start_speed # FIX: Apply the calculated speed to the real head instance.
-	head.position = Vector2(10, 8) * tile_size + tile_offset
 	head.main = self
 	add_child(head)
+	
+	#--POSITION HEAD AND BODY--#
+	var start_grid_pos = Vector2(grid_width / 2, grid_height / 2)
+	head.position = (start_grid_pos * tile_size) + tile_offset
+	
+	var behind_direction = -head.current_direction
+	for i in range(initial_snake_length - 1):
+		var grid_pos = (start_grid_pos + (behind_direction * (i + 1)))
+		var segment_pos = (grid_pos * tile_size) + tile_offset
+		add_body_segment_at(segment_pos)
 	
 	# --- CONNECT SIGNALS ---
 	head.moved.connect(on_snake_head_moved)
 	head.ate_fruit.connect(on_snake_ate_food)
 	head.hit_self.connect(game_over)
+	#-------MENUS AND TRANSITION SIGNALS------#
 	$PauseMenu.resume_game.connect(toggle_pause)
 	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
-	# FIX: Connect the upgrade menu signal here as well.
 	$UI/UpgradeMenu.upgrade_selected.connect(_on_upgrade_menu_upgrade_selected)
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
-
-	# --- CREATE INITIAL BODY & FRUIT ---
-	var behind_direction = -head.current_direction
-	for i in range(initial_snake_length - 1):
-		var grid_pos = (Vector2(10, 8) + (behind_direction * (i + 1)))
-		var segment_pos = (grid_pos * tile_size) + tile_offset
-		add_body_segment_at(segment_pos)
-	
+	SceneTransition.transition_finished.connect(_on_transition_finished)
+	# --- FINAL SETUP ---#
 	for i in range(GameManager.max_fruits_on_screen):
 		spawn_fruit()
 	
 	# --- FINAL SETUP & START ---
 	update_score_display()
 	update_hud()
-	apply_persistent_upgrades()
-	head.move_timer.start()
+	apply_persistent_upgrades() # Removed head_timer.start() here
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not is_game_over:
 		toggle_pause()
+	if event.is_action_pressed("show_hud"):
+		var tween = create_tween()
+		tween.tween_property($UI/HUDContainer, "modulate:a", 1.0, 0.2)
+	elif event.is_action_released("show_hud"):
+		var tween = create_tween()
+		tween.tween_property($UI/HUDContainer, "modulate:a", 0.1, 1.0)
 
 func toggle_pause():
 	if get_tree().paused:
@@ -116,11 +121,11 @@ func show_garden_complete_screen():
 
 func update_hud():
 	# Update Level
-	$UI/LevelLabel.text = "Level: " + str(GameManager.player_level)
+	$UI/HUDContainer/LevelLabel.text = "Level: " + str(GameManager.player_level)
 
 	# Update Progress Bar
 	var current_score = snake_body_segments.size() + 1
-	var xp_bar = $UI/XPProgressBar
+	var xp_bar = $UI/HUDContainer/XPProgressBar
 	
 	# Set range for the bar
 	xp_bar.max_value = GameManager.score_needed_for_next_level
@@ -129,11 +134,30 @@ func update_hud():
 	
 	# Set the Bar's current fill value
 	xp_bar.value = current_score
+	# Update values for selected class, difficulty, and which garden currently on
+	$UI/HUDContainer/GameClassSelectedLabel.text = "Class: " + GameManager.chosen_class.capitalize()
+	$UI/HUDContainer/DifficultySelectedLabel.text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
+	$UI/HUDContainer/GardenCurrentNumberLabel.text = "Garden %s/5" % GameManager.current_garden
+	$UI/HUDContainer/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
 	
+	# Ability Charges
+	var burrow_label = $UI/HUDContainer/BurrowChargeLabel
+	if GameManager.burrow_level > 0:
+		burrow_label.visible = true
+		burrow_label.text = "Burrow Charges (space): " + str(GameManager.burrow_charges)
+	else:
+		burrow_label.visible = false
+	var phase_label = $UI/HUDContainer/PhaseChargeLabel
+	if GameManager.phase_shift_level > 0:
+		phase_label.visible = true
+		phase_label.text = "Phase Charges (e): " + str(GameManager.phase_shift_charges)
+	else:
+		phase_label.visible = false
+
 
 func _on_quit_to_menu_pressed():
 	get_tree().paused = false
-	GameManager.go_to_scene("res://Scenes/main_menu.tscn")
+	SceneTransition.transition_to("res://Scenes/main_menu.tscn")
 
 func on_snake_head_moved(head_previous_position: Vector2):
 	if snake_body_segments.is_empty():
@@ -322,7 +346,7 @@ func game_over():
 
 func update_score_display():
 	var score = (snake_body_segments.size() + 1)
-	$UI/ScoreLabel.text = "Score: " + str(score)
+	$UI/HUDContainer/ScoreLabel.text = "Score: " + str(score)
 
 	
 func create_colored_segment(position: Vector2) -> Node2D:
@@ -358,15 +382,38 @@ func is_position_out_of_bounds(check_pos: Vector2) -> bool:
 		return true
 	return false
 
+func start_countdown() -> void:
+	var countdown = $UI/CountdownLabel
+	countdown.visible = true
+	# START THE COUNTDOWN
+	countdown.text = "3"
+	await get_tree().create_timer(1.0).timeout
+	countdown.text = "2"
+	await get_tree().create_timer(1.0).timeout
+	countdown.text = "1"
+	await get_tree().create_timer(1.0).timeout
+	# GIVE THE GAME SOME PERSONALITY AND RANDOMNESS
+	var go_messages = ["SNAKE OFF!", "GET GROWING", "FEED THE BEAST!"]
+	countdown.text = go_messages.pick_random()
+	await get_tree().create_timer(1.0).timeout
+	# HIDE THE LABEL AND START THE GAME!
+	countdown.visible = false
+	if is_instance_valid(head) and head.move_timer:
+		head.move_timer.start()
+
+func _on_transition_finished():
+	print("Transition Finished, starting game!")
+	if is_instance_valid(head) and head.move_timer:
+		start_countdown()
 
 func _on_garden_complete_continue_pressed() -> void:
 	var garden_id = GameManager.current_garden
 	var score = snake_body_segments.size() + 1
 	if garden_id == 5 and score >= 666:
-		GameManager.go_to_scene("res://Scenes/main_menu.tscn")
+		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
 	else:
 		GameManager.current_garden += 1
-		get_tree().reload_current_scene()
+		SceneTransition.transition_to("res://Scenes/main.tscn")
 
 func update_boundary_visuals():
 	var current_grid_size = GameManager.grid_size_data[GameManager.grid_size_level]

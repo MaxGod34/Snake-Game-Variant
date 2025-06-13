@@ -1,9 +1,9 @@
 [gd_scene load_steps=7 format=3 uid="uid://d3rfwv84ov8cy"]
 
 [ext_resource type="Script" uid="uid://bna0kfyo2ui5s" path="res://Scripts/garden_complete_screen.gd" id="1_8msff"]
-[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Scenes/button_hover_template.tres" id="2_nk6tt"]
-[ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/panel_container_prototype1.tres" id="2_rohuw"]
-[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Scenes/base_button_template.tres" id="3_rohuw"]
+[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="2_nk6tt"]
+[ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/Styles/panel_container_prototype1.tres" id="2_rohuw"]
+[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Assets/Styles/base_button_template.tres" id="3_rohuw"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tu85b"]
 content_margin_left = 20.0

@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://sgqsxt4choq5"]
+
+[ext_resource type="Script" uid="uid://7spvg3ukfoys" path="res://Scripts/scene_transition.gd" id="1_vin40"]
+[ext_resource type="Texture2D" uid="uid://bx3jyj02lw1sa" path="res://Assets/snake_lime.png" id="2_vin40"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8sxkv"]
+texture = ExtResource("2_vin40")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/z_index = 11
+
+[sub_resource type="TileSet" id="TileSet_sd3nk"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_8sxkv")
+
+[node name="SceneTransition" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_vin40")
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_sd3nk")
+format = 2
+
+[node name="InputBlocker" type="ColorRect" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)

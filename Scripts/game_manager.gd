@@ -9,11 +9,11 @@ var chosen_class = "speedster"
 #------Garden Progression----#
 var current_garden = 1
 var garden_data = {
-	1: {"name": "The First Step", "score_goal": 50},
-	2: {"name": "The Growing Patch", "score_goal": 125},
-	3: {"name": "The Sunken Grove", "score_goal": 250},
-	4: {"name": "The Serpent's Maze", "score_goal": 420},
-	5: {"name": "The Endless Eden", "score_goal": 666}
+	1: {"name": "The First Coil", "score_goal": 50},
+	2: {"name": "Maximum Over-Bite", "score_goal": 125},
+	3: {"name": "The Juice Box", "score_goal": 250},
+	4: {"name": "The Forked Tongue Bistro", "score_goal": 420},
+	5: {"name": "The Garden of Eatin'", "score_goal": 666}
 }
 #--------Perimeter Upgrade Sizes-------#
 var grid_size_data = [
@@ -138,5 +138,6 @@ func start_game():
 	phase_shift_level = 0
 	phase_shift_level = 0
 	
+	SceneTransition.transition_to("res://Scenes/main.tscn")
 	get_tree().paused = false
-	go_to_scene("res://Scenes/main.tscn")
+	

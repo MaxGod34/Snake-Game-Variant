@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" uid="uid://detorffqmcsnv" path="res://Scripts/game_over_screen.gd" id="1_0gua7"]
 [ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="2_jb6in"]
-[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Scenes/button_hover_template.tres" id="3_kk8k2"]
-[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Scenes/base_button_template.tres" id="3_y8man"]
+[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="3_kk8k2"]
+[ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Assets/Styles/base_button_template.tres" id="3_y8man"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kk8k2"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
