@@ -5,12 +5,12 @@ signal resume_game_pressed
 
 func _ready():
 	# Connect all buttons to the SAME function, but pass a unique argument
-	$CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_speed"))
-	$CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_fruit_reward"))
-	$CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_max_fruits"))
-	$CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/PerimeterUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_grid_size"))
-	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_burrow_charges"))
-	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_phase_charges"))
+	$CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_speed", $CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/SpeedUpgradeButton))
+	$CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_fruit_reward", $CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/FruitRewardUpgradeButton))
+	$CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_max_fruits", $CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/MaxFruitsButton))
+	$CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/PerimeterUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_grid_size", $CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/PerimeterUpgradeButton))
+	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_burrow_charges", $CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton))
+	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_phase_charges", $CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton))
 	$CenterContainer/PanelContainer/VBoxContainer/ResumeButton.pressed.connect(_on_resume_button_pressed)
 
 func update_all_displays():
@@ -58,7 +58,7 @@ func _on_resume_button_pressed():
 	emit_signal("resume_game_pressed")
 
 # A single, powerful function to handle any button press
-func _on_upgrade_button_pressed(upgrade_key):
+func _on_upgrade_button_pressed(upgrade_key, button_node):
 	var current_level # Get the correct level to check against
 	if upgrade_key == "increase_fruit_reward": current_level = GameManager.fruit_reward - 1
 	elif upgrade_key == "increase_max_fruits": current_level = GameManager.max_fruits_on_screen - 1
@@ -73,4 +73,6 @@ func _on_upgrade_button_pressed(upgrade_key):
 		if GameManager.skill_points >= cost:
 			GameManager.skill_points -= cost
 			emit_signal("upgrade_selected", upgrade_key)
+			if is_instance_valid(button_node):
+				button_node.release_focus()
 			update_all_displays() # Refresh UI immediately after purchase

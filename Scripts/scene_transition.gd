@@ -1,7 +1,6 @@
 extends CanvasLayer
 
-# --- TWEAKABLE PARAMETERS ---
-@export var transition_speed: float = 0.02 # How long the pause is between each animation step
+@export var transition_speed: float = 0.04 # How long the pause is between each animation step
 
 @onready var tile_map = $TileMap
 @onready var input_blocker = $InputBlocker
@@ -16,10 +15,10 @@ func transition_to(scene_path):
 	# The max number of steps is the width + height of the screen in tiles
 	var max_steps = size.x + size.y
 	for step in range(max_steps):
-		# For each step, draw all tiles that add up to this step number
+		# for each step, draw all tiles that add up to this step number
 		for x in range(step + 1):
 			var y = step - x
-			# Make sure we don't try to draw outside the screen
+			# don't try to draw outside the screen
 			if x < size.x and y < size.y:
 				tile_map.set_cell(0, Vector2i(x, y), 0, Vector2i(0, 0))
 		

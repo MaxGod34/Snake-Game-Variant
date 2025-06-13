@@ -61,6 +61,7 @@ func _ready():
 	head.hit_self.connect(game_over)
 	#-------MENUS AND TRANSITION SIGNALS------#
 	$PauseMenu.resume_game.connect(toggle_pause)
+	$UI/GameOverScreen.restart_pressed.connect(_on_restart_pressed)
 	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
 	$UI/UpgradeMenu.upgrade_selected.connect(_on_upgrade_menu_upgrade_selected)
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
@@ -268,6 +269,8 @@ func level_up():
 		GameManager.burrow_charges = GameManager.burrow_level
 	if GameManager.phase_shift_level > 0:
 		GameManager.phase_shift_charges = GameManager.phase_shift_level
+		
+	
 
 func _on_upgrade_menu_resume_game_pressed():
 	$UI/UpgradeMenu.visible = false
@@ -278,6 +281,8 @@ func _on_upgrade_menu_resume_game_pressed():
 	else:
 		# Resume Game if no
 		head.move_timer.start()
+		update_hud()
+	
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
@@ -316,8 +321,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		GameManager.phase_shift_level += 1
 		GameManager.phase_shift_charges += 1
 		print("Phase Shift Charge + 1!")
-	
-	_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
+	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
 
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
@@ -400,6 +404,8 @@ func start_countdown() -> void:
 	countdown.visible = false
 	if is_instance_valid(head) and head.move_timer:
 		head.move_timer.start()
+func _on_restart_pressed():
+	GameManager.start_game()
 
 func _on_transition_finished():
 	print("Transition Finished, starting game!")

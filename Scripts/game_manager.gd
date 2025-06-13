@@ -84,7 +84,7 @@ var is_phasing = false
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
 	"increase_speed": {
-		"display_name": "Slighter Sauce",
+		"display_name": "Slither Sauce",
 		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 
 		"max_level": 10
 	},

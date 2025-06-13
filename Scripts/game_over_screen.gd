@@ -1,9 +1,10 @@
 extends CanvasLayer
 
 signal quit_to_menu_pressed
+signal restart_pressed
 
 func _on_button_pressed() -> void:
-	get_tree().reload_current_scene()
+	emit_signal("restart_pressed")
 
 func on_game_over(final_score):
 	self.visible = true
