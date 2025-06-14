@@ -26,6 +26,15 @@ func update_all_displays():
 	update_button_display("increase_burrow_charges", vbox.get_node("AbilityRow1/H/BurrowAbilityRow/BurrowButton"), GameManager.burrow_level)
 	update_button_display("increase_phase_charges", vbox.get_node("AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton"), GameManager.phase_shift_level)
 	update_button_display("buy_extra_life", vbox.get_node("AbilityRow1/H2/ExtraLifeRow/ExtraLifeButton"), GameManager.extra_lives)
+	var extra_life_button = $CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow/ExtraLifeButton
+	
+	# Check if the current class is The Zealot
+	if GameManager.chosen_class == "the_zealot":
+		# If yes, make the button invisible.
+		extra_life_button.disabled = true
+	else:
+		# If it's any other class, make sure the button is visible.
+		extra_life_button.disabled = false
 
 # A single, powerful function to update any upgrade row
 func update_button_display(upgrade_key, button_node, current_level):
@@ -39,8 +48,9 @@ func update_button_display(upgrade_key, button_node, current_level):
 		button_node.disabled = true
 	else:
 		var base_cost = rules["costs"][current_level]
-		var cost_modifier = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
-		var cost = base_cost + cost_modifier
+		var difficulty_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
+		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
+		var cost = max(1, base_cost + difficulty_mod + class_mod)
 		button_node.text = display_name + " (" + str(cost) + " SP)"
 		button_node.disabled = false
 
@@ -75,8 +85,9 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 	var rules = GameManager.upgrade_data[upgrade_key]
 	if current_level < rules["max_level"]:
 		var base_cost = rules["costs"][current_level]
-		var cost_modifier = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
-		var cost = base_cost + cost_modifier
+		var difficulty_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
+		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
+		var cost = max(1, base_cost + difficulty_mod + class_mod)
 		if GameManager.skill_points >= cost:
 			GameManager.skill_points -= cost
 			emit_signal("upgrade_selected", upgrade_key)

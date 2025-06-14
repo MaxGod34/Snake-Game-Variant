@@ -10,28 +10,67 @@ func _on_warlock_button_pressed() -> void:
 func _on_inchworm_button_pressed() -> void:
 	GameManager.chosen_class = "inchworm"
 	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+func _on_phoenix_coil_button_pressed() -> void:
+	GameManager.chosen_class = "phoenix_coil"
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+func _on_sidewinder_button_pressed() -> void:
+	GameManager.chosen_class = "sidewinder"
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+func _on_zealot_button_pressed() -> void:
+	GameManager.chosen_class = "the_zealot"
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+func _on_alchemist_button_pressed() -> void:
+	GameManager.chosen_class = "the_alchemist"
+	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
 func _on_back_button_pressed() -> void:
 	SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+
+#----------____________----------------_____________--------------______________----------------#
 
 #---------Description Pop-up Text-----#
 func _on_speedster_button_mouse_entered() -> void:
 	var speedster_data = GameManager.class_data["speedster"]
-	var description = "%s Modifiers:\nStart Length: %s\nStart Speed: %s\nStart Fruit Reward: %s\nStart Max Fruits: %s\nSpeed Upgrade Mod: %sx\nReward Upgrade Mod: %sx" % \
-	[speedster_data["name"], speedster_data["start_length"], speedster_data["start_speed"], speedster_data["start_fruit_reward"], speedster_data["start_max_fruits"], speedster_data["speed_upgrade_mod"], speedster_data["reward_upgrade_mod"]]
+	var description = speedster_data["description"]
 	$DescriptionLabel.text = description
 func _on_speedster_button_mouse_exited() -> void:
 	$DescriptionLabel.text = ''
 func _on_warlock_button_mouse_entered() -> void:
 	var warlock_data = GameManager.class_data["warlock"]
-	var description = "%s Modifiers:\nStart Length: %s\nStart Speed: %s\nStart Fruit Reward: %s\nStart Max Fruits: %s\nSpeed Upgrade Mod: %sx\nReward Upgrade Mod: %sx" % \
-	[warlock_data["name"], warlock_data["start_length"], warlock_data["start_speed"], warlock_data["start_fruit_reward"], warlock_data["start_max_fruits"], warlock_data["speed_upgrade_mod"], warlock_data["reward_upgrade_mod"]]
+	var description = warlock_data["description"]
 	$DescriptionLabel.text = description
 func _on_warlock_button_mouse_exited() -> void:
 	$DescriptionLabel.text = ''
 func _on_inchworm_button_mouse_entered() -> void:
 	var inchworm_data = GameManager.class_data["inchworm"]
-	var description = "%s Modifiers:\nStart Length: %s\nStart Speed: %s\nStart Fruit Reward: %s\nStart Max Fruits: %s\nSpeed Upgrade Mod: %sx\nReward Upgrade Mod: %sx" % \
-	[inchworm_data["name"], inchworm_data["start_length"], inchworm_data["start_speed"], inchworm_data["start_fruit_reward"], inchworm_data["start_max_fruits"], inchworm_data["speed_upgrade_mod"], inchworm_data["reward_upgrade_mod"]]
+	var description = inchworm_data["description"]
 	$DescriptionLabel.text = description
 func _on_inchworm_button_mouse_exited() -> void:
+	$DescriptionLabel.text = ''
+func _on_phoenix_coil_button_mouse_entered() -> void:
+	var coil_data = GameManager.class_data["phoenix_coil"]
+	var description = coil_data["description"]
+	$DescriptionLabel.text = description
+func _on_phoenix_coil_button_mouse_exited() -> void:
+	$DescriptionLabel.text = ''
+func _on_sidewinder_button_mouse_entered() -> void:
+	var sidewinder_data = GameManager.class_data["sidewinder"]
+	var description = sidewinder_data["description"]
+	$DescriptionLabel.text = description
+func _on_sidewinder_button_mouse_exited() -> void:
+	$DescriptionLabel.text = ''
+func _on_zealot_button_mouse_entered() -> void:
+	var zealot_data = GameManager.class_data["the_zealot"]
+	var description = zealot_data["description"]
+	$DescriptionLabel.text = description
+func _on_zealot_button_mouse_exited() -> void:
+	$DescriptionLabel.text = ''
+func _on_alchemist_button_mouse_entered() -> void:
+	var alc_data = GameManager.class_data["the_alchemist"]
+	var description = alc_data["description"]
+	$DescriptionLabel.text = description
+func _on_alchemist_button_mouse_exited() -> void:
+	$DescriptionLabel.text = ''
+func _on_back_button_mouse_entered() -> void:
+	$DescriptionLabel.text = "Slither away back to the Main Menu...\n\nWhile you can!"
+func _on_back_button_mouse_exited() -> void:
 	$DescriptionLabel.text = ''

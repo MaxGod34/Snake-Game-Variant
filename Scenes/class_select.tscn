@@ -40,9 +40,9 @@ color = Color(0.152941, 0, 0.176471, 1)
 [node name="Label" type="Label" parent="."]
 anchors_preset = -1
 anchor_left = 0.5
-anchor_top = 0.33
+anchor_top = 0.2
 anchor_right = 0.5
-anchor_bottom = 0.33
+anchor_bottom = 0.25
 grow_horizontal = 2
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_constants/outline_size = 32
@@ -51,12 +51,9 @@ text = "SELECT CLASS"
 horizontal_alignment = 1
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
-anchors_preset = 14
-anchor_top = 0.5
+anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 0.5
-offset_top = -33.0
-offset_bottom = 33.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -74,7 +71,7 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 32
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 36
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
 theme_override_styles/hover = ExtResource("1_36rpi")
 theme_override_styles/pressed = ExtResource("1_36rpi")
@@ -90,7 +87,7 @@ theme_override_colors/font_color = Color(0, 1, 0.52549, 1)
 theme_override_colors/font_focus_color = Color(0, 1, 0.52549, 1)
 theme_override_colors/font_pressed_color = Color(0, 1, 0.52549, 1)
 theme_override_constants/outline_size = 32
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 36
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
 theme_override_styles/hover = ExtResource("1_36rpi")
 theme_override_styles/pressed = ExtResource("1_36rpi")
@@ -106,7 +103,7 @@ theme_override_colors/font_color = Color(0.524085, 0.477047, 0.350814, 1)
 theme_override_colors/font_focus_color = Color(0.52549, 0.478431, 0.34902, 1)
 theme_override_colors/font_pressed_color = Color(0.52549, 0.478431, 0.34902, 1)
 theme_override_constants/outline_size = 32
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 36
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
 theme_override_styles/hover = ExtResource("1_36rpi")
 theme_override_styles/pressed = ExtResource("1_36rpi")
@@ -122,12 +119,90 @@ theme_override_colors/font_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_colors/font_focus_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_constants/outline_size = 32
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 36
 theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
 theme_override_styles/hover = ExtResource("1_36rpi")
 theme_override_styles/pressed = ExtResource("1_36rpi")
 theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
 text = "Back"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+anchors_preset = -1
+anchor_top = 0.38
+anchor_right = 1.0
+anchor_bottom = 0.41
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="PhoenixCoilButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_hover_pressed_color = Color(0.945098, 0.411765, 0, 1)
+theme_override_colors/font_hover_color = Color(0.945098, 0.411765, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.946966, 0.410653, 9.62615e-07, 1)
+theme_override_colors/font_focus_color = Color(0.945098, 0.411765, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.945098, 0.411765, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
+theme_override_styles/hover = ExtResource("1_36rpi")
+theme_override_styles/pressed = ExtResource("1_36rpi")
+theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+text = "Phoenix Coil"
+
+[node name="SidewinderButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
+theme_override_styles/hover = ExtResource("1_36rpi")
+theme_override_styles/pressed = ExtResource("1_36rpi")
+theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+text = "Sidewinder"
+
+[node name="ZealotButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_hover_pressed_color = Color(0.568627, 0.121569, 0.933333, 1)
+theme_override_colors/font_hover_color = Color(0.568627, 0.121569, 0.933333, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.568627, 0.121569, 0.933333, 1)
+theme_override_colors/font_focus_color = Color(0.568627, 0.121569, 0.933333, 1)
+theme_override_colors/font_pressed_color = Color(0.568627, 0.121569, 0.933333, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
+theme_override_styles/hover = ExtResource("1_36rpi")
+theme_override_styles/pressed = ExtResource("1_36rpi")
+theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+text = "The Zealot"
+
+[node name="AlchemistButton" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_colors/font_hover_pressed_color = Color(0.290196, 0.341176, 0.462745, 1)
+theme_override_colors/font_hover_color = Color(0.290196, 0.341176, 0.462745, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.289327, 0.341358, 0.461529, 1)
+theme_override_colors/font_focus_color = Color(0.290196, 0.341176, 0.462745, 1)
+theme_override_colors/font_pressed_color = Color(0.290196, 0.341176, 0.462745, 1)
+theme_override_constants/outline_size = 32
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
+theme_override_styles/hover = ExtResource("1_36rpi")
+theme_override_styles/pressed = ExtResource("1_36rpi")
+theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+text = "The Alchemist"
 
 [node name="DescriptionLabel" type="Label" parent="."]
 anchors_preset = -1
@@ -172,4 +247,18 @@ color_ramp = SubResource("Gradient_poemj")
 [connection signal="mouse_entered" from="CenterContainer/HBoxContainer/InchwormButton" to="." method="_on_inchworm_button_mouse_entered"]
 [connection signal="mouse_exited" from="CenterContainer/HBoxContainer/InchwormButton" to="." method="_on_inchworm_button_mouse_exited"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/InchwormButton" to="." method="_on_inchworm_button_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/BackButton" to="." method="_on_back_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/BackButton" to="." method="_on_back_button_mouse_exited"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer2/PhoenixCoilButton" to="." method="_on_phoenix_coil_button_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer2/PhoenixCoilButton" to="." method="_on_phoenix_coil_button_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer2/PhoenixCoilButton" to="." method="_on_phoenix_coil_button_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer2/SidewinderButton" to="." method="_on_sidewinder_button_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer2/SidewinderButton" to="." method="_on_sidewinder_button_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer2/SidewinderButton" to="." method="_on_sidewinder_button_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer2/ZealotButton" to="." method="_on_zealot_button_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer2/ZealotButton" to="." method="_on_zealot_button_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer2/ZealotButton" to="." method="_on_zealot_button_pressed"]
+[connection signal="mouse_entered" from="HBoxContainer2/AlchemistButton" to="." method="_on_alchemist_button_mouse_entered"]
+[connection signal="mouse_exited" from="HBoxContainer2/AlchemistButton" to="." method="_on_alchemist_button_mouse_exited"]
+[connection signal="pressed" from="HBoxContainer2/AlchemistButton" to="." method="_on_alchemist_button_pressed"]

@@ -66,14 +66,27 @@ func _unhandled_input(event: InputEvent):
 			get_node("FillSprite").modulate = Color.WHITE
 			# Decrement in case they have multiple
 			GameManager.burrow_charges -= 1
+				# --- SIDEWINDER LOGIC ---
+			if GameManager.chosen_class == "sidewinder":
+				# 25% chance to refund the charge
+				if randi() % 100 < 25:
+					print("SIDEWINDER LUCK! Charge refunded.")
+					GameManager.burrow_charges += 1
 			main.update_hud()
 	#Phase Shift Ability
 	if event.is_action_pressed("activate_phase_shift") and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
 		GameManager.is_phasing = true
 		GameManager.phase_shift_charges -= 1
-		main.update_hud()
 		phase_timer.start()
 		get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
+		# --- SIDEWINDER LOGIC ---
+		if GameManager.chosen_class == "sidewinder":
+			# 25% chance to refund the charge
+			if randi() % 100 < 25:
+				print("SIDEWINDER LUCK! Charge refunded.")
+				GameManager.burrow_charges += 1
+		main.update_hud()
+			
 # --- Signal Handlers ---
 
 func on_move_timer_timeout():

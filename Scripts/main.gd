@@ -31,6 +31,7 @@ func _ready():
 	var p_class = GameManager.chosen_class
 	var diff_data = GameManager.difficulty_data[difficulty]
 	var class_data = GameManager.class_data[p_class]
+	GameManager.has_died_this_garden = false
 	
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
@@ -253,12 +254,13 @@ func level_up():
 	GameManager.player_level += 1
 	
 	#SP SCALE
-	if GameManager.player_level >= 10:
-		GameManager.skill_points += 3
-	elif GameManager.player_level >= 5:
-		GameManager.skill_points += 2
-	else:
-		GameManager.skill_points += 1
+	if GameManager.chosen_class != "the_alchemist":
+		if GameManager.player_level >= 10:
+			GameManager.skill_points += 3
+		elif GameManager.player_level >= 5:
+			GameManager.skill_points += 2
+		else:
+			GameManager.skill_points += 1
 	#EXP/SCORE SCALE
 	if GameManager.player_level >= 10:
 		GameManager.score_needed_for_next_level += 15
@@ -330,6 +332,13 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
 	fruit.queue_free()
+	
+	if GameManager.chosen_class == "the_alchemist":
+		if randi() % 100 < 10:
+			print("Alchemist bonus! +1 SP")
+			GameManager.skill_points += 1
+			update_hud()
+	
 	grow_snake()
 	spawn_fruit()
 	update_progression()
@@ -355,6 +364,7 @@ func game_over():
 		game_is_over.emit(final_score)
 
 func use_extra_life():
+	GameManager.has_died_this_garden = true
 	print("Used an extra life!")
 	
 	# 1. Stop the snake and start the fade to black
@@ -459,6 +469,15 @@ func _on_garden_complete_continue_pressed() -> void:
 	else:
 		GameManager.current_garden += 1
 		SceneTransition.transition_to("res://Scenes/main.tscn")
+		
+	var p_class = GameManager.chosen_class
+	
+	# Check if we are a Zealot AND we haven't died this garden
+	if p_class == "the_zealot" and not GameManager.has_died_this_garden:
+		# If so, award the bonus SP!
+		var bonus_sp = GameManager.class_data[p_class]["sp_on_perfect_garden"]
+		print("ZEALOT BONUS! +", bonus_sp, " SP for a perfect run!")
+		GameManager.skill_points += bonus_sp
 
 func update_boundary_visuals():
 	var current_grid_size = GameManager.grid_size_data[GameManager.grid_size_level]
