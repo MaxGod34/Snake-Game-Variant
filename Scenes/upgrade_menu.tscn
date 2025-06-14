@@ -121,12 +121,13 @@ text = "Skill Points: 0"
 [node name="SpeedUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_constants/separation = 180
+theme_override_constants/separation = 256
 alignment = 1
 
 [node name="SpeedUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_hover_color = Color(0.196078, 0.803922, 0.196078, 1)
@@ -136,7 +137,7 @@ theme_override_colors/font_focus_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_colors/font_pressed_color = Color(0.196078, 0.803922, 0.196078, 1)
 theme_override_constants/outline_size = 14
 theme_override_constants/h_separation = 0
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
@@ -146,79 +147,78 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
 text = "Slither Sauce (1 SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow"]
-custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 theme_override_constants/separation = 20
-alignment = 1
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/SpeedUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="FruitUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 36
+theme_override_constants/separation = 256
 alignment = 1
 
 [node name="FruitRewardUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(1, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
@@ -227,7 +227,7 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
@@ -237,78 +237,78 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
 text = "Elephant-Sized Portions (1 SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow"]
-custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/FruitUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="MaxFruitsUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 206
+theme_override_constants/separation = 256
 alignment = 1
 
 [node name="MaxFruitsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_colors/font_hover_color = Color(0.988235, 0.768627, 0.690196, 1)
@@ -317,7 +317,7 @@ theme_override_colors/font_color = Color(0.987029, 0.769693, 0.689322, 1)
 theme_override_colors/font_focus_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_colors/font_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
 theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
@@ -331,77 +331,78 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/MaxFruitsUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="PerimeterUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 500
+theme_override_constants/separation = 456
 alignment = 1
 
 [node name="PerimeterUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 5
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
@@ -416,25 +417,25 @@ theme_override_constants/separation = 32
 alignment = 2
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -455,12 +456,11 @@ horizontal_alignment = 1
 
 [node name="H" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1"]
 layout_mode = 2
-theme_override_constants/separation = 20
-alignment = 1
+theme_override_constants/separation = 128
 
 [node name="BurrowAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 108
 alignment = 1
 
 [node name="BurrowButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow"]
@@ -474,7 +474,7 @@ theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_colors/font_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
 theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
@@ -489,26 +489,26 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="PhaseShiftAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 72
 alignment = 1
 
 [node name="PhaseShiftButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow"]
@@ -522,7 +522,7 @@ theme_override_colors/font_color = Color(0.368001, 0.356213, 0.544022, 1)
 theme_override_colors/font_focus_color = Color(0.368627, 0.356863, 0.545098, 1)
 theme_override_colors/font_pressed_color = Color(0.368627, 0.356863, 0.545098, 1)
 theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
@@ -538,19 +538,70 @@ theme_override_constants/separation = 16
 alignment = 2
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="H2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1"]
+layout_mode = 2
+theme_override_constants/separation = 72
+
+[node name="ExtraLifeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2"]
+layout_mode = 2
+theme_override_constants/separation = 72
+
+[node name="ExtraLifeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_disabled_color = Color(0.427451, 0.835294, 0.933333, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.427451, 0.835294, 0.933333, 1)
+theme_override_colors/font_hover_color = Color(0.427451, 0.835294, 0.933333, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.427451, 0.835294, 0.933333, 1)
+theme_override_colors/font_focus_color = Color(0.427451, 0.835294, 0.933333, 1)
+theme_override_colors/font_pressed_color = Color(0.427451, 0.835294, 0.933333, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Mulligan Munchie (4 SP)"
+icon_alignment = 1
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
@@ -561,7 +612,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_lhh40")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = SubResource("StyleBoxFlat_2hr16")

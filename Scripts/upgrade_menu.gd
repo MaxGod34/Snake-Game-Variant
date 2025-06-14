@@ -11,6 +11,7 @@ func _ready():
 	$CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/PerimeterUpgradeButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_grid_size", $CenterContainer/PanelContainer/VBoxContainer/PerimeterUpgradeRow/PerimeterUpgradeButton))
 	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_burrow_charges", $CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/BurrowAbilityRow/BurrowButton))
 	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton.pressed.connect(_on_upgrade_button_pressed.bind("increase_phase_charges", $CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton))
+	$CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow/ExtraLifeButton.pressed.connect(_on_upgrade_button_pressed.bind("buy_extra_life", $CenterContainer/PanelContainer/VBoxContainer/AbilityRow1/H2/ExtraLifeRow/ExtraLifeButton))
 	$CenterContainer/PanelContainer/VBoxContainer/ResumeButton.pressed.connect(_on_resume_button_pressed)
 
 func update_all_displays():
@@ -24,6 +25,7 @@ func update_all_displays():
 	update_button_display("increase_grid_size", vbox.get_node("PerimeterUpgradeRow/PerimeterUpgradeButton"), GameManager.grid_size_level)
 	update_button_display("increase_burrow_charges", vbox.get_node("AbilityRow1/H/BurrowAbilityRow/BurrowButton"), GameManager.burrow_level)
 	update_button_display("increase_phase_charges", vbox.get_node("AbilityRow1/H/PhaseShiftAbilityRow/PhaseShiftButton"), GameManager.phase_shift_level)
+	update_button_display("buy_extra_life", vbox.get_node("AbilityRow1/H2/ExtraLifeRow/ExtraLifeButton"), GameManager.extra_lives)
 
 # A single, powerful function to update any upgrade row
 func update_button_display(upgrade_key, button_node, current_level):
@@ -36,7 +38,9 @@ func update_button_display(upgrade_key, button_node, current_level):
 		button_node.text = display_name + " (MAX)"
 		button_node.disabled = true
 	else:
-		var cost = rules["costs"][current_level]
+		var base_cost = rules["costs"][current_level]
+		var cost_modifier = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
+		var cost = base_cost + cost_modifier
 		button_node.text = display_name + " (" + str(cost) + " SP)"
 		button_node.disabled = false
 
@@ -65,11 +69,14 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 	elif upgrade_key == "increase_grid_size": current_level = GameManager.grid_size_level
 	elif upgrade_key == "increase_burrow_charges": current_level = GameManager.burrow_level
 	elif upgrade_key == "increase_phase_charges": current_level = GameManager.phase_shift_level
+	elif upgrade_key == "buy_extra_life": current_level = GameManager.extra_lives
 	else: current_level = GameManager.speed_upgrade_level
 
 	var rules = GameManager.upgrade_data[upgrade_key]
 	if current_level < rules["max_level"]:
-		var cost = rules["costs"][current_level]
+		var base_cost = rules["costs"][current_level]
+		var cost_modifier = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
+		var cost = base_cost + cost_modifier
 		if GameManager.skill_points >= cost:
 			GameManager.skill_points -= cost
 			emit_signal("upgrade_selected", upgrade_key)

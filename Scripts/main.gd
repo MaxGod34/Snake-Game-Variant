@@ -140,6 +140,8 @@ func update_hud():
 	$UI/HUDContainer/DifficultySelectedLabel.text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
 	$UI/HUDContainer/GardenCurrentNumberLabel.text = "Garden %s/5" % GameManager.current_garden
 	$UI/HUDContainer/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
+	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
+
 	
 	# Ability Charges
 	var burrow_label = $UI/HUDContainer/BurrowChargeLabel
@@ -321,6 +323,8 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		GameManager.phase_shift_level += 1
 		GameManager.phase_shift_charges += 1
 		print("Phase Shift Charge + 1!")
+	elif upgrade_name == "buy_extra_life":
+		GameManager.extra_lives += 1
 	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
 
 func on_snake_ate_food(fruit):
@@ -340,12 +344,45 @@ func add_body_segment_at(position: Vector2):
 	snake_body_segments.append(new_segment)
 	
 func game_over():
-	is_game_over = true
+	if GameManager.extra_lives > 0:
+		use_extra_life()
+	else:
+		is_game_over = true
+		head.move_timer.stop()
+		print("Game Over!")
+		$UI/GameOverScreen.visible = true
+		var final_score = snake_body_segments.size() + 1
+		game_is_over.emit(final_score)
+
+func use_extra_life():
+	print("Used an extra life!")
+	
+	# 1. Stop the snake and start the fade to black
 	head.move_timer.stop()
-	print("Game Over!")
-	$UI/GameOverScreen.visible = true
-	var final_score = snake_body_segments.size() + 1
-	game_is_over.emit(final_score)
+	await SceneTransition.cover_screen()
+
+	# 2. While the screen is black, safely reset everything
+	GameManager.extra_lives -= 1
+	update_hud()
+	
+	while snake_body_segments.size() > 0:
+		var segment_to_remove = snake_body_segments.pop_back()
+		segment_to_remove.queue_free()
+	
+	var start_grid_pos = Vector2(grid_width / 2, grid_height / 2)
+	head.position = (start_grid_pos * tile_size) + tile_offset
+	on_snake_head_moved(head.position)
+	
+	# 3. Give a moment of invincibility
+	GameManager.is_phasing = true
+	head.get_node("PhaseTimer").start()
+	head.get_node("FillSprite").modulate = Color.GOLD
+	
+	# 4. Now that everything is reset, fade the screen back in
+	await SceneTransition.uncover_screen()
+	
+	# 5. Start the countdown
+	start_countdown()
 
 
 func update_score_display():
@@ -416,6 +453,8 @@ func _on_garden_complete_continue_pressed() -> void:
 	var garden_id = GameManager.current_garden
 	var score = snake_body_segments.size() + 1
 	if garden_id == 5 and score >= 666:
+		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+	elif garden_id == 5:
 		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
 	else:
 		GameManager.current_garden += 1

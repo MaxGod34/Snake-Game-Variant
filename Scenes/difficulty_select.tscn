@@ -80,7 +80,7 @@ grow_vertical = 2
 layout_mode = 2
 theme_override_constants/separation = 100
 
-[node name="EasyButton" type="Button" parent="CenterContainer/HBoxContainer"]
+[node name="HatchlingButton" type="Button" parent="CenterContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0.537255, 1, 0.505882, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -93,9 +93,9 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_jnktv")
 theme_override_styles/hover = ExtResource("2_jnktv")
 theme_override_styles/pressed = ExtResource("2_jnktv")
 theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
-text = "Easy"
+text = "Hatchling"
 
-[node name="NormalButton" type="Button" parent="CenterContainer/HBoxContainer"]
+[node name="ViperButton" type="Button" parent="CenterContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0.184314, 0.619608, 0.592157, 1)
 theme_override_colors/font_color = Color(0.183629, 0.619397, 0.592657, 1)
@@ -107,9 +107,9 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_7lp5y")
 theme_override_styles/hover = ExtResource("2_jnktv")
 theme_override_styles/pressed = ExtResource("2_jnktv")
 theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
-text = "Normal"
+text = "Viper"
 
-[node name="HardButton" type="Button" parent="CenterContainer/HBoxContainer"]
+[node name="BasiliskButton" type="Button" parent="CenterContainer/HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
 theme_override_colors/font_color = Color(1, 0, 0, 1)
@@ -121,7 +121,7 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_7lp5y")
 theme_override_styles/hover = ExtResource("2_jnktv")
 theme_override_styles/pressed = ExtResource("2_jnktv")
 theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
-text = "Hard"
+text = "Basilisk"
 
 [node name="BackButton" type="Button" parent="CenterContainer/HBoxContainer"]
 layout_mode = 2
@@ -171,13 +171,13 @@ scale_amount_max = 0.2
 color = Color(0.8, 0.733333, 0, 1)
 color_ramp = SubResource("Gradient_4x1yg")
 
-[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/EasyButton" to="." method="_on_easy_button_mouse_entered"]
-[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/EasyButton" to="." method="_on_easy_button_mouse_exited"]
-[connection signal="pressed" from="CenterContainer/HBoxContainer/EasyButton" to="." method="_on_easy_button_pressed"]
-[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/NormalButton" to="." method="_on_normal_button_mouse_entered"]
-[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/NormalButton" to="." method="_on_normal_button_mouse_exited"]
-[connection signal="pressed" from="CenterContainer/HBoxContainer/NormalButton" to="." method="_on_normal_button_pressed"]
-[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/HardButton" to="." method="_on_hard_button_mouse_entered"]
-[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/HardButton" to="." method="_on_hard_button_mouse_exited"]
-[connection signal="pressed" from="CenterContainer/HBoxContainer/HardButton" to="." method="_on_hard_button_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/HatchlingButton" to="." method="_on_hatchling_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/HatchlingButton" to="." method="_on_hatchling_button_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/HatchlingButton" to="." method="_on_hatchling_button_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/ViperButton" to="." method="_on_viper_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/ViperButton" to="." method="_on_viper_button_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/ViperButton" to="." method="_on_viper_button_pressed"]
+[connection signal="mouse_entered" from="CenterContainer/HBoxContainer/BasiliskButton" to="." method="_on_basilisk_button_mouse_entered"]
+[connection signal="mouse_exited" from="CenterContainer/HBoxContainer/BasiliskButton" to="." method="_on_basilisk_button_mouse_exited"]
+[connection signal="pressed" from="CenterContainer/HBoxContainer/BasiliskButton" to="." method="_on_basilisk_button_pressed"]
 [connection signal="pressed" from="CenterContainer/HBoxContainer/BackButton" to="." method="_on_back_button_pressed"]

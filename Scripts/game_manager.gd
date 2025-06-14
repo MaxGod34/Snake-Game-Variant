@@ -3,7 +3,7 @@ extends Node
 
 
 #------Session State---------#
-var chosen_difficulty = "normal"
+var chosen_difficulty = "viper"
 var chosen_class = "speedster"
 
 #------Garden Progression----#
@@ -41,12 +41,34 @@ var phase_shift_level = 0
 var phase_shift_charges = 0
 		#-------Perimeter Upgrade Shit-----------#
 var grid_size_level = 0
+		#-------Extra Life Shit-------------#
+var extra_lives = 0
 
+#---------Difficulty parameters-------#
 var difficulty_data = {
-	"easy": {"speed_multiplier": 1.0, "goal_multiplier": 0.8},
-	"normal": {"speed_multiplier": 1.0, "goal_multiplier": 0.9},
-	"hard": {"speed_multiplier": 0.75, "goal_multiplier": 1.0}
+	"hatchling": {	#Easy
+		"name": "Hatchling",
+		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
+		"goal_multiplier": 0.8,   # Shorter garden goals
+		"sp_cost_modifier": 0,    # Upgrades cost the normal amount
+		"starting_sp": 5          # Start with 5 free skill points!
+	},
+	"viper": {	#Medium
+		"name": "Viper",
+		"speed_multiplier": 1.0,  # Normal speed
+		"goal_multiplier": 1.0,   # Normal garden goals
+		"sp_cost_modifier": 1,    # Upgrades cost +1 SP
+		"starting_sp": 0
+	},
+	"basilisk": {	#Hard
+		"name": "Basilisk",
+		"speed_multiplier": 0.8,  # Faster snake
+		"goal_multiplier": 1.25,  # Longer garden goals
+		"sp_cost_modifier": 2,    # Upgrades cost +2 SP
+		"starting_sp": 0
+	}
 }
+
 var class_data = {
 	"speedster": {
 		"name": "Speedster",
@@ -112,6 +134,11 @@ var upgrade_data = {
 		"display_name": "Edge Lord",
 		"costs": [3, 6, 9, 12],
 		"max_level": 4
+	},
+	"buy_extra_life": {
+		"display_name": "Mulligan Munchie",
+		"costs": [5, 5, 5],
+		"max_level": 3
 	}
 }
 
@@ -122,9 +149,11 @@ func go_to_scene(scene_path):
 	
 func start_game():
 	var p_class_data = class_data[chosen_class]
+	var diff_data = difficulty_data[chosen_difficulty]
 	# Reset all stats for a new run
 	player_level = 1
 	skill_points = 0
+	skill_points += diff_data["starting_sp"]	# add starting sp
 	score_needed_for_next_level = 5
 	score_at_level_start = 0
 	current_garden = 1
@@ -132,11 +161,13 @@ func start_game():
 	speed_upgrade_level = 0
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
-	#--------Burrow Uprade Shit--------#
+	grid_size_level = 0
+
 	burrow_charges = 0
 	burrow_level = 0
 	phase_shift_level = 0
 	phase_shift_level = 0
+	extra_lives = 0
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")
 	get_tree().paused = false
