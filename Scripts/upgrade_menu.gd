@@ -56,8 +56,7 @@ func update_all_displays():
 	update_button_display("fruit_foresight", bottom_tabs.get_node("Planner/FruitForesightRow/FruitForesightButton"), foresight_level)
 	update_button_display("ghost_tail", bottom_tabs.get_node("Planner/GhostTailRow/GhostTailButton"), GameManager.ghost_tail_level)
 	update_button_display("sovereign_trail", bottom_tabs.get_node("Planner/SovereignTrailRow/SovereignTrailButton"), GameManager.sovereign_trail_level)
-	var meditative_state_level = 1 if GameManager.meditative_state_unlocked else 0
-	update_button_display("meditative_state", bottom_tabs.get_node("Planner/MeditativeStateRow/MeditativeStateButton"), meditative_state_level)
+	update_button_display("meditative_state", bottom_tabs.get_node("Planner/MeditativeStateRow/MeditativeStateButton"), GameManager.meditative_state_level)
 	var garden_weaver_level = 1 if GameManager.garden_weaver_unlocked else 0
 	update_button_display("garden_weaver", bottom_tabs.get_node("Planner/GardenWeaverRow/GardenWeaverButton"), garden_weaver_level)
 	#-------CLASS SPECIFIC DISABLES-------#
@@ -125,6 +124,18 @@ func update_stats_tab():
 		stats_panel.get_node("DifficultyLabel").text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
 		stats_panel.get_node("LevelLabel").text = "Level: " + str(GameManager.player_level)
 		stats_panel.get_node("SPLabel").text = "Snake Points: " + str(GameManager.skill_points)
+	var side_stats_panel = main_vbox.get_node("TopTabs/Stats/LevelUpStatsContainer")
+	#Check our other stats panel on the side
+	if is_instance_valid(side_stats_panel):
+		side_stats_panel.get_node("FruitRewardStatsLabel").text = str(GameManager.fruit_reward)
+		side_stats_panel.get_node("MaxFruitsStatsLabel").text = str(GameManager.max_fruits_on_screen)
+		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (length X height)" % [GameManager.grid_size_data[GameManager.grid_size_level].x, GameManager.grid_size_data[GameManager.grid_size_level].y]
+		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: (fill)"
+		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: (fill)"
+		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill)"
+		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: (fill)"
+		side_stats_panel.get_node("NextGardenObstacles#Label").text = "# of obstacles next garden: (fill)"
+		side_stats_panel.get_node("RunTimeStatsLabel").text = "Run Time: 4.2s (fill)"
 
 func update_skill_points_label():
 	# Make sure this path is correct for your scene!
@@ -146,7 +157,7 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 	elif upgrade_key == "fruit_foresight": current_level = 1 if GameManager.fruit_foresight_unlocked else 0
 	elif upgrade_key == "ghost_tail": current_level = GameManager.ghost_tail_level
 	elif upgrade_key == "sovereign_trail": current_level = GameManager.sovereign_trail_level
-	elif upgrade_key == "meditative_state": current_level = 1 if GameManager.meditative_state_unlocked else 0
+	elif upgrade_key == "meditative_state": current_level = GameManager.meditative_state_level
 	elif upgrade_key == "garden_weaver": current_level = 1 if GameManager.garden_weaver_unlocked else 0
 	else: current_level = GameManager.speed_upgrade_level
 
@@ -172,7 +183,7 @@ func get_upgrade_level_from_key(upgrade_key):
 	if upgrade_key == "fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
 	if upgrade_key == "ghost_tail": return GameManager.ghost_tail_level
 	if upgrade_key == "sovereign_trail": return GameManager.sovereign_trail_level
-	if upgrade_key == "meditative_state": return 1 if GameManager.meditative_state_unlocked else 0
+	if upgrade_key == "meditative_state": return GameManager.meditative_state_level
 	if upgrade_key == "garden_weaver": return 1 if GameManager.garden_weaver_unlocked else 0
 	return 0 # Default
 func set_initial_state():
@@ -183,7 +194,7 @@ func set_initial_state():
 		bottom_tabs.current_tab = -1
 	is_switching_tabs = false
 
-func _on_top_tabs_tab_selected(tab_index):
+func _on_top_tabs_tab_selected(_tab_index):
 	if is_switching_tabs:
 		return
 	is_switching_tabs = true
@@ -191,7 +202,7 @@ func _on_top_tabs_tab_selected(tab_index):
 		bottom_tabs.current_tab = -1
 	is_switching_tabs = false
 
-func _on_bottom_tabs_tab_selected(tab_index):
+func _on_bottom_tabs_tab_selected(_tab_index):
 	if is_switching_tabs:
 		return
 	is_switching_tabs = true
@@ -201,7 +212,6 @@ func _on_bottom_tabs_tab_selected(tab_index):
 
 
 func _on_any_upgrade_mouse_entered(upgrade_key):
-	print("mouse entered")
 	# Get the description text from our global data dictionary
 	var description_text = GameManager.upgrade_data[upgrade_key]["description"]
 	
@@ -210,7 +220,6 @@ func _on_any_upgrade_mouse_entered(upgrade_key):
 	$DescriptionText.visible = true
 
 func _on_any_upgrade_mouse_exited():
-	print("mouse exited")
 	# When the mouse leaves, just hide the label
 	$DescriptionText.visible = false
 

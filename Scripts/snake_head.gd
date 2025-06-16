@@ -33,22 +33,22 @@ func _unhandled_input(event: InputEvent):
 	var new_direction = current_direction
 	#This is our backstop in case there is only one snake length
 	if can_reverse:
-		if event.is_action_pressed("ui_up"):
+		if event.is_action_pressed("up"):
 			new_direction = Vector2.UP
-		elif event.is_action_pressed("ui_down"):
+		elif event.is_action_pressed("down"):
 			new_direction = Vector2.DOWN
-		elif event.is_action_pressed("ui_left"):
+		elif event.is_action_pressed("left"):
 			new_direction = Vector2.LEFT
-		elif event.is_action_pressed("ui_right"):
+		elif event.is_action_pressed("right"):
 			new_direction = Vector2.RIGHT
 	else: #This will be the regular movement logic that doesn't allow reversing
-		if event.is_action_pressed("ui_up") and current_direction != Vector2.DOWN:
+		if event.is_action_pressed("up") and current_direction != Vector2.DOWN:
 			new_direction = Vector2.UP
-		elif event.is_action_pressed("ui_down") and current_direction != Vector2.UP:
+		elif event.is_action_pressed("down") and current_direction != Vector2.UP:
 			new_direction = Vector2.DOWN
-		elif event.is_action_pressed("ui_left") and current_direction != Vector2.RIGHT:
+		elif event.is_action_pressed("left") and current_direction != Vector2.RIGHT:
 			new_direction = Vector2.LEFT
-		elif event.is_action_pressed("ui_right") and current_direction != Vector2.LEFT:
+		elif event.is_action_pressed("right") and current_direction != Vector2.LEFT:
 			new_direction = Vector2.RIGHT
 	
 	if new_direction != current_direction:
@@ -87,6 +87,17 @@ func _unhandled_input(event: InputEvent):
 				GameManager.burrow_charges += 1
 		main.update_hud()
 			
+			
+	#-----------MEDITATIVE STATE ABILITY-------#
+	if event.is_action_pressed("activate_meditation") and GameManager.meditative_state_charges > 0:
+		print("Meditative State Activated!")
+		GameManager.meditative_state_charges -= 1
+		main.update_hud()
+		move_timer.stop()
+		var duration = GameManager.meditative_data[GameManager.meditative_state_level]
+		$MeditativeStateTimer.wait_time = duration
+		$MeditativeStateTimer.start()
+		get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
 # --- Signal Handlers ---
 
 func on_move_timer_timeout():
@@ -145,3 +156,8 @@ func _on_head_area_area_entered(area):
 func _on_phase_timer_timeout() -> void:
 	GameManager.is_phasing = false
 	get_node("FillSprite").modulate = head_color
+
+
+func _on_meditative_state_timer_timeout() -> void:
+	get_node("FillSprite").modulate = head_color
+	move_timer.start()

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://big1tpxvk7yl2" path="res://Scenes/pause_menu.tscn" id="3_8gbba"]
 [ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/upgrade_menu.tscn" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
+[ext_resource type="StyleBox" uid="uid://b4x8o38qx0owk" path="res://Scenes/HUD_label_template.tres" id="6_6bp64"]
 
 [sub_resource type="Gradient" id="Gradient_6bp64"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -24,39 +25,22 @@ border_blend = true
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_21xkr"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kry3j"]
-bg_color = Color(0.596078, 1, 0.596078, 0.588235)
+bg_color = Color(0, 1, 0, 0.458824)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bp64"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
-bg_color = Color(0.0784314, 0.0588235, 0, 0.760784)
-border_width_left = 6
-border_width_top = 6
-border_width_right = 6
-border_width_bottom = 6
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-expand_margin_left = 5.0
-expand_margin_top = 5.0
-expand_margin_right = 5.0
-expand_margin_bottom = 5.0
-
 [node name="Main" type="Node2D"]
 process_mode = 3
 script = ExtResource("1_jjgbg")
 
+[node name="TrailContainer" type="Node2D" parent="."]
+z_index = -5
+
 [node name="Background-Color-Rect" type="ColorRect" parent="."]
-z_index = -2
+z_index = -10
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -125,7 +109,7 @@ theme_override_font_sizes/font_size = 48
 text = "SNAKE OFF!"
 
 [node name="HUDContainer" type="Panel" parent="UI"]
-modulate = Color(1, 1, 1, 0.670588)
+modulate = Color(1, 1, 1, 0.447059)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -133,232 +117,224 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_21xkr")
 
-[node name="ScoreLabel" type="Label" parent="UI/HUDContainer"]
+[node name="BottomGrid" type="GridContainer" parent="UI/HUDContainer"]
+custom_minimum_size = Vector2(1080, 0)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.005
-anchor_top = 0.875
-anchor_right = 0.15
-anchor_bottom = 0.925
-grow_horizontal = 0
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+anchor_left = 0.1
+anchor_top = 0.95
+anchor_right = 0.9
+anchor_bottom = 0.95
+offset_top = -102.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 4
+columns = 4
+
+[node name="ScoreLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Score: 1"
 horizontal_alignment = 1
 
-[node name="LevelLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.005
-anchor_top = 0.925
-anchor_right = 0.15
-anchor_bottom = 0.975
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 32
-text = "Level: 1"
-horizontal_alignment = 1
-
-[node name="XPProgressBar" type="ProgressBar" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.16
-anchor_top = 0.94
-anchor_right = 0.5
-anchor_bottom = 0.96
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
-theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
-show_percentage = false
-
-[node name="PlayerNameLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.175
-anchor_top = 0.88
-anchor_right = 0.5
-anchor_bottom = 0.925
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+[node name="PlayerNameLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Player: Crash_Test_Dummy_sigma"
 
-[node name="GameClassSelectedLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.55
-anchor_top = 0.9
-anchor_right = 0.75
-anchor_bottom = 0.9
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+[node name="GameClassSelectedLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Class: Warlock"
 horizontal_alignment = 1
 
-[node name="DifficultySelectedLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.55
-anchor_top = 0.925
-anchor_right = 0.75
-anchor_bottom = 0.975
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+[node name="DifficultySelectedLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Difficulty: Easy"
 horizontal_alignment = 1
 
-[node name="GardenCurrentNumberLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.75
-anchor_top = 0.875
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 16
-theme_override_font_sizes/font_size = 28
-text = "Garden 1 / 5"
+[node name="LevelLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Level: 1"
 horizontal_alignment = 1
 
-[node name="GardenCurrentNameLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.75
-anchor_top = 0.925
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.768627, 0.596078, 1, 0.635294)
+[node name="XPProgressBar" type="ProgressBar" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_styles/background = ExtResource("6_6bp64")
+theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
+show_percentage = false
+
+[node name="GardenCurrentNameLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "\"The Snake Pit\""
 horizontal_alignment = 1
 
-[node name="BurrowChargeLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.025
-anchor_top = 0.785
-anchor_right = 0.25
-anchor_bottom = 0.82
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
+[node name="GardenCurrentNumberLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
-text = "Burrow Charges: 0"
-horizontal_alignment = 3
-
-[node name="PhaseChargeLabel" type="Label" parent="UI/HUDContainer"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.025
-anchor_top = 0.825
-anchor_right = 0.25
-anchor_bottom = 0.86
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.368627, 0.356863, 0.545098, 1)
-theme_override_constants/outline_size = 16
-theme_override_font_sizes/font_size = 28
-text = "Phase Charges: 0"
-horizontal_alignment = 3
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Garden 1 / 5"
+horizontal_alignment = 1
 
 [node name="StatsVbox" type="VBoxContainer" parent="UI/HUDContainer"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.8
-anchor_top = 0.15
-anchor_right = 0.95
-anchor_bottom = 0.75
+anchor_left = 0.775
+anchor_top = 0.2
+anchor_right = 0.775
+anchor_bottom = 0.2
+offset_top = 4.0
+offset_right = 186.0
+offset_bottom = 470.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 1
 
 [node name="LivesLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Lives: "
-horizontal_alignment = 3
-
-[node name="FriutRewardLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
-text = "Growth: + "
-horizontal_alignment = 3
-
-[node name="MaxFruitsLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
-text = "# of fruits: "
-
-[node name="GoalLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
-text = "Goal: "
 horizontal_alignment = 3
 
 [node name="GameTimerLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Time:"
 horizontal_alignment = 3
 
 [node name="TimeSinceLastFruitLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_color = Color(0.999995, 0.494367, 0.42619, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "TSLFruit:"
 horizontal_alignment = 3
 
 [node name="FruitsPerMinute" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 0.588235)
+theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_6bp64")
+theme_override_styles/normal = ExtResource("6_6bp64")
 text = "FPM: "
+horizontal_alignment = 3
+
+[node name="FriutRewardLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.298039, 0.807843, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Growth: + "
+horizontal_alignment = 3
+
+[node name="MaxFruitsLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.287307, 0.225237, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "# of fruits: "
+
+[node name="GoalLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.537718, 1, 0.50622, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Goal: "
+horizontal_alignment = 3
+
+[node name="AbilitySlot1" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 1: "
+horizontal_alignment = 3
+
+[node name="AbilitySlot2" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 2:"
+horizontal_alignment = 3
+
+[node name="AbilitySlot3" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 3:"
 horizontal_alignment = 3
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]

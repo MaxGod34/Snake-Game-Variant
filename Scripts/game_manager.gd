@@ -53,8 +53,11 @@ var grid_size_data = [
 var diet_slith_level = 0
 var fruit_foresight_unlocked = false
 var ghost_tail_level = 0
+var ghost_tail_data = [0, 7, 10, 15]
 var sovereign_trail_level = 0
-var meditative_state_unlocked = false
+var meditative_state_level = 0
+var meditative_state_charges = 0
+var meditative_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
 
 
@@ -69,7 +72,7 @@ var difficulty_data = {
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
 		"sp_cost_modifier": 0,    # Upgrades cost the normal amount
-		"starting_sp": 5          # Start with 5 free skill points!
+		"starting_sp": 12          # Start with 5 free skill points!
 	},
 	"viper": {	#Medium
 		"name": "Viper",
@@ -331,9 +334,9 @@ var upgrade_data = {
 	},
 	"meditative_state": {
 		"display_name": "Meditative State",
-		"costs": [5],
+		"costs": [5, 5, 10],
 		"description": "Pause! Need I say more?\nThis grants you the ability to pause your snake for 3 seconds!\nRequires Diet Slith lvl 5",
-		"max_level": 1,
+		"max_level": 3,
 		"prerequisite": {"upgrade": "decrease_speed", "level": 5}
 	},
 	"garden_weaver": {
@@ -377,7 +380,8 @@ func start_game():
 	fruit_foresight_unlocked = false
 	ghost_tail_level = 0
 	sovereign_trail_level = 0
-	meditative_state_unlocked = false
+	meditative_state_level = 0
+	meditative_state_charges = 0
 	garden_weaver_unlocked = false
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")

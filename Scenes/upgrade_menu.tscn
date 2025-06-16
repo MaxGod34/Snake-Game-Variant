@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=20 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/Styles/panel_container_prototype1.tres" id="2_6gn5s"]
@@ -54,8 +54,6 @@ expand_margin_left = 20.0
 expand_margin_top = 20.0
 expand_margin_right = 20.0
 expand_margin_bottom = 20.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ltp0x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f5dmy"]
 content_margin_left = 20.0
@@ -115,10 +113,10 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
+current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -229,7 +227,7 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 text = "Max fruits = "
 
-[node name="GridSizeStatLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="GridSizeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -252,7 +250,7 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 text = "Total Fruits Grabbed This Run:"
 
-[node name="TotalSPStatLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="TotalSPStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -263,7 +261,7 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 text = "SP earned this Run:"
 
-[node name="AbilityIncrementStatLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="AbilityIncrementStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -297,7 +295,7 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 text = "# of obstacles next Garden:"
 
-[node name="RunTimeStatLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="RunTimeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -334,7 +332,7 @@ theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_ltp0x")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
@@ -840,11 +838,11 @@ theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 0
 tabs_position = 1
 deselect_enabled = true
 
 [node name="Planner" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -888,7 +886,7 @@ theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
@@ -951,7 +949,7 @@ theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
@@ -990,7 +988,7 @@ theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
@@ -1041,7 +1039,7 @@ theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
@@ -1086,7 +1084,7 @@ theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
@@ -1100,6 +1098,18 @@ layout_mode = 2
 theme_override_constants/separation = 20
 
 [node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/MeditativeStateRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/MeditativeStateRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/MeditativeStateRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1125,7 +1135,7 @@ theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/focus = ExtResource("3_f5dmy")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
