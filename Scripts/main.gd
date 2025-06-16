@@ -18,10 +18,17 @@ var garden_complete_is_pending: bool = false
 var snake_body_segments: Array[Node2D] = []
 var head: CharacterBody2D
 
+var spawned_obstacles: Array = []
+var next_fruit_position: Vector2
+var ghost_fruit_instance = null
+
 var head_scene = preload("res://Scenes/snake_head.tscn")
 var body_scene = preload("res://Scenes/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/fruit.tscn")
+var rock_scene = preload("res://Scenes/rock.tscn")
 var pause_scene = preload("res://Scenes/pause_menu.tscn")
+
+#-------SIGNALS--------#
 
 signal game_is_over(score)
 
@@ -36,6 +43,7 @@ func _ready():
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
 	
+	spawned_obstacles.clear()
 	# Bounds and Tile Offset cuz center origin omfg i'll kms
 	update_boundary_visuals()
 	tile_offset = Vector2(tile_size / 2, tile_size / 2)
@@ -68,13 +76,22 @@ func _ready():
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 	SceneTransition.transition_finished.connect(_on_transition_finished)
 	# --- FINAL SETUP ---#
+	#-----SET OBSTACLSE-----#
+	var obstacle_count = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
+	for i in range(obstacle_count):
+		spawn_rock()
+	#------SPAWN FRUITS----#
 	for i in range(GameManager.max_fruits_on_screen):
+		calculate_next_fruit_position()
 		spawn_fruit()
 	
 	# --- FINAL SETUP & START ---
+	calculate_next_fruit_position()
+	show_ghost_fruit()
 	update_score_display()
 	update_hud()
 	apply_persistent_upgrades() # Removed head_timer.start() here
+	
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not is_game_over:
@@ -106,9 +123,14 @@ func apply_persistent_upgrades():
 			head.move_timer.wait_time *= speed_mod
 
 func show_upgrade_menu():
-	head.move_timer.stop() #this doesn't pause the game, it just stops the snake movement
+	head.move_timer.stop()
+	
+	$UI/UpgradeMenu.set_initial_state()
+
 	$UI/UpgradeMenu.update_all_displays()
+
 	$UI/UpgradeMenu.visible = true
+
 
 func show_garden_complete_screen():
 	head.move_timer.stop()
@@ -120,6 +142,16 @@ func show_garden_complete_screen():
 	
 	$UI/GardenCompleteScreen.setup(garden_name, score, is_final_garden, is_final_win)
 	$UI/GardenCompleteScreen.visible = true
+
+
+func show_ghost_fruit():
+	if is_instance_valid(ghost_fruit_instance):
+		ghost_fruit_instance.queue_free()
+	
+	if GameManager.fruit_foresight_unlocked:
+		ghost_fruit_instance = preload("res://Scenes/ghost_fruit.tscn").instantiate()
+		ghost_fruit_instance.position = next_fruit_position
+		add_child(ghost_fruit_instance)
 
 func update_hud():
 	# Update Level
@@ -182,24 +214,43 @@ func spawn_fruit():
 	print("Spawning a fruit.")
 	
 	var fruit = fruit_scene.instantiate()
+	fruit.position = next_fruit_position
+	call_deferred("add_child", fruit)
+	print("fruit spawned at a safe location")
+
+
+
+
+func spawn_rock():
+	var rock = rock_scene.instantiate()
 	var potential_position: Vector2
-	var is_safe_position = false
+	var is_safe_position: bool = false
 	
 	while not is_safe_position:
 		var x_pos = randi() % grid_width
 		var y_pos = randi() % grid_height
 		var random_grid_pos = Vector2(x_pos, y_pos)
-		
 		potential_position = (random_grid_pos * tile_size) + tile_offset
-		if not is_position_occupied(potential_position) and not positions_are_equal(potential_position, head.global_position):
+		
+		# SAFETY CHECK
+		var is_on_snake = is_position_occupied(potential_position) or positions_are_equal(potential_position, head.global_position)
+		var is_on_another_rock = false
+		for placed_rock in spawned_obstacles:
+			if positions_are_equal(potential_position, placed_rock.position):
+				is_on_another_rock = true
+				break
+		if not is_on_snake and not is_on_another_rock:
 			is_safe_position = true
-			#this will break us out of the loop once it is set to true
+	
+	var gray_value = randf_range(0.4, 0.7) # A random decimal between 0.4 (darker) and 0.7 (lighter)
+	var random_gray_color = Color(gray_value, gray_value, gray_value)
+	rock.get_node("FillSprite").modulate = random_gray_color
 	
 	
-	fruit.position = potential_position
-	call_deferred("add_child", fruit)
-	print("fruit spawned at a safe location")
-	
+	rock.position = potential_position
+	spawned_obstacles.append(rock)
+	add_child(rock)
+
 func grow_snake():
 	print("Growing snake.")
 	
@@ -295,7 +346,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	if upgrade_name == "increase_speed":
 		if GameManager.speed_upgrade_level < 10:
 			GameManager.speed_upgrade_level += 1
-			head.move_timer.wait_time *= 0.9
+			apply_persistent_upgrades()
 			print("New snake speed (wait time): ", head.move_timer.wait_time)
 	# Fruit Reward Upgrade logic only
 	elif upgrade_name == "increase_fruit_reward":
@@ -327,6 +378,18 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		print("Phase Shift Charge + 1!")
 	elif upgrade_name == "buy_extra_life":
 		GameManager.extra_lives += 1
+	#-----------THE PLANNER--------#
+	elif upgrade_name == "decrease_speed":
+		if GameManager.diet_slith_level < 5:
+			GameManager.diet_slith_level += 1
+			head.move_timer.wait_time *= 1.1 
+			print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
+	elif upgrade_name == "fruit_foresight":
+		if not GameManager.fruit_foresight_unlocked:
+			GameManager.fruit_foresight_unlocked = true
+			show_ghost_fruit()
+			
+		
 	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
 
 func on_snake_ate_food(fruit):
@@ -340,12 +403,41 @@ func on_snake_ate_food(fruit):
 			update_hud()
 	
 	grow_snake()
+	
 	spawn_fruit()
+	calculate_next_fruit_position()
+	show_ghost_fruit()
+	
 	update_progression()
 	update_hud()
 	
+	
+	
 	if head.can_reverse:
 		head.can_reverse = false
+
+func calculate_next_fruit_position():
+	var potential_position: Vector2
+	var is_safe_position = false
+	
+	while not is_safe_position:
+		var x_pos = randi() % grid_width
+		var y_pos = randi() % grid_height
+		var random_grid_pos = Vector2(x_pos, y_pos)
+		
+		potential_position = (random_grid_pos * tile_size) + tile_offset
+		#-------SAFETY CHECK--------#
+		var is_on_snake = is_position_occupied(potential_position) or positions_are_equal(potential_position, head.global_position)
+		var is_on_an_obstacle = false
+		for obstacle in spawned_obstacles:
+			if positions_are_equal(potential_position, obstacle.position):
+				is_on_an_obstacle = true
+				break
+		
+		if not is_on_snake and not is_on_an_obstacle:
+			is_safe_position = true
+			#this will break us out of the loop once it is set to true
+	next_fruit_position = potential_position
 
 func add_body_segment_at(position: Vector2):
 	var new_segment = create_colored_segment(position)

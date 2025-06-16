@@ -8,11 +8,11 @@ var chosen_class = "speedster"
 var has_died_this_garden = false
 var current_garden = 1
 var garden_data = {
-	1: {"name": "The First Coil", "score_goal": 50},
-	2: {"name": "Maximum Over-Bite", "score_goal": 125},
-	3: {"name": "The Juice Box", "score_goal": 250},
-	4: {"name": "The Forked Tongue Bistro", "score_goal": 420},
-	5: {"name": "The Garden of Eatin'", "score_goal": 666}
+	1: {"name": "The First Coil", "score_goal": 50, "obstacle_count": 1},
+	2: {"name": "Maximum Over-Bite", "score_goal": 125, "obstacle_count": 5},
+	3: {"name": "The Juice Box", "score_goal": 250, "obstacle_count": 10},
+	4: {"name": "The Forked Tongue Bistro", "score_goal": 420, "obstacle_count": 15},
+	5: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 20}
 }
 
 
@@ -49,6 +49,15 @@ var grid_size_data = [
 	Vector2(32, 24), # Level 3
 	Vector2(40, 30)  # Level 4 (MAX)
 ]
+#------The Planner-------#
+var diet_slith_level = 0
+var fruit_foresight_unlocked = false
+var ghost_tail_level = 0
+var sovereign_trail_level = 0
+var meditative_state_unlocked = false
+var garden_weaver_unlocked = false
+
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -97,7 +106,10 @@ var class_data = {
 			"increase_burrow_charges": 1, # +1 SP cost
 			"increase_phase_charges": 1,  # +1 SP cost
 			"increase_grid_size": 2,      # +2 SP cost
-			"buy_extra_life": 2           # +2 SP cost
+			"buy_extra_life": 2,           # +2 SP cost
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	},
 	"warlock": {
@@ -118,7 +130,10 @@ var class_data = {
 			"increase_burrow_charges": 1,
 			"increase_phase_charges": 1,
 			"increase_grid_size": 0,
-			"buy_extra_life": 1
+			"buy_extra_life": 1,
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	},
 	"inchworm": {
@@ -139,7 +154,10 @@ var class_data = {
 			"increase_burrow_charges": 1, # +1 SP cost
 			"increase_phase_charges": 1,  # +1 SP cost
 			"increase_grid_size": -1,      # Cheaper 1 (min. 1)
-			"buy_extra_life": 2           # +2 SP cost
+			"buy_extra_life": 2,           # +2 SP cost
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	},
 	"phoenix_coil": {
@@ -160,7 +178,10 @@ var class_data = {
 			"increase_burrow_charges": 0,
 			"increase_phase_charges": 0,
 			"increase_grid_size": 1,
-			"buy_extra_life": -5 # Makes the 10 SP cost only 5
+			"buy_extra_life": -5, # Makes the 10 SP cost only 5
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	},
 	"sidewinder": {
@@ -181,7 +202,10 @@ var class_data = {
 			"increase_burrow_charges": -3,
 			"increase_phase_charges": -1,
 			"increase_grid_size": 1,
-			"buy_extra_life": 0
+			"buy_extra_life": 0,
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	},
 	"the_zealot": {
@@ -202,7 +226,10 @@ var class_data = {
 			"increase_burrow_charges": 0,
 			"increase_phase_charges": 0,
 			"increase_grid_size": 0,
-			"buy_extra_life": 0
+			"buy_extra_life": 0,
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	},
 	"the_alchemist": {
@@ -223,7 +250,10 @@ var class_data = {
 			"increase_burrow_charges": -1,
 			"increase_phase_charges": -1,
 			"increase_grid_size": 2,
-			"buy_extra_life": -1
+			"buy_extra_life": -1,
+			# Planner Path Modifiers
+			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"meditative_state": 0, "garden_weaver": 0
 		}
 	}
 }
@@ -232,38 +262,86 @@ var class_data = {
 var upgrade_data = {
 	"increase_speed": {
 		"display_name": "Slither Sauce",
+		"description": "Increase Snake Movement Speed By 10%\nRequired for...upgrades...",
 		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 
 		"max_level": 10
 	},
 	"increase_fruit_reward": {
 		"display_name": "Elephant-Sized Portions",
+		"description": "Increase Fruit reward by 1",
 		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
 		"max_level": 10
 	},
 	"increase_max_fruits": {
 		"display_name": "More Mice!",
+		"description": "Increase the maximum number of fruits on screen by 1\n*Requires level 3 ESP*",
 		"costs": [2, 2, 4, 4, 6, 6, 8, 8, 10, 10],
 		"max_level": 10
 	},
 	"increase_burrow_charges": { # Changed from "unlock_burrow"
 		"display_name": "Burrow Ability",
+		"description": "Burrow your way through those blasted walls!\nPress space to burrow through to the other side in one piece!\nOne charge per level",
 		"costs": [5, 5, 5], # Cost for each additional charge
 		"max_level": 3
 	},
 	"increase_phase_charges": {
 		"display_name": "Phase Shift Ability",
+		"description": "Phase through yourself...whenever you feel like it!\nPress e to pass through your own body for 2 seconds!",
 		"costs": [3, 4, 5],
 		"max_level": 3
 	},
 	"increase_grid_size": {
 		"display_name": "Edge Lord",
+		"description": "INCREASE PERIMETER SIZE M'LORD!",
 		"costs": [3, 6, 9, 12],
 		"max_level": 4
 	},
 	"buy_extra_life": {
 		"display_name": "Mulligan Munchie",
+		"description": "We all make mistakes.\nHere's a free life if ya need it!\nReset to 1 length and keep all your buffs!\n3 per run!",
 		"costs": [3, 7, 10],
 		"max_level": 3
+	}, #--------The Planner-----#
+	"decrease_speed": {
+		"display_name": "Diet Slith",
+		"description": "Speed ain't your thing?\nCome take a walk on the Slith side with some Diet Slith!\nDecresae your speed by 10%",
+		"costs": [1, 1, 2, 2, 3], # 5 levels total
+		"max_level": 5
+	},
+	"fruit_foresight": {
+		"display_name": "Fruit Foresight",
+		"description": "Movin' so slow out there,\nit'd be nice to see where the next fruit is gonna go...\nLook no further! One time purchase!",
+		"costs": [3], # One-time purchase
+		"max_level": 1,
+		"prerequisite": {"upgrade": "decrease_speed", "level": 2} # Requires Diet Slith Lvl 2
+	},
+	"ghost_tail": {
+		"display_name": "Ghost Tail",
+		"description": "Makes your tail specifically passable\nLvl 1: 7 seg, Lvl 2: 10 seg, Lvl 3: 15 seg!",
+		"costs": [2, 2, 3], # 3 levels (e.g., 7 -> 10 -> 15 segments)
+		"max_level": 3,
+		"prerequisite": {"upgrade": "decrease_speed", "level": 2}
+	},
+	"sovereign_trail": {
+		"display_name": "Sovereign Trail",
+		"description": "Leave a trail for 10 segments behind you, wherever you go!\nLvl 1:Fruits can't spawn in your trail!\nLvl 2: Fruits wills spawn VERY close to your trail",
+		"costs": [2, 4], # Lvl 1: Repel, Lvl 2: Attract
+		"max_level": 2,
+		"prerequisite": {"upgrade": "decrease_speed", "level": 2}
+	},
+	"meditative_state": {
+		"display_name": "Meditative State",
+		"costs": [5],
+		"description": "Pause! Need I say more?\nThis grants you the ability to pause your snake for 3 seconds!\nRequires Diet Slith lvl 5",
+		"max_level": 1,
+		"prerequisite": {"upgrade": "decrease_speed", "level": 5}
+	},
+	"garden_weaver": {
+		"display_name": "Garden Weaver",
+		"description": "Don't like how far away all those fruits are, slowpoke?\nWith Garden Weaver, reroll the fruits MUCH closer with this ability!\nRequires Diet Slith Lvl 5",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "decrease_speed", "level": 5}
 	}
 }
 
@@ -294,6 +372,13 @@ func start_game():
 	phase_shift_level = 0
 	extra_lives = 0
 	extra_lives += p_class_data["start_lives"]
+	#------Reset Planner Upgrades-----#
+	diet_slith_level = 0
+	fruit_foresight_unlocked = false
+	ghost_tail_level = 0
+	sovereign_trail_level = 0
+	meditative_state_unlocked = false
+	garden_weaver_unlocked = false
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")
 	get_tree().paused = false

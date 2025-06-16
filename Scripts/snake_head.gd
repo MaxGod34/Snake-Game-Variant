@@ -138,6 +138,8 @@ func _on_head_area_area_entered(area):
 		emit_signal("ate_fruit", area)
 	elif not GameManager.is_phasing and area is SnakeBody:
 		emit_signal("hit_self")
+	elif area is Rock:
+		emit_signal("hit_self")
 
 
 func _on_phase_timer_timeout() -> void:

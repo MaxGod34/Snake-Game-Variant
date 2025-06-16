@@ -1,6 +1,5 @@
 extends CanvasLayer
 
-
 signal continue_pressed
 
 func setup(garden_name, score, is_final_garden, is_final_win):
@@ -16,9 +15,5 @@ func setup(garden_name, score, is_final_garden, is_final_win):
 		.text = "Final Garden Complete!"
 		$CenterContainer/PanelContainer/VBoxContainer/ContinueButton\
 		.text = "Finish"
-
-	
-
-
 func _on_continue_button_pressed() -> void:
 	emit_signal("continue_pressed")

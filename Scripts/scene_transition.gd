@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-@export var transition_speed: float = 0.04
+@export var transition_speed: float = 0.01
 
 @onready var tile_map = $TileMap
 @onready var input_blocker = $InputBlocker
