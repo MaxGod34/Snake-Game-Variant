@@ -98,6 +98,11 @@ func _unhandled_input(event: InputEvent):
 		$MeditativeStateTimer.wait_time = duration
 		$MeditativeStateTimer.start()
 		get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
+	#----------GARDEN WEAVER ABILITY--------#
+	if event.is_action_pressed("activate_weaver"):
+		if GameManager.garden_weaver_unlocked and not GameManager.garden_weaver_used_this_garden:
+			main.perform_garden_weave()
+		
 # --- Signal Handlers ---
 
 func on_move_timer_timeout():

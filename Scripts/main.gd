@@ -40,6 +40,7 @@ func _ready():
 	var diff_data = GameManager.difficulty_data[difficulty]
 	var class_data = GameManager.class_data[p_class]
 	GameManager.has_died_this_garden = false
+	GameManager.garden_weaver_used_this_garden = false
 	
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
@@ -423,10 +424,33 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			print("New fruit reward (fruit reward): ", GameManager.fruit_reward)
 	# Max Fruits Upgrade Logic only
 	elif upgrade_name == "increase_max_fruits":
-		if GameManager.max_fruits_on_screen < 11:
-			GameManager.max_fruits_on_screen += 1
-			spawn_fruit()
-			print("New max fruits (max fruits): ", GameManager.max_fruits_on_screen)
+			if GameManager.max_fruits_on_screen < 10: # Your max level
+				GameManager.max_fruits_on_screen += 1
+				
+				# Instead of just spawning one fruit, we now check how many are
+				# on screen vs. how many SHOULD be, and spawn the difference.
+				var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
+				var target_fruit_count = GameManager.max_fruits_on_screen
+				var fruits_to_spawn = target_fruit_count - current_fruit_count
+				
+				print("Player bought More Mice! Spawning %s new fruit." % fruits_to_spawn)
+
+				# This loop ensures that even if we spawn multiple fruits in the same frame,
+				# they won't spawn on top of each other.
+				var pending_positions = []
+				for i in range(fruits_to_spawn):
+					var new_pos = calculate_safe_spawn_position(pending_positions)
+					var fruit = fruit_scene.instantiate()
+					fruit.position = new_pos
+					fruit.add_to_group("fruits")
+					# Because we are in a UI callback, NOT a physics callback,
+					# it's safe to use add_child() directly here.
+					add_child(fruit) 
+					pending_positions.append(new_pos)
+				
+				# Update the ghost fruit prediction now that the board has changed.
+				update_fruit_prediction()
+				
 	# Increase Grid Size Upgrade Logic
 	elif upgrade_name == "increase_grid_size":
 		if GameManager.grid_size_level < 4:
@@ -469,6 +493,10 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.meditative_state_charges += 1
 			print("Meditative State Upgraded. New pause time: ", GameManager.meditative_data[GameManager.meditative_state_level])
 			print("Meditative State Upgraded. New pause charges: ", GameManager.meditative_state_charges)
+	elif upgrade_name == "garden_weaver":
+		if not GameManager.garden_weaver_unlocked:
+			GameManager.garden_weaver_unlocked = true
+			
 			
 		
 	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
@@ -496,7 +524,7 @@ func on_snake_ate_food(fruit):
 	if head.can_reverse:
 		head.can_reverse = false
 
-func calculate_safe_spawn_position() -> Vector2:
+func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> Vector2:
 	var potential_position: Vector2
 	var is_safe_position = false
 	var trail_level = GameManager.sovereign_trail_level
@@ -538,9 +566,15 @@ func calculate_safe_spawn_position() -> Vector2:
 				if positions_are_equal(potential_position, piece.node.position + tile_offset):
 					is_on_trail = true
 					break
-
+		
+		var is_on_pending_spot = false
+		for pos in additional_unsafe_positions:
+			if positions_are_equal(potential_position, pos):
+				is_on_pending_spot = true
+				break
+		
 		# A spot is safe only if ALL checks are false.
-		if not is_on_snake and not is_on_obstacle and not is_on_another_fruit and not is_on_trail:
+		if not is_on_snake and not is_on_obstacle and not is_on_another_fruit and not is_on_trail and not is_on_pending_spot:
 			is_safe_position = true
 			
 	return potential_position
@@ -731,3 +765,27 @@ func update_tail_visuals():
 				fill_sprite.modulate = Color("8A00C4") # Purple-neon
 			# Tell the physics engine to make it solid again
 			collision_shape.disabled = false
+
+func perform_garden_weave():
+	print("GARDEN WEAVER ACTIVATED!")
+	
+	GameManager.garden_weaver_used_this_garden = true
+	update_hud()
+
+	# 1. Get a list of all current fruit nodes.
+	var fruit_nodes = get_tree().get_nodes_in_group("fruits")
+	
+	# 2. This array will keep track of the new positions we've chosen
+	#    to prevent spawning two fruits in the same new spot.
+	var new_positions = []
+
+	# 3. Loop through each existing fruit and give it a new home.
+	for fruit in fruit_nodes:
+		# We find a new safe position, making sure to avoid spots
+		# we've already assigned to other fruits in this same frame.
+		var new_pos = calculate_safe_spawn_position(new_positions)
+		fruit.position = new_pos
+		new_positions.append(new_pos) # Add this spot to our list of claimed spots
+
+	# 4. Now that all real fruit have been moved, update the ghost's prediction.
+	update_fruit_prediction()

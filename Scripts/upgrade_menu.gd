@@ -127,8 +127,8 @@ func update_stats_tab():
 	var side_stats_panel = main_vbox.get_node("TopTabs/Stats/LevelUpStatsContainer")
 	#Check our other stats panel on the side
 	if is_instance_valid(side_stats_panel):
-		side_stats_panel.get_node("FruitRewardStatsLabel").text = str(GameManager.fruit_reward)
-		side_stats_panel.get_node("MaxFruitsStatsLabel").text = str(GameManager.max_fruits_on_screen)
+		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
+		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
 		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (length X height)" % [GameManager.grid_size_data[GameManager.grid_size_level].x, GameManager.grid_size_data[GameManager.grid_size_level].y]
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: (fill)"
 		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: (fill)"

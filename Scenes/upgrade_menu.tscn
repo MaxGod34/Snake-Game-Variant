@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=21 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/Styles/panel_container_prototype1.tres" id="2_6gn5s"]
@@ -8,6 +8,7 @@
 [ext_resource type="StyleBox" uid="uid://bvvxp1nruai3g" path="res://Scenes/tab_hovered.tres" id="3_mpwqm"]
 [ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/snake_chart_logo.png" id="4_lpopj"]
 [ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Scenes/panel_bg.tres" id="5_m70ya"]
+[ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Scenes/panel_shadow_temp.tres" id="7_60tjm"]
 [ext_resource type="StyleBox" uid="uid://c5n012lqx25ow" path="res://Scenes/tab_selected.tres" id="7_lpopj"]
 [ext_resource type="StyleBox" uid="uid://cmealg0fw7fl0" path="res://Scenes/tabbar_bg.tres" id="8_v4egn"]
 [ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Assets/Styles/base_button_template.tres" id="10_d1lbs"]
@@ -194,19 +195,22 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("4_lpopj")
 
-[node name="LevelUpStatsContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats"]
+[node name="LevelUpStatsContainer" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.55
-anchor_top = 0.2
-anchor_right = 1.0
-anchor_bottom = 0.8
+anchor_left = 0.6
+anchor_top = 0.15
+anchor_right = 0.925
+anchor_bottom = 0.75
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
-alignment = 1
+theme_override_styles/panel = ExtResource("7_60tjm")
 
 [node name="FruitRewardStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_right = 486.0
+offset_bottom = 34.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -218,6 +222,9 @@ text = "Growth / fruit = "
 
 [node name="MaxFruitsStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 46.0
+offset_right = 486.0
+offset_bottom = 80.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -229,6 +236,9 @@ text = "Max fruits = "
 
 [node name="GridSizeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 92.0
+offset_right = 486.0
+offset_bottom = 163.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -241,6 +251,9 @@ text = "Grid Size =
 
 [node name="TotalFruitsStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 175.0
+offset_right = 486.0
+offset_bottom = 209.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -252,6 +265,9 @@ text = "Total Fruits Grabbed This Run:"
 
 [node name="TotalSPStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 221.0
+offset_right = 486.0
+offset_bottom = 255.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -263,6 +279,9 @@ text = "SP earned this Run:"
 
 [node name="AbilityIncrementStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 267.0
+offset_right = 486.0
+offset_bottom = 338.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -275,6 +294,9 @@ text = "Abiities Used This Run:
 
 [node name="NextGardenGoalLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 350.0
+offset_right = 486.0
+offset_bottom = 384.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -286,6 +308,9 @@ text = "Next Garden at:"
 
 [node name="NextGardenObstacles#Label" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 396.0
+offset_right = 486.0
+offset_bottom = 430.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -297,6 +322,9 @@ text = "# of obstacles next Garden:"
 
 [node name="RunTimeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
 layout_mode = 2
+offset_top = 442.0
+offset_right = 486.0
+offset_bottom = 476.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
@@ -1230,7 +1258,7 @@ visible = false
 z_index = 5
 anchors_preset = -1
 anchor_left = 0.45
-anchor_top = 0.4
+anchor_top = 0.3
 anchor_right = 0.85
 anchor_bottom = 0.7
 grow_horizontal = 2
@@ -1242,7 +1270,7 @@ theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
+theme_override_styles/normal = ExtResource("7_60tjm")
 text = "Description text"
 horizontal_alignment = 1
 vertical_alignment = 3

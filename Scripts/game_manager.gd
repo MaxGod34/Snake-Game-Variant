@@ -59,6 +59,7 @@ var meditative_state_level = 0
 var meditative_state_charges = 0
 var meditative_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
+var garden_weaver_used_this_garden = false
 
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
@@ -72,7 +73,7 @@ var difficulty_data = {
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
 		"sp_cost_modifier": 0,    # Upgrades cost the normal amount
-		"starting_sp": 12          # Start with 5 free skill points!
+		"starting_sp": 34          # Start with 5 free skill points!
 	},
 	"viper": {	#Medium
 		"name": "Viper",
@@ -383,6 +384,7 @@ func start_game():
 	meditative_state_level = 0
 	meditative_state_charges = 0
 	garden_weaver_unlocked = false
+	garden_weaver_used_this_garden = false
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")
 	get_tree().paused = false
