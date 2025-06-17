@@ -111,7 +111,7 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 1
+current_tab = 2
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
@@ -319,6 +319,7 @@ theme_override_font_sizes/font_size = 24
 text = "# of obstacles next Garden:"
 
 [node name="Glutton" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -706,17 +707,16 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Acrobat" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
-theme_override_styles/panel = ExtResource("2_6gn5s")
+theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 2
 
 [node name="GluttonTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 0.025
+anchor_bottom = 0.05
 offset_top = -2.0
 offset_bottom = 157.0
 grow_horizontal = 2

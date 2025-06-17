@@ -7,6 +7,7 @@ signal hit_self
 # --- Properties ---
 @export var head_color: Color = Color.LIME_GREEN
 var tile_size = 32
+var normal_move_speed: float = 0.0
 
 var move_speed: float = 0.25 # This will be set by main.gd
 var current_direction: Vector2 = Vector2.RIGHT
@@ -25,7 +26,8 @@ var juke_and_jive_is_active: bool = false
 @onready var juke_duration_timer: Timer = $JukeDurationTimer
 @onready var phase_timer: Timer = $PhaseTimer
 @onready var meditative_state_timer: Timer = $MeditativeStateTimer
-@onready var autotomy_timer: Timer = $AutotomyTimer # Assuming you add this timer for Autotomy
+@onready var afterburner_timer: Timer = $AfterburnerTimer
+@onready var autotomy_timer: Timer = $AutotomyTimer 
 
 # --- GODOT'S BUILT-IN FUNCTIONS ---
 
@@ -34,6 +36,7 @@ func _ready():
 	
 	# Connect all timers to their respective functions
 	move_timer.timeout.connect(on_move_timer_timeout)
+	afterburner_timer.timeout.connect(_on_afterburner_timer_timeout)
 	juke_timer.timeout.connect(_on_juke_timer_timeout)
 	juke_duration_timer.timeout.connect(_on_juke_duration_timer_timeout)
 	phase_timer.timeout.connect(_on_phase_timer_timeout)
@@ -95,6 +98,15 @@ func _unhandled_input(event: InputEvent):
 			meditative_state_timer.wait_time = duration
 			meditative_state_timer.start()
 			get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
+	
+	if event.is_action_pressed("activate_autotomy"):
+	# Check if the ability is unlocked, hasn't been used this garden, and isn't already active
+		if GameManager.autotomy_unlocked and not GameManager.autotomy_used_this_garden and not GameManager.autotomy_is_active:
+			print("AUTOTOMY ACTIVATED! You have 2 seconds to sever your tail.")
+			GameManager.autotomy_is_active = true
+			$AutotomyTimer.start(2.0) # Start the 2-second window
+			# Visual Feedback
+			get_node("FillSprite").modulate = Color.ORANGE_RED
 			
 
 # --- GAME LOGIC & MOVEMENT ---
@@ -133,6 +145,9 @@ func _on_head_area_area_entered(area):
 			if GameManager.autotomy_is_active:
 				main.perform_autotomy(area)
 				GameManager.autotomy_is_active = false
+				GameManager.autotomy_used_this_garden = true
+				$AutotomyTimer.stop()
+				reset_head_color()
 			else:
 				emit_signal("hit_self")
 		
@@ -143,6 +158,38 @@ func _on_head_area_area_entered(area):
 			main.destroy_obstacle(area)
 		else:
 			emit_signal("hit_self")
+
+#------AFTERBURNER-----#
+func check_for_afterburner():
+	# Do nothing if the player doesn't have the upgrade.
+	if GameManager.afterburner_level == 0:
+		return
+		
+	# If the ability isn't already active, start it.
+	if afterburner_timer.is_stopped():
+		activate_afterburner()
+
+# This function applies the speed boost.
+func activate_afterburner():
+	print("AFTERBURNER ACTIVATED!")
+	normal_move_speed = move_timer.wait_time
+	
+	# Get the rules for our current level
+	var current_level = GameManager.afterburner_level
+	var rules = GameManager.afterburner_data[current_level]
+	
+	# Apply the correct boost and duration
+	var boosted_speed = normal_move_speed * rules["boost"]
+	move_timer.wait_time = boosted_speed
+	afterburner_timer.start(rules["duration"])
+
+# This function runs when the AfterburnerTimer finishes.
+func _on_afterburner_timer_timeout():
+	print("Afterburner finished.")
+	# Restore the snake's speed to what it was before the boost.
+	move_timer.wait_time = normal_move_speed
+
+
 
 # --- JUKE & JIVE ---
 func handle_juke_and_jive():
@@ -181,7 +228,7 @@ func _on_autotomy_timer_timeout():
 	GameManager.autotomy_is_active = false
 	reset_head_color()
 
-# A helper function to safely reset the head color
+# helper function to safely reset the head color
 func reset_head_color():
 	# Only reset if no other ability is currently giving a color
 	if not GameManager.is_phasing and not juke_and_jive_is_active and not GameManager.burrow_is_active and not GameManager.autotomy_is_active:

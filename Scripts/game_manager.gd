@@ -90,8 +90,15 @@ var tenderizer_level = 0
 var tenderizer_charges = 0
 var juke_and_jive_unlocked = false
 var afterburner_level = 0
+var afterburner_data = [
+	{}, # Level 0 does nothing
+	{"boost": 0.75, "duration": 2.0}, # Level 1: 25% faster for 2s
+	{"boost": 0.60, "duration": 2.5}, # Level 2: 40% faster for 2.5s
+	{"boost": 0.50, "duration": 3.0}  # Level 3: 50% faster for 3s
+]
 var pop_rocks_unlocked = false
 var autotomy_unlocked = false
+var autotomy_used_this_garden = false
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
@@ -356,14 +363,14 @@ var upgrade_data = {
 	},
 	"Juke & Jive": {
 		"display_name": "Juke & Jive",
-		"description": "Changing direction 4 times in 1 second\nlets you phase through a single body segment.",
+		"description": "Changing direction 4 times in 1 second\nlets you phase through a single body segment\nGet groovin'",
 		"costs": [4],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
 	},
 	"Afterburner": {
 		"display_name": "Afterburner",
-		"description": "Gain a temporary speed boost for 2 seconds after eating a fruit.",
+		"description": "Speed boost after eating a fruit?\nLvl 1: 33% faster for 2s\nLvl 2: 66.6% faster for 2.5s\nLvl 3: 3s double speed",
 		"costs": [2, 2, 3],
 		"max_level": 3,
 		"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
@@ -529,6 +536,7 @@ func start_game():
 	pop_rocks_unlocked = false
 	autotomy_unlocked = false
 	autotomy_is_active = false
+	autotomy_used_this_garden = false
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")

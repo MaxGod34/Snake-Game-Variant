@@ -129,7 +129,7 @@ func _process(delta):
 		$UI/HUDContainer/StatsVbox/RunTimerLabel.text = "Run Time: " + time_string
 		
 		# --- NEW: Time Since Last Fruit Display ---
-		$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "Time Since Fruit: %.1f" % time_since_last_fruit
+		$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "TSLFruit: %.1f" % time_since_last_fruit
 
 		# --- NEW: Fruits Per Minute (FPM) Display ---
 		var fpm = 0.0
@@ -340,16 +340,47 @@ func spawn_fruit():
 	print("Fruit spawned at a guaranteed safe location.")
 
 func destroy_obstacle(obstacle_node):
-	# This function safely removes a rock from the game.
+	# First, check if the obstacle is still valid (it might have already been destroyed by a shockwave)
+	if not is_instance_valid(obstacle_node):
+		return
+
+	# Store the rock's position *before* we remove it.
+	var rock_position = obstacle_node.position
 	
-	# 1. Remove it from our tracking array so fruit can spawn here.
+	# Safely remove it from our tracking array.
 	spawned_obstacles.erase(obstacle_node)
 	
-	# 2. Add a cool effect, like making it shrink away.
+	# Play the shrinking animation and queue it for deletion.
 	var tween = create_tween()
 	tween.tween_property(obstacle_node, "scale", Vector2.ZERO, 0.2)
-	# After the animation is done, delete the node for good.
 	tween.tween_callback(obstacle_node.queue_free)
+
+	# After we've handled the first rock, check if we should trigger the shockwave.
+	if GameManager.pop_rocks_unlocked:
+		trigger_pop_rocks_shockwave(rock_position)
+
+func trigger_pop_rocks_shockwave(origin_rock_pos: Vector2):
+	# This array defines the 8 tiles surrounding a central point.
+	var neighbor_offsets = [
+		Vector2(1, 0), Vector2(-1, 0), Vector2(0, 1), Vector2(0, -1),
+		Vector2(1, 1), Vector2(1, -1), Vector2(-1, 1), Vector2(-1, -1)
+	]
+	
+	# We need a list of rocks to destroy so we don't modify the array while looping.
+	var rocks_to_destroy = []
+
+	# Loop through all the offsets to find the neighbors.
+	for offset in neighbor_offsets:
+		var neighbor_pos = origin_rock_pos + (offset * tile_size)
+		# Now, loop through all spawned obstacles to see if one is at this position.
+		for rock in spawned_obstacles:
+			if positions_are_equal(rock.position, neighbor_pos):
+				rocks_to_destroy.append(rock)
+				
+	# Now that we have our list, destroy them all.
+	for rock in rocks_to_destroy:
+		# We can call our existing destroy function! This creates a cool chain reaction.
+		destroy_obstacle(rock)
 
 
 func spawn_rock():
@@ -622,6 +653,8 @@ func on_snake_ate_food(fruit):
 	
 	var was_bounty_target = fruit.is_bounty_target
 	
+	head.check_for_afterburner()
+	
 	# --- Check for all fruit states ---
 	if was_bounty_target:
 		# SUCCESS: You ate the correct fruit.
@@ -656,7 +689,8 @@ func on_snake_ate_food(fruit):
 	# --- Apply rewards ---
 	GameManager.skill_points += sp_reward
 	grow_snake(segments_to_add)
-	
+	time_since_last_fruit = 0.0
+	GameManager.fruits_eaten_this_run += 1
 	# --- Cleanup and Respawning ---
 	if was_bounty_target:
 		# --- THIS IS THE FIX ---
@@ -988,3 +1022,23 @@ func activate_banana_bounty():
 	
 	# Store a reference to this new tween
 	target_fruit.active_tween = tween
+
+
+func perform_autotomy(collided_segment):
+	print("SEVERING TAIL!")
+	# First, find the index of the segment we hit in our array
+	var hit_index = snake_body_segments.find(collided_segment)
+	
+	# If for some reason we couldn't find it, stop to prevent a crash
+	if hit_index == -1:
+		return
+		
+	# Now, loop from the end of the array down to the segment we hit
+	while snake_body_segments.size() > hit_index:
+		# Remove the last segment from the array and delete it from the game
+		var segment_to_remove = snake_body_segments.pop_back()
+		segment_to_remove.queue_free()
+		
+	# Update the score and HUD to reflect the shorter snake
+	update_score_display()
+	update_hud()
