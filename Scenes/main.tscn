@@ -53,21 +53,22 @@ size_flags_vertical = 3
 color = Color(0.133333, 0.133333, 0.133333, 1)
 
 [node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
-amount = 50
+position = Vector2(640, 480)
+amount = 25
 texture = ExtResource("2_21xkr")
-lifetime = 0.33
+lifetime = 0.36
 speed_scale = 0.25
 randomness = 0.26
 lifetime_randomness = 0.23
 emission_shape = 3
-emission_rect_extents = Vector2(1280, 960)
-direction = Vector2(100, -10)
-spread = 0.0
+emission_rect_extents = Vector2(640, 480)
+direction = Vector2(360, -10)
+spread = 3.62
 initial_velocity_min = 10.0
 initial_velocity_max = 25.0
 angular_velocity_min = -10.0
-scale_amount_min = 0.1
-scale_amount_max = 0.13
+scale_amount_min = 0.08
+scale_amount_max = 0.14
 color = Color(0.8, 0.878431, 0, 1)
 color_ramp = SubResource("Gradient_6bp64")
 
@@ -227,7 +228,7 @@ horizontal_alignment = 1
 [node name="StatsVbox" type="VBoxContainer" parent="UI/HUDContainer"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.775
+anchor_left = 0.7
 anchor_top = 0.2
 anchor_right = 0.775
 anchor_bottom = 0.2
@@ -246,17 +247,15 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Lives: "
-horizontal_alignment = 3
 
-[node name="GameTimerLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+[node name="RunTimerLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Time:"
-horizontal_alignment = 3
+text = "Run Time: --:--"
 
 [node name="TimeSinceLastFruitLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
@@ -266,9 +265,8 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "TSLFruit:"
-horizontal_alignment = 3
 
-[node name="FruitsPerMinute" type="Label" parent="UI/HUDContainer/StatsVbox"]
+[node name="FPMLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
@@ -276,7 +274,6 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "FPM: "
-horizontal_alignment = 3
 
 [node name="FriutRewardLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
@@ -286,7 +283,6 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Growth: + "
-horizontal_alignment = 3
 
 [node name="MaxFruitsLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
@@ -305,7 +301,6 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Goal: "
-horizontal_alignment = 3
 
 [node name="AbilitySlot1" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
@@ -315,7 +310,6 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 1: "
-horizontal_alignment = 3
 
 [node name="AbilitySlot2" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
@@ -325,7 +319,6 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 2:"
-horizontal_alignment = 3
 
 [node name="AbilitySlot3" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
@@ -335,7 +328,6 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 3:"
-horizontal_alignment = 3
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 

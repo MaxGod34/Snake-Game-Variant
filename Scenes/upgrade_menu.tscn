@@ -114,10 +114,11 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -320,44 +321,50 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 text = "# of obstacles next Garden:"
 
-[node name="RunTimeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
-layout_mode = 2
-offset_top = 442.0
-offset_right = 486.0
-offset_bottom = 476.0
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
-text = "Time:"
-
-[node name="Glutton" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
+[node name="Glutton" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
+theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 1
 
-[node name="FruitUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+[node name="PlannerTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 121.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.929412, 0.376471, 0.286275, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
+text = "Gluttonius Maximus
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ESPortionsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
 layout_mode = 2
+offset_top = 116.0
+offset_right = 739.0
+offset_bottom = 184.0
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="FruitRewardUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow"]
+[node name="ESPortionsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(1, 0, 0, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 0, 0, 1)
-theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
-theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
+theme_override_colors/font_color = Color(0.928588, 0.716534, 0, 1)
+theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("3_f5dmy")
@@ -368,86 +375,89 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
 text = "Elephant-Sized Portions (1 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/FruitUpgradeRow/IndicatorContainer"]
+[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ESPortionsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="MaxFruitsUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+[node name="MoreMiceRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
 layout_mode = 2
+offset_top = 200.0
+offset_right = 457.0
+offset_bottom = 268.0
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="MaxFruitsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow"]
+[node name="MoreMiceButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.988235, 0.768627, 0.690196, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
-theme_override_colors/font_hover_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(0.987029, 0.769693, 0.689322, 1)
-theme_override_colors/font_focus_color = Color(0.988235, 0.768627, 0.690196, 1)
-theme_override_colors/font_pressed_color = Color(0.988235, 0.768627, 0.690196, 1)
+theme_override_colors/font_color = Color(0.928588, 0.716534, 0, 1)
+theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
@@ -458,65 +468,227 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
 text = "More Mice! (2 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block6" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block7" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="GoldenSeedsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+layout_mode = 2
+offset_top = 284.0
+offset_right = 398.0
+offset_bottom = 352.0
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="GoldenSeedsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.928588, 0.716534, 0, 1)
+theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Golden Seeds (? SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block8" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block9" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block10" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MaxFruitsUpgradeRow/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PatientGardenerRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+layout_mode = 2
+offset_top = 368.0
+offset_right = 394.0
+offset_bottom = 436.0
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="PatientGardenerButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.928588, 0.716534, 0, 1)
+theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Patient Gardener (? SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="BananaBountyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+layout_mode = 2
+offset_top = 452.0
+offset_right = 296.0
+offset_bottom = 520.0
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="BananaBountyButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/BananaBountyRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.928588, 0.716534, 0, 1)
+theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Banana Bounty (? SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/BananaBountyRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/BananaBountyRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TheSatchelRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
+layout_mode = 2
+offset_top = 536.0
+offset_right = 259.0
+offset_bottom = 604.0
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="TheSatchelButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/TheSatchelRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_hover_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.928588, 0.716534, 0, 1)
+theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_f5dmy")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "The Satchel (? SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/TheSatchelRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/TheSatchelRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -865,7 +1037,6 @@ theme_override_styles/tabbar_background = ExtResource("8_v4egn")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-tab_alignment = 1
 tabs_position = 1
 deselect_enabled = true
 
@@ -1209,14 +1380,29 @@ metadata/_tab_index = 5
 
 [node name="BottomRowHbox" type="HBoxContainer" parent="."]
 anchors_preset = -1
-anchor_left = 0.1
-anchor_top = 0.77
-anchor_right = 0.9
+anchor_left = 0.09
+anchor_top = 0.79
+anchor_right = 0.925
 anchor_bottom = 0.85
+offset_bottom = 31.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/separation = 128
 alignment = 1
+
+[node name="RunTimeStatsLabel" type="Label" parent="BottomRowHbox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+text = "Run Time: 0s"
 
 [node name="BottomSPLabel" type="Label" parent="BottomRowHbox"]
 layout_mode = 2
@@ -1226,32 +1412,12 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 16
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
-text = "Skill Points: 0"
+text = "snake points available: 20sp"
 horizontal_alignment = 1
 vertical_alignment = 3
 uppercase = true
-
-[node name="ResumeButton" type="Button" parent="BottomRowHbox"]
-z_index = 5
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_colors/font_hover_pressed_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_hover_color = Color(0.565083, 0.673383, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_focus_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_pressed_color = Color(0.658824, 0.784314, 0.870588, 1)
-theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 28
-theme_override_styles/focus = ExtResource("3_f5dmy")
-theme_override_styles/hover_pressed = ExtResource("10_d1lbs")
-theme_override_styles/hover = ExtResource("3_f5dmy")
-theme_override_styles/pressed = ExtResource("10_d1lbs")
-theme_override_styles/normal = ExtResource("10_d1lbs")
-text = "Resume"
 
 [node name="DescriptionText" type="Label" parent="."]
 visible = false
@@ -1274,3 +1440,27 @@ theme_override_styles/normal = ExtResource("7_60tjm")
 text = "Description text"
 horizontal_alignment = 1
 vertical_alignment = 3
+
+[node name="ResumeButton" type="Button" parent="."]
+z_index = 5
+anchors_preset = -1
+anchor_left = 0.79
+anchor_top = 0.875
+anchor_right = 0.92
+anchor_bottom = 0.928
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_hover_pressed_color = Color(0.780392, 0.862745, 0.921569, 1)
+theme_override_colors/font_hover_color = Color(0.780392, 0.862745, 0.921569, 1)
+theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
+theme_override_colors/font_color = Color(0.778793, 0.861846, 0.91972, 1)
+theme_override_colors/font_focus_color = Color(0.780392, 0.862745, 0.921569, 1)
+theme_override_colors/font_pressed_color = Color(0.658824, 0.784314, 0.870588, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/hover_pressed = ExtResource("10_d1lbs")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = ExtResource("10_d1lbs")
+theme_override_styles/normal = ExtResource("10_d1lbs")
+text = "Resume"

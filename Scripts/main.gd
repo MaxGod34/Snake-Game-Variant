@@ -23,6 +23,11 @@ var spawned_obstacles: Array = []
 var next_fruit_position: Vector2
 var ghost_fruit_instance = null
 
+
+var time_since_last_fruit: float = 0.0
+
+
+
 var head_scene = preload("res://Scenes/snake_head.tscn")
 var body_scene = preload("res://Scenes/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/fruit.tscn")
@@ -72,6 +77,7 @@ func _ready():
 	head.ate_fruit.connect(on_snake_ate_food)
 	head.hit_self.connect(game_over)
 	#-------MENUS AND TRANSITION SIGNALS------#
+	$UI/UpgradeMenu.main_game = self
 	$PauseMenu.resume_game.connect(toggle_pause)
 	$UI/GameOverScreen.restart_pressed.connect(_on_restart_pressed)
 	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
@@ -89,28 +95,58 @@ func _ready():
 		spawn_fruit()
 	
 	update_fruit_prediction()
+	
+	time_since_last_fruit = 0.0
+	GameManager.fruits_eaten_this_run = 0
+
+	
 	# --- FINAL SETUP & START ---
 	update_score_display()
 	update_hud()
 	apply_persistent_upgrades() # Removed head_timer.start() here
 	
 func _process(delta):
-	#Bug fix: once the timer is stopped, do nothing
-	if head.move_timer.is_stopped() or delta > 0.5:
+	# First, check for a "hard pause". If the tree is paused, do nothing at all.
+	if get_tree().paused:
 		return
-	# We loop through the trail array BACKWARDS because we might remove items.
-	for i in range(trail_pieces.size() - 1, -1, -1):
-		var piece = trail_pieces[i]
-		# Reduce the timer by the time that has passed
-		piece.time_left -= delta
-		
-		# This creates a cool fade-out effect
-		piece.node.color.a = piece.time_left / 5.0 
 
-		if piece.time_left <= 0:
-			# If the timer is up, remove the visual node and the data entry
-			piece.node.queue_free()
-			trail_pieces.remove_at(i)
+	# 1. The snake's movement timer is NOT stopped (i.e., we are actively playing).
+	# 2. The upgrade menu is currently visible on screen.
+	if not head.move_timer.is_stopped() or $UI/UpgradeMenu.visible:
+		# If either of those is true, the clock runs.
+		GameManager.run_time += delta
+		time_since_last_fruit += delta # Also increment our new timer
+		
+		# --- Run Timer Display ---
+		var minutes = int(GameManager.run_time / 60)
+		var seconds = int(GameManager.run_time) % 60
+		var tenths = int(fmod(GameManager.run_time, 1.0) * 10)
+		var time_string = ""
+		if minutes > 0:
+			time_string = "%d:%02d.%d" % [minutes, seconds, tenths]
+		else:
+			time_string = "%02d.%d" % [seconds, tenths]
+		$UI/HUDContainer/StatsVbox/RunTimerLabel.text = "Run Time: " + time_string
+		
+		# --- NEW: Time Since Last Fruit Display ---
+		$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "Time Since Fruit: %.1f" % time_since_last_fruit
+
+		# --- NEW: Fruits Per Minute (FPM) Display ---
+		var fpm = 0.0
+		if GameManager.run_time > 0: # Avoid division by zero at the start
+			fpm = (GameManager.fruits_eaten_this_run / GameManager.run_time) * 60.0
+		$UI/HUDContainer/StatsVbox/FPMLabel.text = "FPM: %.1f" % fpm
+
+	# The trail logic is separate. It should ONLY run when the snake is actively moving.
+	if not head.move_timer.is_stopped():
+		# Handle the trail fading logic
+		for i in range(trail_pieces.size() - 1, -1, -1):
+			var piece = trail_pieces[i]
+			piece.time_left -= delta
+			piece.node.color.a = piece.time_left / 5.0 
+			if piece.time_left <= 0:
+				piece.node.queue_free()
+				trail_pieces.remove_at(i)
 	
 	if GameManager.fruit_foresight_unlocked and is_instance_valid(ghost_fruit_instance):
 		if positions_are_equal(head.global_position, ghost_fruit_instance.position):
@@ -202,12 +238,9 @@ func update_hud():
 	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
 	#---------Stats Vbox-------#
 	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
-	$UI/HUDContainer/StatsVbox/GameTimerLabel.text = "Run Time: 3.0s"
-	$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "TSLFruit: 4.2s"
-	$UI/HUDContainer/StatsVbox/FruitsPerMinute.text = "FPM: 32.4"
 	$UI/HUDContainer/StatsVbox/FriutRewardLabel.text = "Growth: " + str(GameManager.fruit_reward)
 	$UI/HUDContainer/StatsVbox/MaxFruitsLabel.text = "# of fruits: " + str(GameManager.max_fruits_on_screen)
-	$UI/HUDContainer/StatsVbox/GoalLabel.text = str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
+	$UI/HUDContainer/StatsVbox/GoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
 		#------------ABILITY LABELS----------#
 	var burrow_label = $UI/HUDContainer/StatsVbox/AbilitySlot1
 	if GameManager.burrow_level > 0:
@@ -227,6 +260,7 @@ func update_hud():
 		meditate_label.text = "Meditate Charges (r): " + str(GameManager.meditative_state_charges)
 	else:
 		meditate_label.visible = false
+
 	
 	
 
@@ -267,7 +301,14 @@ func on_snake_head_moved(head_previous_position: Vector2):
 		show_upgrade_menu()				# Now we show the menu
 		
 func spawn_fruit():
-	var fruit = fruit_scene.instantiate()
+	var fruit = null
+	var current_gs_level = GameManager.golden_seeds_level
+	
+	if current_gs_level > 0 and randf() < GameManager.golden_seeds_data[current_gs_level]["chance"]:
+		fruit = preload("res://Scenes/golden_fruit.tscn").instantiate()
+	else:
+		fruit = fruit_scene.instantiate()
+	
 	# Add to group so we can check against it
 	fruit.add_to_group("fruits") 
 	# Find a safe spot NOW and place it there.
@@ -375,10 +416,13 @@ func level_up():
 	if GameManager.chosen_class != "the_alchemist":
 		if GameManager.player_level >= 10:
 			GameManager.skill_points += 3
+			GameManager.total_sp_this_run += 3
 		elif GameManager.player_level >= 5:
 			GameManager.skill_points += 2
+			GameManager.total_sp_this_run += 2
 		else:
 			GameManager.skill_points += 1
+			GameManager.total_sp_this_run += 1
 	#EXP/SCORE SCALE
 	if GameManager.player_level >= 10:
 		GameManager.score_needed_for_next_level += 15
@@ -416,16 +460,17 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.speed_upgrade_level += 1
 			apply_persistent_upgrades()
 			print("New snake speed (wait time): ", head.move_timer.wait_time)
-	# Fruit Reward Upgrade logic only
-	elif upgrade_name == "increase_fruit_reward":
-		if GameManager.fruit_reward < 11:
-			var reward_mod = GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
-			GameManager.fruit_reward += reward_mod
-			print("New fruit reward (fruit reward): ", GameManager.fruit_reward)
-	# Max Fruits Upgrade Logic only
-	elif upgrade_name == "increase_max_fruits":
-			if GameManager.max_fruits_on_screen < 10: # Your max level
+	#-------------Glutton----------------#
+		#---ESP---#
+	elif upgrade_name == "elephant_sized_portions":
+		GameManager.es_portions_level += 1
+		GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
+		print("ESP bought! New Fruit Reward: ", GameManager.fruit_reward)
+		#---More Mice---#
+	elif upgrade_name == "more_mice":
+			if GameManager.more_mice_level < 6: # Your max level
 				GameManager.max_fruits_on_screen += 1
+				GameManager.more_mice_level += 1
 				
 				# Instead of just spawning one fruit, we now check how many are
 				# on screen vs. how many SHOULD be, and spawn the difference.
@@ -450,7 +495,23 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				
 				# Update the ghost fruit prediction now that the board has changed.
 				update_fruit_prediction()
-				
+		#---golden seeds----#
+	elif upgrade_name == "golden_seeds":
+		if GameManager.golden_seeds_level < 4:
+			GameManager.golden_seeds_level += 1
+		#-----patient gardener----#
+	elif upgrade_name == "patient_gardener":
+		if GameManager.patient_gardener_level < 3:
+			GameManager.patient_gardener_level += 1
+		#----banana bounty---#
+	elif upgrade_name == "banana_bounty":
+		if not GameManager.banana_bounty_unlocked:
+			GameManager.banana_bounty_unlocked = true
+		#-----the satchel------#
+	elif upgrade_name == "the_satchel":
+		if not GameManager.the_satchel_unlocked:
+			GameManager.the_satchel_unlocked = true
+		
 	# Increase Grid Size Upgrade Logic
 	elif upgrade_name == "increase_grid_size":
 		if GameManager.grid_size_level < 4:
@@ -503,12 +564,20 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
+	GameManager.fruits_eaten_this_run += 1
+	time_since_last_fruit = 0.0
 	fruit.queue_free()
+	
+	if fruit is GoldenFruit:
+		var reward = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
+		print("Golden APPLe! +%s SP" % reward)
+		GameManager.skill_points += reward
 	
 	if GameManager.chosen_class == "the_alchemist":
 		if randi() % 100 < 10:
 			print("Alchemist bonus! +1 SP")
 			GameManager.skill_points += 1
+			GameManager.total_sp_this_run += 1
 			update_hud()
 	
 	grow_snake()
@@ -546,7 +615,7 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 		potential_position = (Vector2(random_grid_pos) * tile_size) + tile_offset
 
 		# --- Full Safety Check ---
-		var is_on_snake = is_position_occupied(potential_position) or positions_are_equal(potential_position, head.global_position)
+		var is_on_snake = is_any_body_part_at(potential_position) or positions_are_equal(potential_position, head.global_position)
 		
 		var is_on_obstacle = false
 		for obstacle in spawned_obstacles:
@@ -578,6 +647,13 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			is_safe_position = true
 			
 	return potential_position
+
+func is_any_body_part_at(check_pos: Vector2) -> bool:
+	# This function ignores ghost rules and just checks every segment.
+	for segment in snake_body_segments:
+		if positions_are_equal(segment.global_position, check_pos):
+			return true # Found a body part here.
+	return false # No parts found.
 
 func add_body_segment_at(position: Vector2):
 	var new_segment = create_colored_segment(position)

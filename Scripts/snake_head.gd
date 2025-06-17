@@ -150,7 +150,7 @@ func on_move_timer_timeout():
 
 
 func _on_head_area_area_entered(area):
-	if area is Fruit:
+	if area is Fruit or area is GoldenFruit:
 		emit_signal("ate_fruit", area)
 	elif not GameManager.is_phasing and area is SnakeBody:
 		emit_signal("hit_self")

@@ -7,6 +7,8 @@ signal resume_game_pressed
 @onready var top_tabs = main_vbox.get_node("TopTabs")
 @onready var bottom_tabs = main_vbox.get_node("BottomTabs")
 
+var main_game
+
 var is_switching_tabs: bool = false
 
 func _ready():
@@ -16,8 +18,14 @@ func _ready():
 	
 	# --- Top Row ---
 	connect_upgrade_button(top_tabs, "Acrobat/SpeedUpgradeRow/SpeedUpgradeButton", "increase_speed")
-	connect_upgrade_button(top_tabs, "Glutton/FruitUpgradeRow/FruitRewardUpgradeButton", "increase_fruit_reward")
-	connect_upgrade_button(top_tabs, "Glutton/MaxFruitsUpgradeRow/MaxFruitsButton", "increase_max_fruits")
+		#--------------THE GLUTTON-----------#
+	connect_upgrade_button(top_tabs, "Glutton/ESPortionsRow/ESPortionsButton", "elephant_sized_portions")
+	connect_upgrade_button(top_tabs, "Glutton/MoreMiceRow/MoreMiceButton", "more_mice")
+	connect_upgrade_button(top_tabs, "Glutton/GoldenSeedsRow/GoldenSeedsButton", "golden_seeds")
+	connect_upgrade_button(top_tabs, "Glutton/PatientGardenerRow/PatientGardenerButton", "patient_gardener")
+	connect_upgrade_button(top_tabs, "Glutton/BananaBountyRow/BananaBountyButton", "banana_bounty")
+	connect_upgrade_button(top_tabs, "Glutton/TheSatchelRow/TheSatchelButton", "the_satchel")
+	#to-do
 	connect_upgrade_button(top_tabs, "Architect/PerimeterUpgradeRow/PerimeterUpgradeButton", "increase_grid_size")
 	connect_upgrade_button(top_tabs, "Standalone/H/BurrowAbilityRow/BurrowButton", "increase_burrow_charges")
 	connect_upgrade_button(top_tabs, "Standalone/H/PhaseShiftAbilityRow/PhaseShiftButton", "increase_phase_charges")
@@ -32,7 +40,7 @@ func _ready():
 	connect_upgrade_button(bottom_tabs, "Planner/GardenWeaverRow/GardenWeaverButton", "garden_weaver")
 	
 	# --- Other Connections ---
-	$BottomRowHbox/ResumeButton.pressed.connect(_on_resume_button_pressed)
+	$ResumeButton.pressed.connect(_on_resume_button_pressed)
 	top_tabs.tab_selected.connect(_on_top_tabs_tab_selected)
 	bottom_tabs.tab_selected.connect(_on_bottom_tabs_tab_selected)
 
@@ -44,8 +52,6 @@ func update_all_displays():
 	update_skill_points_label()
 	update_stats_tab()
 	update_button_display("increase_speed", top_tabs.get_node("Acrobat/SpeedUpgradeRow/SpeedUpgradeButton"), GameManager.speed_upgrade_level)
-	update_button_display("increase_fruit_reward", top_tabs.get_node("Glutton/FruitUpgradeRow/FruitRewardUpgradeButton"), GameManager.fruit_reward - 1)
-	update_button_display("increase_max_fruits", top_tabs.get_node("Glutton/MaxFruitsUpgradeRow/MaxFruitsButton"), GameManager.max_fruits_on_screen - 1)
 	update_button_display("increase_grid_size",top_tabs.get_node("Architect/PerimeterUpgradeRow/PerimeterUpgradeButton"), GameManager.grid_size_level)
 	update_button_display("increase_burrow_charges", top_tabs.get_node("Standalone/H/BurrowAbilityRow/BurrowButton"), GameManager.burrow_level)
 	update_button_display("increase_phase_charges", top_tabs.get_node("Standalone/H/PhaseShiftAbilityRow/PhaseShiftButton"), GameManager.phase_shift_level)
@@ -59,6 +65,15 @@ func update_all_displays():
 	update_button_display("meditative_state", bottom_tabs.get_node("Planner/MeditativeStateRow/MeditativeStateButton"), GameManager.meditative_state_level)
 	var garden_weaver_level = 1 if GameManager.garden_weaver_unlocked else 0
 	update_button_display("garden_weaver", bottom_tabs.get_node("Planner/GardenWeaverRow/GardenWeaverButton"), garden_weaver_level)
+	#--------------THE GLUTTON-----------#
+	update_button_display("elephant_sized_portions", top_tabs.get_node("Glutton/ESPortionsRow/ESPortionsButton"), GameManager.es_portions_level)
+	update_button_display("more_mice", top_tabs.get_node("Glutton/MoreMiceRow/MoreMiceButton"), GameManager.more_mice_level)
+	update_button_display("golden_seeds", top_tabs.get_node("Glutton/GoldenSeedsRow/GoldenSeedsButton"), GameManager.golden_seeds_level)
+	update_button_display("patient_gardener", top_tabs.get_node("Glutton/PatientGardenerRow/PatientGardenerButton"), GameManager.patient_gardener_level)
+	var banana_bounty_level = 1 if GameManager.banana_bounty_unlocked else 0
+	update_button_display("banana_bounty", top_tabs.get_node("Glutton/BananaBountyRow/BananaBountyButton"), banana_bounty_level)
+	var satchel_level = 1 if GameManager.the_satchel_unlocked else 0
+	update_button_display("the_satchel", top_tabs.get_node("Glutton/TheSatchelRow/TheSatchelButton"), satchel_level)
 	#-------CLASS SPECIFIC DISABLES-------#
 	var extra_life_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/H2/ExtraLifeRow/ExtraLifeButton
 	# Check if the current class is The Zealot
@@ -76,20 +91,26 @@ func update_button_display(upgrade_key, button_node, current_level):
 	var rules = GameManager.upgrade_data[upgrade_key]
 	var display_name = rules["display_name"]
 	var indicator_container = button_node.get_parent().get_node("IndicatorContainer")
-	# --- NEW PREREQUISITE LOGIC ---
+	# --- PREREQUISITE LOGIC ---
 	var prerequisites_met = true
 	if rules.has("prerequisite"):
+		# Check the FIRST prerequisite
 		var prereq_key = rules["prerequisite"]["upgrade"]
 		var required_level = rules["prerequisite"]["level"]
-		
-		# Get the current level of the prerequisite upgrade
 		var prereq_current_level = get_upgrade_level_from_key(prereq_key)
-
 		if prereq_current_level < required_level:
 			prerequisites_met = false
-			
-	# If prerequisites aren't met, hide the button and stop.
-	button_node.disabled = not prerequisites_met
+		
+		# Now, check if there is a SECOND prerequisite
+		if rules["prerequisite"].has("and"):
+			var prereq_key_2 = rules["prerequisite"]["and"]
+			var required_level_2 = rules["prerequisite"]["and_level"]
+			var prereq_current_level_2 = get_upgrade_level_from_key(prereq_key_2)
+			if prereq_current_level_2 < required_level_2:
+				prerequisites_met = false # If this one isn't met, also fail.
+
+	# If prerequisites aren't met, hide the button's entire row and stop.
+	button_node.get_parent().visible = prerequisites_met
 	if not prerequisites_met:
 		return
 
@@ -130,12 +151,23 @@ func update_stats_tab():
 		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
 		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (length X height)" % [GameManager.grid_size_data[GameManager.grid_size_level].x, GameManager.grid_size_data[GameManager.grid_size_level].y]
-		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: (fill)"
-		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: (fill)"
+		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
+		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: " + str(GameManager.total_sp_this_run) + " SP"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill)"
-		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: (fill)"
+		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden + 1]["score_goal"])
 		side_stats_panel.get_node("NextGardenObstacles#Label").text = "# of obstacles next garden: (fill)"
-		side_stats_panel.get_node("RunTimeStatsLabel").text = "Run Time: 4.2s (fill)"
+		
+
+func _process(delta):
+	var minutes = floor(GameManager.run_time / 60)
+	var seconds = int(GameManager.run_time) % 60
+	var tenths = int(fmod(GameManager.run_time, 1.0) * 10)
+	var time_string = ""
+	if minutes > 0:
+		time_string = "Run Time: %d:%02d.%d" % [minutes, seconds, tenths]
+	else:
+		time_string = "Run Time: %02d.%ds" % [seconds, tenths]
+	$BottomRowHbox/RunTimeStatsLabel.text = time_string
 
 func update_skill_points_label():
 	# Make sure this path is correct for your scene!
@@ -185,6 +217,12 @@ func get_upgrade_level_from_key(upgrade_key):
 	if upgrade_key == "sovereign_trail": return GameManager.sovereign_trail_level
 	if upgrade_key == "meditative_state": return GameManager.meditative_state_level
 	if upgrade_key == "garden_weaver": return 1 if GameManager.garden_weaver_unlocked else 0
+	if upgrade_key == "elephant_sized_portions": return GameManager.es_portions_level
+	if upgrade_key == "more_mice": return GameManager.more_mice_level
+	if upgrade_key == "golden_seeds": return GameManager.golden_seeds_level
+	if upgrade_key == "patient_gardener": return GameManager.patient_gardener_level
+	if upgrade_key == "banana_bounty": return 1 if GameManager.banana_bounty_unlocked else 0
+	if upgrade_key == "the_satchel": return 1 if GameManager.the_satchel_unlocked else 0
 	return 0 # Default
 func set_initial_state():
 	is_switching_tabs = true

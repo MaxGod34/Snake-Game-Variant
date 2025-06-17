@@ -3,7 +3,7 @@ extends Node
 #------Session State---------#
 var chosen_difficulty = "viper"
 var chosen_class = "speedster"
-
+var run_time: float = 0.0
 #------Garden Progression----#
 var has_died_this_garden = false
 var current_garden = 1
@@ -22,8 +22,8 @@ var player_level = 1
 var skill_points = 0
 var score_needed_for_next_level = 5
 var score_at_level_start = 0
-
-
+var fruits_eaten_this_run: int = 0
+var total_sp_this_run: int = 0
 #----Upgrade Data Tracking----#
 var speed_upgrade_level = 0
 var fruit_reward = 1
@@ -60,7 +60,20 @@ var meditative_state_charges = 0
 var meditative_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
 var garden_weaver_used_this_garden = false
-
+#-----------THE GLUTTON----------------#
+var es_portions_level = 0
+var more_mice_level = 0
+var golden_seeds_level = 0
+var golden_seeds_data = [
+	{"chance": 0.0, "reward": 0},
+	{"chance": 0.05, "reward": 1},
+	{"chance": 0.1, "reward": 1},
+	{"chance": 0.2, "reward": 3},
+	{"chance": 0.33, "reward": 3}
+]
+var patient_gardener_level = 0
+var banana_bounty_unlocked = false
+var the_satchel_unlocked = false
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
@@ -113,7 +126,10 @@ var class_data = {
 			"buy_extra_life": 2,           # +2 SP cost
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	},
 	"warlock": {
@@ -129,15 +145,16 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			"increase_speed": 0,
-			"increase_fruit_reward": -1,  # -1 SP cost (minimum of 1)
-			"increase_max_fruits": -1,    # -1 SP cost (minimum of 1)
 			"increase_burrow_charges": 1,
 			"increase_phase_charges": 1,
 			"increase_grid_size": 0,
 			"buy_extra_life": 1,
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	},
 	"inchworm": {
@@ -161,7 +178,10 @@ var class_data = {
 			"buy_extra_life": 2,           # +2 SP cost
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	},
 	"phoenix_coil": {
@@ -185,7 +205,10 @@ var class_data = {
 			"buy_extra_life": -5, # Makes the 10 SP cost only 5
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	},
 	"sidewinder": {
@@ -209,7 +232,10 @@ var class_data = {
 			"buy_extra_life": 0,
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	},
 	"the_zealot": {
@@ -233,7 +259,10 @@ var class_data = {
 			"buy_extra_life": 0,
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	},
 	"the_alchemist": {
@@ -257,7 +286,10 @@ var class_data = {
 			"buy_extra_life": -1,
 			# Planner Path Modifiers
 			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0
+			"meditative_state": 0, "garden_weaver": 0,
+			# Glutton Modifiers
+			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
 		}
 	}
 }
@@ -268,18 +300,6 @@ var upgrade_data = {
 		"display_name": "Slither Sauce",
 		"description": "Increase Snake Movement Speed By 10%\nRequired for...upgrades...",
 		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 
-		"max_level": 10
-	},
-	"increase_fruit_reward": {
-		"display_name": "Elephant-Sized Portions",
-		"description": "Increase Fruit reward by 1",
-		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
-		"max_level": 10
-	},
-	"increase_max_fruits": {
-		"display_name": "More Mice!",
-		"description": "Increase the maximum number of fruits on screen by 1\n*Requires level 3 ESP*",
-		"costs": [2, 2, 4, 4, 6, 6, 8, 8, 10, 10],
 		"max_level": 10
 	},
 	"increase_burrow_charges": { # Changed from "unlock_burrow"
@@ -305,7 +325,7 @@ var upgrade_data = {
 		"description": "We all make mistakes.\nHere's a free life if ya need it!\nReset to 1 length and keep all your buffs!\n3 per run!",
 		"costs": [3, 7, 10],
 		"max_level": 3
-	}, #--------The Planner-----#
+	}, #----------------------------------The Planner--------------------------------------------#
 	"decrease_speed": {
 		"display_name": "Diet Slith",
 		"description": "Speed ain't your thing?\nCome take a walk on the Slith side with some Diet Slith!\nDecresae your speed by 10%",
@@ -346,7 +366,50 @@ var upgrade_data = {
 		"costs": [5],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "decrease_speed", "level": 5}
-	}
+	},
+	#----------------------------------------------------------------------------------#
+	#-------------------------------------------the glutton----------------------------#
+	"elephant_sized_portions": {
+		"display_name": "Elephant Sized Portions",
+		"description": "Increases the number of segments you grow per fruit.",
+		"costs": [1,1,2,2,3,3,4,4,5,5],
+		"max_level": 10
+	},
+	"more_mice": {
+		"display_name": "More Mice!",
+		"description": "Increases the maximum number of fruits on screen at once.",
+		"costs": [2,2,3,3,4,4],
+		"max_level": 6,
+		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
+	},
+	"golden_seeds": {
+		"display_name": "Golden Seeds",
+		"description": "Unlocks a chance for Golden Apples to spawn, granting SP. Each level increases the chance and reward.",
+		"costs": [3,3,4,4],
+		"max_level": 4,
+		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
+	},
+	"patient_gardener": {
+		"display_name": "Patient Gardener",
+		"description": "Fruits left on screen will ripen over time, granting bonus growth.",
+		"costs": [3,3,4],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
+	},
+	"banana_bounty": {
+		"display_name": "Banana Bounty",
+		"description": "Active Ability: Despawns all but one fruit, turning it into a Perfect Fruit. Eat it for a huge reward.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 5}
+	},
+	"the_satchel": {
+		"display_name": "The Satchel",
+		"description": "Permanently unlocks a third active ability slot.",
+		"costs": [8],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 10, "and": "golden_seeds", "and_level": 4}
+	},
 }
 
 #----------FUNCTIONS-----------#
@@ -364,6 +427,10 @@ func start_game():
 	score_at_level_start = 0
 	current_garden = 1
 	has_died_this_garden = false
+	run_time = 0.0
+	fruits_eaten_this_run = 0
+	total_sp_this_run = 0
+	total_sp_this_run = skill_points
 	
 	speed_upgrade_level = 0
 	fruit_reward = p_class_data["start_fruit_reward"]
@@ -385,6 +452,14 @@ func start_game():
 	meditative_state_charges = 0
 	garden_weaver_unlocked = false
 	garden_weaver_used_this_garden = false
+	#-------Reset Glutton Upgrades--------#
+	es_portions_level = 0
+	more_mice_level = 0
+	golden_seeds_level = 0
+	patient_gardener_level = 0
+	banana_bounty_unlocked = false
+	the_satchel_unlocked = false
+	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")
 	get_tree().paused = false
