@@ -154,9 +154,9 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Player: Crash_Test_Dummy_sigma"
+text = "ID: No-Armed Bandit"
 
-[node name="GameClassSelectedLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+[node name="HUDSPLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -165,10 +165,11 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Class: Warlock"
+text = "SP: 0"
 horizontal_alignment = 1
 
-[node name="DifficultySelectedLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+[node name="GardenGoalLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -177,7 +178,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Difficulty: Easy"
+text = "Garden Goal: 500"
 horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
@@ -239,69 +240,6 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="LivesLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Lives: "
-
-[node name="RunTimerLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Run Time: --:--"
-
-[node name="TimeSinceLastFruitLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.999995, 0.494367, 0.42619, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "TSLFruit:"
-
-[node name="FPMLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "FPM: "
-
-[node name="FriutRewardLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.298039, 0.807843, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Growth: + "
-
-[node name="MaxFruitsLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.287307, 0.225237, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "# of fruits: "
-
-[node name="GoalLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.537718, 1, 0.50622, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Goal: "
-
 [node name="AbilitySlot1" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
@@ -328,6 +266,100 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 3:"
+
+[node name="AbilitySlot4" type="Label" parent="UI/HUDContainer/StatsVbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 4:"
+
+[node name="AbilitySlot5" type="Label" parent="UI/HUDContainer/StatsVbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 5:"
+
+[node name="AbilitySlot6" type="Label" parent="UI/HUDContainer/StatsVbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 6:"
+
+[node name="AbilitySlot7" type="Label" parent="UI/HUDContainer/StatsVbox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Ability Slot 7:"
+
+[node name="FriutRewardLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.298039, 0.807843, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Growth: + "
+
+[node name="MaxFruitsLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.287307, 0.225237, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "# of fruits: "
+
+[node name="TimeSinceLastFruitLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.999995, 0.494367, 0.42619, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "TSLFruit:"
+
+[node name="FPMLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "FPM: "
+
+[node name="RunTimerLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Run Time: --:--"
+
+[node name="LivesLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Lives: "
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 

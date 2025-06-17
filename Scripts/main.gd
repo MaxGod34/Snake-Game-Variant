@@ -152,6 +152,17 @@ func _process(delta):
 		if positions_are_equal(head.global_position, ghost_fruit_instance.position):
 			print("Snake occupied ghost spot! Finding new spot!")
 			update_fruit_prediction()
+			
+	if not head.move_timer.is_stopped():
+		var gardener_level = GameManager.patient_gardener_level
+		if gardener_level > 0:
+			# Loop through all fruits on screen
+			for fruit in get_tree().get_nodes_in_group("fruits"):
+				# We now check if the fruit has a "ripen" method. Both Fruit and GoldenFruit do.
+				if fruit.has_method("ripen") and not fruit.is_ripe and fruit.time_left_to_ripen > 0:
+					fruit.time_left_to_ripen -= delta
+					if fruit.time_left_to_ripen <= 0:
+						fruit.ripen()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel") and not is_game_over:
@@ -185,7 +196,7 @@ func apply_persistent_upgrades():
 func show_upgrade_menu():
 	head.move_timer.stop()
 	
-	$UI/UpgradeMenu.set_initial_state()
+	$UI/UpgradeMenu.set_initial_state_and_update()
 
 	$UI/UpgradeMenu.update_all_displays()
 
@@ -232,15 +243,15 @@ func update_hud():
 	# Set the Bar's current fill value
 	xp_bar.value = current_score
 	# Update values for selected class, difficulty, and which garden currently on
-	$UI/HUDContainer/BottomGrid/GameClassSelectedLabel.text = "Class: " + GameManager.chosen_class.capitalize()
-	$UI/HUDContainer/BottomGrid/DifficultySelectedLabel.text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
-	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "Garden %s/5" % GameManager.current_garden
+	$UI/HUDContainer/BottomGrid/GardenGoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
+	$UI/HUDContainer/BottomGrid/HUDSPLabel.text = "SP: " + str(GameManager.skill_points)
+	$UI/HUDContainer/BottomGrid/GardenCurrentNumberLabel.text = "Garden %s/5" % GameManager.current_garden
 	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
 	#---------Stats Vbox-------#
 	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
 	$UI/HUDContainer/StatsVbox/FriutRewardLabel.text = "Growth: " + str(GameManager.fruit_reward)
 	$UI/HUDContainer/StatsVbox/MaxFruitsLabel.text = "# of fruits: " + str(GameManager.max_fruits_on_screen)
-	$UI/HUDContainer/StatsVbox/GoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
+	
 		#------------ABILITY LABELS----------#
 	var burrow_label = $UI/HUDContainer/StatsVbox/AbilitySlot1
 	if GameManager.burrow_level > 0:
@@ -260,6 +271,12 @@ func update_hud():
 		meditate_label.text = "Meditate Charges (r): " + str(GameManager.meditative_state_charges)
 	else:
 		meditate_label.visible = false
+	var banana_bounty_label = $UI/HUDContainer/StatsVbox/AbilitySlot4
+	if GameManager.banana_bounty_level > 0:
+		banana_bounty_label.visible = true
+		banana_bounty_label.text = "Banana Bounty (f): " + str(GameManager.banana_bounty_charges)
+	else:
+		banana_bounty_label.visible = false
 
 	
 	
@@ -359,25 +376,25 @@ func spawn_trail_piece(position: Vector2):
 	$TrailContainer.add_child(trail_piece)
 	trail_pieces.append({"node": trail_piece, "time_left": 5.0})
 
-func grow_snake():
-	print("Growing snake.")
+func grow_snake(segments_to_add: int):
+	print("Growing snake by %s segments." % segments_to_add)
 	
-	for i in range(GameManager.fruit_reward):
-		var new_segment_position: Vector2 
-	# Check if the snake has a body yet.
+	# Loop for the specified number of times
+	for i in range(segments_to_add):
+		var new_segment_position: Vector2
+		
+		# This logic for finding the position is still perfect.
 		if snake_body_segments.is_empty() and i == 0:
-		# If there is no body, place the new segment at the head's current position but one space back
-		# The movement code on the next frame will automatically move it to the correct spot behind the head.
 			new_segment_position = head.global_position - (head.current_direction * tile_size)
 		else:
-		# If there is already a body, use the old logic and place it at the tail's position.
 			var current_tail = snake_body_segments.back()
 			new_segment_position = current_tail.global_position
-		
+			
 		var new_segment = create_colored_segment(new_segment_position)
 		call_deferred("add_child", new_segment)
 		snake_body_segments.append(new_segment)
 
+	# We only update the score display once at the very end.
 	update_score_display()
 
 func update_progression():
@@ -437,6 +454,8 @@ func level_up():
 		GameManager.phase_shift_charges = GameManager.phase_shift_level
 	if GameManager.meditative_state_level > 0:
 		GameManager.meditative_state_charges = GameManager.meditative_state_level
+	if GameManager.banana_bounty_level > 0:
+		GameManager.banana_bounty_charges = GameManager.banana_bounty_level
 	
 
 func _on_upgrade_menu_resume_game_pressed():
@@ -505,8 +524,10 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.patient_gardener_level += 1
 		#----banana bounty---#
 	elif upgrade_name == "banana_bounty":
-		if not GameManager.banana_bounty_unlocked:
-			GameManager.banana_bounty_unlocked = true
+		if GameManager.banana_bounty_level < 2:
+			GameManager.banana_bounty_level += 1
+			GameManager.banana_bounty_charges += 1
+			print("Banana Bounty charge: +1! Now: ", GameManager.banana_bounty_level, " charge(s)")
 		#-----the satchel------#
 	elif upgrade_name == "the_satchel":
 		if not GameManager.the_satchel_unlocked:
@@ -531,7 +552,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "buy_extra_life":
 		GameManager.extra_lives += 1
 	#-----------THE PLANNER--------#
-	elif upgrade_name == "decrease_speed":
+	elif upgrade_name == "diet_slith":
 		if GameManager.diet_slith_level < 5:
 			GameManager.diet_slith_level += 1
 			head.move_timer.wait_time *= 1.1 
@@ -564,41 +585,86 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
-	GameManager.fruits_eaten_this_run += 1
-	time_since_last_fruit = 0.0
-	fruit.queue_free()
 	
-	if fruit is GoldenFruit:
-		var reward = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
-		print("Golden APPLe! +%s SP" % reward)
-		GameManager.skill_points += reward
+	var segments_to_add = 0
+	var sp_reward = 0
 	
-	if GameManager.chosen_class == "the_alchemist":
-		if randi() % 100 < 10:
-			print("Alchemist bonus! +1 SP")
-			GameManager.skill_points += 1
-			GameManager.total_sp_this_run += 1
-			update_hud()
+	var was_bounty_target = fruit.is_bounty_target
 	
-	grow_snake()
-	
-	spawn_fruit()
+	# --- Check for all fruit states ---
+	if was_bounty_target:
+		# SUCCESS: You ate the correct fruit.
+		print("BOUNTY COLLECTED!")
+		segments_to_add = GameManager.max_fruits_on_screen * GameManager.fruit_reward
+		GameManager.is_bounty_active = false
+	elif GameManager.is_bounty_active:
+		# FAILURE: You ate the wrong fruit. Cancel the bounty.
+		print("Wrong fruit! Bounty cancelled.")
+		GameManager.is_bounty_active = false
+		for f in get_tree().get_nodes_in_group("fruits"):
+			if f.is_bounty_target:
+				# Reset the old target's visuals
+				if is_instance_valid(f.active_tween): f.active_tween.kill()
+				f.is_bounty_target = false
+				f.scale = Vector2(1, 1)
+				f.get_node("FillSprite").modulate = Color.GOLD if f is GoldenFruit else Color.RED
+				break
+		segments_to_add = GameManager.fruit_reward
+	else:
+		# If no bounty is active, calculate rewards normally.
+		var growth_multiplier = 1
+		if fruit is GoldenFruit:
+			sp_reward = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
+			if fruit.is_ripe:
+				growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
+				sp_reward += 1
+		elif fruit.has_method("ripen") and fruit.is_ripe:
+			growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
+		segments_to_add = GameManager.fruit_reward * growth_multiplier
 
-	update_fruit_prediction()
+	# --- Apply rewards ---
+	GameManager.skill_points += sp_reward
+	grow_snake(segments_to_add)
 	
+	# --- Cleanup and Respawning ---
+	if was_bounty_target:
+		# --- THIS IS THE FIX ---
+		# If it was a bounty, kill ALL tweens before clearing the board.
+		for f in get_tree().get_nodes_in_group("fruits"):
+			if is_instance_valid(f.active_tween):
+				f.active_tween.kill()
+			f.queue_free()
+		# Now it's safe to respawn everything.
+		for i in range(GameManager.max_fruits_on_screen):
+			spawn_fruit()
+	else:
+		# Otherwise, just kill the tween on the one fruit that was eaten.
+		if is_instance_valid(fruit.active_tween):
+			fruit.active_tween.kill()
+		fruit.queue_free()
+		spawn_fruit()
+
+	# --- Final updates ---
+	update_fruit_prediction()
 	update_progression()
 	update_hud()
 	
-	
 	if head.can_reverse:
 		head.can_reverse = false
+
 
 func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> Vector2:
 	var potential_position: Vector2
 	var is_safe_position = false
 	var trail_level = GameManager.sovereign_trail_level
 
+	var attempt_counter = 0
+
 	while not is_safe_position:
+		attempt_counter += 1
+		if attempt_counter > 5000:
+			print_debug("ERROR: Could not find a safe spawn position. Grid is full.")
+			return Vector2(-100, -100) #spawn off screen
 		var random_grid_pos: Vector2i
 		
 		# --- Logic to pick a random spot (including trail bonus) ---
@@ -865,3 +931,29 @@ func perform_garden_weave():
 
 	# 4. Now that all real fruit have been moved, update the ghost's prediction.
 	update_fruit_prediction()
+
+func activate_banana_bounty():
+	var all_fruits = get_tree().get_nodes_in_group("fruits")
+	if all_fruits.is_empty():
+		return
+
+	print("BANANA BOUNTY ACTIVATED!")
+	GameManager.is_bounty_active = true
+	GameManager.banana_bounty_charges -= 1
+	update_hud()
+
+	var target_fruit = all_fruits.pick_random()
+	target_fruit.is_bounty_target = true
+	
+	# Before creating a new tween, kill any old one (like a ripen tween).
+	if is_instance_valid(target_fruit.active_tween):
+		target_fruit.active_tween.kill()
+
+	# Create the new tween animation
+	var tween = create_tween().set_loops()
+	tween.tween_property(target_fruit, "scale", Vector2(1.5, 1.5), 0.3)
+	tween.tween_property(target_fruit, "scale", Vector2(1.0, 1.0), 0.3)
+	target_fruit.get_node("FillSprite").modulate = Color.GOLD
+	
+	# Store a reference to this new tween
+	target_fruit.active_tween = tween

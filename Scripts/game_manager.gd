@@ -41,6 +41,7 @@ var extra_lives = 0
 	#----Active Ability Flags----#
 var burrow_is_active = false
 var is_phasing = false 
+var is_bounty_active = false
 	#--------Perimeter Upgrade Sizes-------#
 var grid_size_data = [
 	Vector2(20, 15), # Level 0
@@ -72,7 +73,14 @@ var golden_seeds_data = [
 	{"chance": 0.33, "reward": 3}
 ]
 var patient_gardener_level = 0
-var banana_bounty_unlocked = false
+var patient_gardener_data = [
+	{}, # Level 0
+	{"time": 10.0, "multiplier": 2}, # Level 1
+	{"time": 7.0, "multiplier": 2},  # Level 2
+	{"time": 5.0, "multiplier": 3}   # Level 3
+]
+var banana_bounty_charges = 0
+var banana_bounty_level = 0
 var the_satchel_unlocked = false
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
@@ -125,7 +133,7 @@ var class_data = {
 			"increase_grid_size": 2,      # +2 SP cost
 			"buy_extra_life": 2,           # +2 SP cost
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -150,7 +158,7 @@ var class_data = {
 			"increase_grid_size": 0,
 			"buy_extra_life": 1,
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
@@ -177,7 +185,7 @@ var class_data = {
 			"increase_grid_size": -1,      # Cheaper 1 (min. 1)
 			"buy_extra_life": 2,           # +2 SP cost
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -204,7 +212,7 @@ var class_data = {
 			"increase_grid_size": 1,
 			"buy_extra_life": -5, # Makes the 10 SP cost only 5
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -231,7 +239,7 @@ var class_data = {
 			"increase_grid_size": 1,
 			"buy_extra_life": 0,
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -258,7 +266,7 @@ var class_data = {
 			"increase_grid_size": 0,
 			"buy_extra_life": 0,
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -285,7 +293,7 @@ var class_data = {
 			"increase_grid_size": 2,
 			"buy_extra_life": -1,
 			# Planner Path Modifiers
-			"decrease_speed": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -326,7 +334,7 @@ var upgrade_data = {
 		"costs": [3, 7, 10],
 		"max_level": 3
 	}, #----------------------------------The Planner--------------------------------------------#
-	"decrease_speed": {
+	"diet_slith": {
 		"display_name": "Diet Slith",
 		"description": "Speed ain't your thing?\nCome take a walk on the Slith side with some Diet Slith!\nDecresae your speed by 10%",
 		"costs": [1, 1, 2, 2, 3], # 5 levels total
@@ -337,35 +345,35 @@ var upgrade_data = {
 		"description": "Movin' so slow out there,\nit'd be nice to see where the next fruit is gonna go...\nLook no further! One time purchase!",
 		"costs": [3], # One-time purchase
 		"max_level": 1,
-		"prerequisite": {"upgrade": "decrease_speed", "level": 2} # Requires Diet Slith Lvl 2
+		"prerequisite": {"upgrade": "diet_slith", "level": 2} # Requires Diet Slith Lvl 2
 	},
 	"ghost_tail": {
 		"display_name": "Ghost Tail",
 		"description": "Makes your tail specifically passable\nLvl 1: 7 seg, Lvl 2: 10 seg, Lvl 3: 15 seg!",
 		"costs": [2, 2, 3], # 3 levels (e.g., 7 -> 10 -> 15 segments)
 		"max_level": 3,
-		"prerequisite": {"upgrade": "decrease_speed", "level": 2}
+		"prerequisite": {"upgrade": "diet_slith", "level": 2}
 	},
 	"sovereign_trail": {
 		"display_name": "Sovereign Trail",
 		"description": "Leave a trail for 10 segments behind you, wherever you go!\nLvl 1:Fruits can't spawn in your trail!\nLvl 2: Fruits wills spawn VERY close to your trail",
 		"costs": [2, 4], # Lvl 1: Repel, Lvl 2: Attract
 		"max_level": 2,
-		"prerequisite": {"upgrade": "decrease_speed", "level": 2}
+		"prerequisite": {"upgrade": "diet_slith", "level": 2}
 	},
 	"meditative_state": {
 		"display_name": "Meditative State",
 		"costs": [5, 5, 10],
 		"description": "Pause! Need I say more?\nThis grants you the ability to pause your snake for 3 seconds!\nRequires Diet Slith lvl 5",
 		"max_level": 3,
-		"prerequisite": {"upgrade": "decrease_speed", "level": 5}
+		"prerequisite": {"upgrade": "diet_slith", "level": 5}
 	},
 	"garden_weaver": {
 		"display_name": "Garden Weaver",
 		"description": "Don't like how far away all those fruits are, slowpoke?\nWith Garden Weaver, reroll the fruits MUCH closer with this ability!\nRequires Diet Slith Lvl 5",
 		"costs": [5],
 		"max_level": 1,
-		"prerequisite": {"upgrade": "decrease_speed", "level": 5}
+		"prerequisite": {"upgrade": "diet_slith", "level": 5}
 	},
 	#----------------------------------------------------------------------------------#
 	#-------------------------------------------the glutton----------------------------#
@@ -398,9 +406,9 @@ var upgrade_data = {
 	},
 	"banana_bounty": {
 		"display_name": "Banana Bounty",
-		"description": "Active Ability: Despawns all but one fruit, turning it into a Perfect Fruit. Eat it for a huge reward.",
-		"costs": [5],
-		"max_level": 1,
+		"description":  "Active Ability: Marks a random fruit.\nEating it grants growth equal\nto your max fruit count * your fruit reward.",
+		"costs": [5, 7],
+		"max_level": 2,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 5}
 	},
 	"the_satchel": {
@@ -457,7 +465,9 @@ func start_game():
 	more_mice_level = 0
 	golden_seeds_level = 0
 	patient_gardener_level = 0
-	banana_bounty_unlocked = false
+	banana_bounty_level = 0
+	banana_bounty_charges = 0
+	is_bounty_active = false
 	the_satchel_unlocked = false
 	
 	

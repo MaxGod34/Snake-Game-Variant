@@ -56,11 +56,18 @@ func _unhandled_input(event: InputEvent):
 		can_change_direction = false
 		
 	#----------Ability Activation----------#
+	#	Banana Bounty	#
+	if event.is_action_pressed("activate_bounty"):
+		if GameManager.banana_bounty_charges > 0 and not GameManager.is_bounty_active:
+			print("Bounty Activated! -snakeHead")
+			main.activate_banana_bounty()
+	
+	
 	#Burrow
 	if event.is_action_pressed("activate_ability_burrow"):
 		# Check if we can use the ability
 		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
-			print("Button Activated")
+			print("Burrow Activated")
 			GameManager.burrow_is_active = true
 			# Visual feedback for the player
 			get_node("FillSprite").modulate = Color.WHITE
