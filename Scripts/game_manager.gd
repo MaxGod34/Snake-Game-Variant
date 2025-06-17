@@ -42,6 +42,7 @@ var extra_lives = 0
 var burrow_is_active = false
 var is_phasing = false 
 var is_bounty_active = false
+var autotomy_is_active = false
 	#--------Perimeter Upgrade Sizes-------#
 var grid_size_data = [
 	Vector2(20, 15), # Level 0
@@ -82,6 +83,15 @@ var patient_gardener_data = [
 var banana_bounty_charges = 0
 var banana_bounty_level = 0
 var the_satchel_unlocked = false
+
+#----------ACROBAT PATH-----#
+var slither_sauce_level = 0 
+var tenderizer_level = 0
+var tenderizer_charges = 0
+var juke_and_jive_unlocked = false
+var afterburner_level = 0
+var pop_rocks_unlocked = false
+var autotomy_unlocked = false
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
@@ -125,9 +135,6 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_speed": 0,          # Normal cost
-			"increase_fruit_reward": 0,
-			"increase_max_fruits": 0,
 			"increase_burrow_charges": 1, # +1 SP cost
 			"increase_phase_charges": 1,  # +1 SP cost
 			"increase_grid_size": 2,      # +2 SP cost
@@ -137,7 +144,10 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	},
 	"warlock": {
@@ -152,7 +162,6 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_speed": 0,
 			"increase_burrow_charges": 1,
 			"increase_phase_charges": 1,
 			"increase_grid_size": 0,
@@ -162,7 +171,10 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	},
 	"inchworm": {
@@ -177,9 +189,6 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_speed": 1,          # + 1 SP
-			"increase_fruit_reward": -1,  # Cheaper 1 (min. 1)
-			"increase_max_fruits": 0,
 			"increase_burrow_charges": 1, # +1 SP cost
 			"increase_phase_charges": 1,  # +1 SP cost
 			"increase_grid_size": -1,      # Cheaper 1 (min. 1)
@@ -189,7 +198,10 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	},
 	"phoenix_coil": {
@@ -204,9 +216,6 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_speed": 1,
-			"increase_fruit_reward": 1,
-			"increase_max_fruits": 0,
 			"increase_burrow_charges": 0,
 			"increase_phase_charges": 0,
 			"increase_grid_size": 1,
@@ -216,7 +225,10 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	},
 	"sidewinder": {
@@ -231,9 +243,6 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_speed": 1,
-			"increase_fruit_reward": 1,
-			"increase_max_fruits": 0,
 			"increase_burrow_charges": -3,
 			"increase_phase_charges": -1,
 			"increase_grid_size": 1,
@@ -243,7 +252,10 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	},
 	"the_zealot": {
@@ -258,9 +270,6 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
-			"increase_speed": -1,
-			"increase_fruit_reward": 0,
-			"increase_max_fruits": 1,
 			"increase_burrow_charges": 0,
 			"increase_phase_charges": 0,
 			"increase_grid_size": 0,
@@ -270,7 +279,10 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	},
 	"the_alchemist": {
@@ -285,9 +297,6 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_speed": 0,
-			"increase_fruit_reward": 0,
-			"increase_max_fruits": -1,
 			"increase_burrow_charges": -1,
 			"increase_phase_charges": -1,
 			"increase_grid_size": 2,
@@ -297,19 +306,16 @@ var class_data = {
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0
+			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
 		}
 	}
 }
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
-	"increase_speed": {
-		"display_name": "Slither Sauce",
-		"description": "Increase Snake Movement Speed By 10%\nRequired for...upgrades...",
-		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5], 
-		"max_level": 10
-	},
 	"increase_burrow_charges": { # Changed from "unlock_burrow"
 		"display_name": "Burrow Ability",
 		"description": "Burrow your way through those blasted walls!\nPress space to burrow through to the other side in one piece!\nOne charge per level",
@@ -333,7 +339,52 @@ var upgrade_data = {
 		"description": "We all make mistakes.\nHere's a free life if ya need it!\nReset to 1 length and keep all your buffs!\n3 per run!",
 		"costs": [3, 7, 10],
 		"max_level": 3
-	}, #----------------------------------The Planner--------------------------------------------#
+	}, 
+	#------------------------THE ACROBAT--------------------------#
+	"Slither Sauce": {
+		"display_name": "Slither Sauce",
+		"description": "Permanently increases movement speed.\nIf you can handle it...",
+		"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+		"max_level": 10
+	},
+	"Tenderizer": {
+		"display_name": "Tenderizer",
+		"description": "Destroy a rock on impact.\nHas limited charges, which refresh on level up.\nEach level grants another charge.",
+		"costs": [2, 3, 4],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
+	},
+	"Juke & Jive": {
+		"display_name": "Juke & Jive",
+		"description": "Changing direction 4 times in 1 second\nlets you phase through a single body segment.",
+		"costs": [4],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
+	},
+	"Afterburner": {
+		"display_name": "Afterburner",
+		"description": "Gain a temporary speed boost for 2 seconds after eating a fruit.",
+		"costs": [2, 2, 3],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
+	},
+	"Pop Rocks": {
+		"display_name": "Pop Rocks",
+		"description": "When you destroy a rock with Tenderizer,\nit creates a shockwave that destroys adjacent rocks.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Tenderizer", "level": 1}
+	},
+	"Autotomy": {
+		"display_name": "Autotomy",
+		"description": "Active Ability (once per Garden):\nFor 2s, you can sever your own tail on impact,\nsacrificing score to survive.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Slither Sauce", "level": 5}
+	},
+	
+	
+	#----------------------------------The Planner--------------------------------------------#
 	"diet_slith": {
 		"display_name": "Diet Slith",
 		"description": "Speed ain't your thing?\nCome take a walk on the Slith side with some Diet Slith!\nDecresae your speed by 10%",
@@ -392,14 +443,14 @@ var upgrade_data = {
 	},
 	"golden_seeds": {
 		"display_name": "Golden Seeds",
-		"description": "Unlocks a chance for Golden Apples to spawn, granting SP. Each level increases the chance and reward.",
+		"description": "Unlocks a chance for Golden Apples to spawn,\ngranting SP. Each level increases the chance and reward.",
 		"costs": [3,3,4,4],
 		"max_level": 4,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
 	},
 	"patient_gardener": {
 		"display_name": "Patient Gardener",
-		"description": "Fruits left on screen will ripen over time, granting bonus growth.",
+		"description": "Fruits left on screen will ripen over time,\ngranting bonus growth.",
 		"costs": [3,3,4],
 		"max_level": 3,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
@@ -469,6 +520,15 @@ func start_game():
 	banana_bounty_charges = 0
 	is_bounty_active = false
 	the_satchel_unlocked = false
+	#------Reset Acrobat Upgrades--------#
+	slither_sauce_level = 0 
+	tenderizer_level = 0
+	tenderizer_charges = 0
+	juke_and_jive_unlocked = false
+	afterburner_level = 0
+	pop_rocks_unlocked = false
+	autotomy_unlocked = false
+	autotomy_is_active = false
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")

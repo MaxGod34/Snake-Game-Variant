@@ -5,171 +5,184 @@ signal ate_fruit(fruit)
 signal hit_self
 
 # --- Properties ---
-@export var head_color: Color = Color.LIME
+@export var head_color: Color = Color.LIME_GREEN
+var tile_size = 32
 
-var tile_size: int = 32
-var move_speed: float = 0.2
+var move_speed: float = 0.25 # This will be set by main.gd
 var current_direction: Vector2 = Vector2.RIGHT
 var can_change_direction: bool = true
 var can_reverse: bool = true
-var main: Node2D
+var main: Node2D # A reference to the main game script
 
+# --- Juke & Jive Properties ---
+var juke_inputs: int = 0
+var juke_and_jive_is_active: bool = false
+
+# --- NODE REFERENCES ---
 @onready var move_timer: Timer = $MoveTimer
 @onready var head_area: Area2D = $HeadArea
+@onready var juke_timer: Timer = $JukeTimer
+@onready var juke_duration_timer: Timer = $JukeDurationTimer
 @onready var phase_timer: Timer = $PhaseTimer
+@onready var meditative_state_timer: Timer = $MeditativeStateTimer
+@onready var autotomy_timer: Timer = $AutotomyTimer # Assuming you add this timer for Autotomy
 
-# --- Godot Functions ---
+# --- GODOT'S BUILT-IN FUNCTIONS ---
 
 func _ready():
 	get_node("FillSprite").modulate = head_color
-	move_timer.wait_time = move_speed
-	move_timer.timeout.connect(on_move_timer_timeout)
 	
+	# Connect all timers to their respective functions
+	move_timer.timeout.connect(on_move_timer_timeout)
+	juke_timer.timeout.connect(_on_juke_timer_timeout)
+	juke_duration_timer.timeout.connect(_on_juke_duration_timer_timeout)
+	phase_timer.timeout.connect(_on_phase_timer_timeout)
+	meditative_state_timer.timeout.connect(_on_meditative_state_timer_timeout)
+	autotomy_timer.timeout.connect(_on_autotomy_timer_timeout)
 
 func _unhandled_input(event: InputEvent):
 	if not can_change_direction:
 		return
 
+	# --- Directional Input Logic ---
 	var new_direction = current_direction
-	#This is our backstop in case there is only one snake length
 	if can_reverse:
-		if event.is_action_pressed("up"):
-			new_direction = Vector2.UP
-		elif event.is_action_pressed("down"):
-			new_direction = Vector2.DOWN
-		elif event.is_action_pressed("left"):
-			new_direction = Vector2.LEFT
-		elif event.is_action_pressed("right"):
-			new_direction = Vector2.RIGHT
-	else: #This will be the regular movement logic that doesn't allow reversing
-		if event.is_action_pressed("up") and current_direction != Vector2.DOWN:
-			new_direction = Vector2.UP
-		elif event.is_action_pressed("down") and current_direction != Vector2.UP:
-			new_direction = Vector2.DOWN
-		elif event.is_action_pressed("left") and current_direction != Vector2.RIGHT:
-			new_direction = Vector2.LEFT
-		elif event.is_action_pressed("right") and current_direction != Vector2.LEFT:
-			new_direction = Vector2.RIGHT
+		if event.is_action_pressed("up"): new_direction = Vector2.UP
+		elif event.is_action_pressed("down"): new_direction = Vector2.DOWN
+		elif event.is_action_pressed("left"): new_direction = Vector2.LEFT
+		elif event.is_action_pressed("right"): new_direction = Vector2.RIGHT
+	else:
+		if event.is_action_pressed("up") and current_direction != Vector2.DOWN: new_direction = Vector2.UP
+		elif event.is_action_pressed("down") and current_direction != Vector2.UP: new_direction = Vector2.DOWN
+		elif event.is_action_pressed("left") and current_direction != Vector2.RIGHT: new_direction = Vector2.LEFT
+		elif event.is_action_pressed("right") and current_direction != Vector2.LEFT: new_direction = Vector2.RIGHT
 	
 	if new_direction != current_direction:
 		current_direction = new_direction
 		can_change_direction = false
-		
-	#----------Ability Activation----------#
-	#	Banana Bounty	#
+		handle_juke_and_jive()
+
+	# --- Ability Activation Logic ---
 	if event.is_action_pressed("activate_bounty"):
 		if GameManager.banana_bounty_charges > 0 and not GameManager.is_bounty_active:
-			print("Bounty Activated! -snakeHead")
 			main.activate_banana_bounty()
 	
-	
-	#Burrow
 	if event.is_action_pressed("activate_ability_burrow"):
-		# Check if we can use the ability
 		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
-			print("Burrow Activated")
 			GameManager.burrow_is_active = true
-			# Visual feedback for the player
-			get_node("FillSprite").modulate = Color.WHITE
-			# Decrement in case they have multiple
 			GameManager.burrow_charges -= 1
-				# --- SIDEWINDER LOGIC ---
-			if GameManager.chosen_class == "sidewinder":
-				# 25% chance to refund the charge
-				if randi() % 100 < 25:
-					print("SIDEWINDER LUCK! Charge refunded.")
-					GameManager.burrow_charges += 1
-			main.update_hud()
-	#Phase Shift Ability
-	if event.is_action_pressed("activate_phase_shift") and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
-		GameManager.is_phasing = true
-		GameManager.phase_shift_charges -= 1
-		phase_timer.start()
-		get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
-		# --- SIDEWINDER LOGIC ---
-		if GameManager.chosen_class == "sidewinder":
-			# 25% chance to refund the charge
-			if randi() % 100 < 25:
-				print("SIDEWINDER LUCK! Charge refunded.")
+			get_node("FillSprite").modulate = Color.WHITE
+			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
 				GameManager.burrow_charges += 1
-		main.update_hud()
+			main.update_hud()
 			
+	if event.is_action_pressed("activate_phase_shift"):
+		if GameManager.phase_shift_level > 0 and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
+			GameManager.is_phasing = true
+			GameManager.phase_shift_charges -= 1
+			phase_timer.start()
+			get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
+			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
+				GameManager.phase_shift_charges += 1
+			main.update_hud()
 			
-	#-----------MEDITATIVE STATE ABILITY-------#
-	if event.is_action_pressed("activate_meditation") and GameManager.meditative_state_charges > 0:
-		print("Meditative State Activated!")
-		GameManager.meditative_state_charges -= 1
-		main.update_hud()
-		move_timer.stop()
-		var duration = GameManager.meditative_data[GameManager.meditative_state_level]
-		$MeditativeStateTimer.wait_time = duration
-		$MeditativeStateTimer.start()
-		get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
-	#----------GARDEN WEAVER ABILITY--------#
-	if event.is_action_pressed("activate_weaver"):
-		if GameManager.garden_weaver_unlocked and not GameManager.garden_weaver_used_this_garden:
-			main.perform_garden_weave()
-		
-# --- Signal Handlers ---
+	if event.is_action_pressed("activate_meditation"):
+		if GameManager.meditative_state_level > 0 and GameManager.meditative_state_charges > 0:
+			GameManager.meditative_state_charges -= 1
+			main.update_hud()
+			move_timer.stop()
+			var duration = GameManager.meditative_state_data[GameManager.meditative_state_level]
+			meditative_state_timer.wait_time = duration
+			meditative_state_timer.start()
+			get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
+			
 
+# --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():
-	# Look at the next position
 	var next_position = global_position + (current_direction * tile_size)
 
-	# --- LOOK BEFORE YOU LEAP ---
-	if not GameManager.is_phasing and main.is_position_occupied(next_position):
-		emit_signal("hit_self")
-		return
-
-	# THE NEW BURROW LOGIC
+	# --- Collision Checks ---
 	if main.is_position_out_of_bounds(next_position):
-		# First, check if burrow is active
 		if GameManager.burrow_is_active:
-			# It is! Let's teleport.
 			var grid_pos = (next_position / tile_size).round()
-			
-			# Horizontal Wrap
 			if grid_pos.x < 0: grid_pos.x = main.grid_width - 1
 			if grid_pos.x >= main.grid_width: grid_pos.x = 0
-			
-			# Vertical Wrap
 			if grid_pos.y < 0: grid_pos.y = main.grid_height - 1
 			if grid_pos.y >= main.grid_height: grid_pos.y = 0
-			
-			# Set the new position and consume the ability
 			next_position = (grid_pos * tile_size) + main.tile_offset
 			GameManager.burrow_is_active = false
-			GameManager.burrow_charges -= 1
-			# Return snake head to its normal color after it has teleported
-			get_node("FillSprite").modulate = head_color
+			main.update_hud()
 		else:
-			# If burrow is not active, it's a normal game over.
 			emit_signal("hit_self")
 			return
 
-	# If we made it here, the path is clear. It is now safe to move.
+	# If all checks pass, it's safe to move.
 	var previous_position = global_position
 	global_position = next_position
-	
-	# Tells the Main script that we have successfully moved.
 	moved.emit(previous_position)
 	can_change_direction = true
 
-
+# --- SIGNAL HANDLERS ---
 func _on_head_area_area_entered(area):
 	if area is Fruit or area is GoldenFruit:
 		emit_signal("ate_fruit", area)
-	elif not GameManager.is_phasing and area is SnakeBody:
-		emit_signal("hit_self")
+	
+	elif area is SnakeBody:
+		# Check all invulnerability states
+		if not GameManager.is_phasing and not juke_and_jive_is_active:
+			if GameManager.autotomy_is_active:
+				main.perform_autotomy(area)
+				GameManager.autotomy_is_active = false
+			else:
+				emit_signal("hit_self")
+		
 	elif area is Rock:
-		emit_signal("hit_self")
+		if GameManager.tenderizer_charges > 0:
+			GameManager.tenderizer_charges -= 1
+			main.update_hud()
+			main.destroy_obstacle(area)
+		else:
+			emit_signal("hit_self")
 
+# --- JUKE & JIVE ---
+func handle_juke_and_jive():
+	if not GameManager.juke_and_jive_unlocked or juke_and_jive_is_active:
+		return
+	juke_timer.wait_time = move_speed * 3
+	if juke_timer.is_stopped():
+		juke_timer.start()
+		juke_inputs = 1
+	else:
+		juke_inputs += 1
+	if juke_inputs >= 4:
+		juke_and_jive_is_active = true
+		juke_duration_timer.start(move_speed * 5)
+		get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
+		juke_timer.stop()
+		juke_inputs = 0
 
-func _on_phase_timer_timeout() -> void:
+func _on_juke_timer_timeout():
+	juke_inputs = 0
+
+func _on_juke_duration_timer_timeout():
+	juke_and_jive_is_active = false
+	reset_head_color()
+
+# --- OTHER ABILITY TIMEOUTS ---
+func _on_phase_timer_timeout():
 	GameManager.is_phasing = false
-	get_node("FillSprite").modulate = head_color
+	reset_head_color()
 
-
-func _on_meditative_state_timer_timeout() -> void:
-	get_node("FillSprite").modulate = head_color
+func _on_meditative_state_timer_timeout():
 	move_timer.start()
+	reset_head_color()
+
+func _on_autotomy_timer_timeout():
+	GameManager.autotomy_is_active = false
+	reset_head_color()
+
+# A helper function to safely reset the head color
+func reset_head_color():
+	# Only reset if no other ability is currently giving a color
+	if not GameManager.is_phasing and not juke_and_jive_is_active and not GameManager.burrow_is_active and not GameManager.autotomy_is_active:
+		get_node("FillSprite").modulate = head_color

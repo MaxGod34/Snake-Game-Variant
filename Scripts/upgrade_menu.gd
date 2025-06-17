@@ -85,7 +85,6 @@ func find_upgrade_button(upgrade_key: String):
 # This helper gets the correct current level for any given upgrade.
 func get_upgrade_level_from_key(upgrade_key):
 	match upgrade_key:
-		"increase_speed": return GameManager.speed_upgrade_level
 		"increase_grid_size": return GameManager.grid_size_level
 		"increase_burrow_charges": return GameManager.burrow_level
 		"increase_phase_charges": return GameManager.phase_shift_level
@@ -97,6 +96,13 @@ func get_upgrade_level_from_key(upgrade_key):
 		"sovereign_trail": return GameManager.sovereign_trail_level
 		"meditative_state": return GameManager.meditative_state_level
 		"garden_weaver": return 1 if GameManager.garden_weaver_unlocked else 0
+		#-------Acrobat------#
+		"Slither Sauce": return GameManager.slither_sauce_level
+		"Tenderizer": return GameManager.tenderizer_level
+		"Juke & Jive": return 1 if GameManager.juke_and_jive_unlocked else 0
+		"Afterburner": return GameManager.afterburner_level
+		"Pop Rocks": return 1 if GameManager.pop_rocks_unlocked else 0
+		"Autotomy": return 1 if GameManager.autotomy_unlocked else 0
 		#------Glutton------#
 		"elephant_sized_portions": return GameManager.es_portions_level
 		"more_mice": return GameManager.more_mice_level

@@ -57,7 +57,7 @@ func _ready():
 	
 	# --- CREATE HEAD ---
 	head = head_scene.instantiate()
-	head.move_speed = start_speed # FIX: Apply the calculated speed to the real head instance.
+	head.move_speed = start_speed #  Apply the calculated speed to the real head instance.
 	head.main = self
 	add_child(head)
 	
@@ -188,7 +188,7 @@ func toggle_pause():
 
 func apply_persistent_upgrades():
 	# Re-apply speed upgrades
-	for i in range(GameManager.speed_upgrade_level):
+	for i in range(GameManager.slither_sauce_level):
 		if head.move_timer.wait_time > 0.05:
 			var speed_mod = GameManager.class_data[GameManager.chosen_class]["speed_upgrade_mod"]
 			head.move_timer.wait_time *= speed_mod
@@ -277,6 +277,12 @@ func update_hud():
 		banana_bounty_label.text = "Banana Bounty (f): " + str(GameManager.banana_bounty_charges)
 	else:
 		banana_bounty_label.visible = false
+	var tenderizer_label = $UI/HUDContainer/StatsVbox/AbilitySlot5
+	if GameManager.tenderizer_level > 0:
+		tenderizer_label.visible = true
+		tenderizer_label.text = "Tender Charges: " + str(GameManager.tenderizer_charges)
+	else:
+		tenderizer_label.visible = false
 
 	
 	
@@ -333,7 +339,17 @@ func spawn_fruit():
 	call_deferred("add_child", fruit)
 	print("Fruit spawned at a guaranteed safe location.")
 
-
+func destroy_obstacle(obstacle_node):
+	# This function safely removes a rock from the game.
+	
+	# 1. Remove it from our tracking array so fruit can spawn here.
+	spawned_obstacles.erase(obstacle_node)
+	
+	# 2. Add a cool effect, like making it shrink away.
+	var tween = create_tween()
+	tween.tween_property(obstacle_node, "scale", Vector2.ZERO, 0.2)
+	# After the animation is done, delete the node for good.
+	tween.tween_callback(obstacle_node.queue_free)
 
 
 func spawn_rock():
@@ -456,7 +472,8 @@ func level_up():
 		GameManager.meditative_state_charges = GameManager.meditative_state_level
 	if GameManager.banana_bounty_level > 0:
 		GameManager.banana_bounty_charges = GameManager.banana_bounty_level
-	
+	if GameManager.tenderizer_level > 0:
+		GameManager.tenderizer_charges = GameManager.tenderizer_level
 
 func _on_upgrade_menu_resume_game_pressed():
 	$UI/UpgradeMenu.visible = false
@@ -473,15 +490,9 @@ func _on_upgrade_menu_resume_game_pressed():
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
 	# Upgrades implemented: Speed and Fruit Reward
-	# Speed Upgrade logic only
-	if upgrade_name == "increase_speed":
-		if GameManager.speed_upgrade_level < 10:
-			GameManager.speed_upgrade_level += 1
-			apply_persistent_upgrades()
-			print("New snake speed (wait time): ", head.move_timer.wait_time)
 	#-------------Glutton----------------#
 		#---ESP---#
-	elif upgrade_name == "elephant_sized_portions":
+	if upgrade_name == "elephant_sized_portions":
 		GameManager.es_portions_level += 1
 		GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
 		print("ESP bought! New Fruit Reward: ", GameManager.fruit_reward)
@@ -532,7 +543,27 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "the_satchel":
 		if not GameManager.the_satchel_unlocked:
 			GameManager.the_satchel_unlocked = true
-		
+	#------------ACROBAT---------------#
+	elif upgrade_name == "Slither Sauce":
+		if GameManager.slither_sauce_level < 10:
+			GameManager.slither_sauce_level += 1
+			apply_persistent_upgrades()
+	elif upgrade_name == "Tenderizer":
+		if GameManager.tenderizer_level < 3:
+			GameManager.tenderizer_charges += 1
+			GameManager.tenderizer_level += 1
+	elif upgrade_name == "Juke & Jive":
+		if not GameManager.juke_and_jive_unlocked:
+			GameManager.juke_and_jive_unlocked = true
+	elif upgrade_name == "Afterburner":
+		if GameManager.afterburner_level < 3:
+			GameManager.afterburner_level += 1
+	elif upgrade_name == "Pop Rocks":
+		if not GameManager.pop_rocks_unlocked:
+			GameManager.pop_rocks_unlocked = true
+	elif upgrade_name == "Autotomy":
+		if not GameManager.autotomy_unlocked:
+			GameManager.autotomy_unlocked = true
 	# Increase Grid Size Upgrade Logic
 	elif upgrade_name == "increase_grid_size":
 		if GameManager.grid_size_level < 4:
