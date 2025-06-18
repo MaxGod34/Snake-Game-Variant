@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://big1tpxvk7yl2"]
 
-[ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/snake_break.png" id="1_hdmo1"]
+[ext_resource type="Texture2D" uid="uid://df7oftkfiieai" path="res://Assets/PNGs/snake_break.png" id="1_hdmo1"]
 [ext_resource type="Script" uid="uid://bxwdpl2h4wbwu" path="res://Scripts/pause_menu.gd" id="1_k0w1u"]
 [ext_resource type="PackedScene" uid="uid://de1uou8sdpxr8" path="res://Scenes/options_menu.tscn" id="3_1och7"]
 

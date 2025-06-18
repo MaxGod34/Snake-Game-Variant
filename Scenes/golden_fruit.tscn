@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://cqru33fbk20u3"]
 
-[ext_resource type="Script" uid="uid://cfmsfxfup3qx3" path="res://Scenes/golden_fruit.gd" id="1_x3y7u"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_rrd8q"]
-[ext_resource type="Texture2D" uid="uid://psq4jgvn6heq" path="res://Assets/snake_border.png" id="3_tah3d"]
+[ext_resource type="Script" uid="uid://cfmsfxfup3qx3" path="res://Scripts/golden_fruit.gd" id="1_x3y7u"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_rrd8q"]
+[ext_resource type="Texture2D" uid="uid://psq4jgvn6heq" path="res://Assets/PNGs/snake_border.png" id="3_tah3d"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dajs1"]
 

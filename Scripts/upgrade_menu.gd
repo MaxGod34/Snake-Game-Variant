@@ -85,8 +85,6 @@ func find_upgrade_button(upgrade_key: String):
 # This helper gets the correct current level for any given upgrade.
 func get_upgrade_level_from_key(upgrade_key):
 	match upgrade_key:
-		"increase_grid_size": return GameManager.grid_size_level
-		
 		"increase_phase_charges": return GameManager.phase_shift_level
 		"buy_extra_life": return GameManager.extra_lives
 		#---Planner---#

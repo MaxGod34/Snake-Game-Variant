@@ -1,0 +1,8 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://cs5ipigyjur86"]
+
+[ext_resource type="Texture2D" uid="uid://c1wp4nsk3r4x4" path="res://Assets/Styles/texturebutton_hovered_placeholder.png" id="1_27euc"]
+
+[resource]
+texture = ExtResource("1_27euc")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csxh8041yrsy8"
-path="res://.godot/imported/snake_chart_logo.png-6714174570f11314b1d0072a88ddd46d.ctex"
+uid="uid://2ol8od0liwj2"
+path="res://.godot/imported/texturebutton_placeholder.png-5cf3d7513dbcbb138ad9143b03053b0f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/snake_chart_logo.png"
-dest_files=["res://.godot/imported/snake_chart_logo.png-6714174570f11314b1d0072a88ddd46d.ctex"]
+source_file="res://Assets/PNGs/texturebutton_placeholder.png"
+dest_files=["res://.godot/imported/texturebutton_placeholder.png-5cf3d7513dbcbb138ad9143b03053b0f.ctex"]
 
 [params]
 

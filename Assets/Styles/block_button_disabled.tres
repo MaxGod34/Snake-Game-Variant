@@ -1,0 +1,8 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://cff583opi7pth"]
+
+[ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/PNGs/ShopTransitionTileSet.png" id="1_2byx3"]
+
+[resource]
+texture = ExtResource("1_2byx3")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bx3jyj02lw1sa"
-path="res://.godot/imported/snake_lime.png-077d8417209196125ebd15d5ec6bd8ae.ctex"
+uid="uid://csxh8041yrsy8"
+path="res://.godot/imported/snake_chart_logo.png-3d3c3f255d9f513e7b2b95c72efbf4d6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/snake_lime.png"
-dest_files=["res://.godot/imported/snake_lime.png-077d8417209196125ebd15d5ec6bd8ae.ctex"]
+source_file="res://Assets/PNGs/snake_chart_logo.png"
+dest_files=["res://.godot/imported/snake_chart_logo.png-3d3c3f255d9f513e7b2b95c72efbf4d6.ctex"]
 
 [params]
 

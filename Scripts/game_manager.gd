@@ -638,5 +638,5 @@ func start_game():
 	shatter_reality_unlocked = false
 	
 	
-	SceneTransition.transition_to("res://Scenes/main.tscn")
+	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false

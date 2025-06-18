@@ -1,27 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bsbynsvorx5r4"]
+[gd_scene load_steps=7 format=3 uid="uid://bsbynsvorx5r4"]
 
 [ext_resource type="Script" uid="uid://bnna3qnjiu84k" path="res://Scripts/difficulty_select.gd" id="1_gcggo"]
-[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="2_jnktv"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="3_7lp5y"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jnktv"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gcggo"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
-bg_color = Color(0.368152, 0.392626, 0.17012, 0.305882)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-expand_margin_left = 8.0
-expand_margin_top = 5.0
-expand_margin_right = 8.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7lp5y"]
+[ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_button_hovered.tres" id="2_4fhga"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="3_7lp5y"]
+[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_button_disabled.tres" id="3_chmkc"]
+[ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_button_normal.tres" id="4_gh66d"]
 
 [sub_resource type="Gradient" id="Gradient_4x1yg"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -78,9 +61,10 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 100
+theme_override_constants/separation = 32
 
 [node name="HatchlingButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0.537255, 1, 0.505882, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -89,13 +73,16 @@ theme_override_colors/font_focus_color = Color(0.537786, 1, 0.506004, 1)
 theme_override_colors/font_pressed_color = Color(0.537255, 1, 0.505882, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = SubResource("StyleBoxEmpty_jnktv")
-theme_override_styles/hover = ExtResource("2_jnktv")
-theme_override_styles/pressed = ExtResource("2_jnktv")
-theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+theme_override_styles/focus = ExtResource("2_4fhga")
+theme_override_styles/disabled = ExtResource("3_chmkc")
+theme_override_styles/hover_pressed = ExtResource("2_4fhga")
+theme_override_styles/hover = ExtResource("2_4fhga")
+theme_override_styles/pressed = ExtResource("2_4fhga")
+theme_override_styles/normal = ExtResource("4_gh66d")
 text = "Hatchling"
 
 [node name="ViperButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0.184314, 0.619608, 0.592157, 1)
 theme_override_colors/font_color = Color(0.183629, 0.619397, 0.592657, 1)
@@ -103,13 +90,16 @@ theme_override_colors/font_focus_color = Color(0.184314, 0.619608, 0.592157, 1)
 theme_override_colors/font_pressed_color = Color(0.184314, 0.619608, 0.592157, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = SubResource("StyleBoxEmpty_7lp5y")
-theme_override_styles/hover = ExtResource("2_jnktv")
-theme_override_styles/pressed = ExtResource("2_jnktv")
-theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+theme_override_styles/focus = ExtResource("2_4fhga")
+theme_override_styles/disabled = ExtResource("3_chmkc")
+theme_override_styles/hover_pressed = ExtResource("2_4fhga")
+theme_override_styles/hover = ExtResource("2_4fhga")
+theme_override_styles/pressed = ExtResource("2_4fhga")
+theme_override_styles/normal = ExtResource("4_gh66d")
 text = "Viper"
 
 [node name="BasiliskButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
 theme_override_colors/font_color = Color(1, 0, 0, 1)
@@ -117,13 +107,16 @@ theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = SubResource("StyleBoxEmpty_7lp5y")
-theme_override_styles/hover = ExtResource("2_jnktv")
-theme_override_styles/pressed = ExtResource("2_jnktv")
-theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+theme_override_styles/focus = ExtResource("2_4fhga")
+theme_override_styles/disabled = ExtResource("3_chmkc")
+theme_override_styles/hover_pressed = ExtResource("2_4fhga")
+theme_override_styles/hover = ExtResource("2_4fhga")
+theme_override_styles/pressed = ExtResource("2_4fhga")
+theme_override_styles/normal = ExtResource("4_gh66d")
 text = "Basilisk"
 
 [node name="BackButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_colors/font_color = Color(0.817971, 0.786407, 1, 1)
@@ -131,10 +124,12 @@ theme_override_colors/font_focus_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = SubResource("StyleBoxEmpty_7lp5y")
-theme_override_styles/hover = ExtResource("2_jnktv")
-theme_override_styles/pressed = ExtResource("2_jnktv")
-theme_override_styles/normal = SubResource("StyleBoxFlat_gcggo")
+theme_override_styles/focus = ExtResource("2_4fhga")
+theme_override_styles/disabled = ExtResource("3_chmkc")
+theme_override_styles/hover_pressed = ExtResource("2_4fhga")
+theme_override_styles/hover = ExtResource("2_4fhga")
+theme_override_styles/pressed = ExtResource("2_4fhga")
+theme_override_styles/normal = ExtResource("4_gh66d")
 text = "Back"
 
 [node name="DescriptionLabel" type="Label" parent="."]

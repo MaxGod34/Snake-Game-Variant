@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://psq4jgvn6heq"
-path="res://.godot/imported/snake_border.png-49382700f4cde39b7a6d78ba55d8199a.ctex"
+uid="uid://ka46hsl82hlp"
+path="res://.godot/imported/ShopTransitionTileSet.png-30b4579b7305db7ebd859b7ef770c03f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/snake_border.png"
-dest_files=["res://.godot/imported/snake_border.png-49382700f4cde39b7a6d78ba55d8199a.ctex"]
+source_file="res://Assets/PNGs/ShopTransitionTileSet.png"
+dest_files=["res://.godot/imported/ShopTransitionTileSet.png-30b4579b7305db7ebd859b7ef770c03f.ctex"]
 
 [params]
 

@@ -956,9 +956,15 @@ func game_over():
 		is_game_over = true
 		head.move_timer.stop()
 		print("Game Over!")
+		
+		await SceneTransition.play_cover_animation("spiral")
 		$UI/GameOverScreen.visible = true
 		var final_score = snake_body_segments.size() + 1
 		game_is_over.emit(final_score)
+		await SceneTransition.uncover_screen("spiral")
+		
+		
+		
 
 func use_extra_life():
 	GameManager.has_died_this_garden = true
@@ -966,7 +972,7 @@ func use_extra_life():
 	
 	# 1. Stop the snake and start the fade to black
 	head.move_timer.stop()
-	await SceneTransition.cover_screen()
+	await SceneTransition.cover_screen("diagonal")
 
 	# 2. While the screen is black, safely reset everything
 	GameManager.extra_lives -= 1
@@ -986,7 +992,7 @@ func use_extra_life():
 	head.get_node("FillSprite").modulate = Color.GOLD
 	
 	# 4. Now that everything is reset, fade the screen back in
-	await SceneTransition.uncover_screen()
+	await SceneTransition.uncover_screen("diagonal")
 	
 	# 5. Start the countdown
 	start_countdown()

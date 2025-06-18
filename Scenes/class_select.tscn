@@ -1,25 +1,10 @@
 [gd_scene load_steps=7 format=3 uid="uid://15xnavmm42jj"]
 
-[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="1_36rpi"]
 [ext_resource type="Script" uid="uid://bv4o387kv6xoh" path="res://Scripts/class_select.gd" id="1_mrjx3"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="3_837ae"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mrjx3"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_837ae"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
-bg_color = Color(0.368152, 0.392626, 0.17012, 0.305882)
-corner_radius_top_left = 25
-corner_radius_top_right = 25
-corner_radius_bottom_right = 25
-corner_radius_bottom_left = 25
-expand_margin_left = 8.0
-expand_margin_top = 5.0
-expand_margin_right = 8.0
-expand_margin_bottom = 5.0
+[ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_button_hovered.tres" id="2_n2pa0"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="3_837ae"]
+[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_button_disabled.tres" id="3_jkcb1"]
+[ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_button_normal.tres" id="4_kc3fo"]
 
 [sub_resource type="Gradient" id="Gradient_poemj"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -58,11 +43,13 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(1240, 0)
 layout_mode = 2
-theme_override_constants/separation = 64
-alignment = 1
+theme_override_constants/separation = 32
+alignment = 2
 
 [node name="SpeedsterButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_pressed_color = Color(1, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
@@ -72,13 +59,16 @@ theme_override_colors/font_focus_color = Color(1, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(1, 0, 0, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "Speedster"
 
 [node name="WarlockButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_pressed_color = Color(0, 1, 0.52549, 1)
 theme_override_colors/font_hover_color = Color(0, 1, 0.52549, 1)
@@ -88,13 +78,16 @@ theme_override_colors/font_focus_color = Color(0, 1, 0.52549, 1)
 theme_override_colors/font_pressed_color = Color(0, 1, 0.52549, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "Warlock"
 
 [node name="InchwormButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 theme_override_colors/font_hover_pressed_color = Color(0.52549, 0.478431, 0.34902, 1)
 theme_override_colors/font_hover_color = Color(0.52549, 0.478431, 0.34902, 1)
@@ -104,13 +97,16 @@ theme_override_colors/font_focus_color = Color(0.52549, 0.478431, 0.34902, 1)
 theme_override_colors/font_pressed_color = Color(0.52549, 0.478431, 0.34902, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "Inchworm"
 
 [node name="BackButton" type="Button" parent="CenterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(196, 96)
 layout_mode = 2
 theme_override_colors/font_hover_pressed_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_colors/font_hover_color = Color(0.819608, 0.788235, 1, 1)
@@ -120,23 +116,26 @@ theme_override_colors/font_focus_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.819608, 0.788235, 1, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "Back"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="."]
 anchors_preset = -1
-anchor_top = 0.38
+anchor_left = 0.025
+anchor_top = 0.35
 anchor_right = 1.0
 anchor_bottom = 0.41
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 64
-alignment = 1
+theme_override_constants/separation = 32
 
 [node name="PhoenixCoilButton" type="Button" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/font_hover_pressed_color = Color(0.945098, 0.411765, 0, 1)
@@ -147,13 +146,16 @@ theme_override_colors/font_focus_color = Color(0.945098, 0.411765, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.945098, 0.411765, 0, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "Phoenix Coil"
 
 [node name="SidewinderButton" type="Button" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
@@ -164,13 +166,16 @@ theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "Sidewinder"
 
 [node name="ZealotButton" type="Button" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(256, 96)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/font_hover_pressed_color = Color(0.568627, 0.121569, 0.933333, 1)
@@ -181,13 +186,16 @@ theme_override_colors/font_focus_color = Color(0.568627, 0.121569, 0.933333, 1)
 theme_override_colors/font_pressed_color = Color(0.568627, 0.121569, 0.933333, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "The Zealot"
 
 [node name="AlchemistButton" type="Button" parent="HBoxContainer2"]
+custom_minimum_size = Vector2(288, 96)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_colors/font_hover_pressed_color = Color(0.290196, 0.341176, 0.462745, 1)
@@ -198,10 +206,12 @@ theme_override_colors/font_focus_color = Color(0.290196, 0.341176, 0.462745, 1)
 theme_override_colors/font_pressed_color = Color(0.290196, 0.341176, 0.462745, 1)
 theme_override_constants/outline_size = 32
 theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = SubResource("StyleBoxEmpty_mrjx3")
-theme_override_styles/hover = ExtResource("1_36rpi")
-theme_override_styles/pressed = ExtResource("1_36rpi")
-theme_override_styles/normal = SubResource("StyleBoxFlat_837ae")
+theme_override_styles/focus = ExtResource("2_n2pa0")
+theme_override_styles/disabled = ExtResource("3_jkcb1")
+theme_override_styles/hover_pressed = ExtResource("2_n2pa0")
+theme_override_styles/hover = ExtResource("2_n2pa0")
+theme_override_styles/pressed = ExtResource("2_n2pa0")
+theme_override_styles/normal = ExtResource("4_kc3fo")
 text = "The Alchemist"
 
 [node name="DescriptionLabel" type="Label" parent="."]

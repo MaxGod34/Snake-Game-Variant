@@ -1,6 +1,8 @@
 extends CanvasLayer
 
 
+
+
 func _on_play_button_pressed() -> void:
 	SceneTransition.transition_to("res://Scenes/class_select.tscn")
 

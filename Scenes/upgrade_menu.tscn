@@ -3,14 +3,14 @@
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/Styles/panel_container_prototype1.tres" id="2_6gn5s"]
 [ext_resource type="StyleBox" uid="uid://dckg2uoiur60b" path="res://Assets/Styles/button_disabled_template.tres" id="2_11363"]
-[ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Scenes/tab_unselected.tres" id="3_2hr16"]
+[ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_unselected.tres" id="3_2hr16"]
 [ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="3_f5dmy"]
-[ext_resource type="StyleBox" uid="uid://bvvxp1nruai3g" path="res://Scenes/tab_hovered.tres" id="3_mpwqm"]
-[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/snake_chart_logo.png" id="4_lpopj"]
-[ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Scenes/panel_bg.tres" id="5_m70ya"]
-[ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Scenes/panel_shadow_temp.tres" id="7_60tjm"]
-[ext_resource type="StyleBox" uid="uid://c5n012lqx25ow" path="res://Scenes/tab_selected.tres" id="7_lpopj"]
-[ext_resource type="StyleBox" uid="uid://cmealg0fw7fl0" path="res://Scenes/tabbar_bg.tres" id="8_v4egn"]
+[ext_resource type="StyleBox" uid="uid://bvvxp1nruai3g" path="res://Assets/Styles/tab_hovered.tres" id="3_mpwqm"]
+[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="4_lpopj"]
+[ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Assets/Styles/panel_bg.tres" id="5_m70ya"]
+[ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Assets/Styles/panel_shadow_temp.tres" id="7_60tjm"]
+[ext_resource type="StyleBox" uid="uid://c5n012lqx25ow" path="res://Assets/Styles/tab_selected.tres" id="7_lpopj"]
+[ext_resource type="StyleBox" uid="uid://cmealg0fw7fl0" path="res://Assets/Styles/tabbar_bg.tres" id="8_v4egn"]
 [ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Assets/Styles/base_button_template.tres" id="10_d1lbs"]
 
 [sub_resource type="Theme" id="Theme_d1lbs"]
@@ -1682,11 +1682,11 @@ theme_override_styles/tabbar_background = ExtResource("8_v4egn")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
+current_tab = 0
 tabs_position = 1
 deselect_enabled = true
 
 [node name="Planner" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")

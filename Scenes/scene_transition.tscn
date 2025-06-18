@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://sgqsxt4choq5"]
 
 [ext_resource type="Script" uid="uid://7spvg3ukfoys" path="res://Scripts/scene_transition.gd" id="1_vin40"]
-[ext_resource type="Texture2D" uid="uid://bx3jyj02lw1sa" path="res://Assets/snake_lime.png" id="2_vin40"]
+[ext_resource type="Texture2D" uid="uid://bx3jyj02lw1sa" path="res://Assets/PNGs/snake_lime.png" id="2_vin40"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8sxkv"]
 texture = ExtResource("2_vin40")

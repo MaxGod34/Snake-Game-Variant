@@ -1,13 +1,13 @@
 [gd_scene load_steps=15 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_21xkr"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
 [ext_resource type="PackedScene" uid="uid://dd5oeyqdq4rj3" path="res://Scenes/game_over_screen.tscn" id="2_bo1nx"]
 [ext_resource type="PackedScene" uid="uid://big1tpxvk7yl2" path="res://Scenes/pause_menu.tscn" id="3_8gbba"]
 [ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/upgrade_menu.tscn" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
-[ext_resource type="StyleBox" uid="uid://b4x8o38qx0owk" path="res://Scenes/HUD_label_template.tres" id="6_6bp64"]
-[ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/ShopTransitionTileSet.png" id="7_344ge"]
+[ext_resource type="StyleBox" uid="uid://b4x8o38qx0owk" path="res://Assets/Styles/HUD_label_template.tres" id="6_6bp64"]
+[ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/PNGs/ShopTransitionTileSet.png" id="7_344ge"]
 
 [sub_resource type="Gradient" id="Gradient_6bp64"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -425,6 +425,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(1, 1, 1, 0)
+
+[node name="SpiralTextureRect" type="TextureRect" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 
