@@ -86,7 +86,7 @@ func find_upgrade_button(upgrade_key: String):
 func get_upgrade_level_from_key(upgrade_key):
 	match upgrade_key:
 		"increase_grid_size": return GameManager.grid_size_level
-		"increase_burrow_charges": return GameManager.burrow_level
+		
 		"increase_phase_charges": return GameManager.phase_shift_level
 		"buy_extra_life": return GameManager.extra_lives
 		#---Planner---#
@@ -103,6 +103,16 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Afterburner": return GameManager.afterburner_level
 		"Pop Rocks": return 1 if GameManager.pop_rocks_unlocked else 0
 		"Autotomy": return 1 if GameManager.autotomy_unlocked else 0
+		#----------ARCHITECT------#
+		"Edge Lord": return GameManager.edge_lord_level
+		"Zoning Ordinance": return GameManager.zoning_ordinance_level
+		"Border Czar": return 1 if GameManager.border_czar_unlocked else 0
+		"Surveyed Land": return 1 if GameManager.surveyed_land_unlocked else 0
+		"Burrow": return GameManager.burrow_level
+		"Pocket Garden": return 1 if GameManager.pocket_garden_unlocked else 0
+		"Fold Space": return 1 if GameManager.fold_space_unlocked else 0
+		"Shatter Reality": return 1 if GameManager.shatter_reality_unlocked else 0
+		"Master's Blueprint": return 1 if GameManager.masters_blueprint_unlocked else 0
 		#------Glutton------#
 		"elephant_sized_portions": return GameManager.es_portions_level
 		"more_mice": return GameManager.more_mice_level
@@ -125,7 +135,7 @@ func update_stats_tab():
 	if is_instance_valid(side_stats_panel):
 		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
-		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (length X height)" % [GameManager.grid_size_data[GameManager.grid_size_level].x, GameManager.grid_size_data[GameManager.grid_size_level].y]
+		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [GameManager.edge_lord_data[GameManager.edge_lord_level].x, GameManager.edge_lord_data[GameManager.edge_lord_level].y]
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
 		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: " + str(GameManager.total_sp_this_run) + " SP"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"
@@ -156,6 +166,11 @@ func update_button_display(upgrade_key):
 			var req_level_2 = rules["prerequisite"]["and_level"]
 			if get_upgrade_level_from_key(prereq_key_2) < req_level_2:
 				prereqs_met = false
+	
+	if rules.has("exclusive_with"):
+		var exclusive_key = rules["exclusive_with"]
+		if get_upgrade_level_from_key(exclusive_key) > 0:
+			prereqs_met = false
 	
 	button_node.get_parent().visible = prereqs_met
 	if not prereqs_met: return

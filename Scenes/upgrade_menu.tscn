@@ -111,11 +111,10 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 2
+current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -276,6 +275,7 @@ theme_override_font_sizes/font_size = 24
 text = "SP earned this Run:"
 
 [node name="AbilityIncrementStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+visible = false
 layout_mode = 2
 offset_top = 267.0
 offset_right = 486.0
@@ -707,12 +707,13 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Acrobat" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 2
 
-[node name="GluttonTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat"]
+[node name="AcrobatTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -1084,24 +1085,52 @@ visible = false
 layout_mode = 2
 metadata/_tab_index = 3
 
-[node name="Architect" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+[node name="Architect" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
+custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
-alignment = 1
+theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 4
 
-[node name="PerimeterUpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
-layout_mode = 2
+[node name="AcrobatTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
+text = "Did I mention I'm an architect?"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EdgeLordRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.175
+anchor_bottom = 0.175
+offset_right = 378.0
+offset_bottom = 68.0
+grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
-alignment = 1
 
-[node name="PerimeterUpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PerimeterUpgradeRow"]
+[node name="EdgeLordButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/EdgeLordRow"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
@@ -1110,32 +1139,415 @@ theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
-text = "Edge Lord (3 SP)"
+text = "Edge Lord
+(3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PerimeterUpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/EdgeLordRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PerimeterUpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/EdgeLordRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PerimeterUpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/EdgeLordRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PerimeterUpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/EdgeLordRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PerimeterUpgradeRow/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/EdgeLordRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ZoningOrdinanceRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.3
+anchor_right = 0.1
+anchor_bottom = 0.3
+offset_right = 378.0
+offset_bottom = 68.0
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="ZoningOrdinanceButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ZoningOrdinanceRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Zoning Ordinance
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ZoningOrdinanceRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ZoningOrdinanceRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ZoningOrdinanceRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ZoningOrdinanceRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ZoningOrdinanceRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="BorderCzarRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.425
+anchor_right = 0.1
+anchor_bottom = 0.425
+offset_right = 378.0
+offset_bottom = 68.0
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="BorderCzarButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BorderCzarRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Border Czar
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BorderCzarRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BorderCzarRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="SurveyedLandRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.55
+anchor_right = 0.1
+anchor_bottom = 0.55
+offset_right = 378.0
+offset_bottom = 68.0
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="SurveyedLandButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/SurveyedLandRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Surveyed Land
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/SurveyedLandRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/SurveyedLandRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="BurrowRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+custom_minimum_size = Vector2(540, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.655
+anchor_right = 0.2
+anchor_bottom = 0.655
+offset_bottom = 19.0
+theme_override_constants/separation = 32
+
+[node name="BurrowButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BurrowRow"]
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Burrow Ability
+(5 SP)"
+icon_alignment = 1
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BurrowRow"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BurrowRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BurrowRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/BurrowRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="PocketGardenRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.8
+anchor_right = 0.2
+anchor_bottom = 0.8
+offset_right = 378.0
+offset_bottom = 68.0
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="PocketGardenButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PocketGardenRow"]
+layout_mode = 2
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Pocket Garden
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PocketGardenRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/PocketGardenRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="FoldSpaceRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.225
+anchor_bottom = 0.225
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="FoldSpaceButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/FoldSpaceRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "FOLD SPACE
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/FoldSpaceRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/FoldSpaceRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Master\'sBlueprintRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.4
+anchor_right = 0.2
+anchor_bottom = 0.4
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="Master\'sBlueprintButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/Master\'sBlueprintRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "Master's Blueprint 
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/Master\'sBlueprintRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/Master\'sBlueprintRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ShatterRealityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.575
+anchor_bottom = 0.575
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="ShatterRealityButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ShatterRealityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = SubResource("StyleBoxEmpty_60tjm")
+theme_override_styles/disabled = ExtResource("2_11363")
+theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/hover = ExtResource("3_f5dmy")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+text = "shatter reality 
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ShatterRealityRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/ShatterRealityRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1206,54 +1618,6 @@ metadata/_tab_index = 6
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 128
-
-[node name="BurrowAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H"]
-layout_mode = 2
-theme_override_constants/separation = 24
-alignment = 1
-
-[node name="BurrowButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H/BurrowAbilityRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_disabled_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_colors/font_hover_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_colors/font_focus_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_colors/font_pressed_color = Color(0.701961, 0.447059, 0.266667, 1)
-theme_override_constants/outline_size = 14
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = SubResource("StyleBoxEmpty_v4egn")
-theme_override_styles/disabled = ExtResource("2_11363")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/hover = ExtResource("3_f5dmy")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
-text = "Burrow Ability (5 SP)"
-icon_alignment = 1
-
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H/BurrowAbilityRow"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H/BurrowAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H/BurrowAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H/BurrowAbilityRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
 
 [node name="PhaseShiftAbilityRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Standalone/H"]
 layout_mode = 2
@@ -1730,9 +2094,9 @@ uppercase = true
 visible = false
 z_index = 5
 anchors_preset = -1
-anchor_left = 0.55
+anchor_left = 0.45
 anchor_top = 0.3
-anchor_right = 0.9
+anchor_right = 0.75
 anchor_bottom = 0.75
 grow_horizontal = 0
 grow_vertical = 0

@@ -6,7 +6,7 @@ signal hit_self
 
 # --- Properties ---
 @export var head_color: Color = Color.LIME_GREEN
-var tile_size = 32
+
 var normal_move_speed: float = 0.0
 
 var move_speed: float = 0.25 # This will be set by main.gd
@@ -14,6 +14,7 @@ var current_direction: Vector2 = Vector2.RIGHT
 var can_change_direction: bool = true
 var can_reverse: bool = true
 var main: Node2D # A reference to the main game script
+var tile_size = 32
 
 # --- Juke & Jive Properties ---
 var juke_inputs: int = 0

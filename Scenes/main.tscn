@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=15 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/snake_fill.png" id="2_21xkr"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/upgrade_menu.tscn" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
 [ext_resource type="StyleBox" uid="uid://b4x8o38qx0owk" path="res://Scenes/HUD_label_template.tres" id="6_6bp64"]
+[ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/ShopTransitionTileSet.png" id="7_344ge"]
 
 [sub_resource type="Gradient" id="Gradient_6bp64"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -31,6 +32,15 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_344ge"]
+texture = ExtResource("7_344ge")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_hptm8"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_344ge")
 
 [node name="Main" type="Node2D"]
 process_mode = 3
@@ -90,6 +100,19 @@ layer = 0
 
 [node name="GardenCompleteScreen" parent="UI" instance=ExtResource("4_kry3j")]
 
+[node name="ShopTransitionRect" type="ColorRect" parent="UI"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -16.0
+offset_top = -16.0
+offset_right = -16.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152941, 0, 0.176471, 1)
+
 [node name="CountdownLabel" type="Label" parent="UI"]
 visible = false
 clip_contents = true
@@ -110,7 +133,7 @@ theme_override_font_sizes/font_size = 48
 text = "SNAKE OFF!"
 
 [node name="HUDContainer" type="Panel" parent="UI"]
-modulate = Color(1, 1, 1, 0.447059)
+modulate = Color(1, 1, 1, 0.509804)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -133,6 +156,18 @@ theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 4
 columns = 4
 
+[node name="PlayerNameLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "ID: No-Armed Bandit"
+
 [node name="ScoreLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -144,17 +179,6 @@ theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Score: 1"
 horizontal_alignment = 1
-
-[node name="PlayerNameLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0, 1, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
-theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = ExtResource("6_6bp64")
-text = "ID: No-Armed Bandit"
 
 [node name="HUDSPLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -181,6 +205,15 @@ theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Garden Goal: 500"
 horizontal_alignment = 1
 
+[node name="XPProgressBar" type="ProgressBar" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_styles/background = ExtResource("6_6bp64")
+theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
+show_percentage = false
+
 [node name="LevelLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -192,15 +225,6 @@ theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Level: 1"
 horizontal_alignment = 1
-
-[node name="XPProgressBar" type="ProgressBar" parent="UI/HUDContainer/BottomGrid"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
-theme_override_styles/background = ExtResource("6_6bp64")
-theme_override_styles/fill = SubResource("StyleBoxFlat_kry3j")
-show_percentage = false
 
 [node name="GardenCurrentNameLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -224,6 +248,31 @@ theme_override_constants/outline_size = 16
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Garden 1 / 5"
+horizontal_alignment = 1
+
+[node name="NextLevelLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Next Level: "
+horizontal_alignment = 1
+
+[node name="UpgradePromptLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.719436, 0.735401, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Press [ U ] to Upgrade"
 horizontal_alignment = 1
 
 [node name="StatsVbox" type="VBoxContainer" parent="UI/HUDContainer"]
@@ -360,6 +409,22 @@ theme_override_constants/outline_size = 12
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Lives: "
+
+[node name="ShopTransitionTileMap" type="TileMap" parent="UI"]
+z_index = 9
+tile_set = SubResource("TileSet_hptm8")
+rendering_quadrant_size = 32
+format = 2
+
+[node name="InputBlocker" type="ColorRect" parent="UI"]
+visible = false
+z_index = 10
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 

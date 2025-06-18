@@ -12,8 +12,8 @@ var grid_height: int
 
 # Boolean Flags
 var is_game_over: bool = false
-var upgrade_menu_is_pending: bool = false
 var garden_complete_is_pending: bool = false
+var upgrade_menu_is_pending: bool = false
 
 var snake_body_segments: Array[Node2D] = []
 var head: CharacterBody2D
@@ -87,8 +87,10 @@ func _ready():
 	# --- FINAL SETUP ---#
 	#-----SET OBSTACLSE-----#
 	var obstacle_count = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
-	for i in range(obstacle_count):
-		spawn_rock()
+	# Zone Ord check
+	if GameManager.zoning_ordinance_level < 4:
+		for i in range(obstacle_count):
+			spawn_rock()
 	#------SPAWN FRUITS----#
 	for i in range(GameManager.max_fruits_on_screen):
 		update_fruit_prediction()
@@ -103,6 +105,7 @@ func _ready():
 	# --- FINAL SETUP & START ---
 	update_score_display()
 	update_hud()
+	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
 	
 func _process(delta):
@@ -173,6 +176,11 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_released("show_hud"):
 		var tween = create_tween()
 		tween.tween_property($UI/HUDContainer, "modulate:a", 0.1, 1.0)
+	if event.is_action_pressed("open_upgrade_menu"):
+	# Check if the player has SP and the game is in an active state
+		if GameManager.skill_points > 0 and not get_tree().paused and not is_game_over:
+			# Call new transition/show menu function
+			open_upgrade_menu_with_transition()
 
 func toggle_pause():
 	if get_tree().paused:
@@ -193,14 +201,82 @@ func apply_persistent_upgrades():
 			var speed_mod = GameManager.class_data[GameManager.chosen_class]["speed_upgrade_mod"]
 			head.move_timer.wait_time *= speed_mod
 
-func show_upgrade_menu():
+
+
+func open_upgrade_menu_with_transition():
+	# Stop the snake and block input
 	head.move_timer.stop()
+	$UI/InputBlocker.show()
+
+	var tile_map = $UI/ShopTransitionTileMap
+	var size = Vector2i(GameManager.edge_lord_data[GameManager.edge_lord_level].x, GameManager.edge_lord_data[GameManager.edge_lord_level].y)
+	var max_steps = size.x + size.y
+
+	# --- COVER SCREEN ANIMATION ---
+	for step in range(max_steps):
+		for x in range(step + 1):
+			var y = step - x
+			if x < size.x and y < size.y:
+				tile_map.set_cell(0, Vector2i(x, y), 0, Vector2i(0, 0))
+		await get_tree().create_timer(0.01).timeout
+
+	# --- SHOW THE FUNKY MESSAGE ---
+	$UI/CountdownLabel.text = "shop shop shop"
+	$UI/CountdownLabel.visible = true
+	await get_tree().create_timer(1.5).timeout
+	$UI/CountdownLabel.visible = false
+
+	# --- Prepare the menu for its animation ---
+	var upgrade_menu = $UI/UpgradeMenu
+	upgrade_menu.set_initial_state_and_update()
 	
+	# --- THIS IS THE FIX ---
+	# Set its starting scale to be tiny, but NOT zero.
+	upgrade_menu.scale = Vector2(0.001, 0.001)
+	upgrade_menu.visible = true
+
+	# Create the pop-up animation
+	var menu_tween = create_tween()
+	menu_tween.tween_property(upgrade_menu, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK)
+	await menu_tween.finished
+
+	# Unblock input so the player can use the menu
+	$UI/InputBlocker.hide()
+
+
+
+
+func show_upgrade_menu():
+	# Stop the snake and block input
+	head.move_timer.stop()
+	var transition_rect = $UI/ShopTransitionRect
+	transition_rect.visible = true
+
+	# Create a new tween for the animation
+	var tween = create_tween()
+
+	# Animate the curtain wiping IN
+	transition_rect.position.x = -get_viewport_rect().size.x # Start off-screen
+	tween.tween_property(transition_rect, "position:x", 0, 0.3).set_ease(Tween.EASE_IN)
+	await tween.finished
+
+	# Now that the screen is covered, show the message
+	$UI/CountdownLabel.text = "You're here to upgrade, you little cheeseball!\nWelcome to the shop!"
+	$UI/CountdownLabel.visible = true
+	await get_tree().create_timer(1.5).timeout
+	$UI/CountdownLabel.visible = false
+
+	# Update and show the actual upgrade menu
 	$UI/UpgradeMenu.set_initial_state_and_update()
-
-	$UI/UpgradeMenu.update_all_displays()
-
 	$UI/UpgradeMenu.visible = true
+
+	# Animate the curtain wiping OUT
+	var tween_out = create_tween()
+	tween_out.tween_property(transition_rect, "position:x", get_viewport_rect().size.x, 0.3).set_ease(Tween.EASE_OUT)
+	await tween_out.finished
+
+	transition_rect.visible = false
+
 
 
 func show_garden_complete_screen():
@@ -319,9 +395,13 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	update_tail_visuals()
 	
 	if upgrade_menu_is_pending:
-		#menu is pending
 		upgrade_menu_is_pending = false # Reset the flag
-		show_upgrade_menu()				# Now we show the menu
+		open_upgrade_menu_with_transition() # Show the menu
+	elif garden_complete_is_pending:
+		# If there's no upgrade pending, check if a garden is complete.
+		garden_complete_is_pending = false # Reset the flag
+		show_garden_complete_screen() # Show the garden complete screen
+	
 		
 func spawn_fruit():
 	var fruit = null
@@ -386,28 +466,56 @@ func trigger_pop_rocks_shockwave(origin_rock_pos: Vector2):
 func spawn_rock():
 	var rock = rock_scene.instantiate()
 	var potential_position: Vector2
-	var is_safe_position: bool = false
+	var random_grid_pos: Vector2i # We'll calculate this inside the loop
+	var is_safe_to_spawn = false
 	
-	while not is_safe_position:
+	# This loop will continue until we find a position that is safe from EVERYTHING
+	while not is_safe_to_spawn:
+		# Step 1: Pick a random grid coordinate
 		var x_pos = randi() % grid_width
 		var y_pos = randi() % grid_height
-		var random_grid_pos = Vector2(x_pos, y_pos)
-		potential_position = (random_grid_pos * tile_size) + tile_offset
+		random_grid_pos = Vector2i(x_pos, y_pos)
 		
-		# SAFETY CHECK
-		var is_on_snake = is_position_occupied(potential_position) or positions_are_equal(potential_position, head.global_position)
+		# --- NEW ZONING ORDINANCE LOGIC ---
+		var zone_level = GameManager.zoning_ordinance_level
+		var is_in_safe_zone = false
+		
+		# Check if the chosen spot is in a protected quadrant
+		# Level 1 protects the top-left quadrant
+		if zone_level >= 1 and x_pos < grid_width / 2 and y_pos < grid_height / 2:
+			is_in_safe_zone = true
+		# Level 2 also protects the bottom-right
+		if zone_level >= 2 and x_pos >= grid_width / 2 and y_pos >= grid_height / 2:
+			is_in_safe_zone = true
+		# Level 3 also protects the top-right
+		if zone_level >= 3 and x_pos >= grid_width / 2 and y_pos < grid_height / 2:
+			is_in_safe_zone = true
+		# Level 4 protects all four quadrants
+		if zone_level >= 4 and x_pos < grid_width / 2 and y_pos >= grid_height / 2:
+			is_in_safe_zone = true
+
+		# If it's a safe zone, we must re-roll. 'continue' skips to the next loop iteration.
+		if is_in_safe_zone:
+			continue
+			
+		# --- Full Safety Check ---
+		potential_position = (Vector2(random_grid_pos) * tile_size) + tile_offset
+		
+		var is_on_snake = is_any_body_part_at(potential_position) or positions_are_equal(potential_position, head.global_position)
 		var is_on_another_rock = false
 		for placed_rock in spawned_obstacles:
 			if positions_are_equal(potential_position, placed_rock.position):
 				is_on_another_rock = true
 				break
+		
+		# If we pass all checks, we can exit the loop
 		if not is_on_snake and not is_on_another_rock:
-			is_safe_position = true
-	
-	var gray_value = randf_range(0.4, 0.7) # A random decimal between 0.4 (darker) and 0.7 (lighter)
+			is_safe_to_spawn = true
+
+	# Now that we have a guaranteed safe position, create and place the rock
+	var gray_value = randf_range(0.4, 0.7)
 	var random_gray_color = Color(gray_value, gray_value, gray_value)
 	rock.get_node("FillSprite").modulate = random_gray_color
-	
 	
 	rock.position = potential_position
 	spawned_obstacles.append(rock)
@@ -444,6 +552,12 @@ func grow_snake(segments_to_add: int):
 	# We only update the score display once at the very end.
 	update_score_display()
 
+
+func update_upgrade_prompt():
+	# Show the prompt only if the player has SP to spend.
+	var has_sp = GameManager.skill_points > 0
+	$UI/HUDContainer/BottomGrid/UpgradePromptLabel.visible = has_sp
+
 func update_progression():
 	
 	var current_score = snake_body_segments.size() + 1
@@ -456,9 +570,7 @@ func update_progression():
 		level_up()
 		# Set a flag to know we should show the menu at a "later" time
 		leveled_up_this_frame = true
-	# After looping through this while loop, if we level up, set the flag that is waiting
-	if leveled_up_this_frame:
-		upgrade_menu_is_pending = true
+
 	
 	# Garden Completion Check
 	var current_garden_id = GameManager.current_garden
@@ -507,15 +619,31 @@ func level_up():
 		GameManager.tenderizer_charges = GameManager.tenderizer_level
 
 func _on_upgrade_menu_resume_game_pressed():
-	$UI/UpgradeMenu.visible = false
-	if garden_complete_is_pending:
-		# if yes, show garden screen instead of resuming
-		garden_complete_is_pending = false
-		show_garden_complete_screen()
-	else:
-		# Resume Game if no
-		head.move_timer.start()
-		update_hud()
+	# Block input for the transition out
+	$UI/InputBlocker.show()
+	var upgrade_menu = $UI/UpgradeMenu
+
+	# Animate the menu shrinking out to a tiny, non-zero scale.
+	var menu_tween = create_tween()
+	menu_tween.tween_property(upgrade_menu, "scale", Vector2(0.001, 0.001), 0.2).set_trans(Tween.TRANS_SINE)
+	await menu_tween.finished
+	
+	# Now that it's gone, make it officially invisible
+	upgrade_menu.visible = false
+	
+	# --- UNCOVER SCREEN ANIMATION ---
+	var tile_map = $UI/ShopTransitionTileMap
+	var size = Vector2i(GameManager.edge_lord_data[GameManager.edge_lord_level].x, GameManager.edge_lord_data[GameManager.edge_lord_level].y)
+	var max_steps = size.x + size.y
+	for step in range(max_steps):
+		for x in range(step + 1):
+			var y = (size.y - 1) - (step - x)
+			if x < size.x and y >= 0:
+				tile_map.erase_cell(0, Vector2i(x, y))
+		await get_tree().create_timer(0.01).timeout
+	
+	$UI/InputBlocker.hide()
+	start_countdown()
 	
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
@@ -595,17 +723,46 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Autotomy":
 		if not GameManager.autotomy_unlocked:
 			GameManager.autotomy_unlocked = true
-	# Increase Grid Size Upgrade Logic
-	elif upgrade_name == "increase_grid_size":
-		if GameManager.grid_size_level < 4:
-			GameManager.grid_size_level += 1
-			update_boundary_visuals()
-			print("New grid size: (l x w): ", GameManager.grid_size_data[GameManager.grid_size_level])
-	# Burrow Ability Upgrade Logic 
-	elif upgrade_name == "increase_burrow_charges":
+	#---------Architect---------
+	elif upgrade_name == "Edge Lord":
+		if GameManager.edge_lord_level < 4:
+			GameManager.edge_lord_level += 1
+			update_boundary_visuals() # Immediately resize the world
+
+	elif upgrade_name == "Zoning Ordinance":
+		if GameManager.zoning_ordinance_level < 4:
+			GameManager.zoning_ordinance_level += 1
+
+	elif upgrade_name == "Border Czar":
+		if not GameManager.border_czar_unlocked:
+			GameManager.border_czar_unlocked = true
+
+	elif upgrade_name == "Surveyed Land":
+		if not GameManager.surveyed_land_unlocked:
+			GameManager.surveyed_land_unlocked = true
+			
+	elif upgrade_name == "Burrow":
 		GameManager.burrow_level += 1
 		GameManager.burrow_charges += 1
 		print("Burrow Charge + 1!")
+
+	elif upgrade_name == "Pocket Garden":
+		if not GameManager.pocket_garden_unlocked:
+			GameManager.pocket_garden_unlocked = true
+	
+	elif upgrade_name == "Fold Space":
+		if not GameManager.fold_space_unlocked:
+			GameManager.fold_space_unlocked = true
+			
+	elif upgrade_name == "Shatter Reality":
+		if not GameManager.shatter_reality_unlocked:
+			GameManager.shatter_reality_unlocked = true
+			
+	elif upgrade_name == "Master's Blueprint":
+		if not GameManager.masters_blueprint_unlocked:
+			GameManager.masters_blueprint_unlocked = true
+			
+	
 	# Phase Shift Ability Upgrade Logic
 	elif upgrade_name == "increase_phase_charges":
 		GameManager.phase_shift_level += 1
@@ -713,6 +870,7 @@ func on_snake_ate_food(fruit):
 	update_fruit_prediction()
 	update_progression()
 	update_hud()
+	update_upgrade_prompt()
 	
 	if head.can_reverse:
 		head.can_reverse = false
@@ -931,7 +1089,7 @@ func _on_garden_complete_continue_pressed() -> void:
 		GameManager.skill_points += bonus_sp
 
 func update_boundary_visuals():
-	var current_grid_size = GameManager.grid_size_data[GameManager.grid_size_level]
+	var current_grid_size = GameManager.edge_lord_data[GameManager.edge_lord_level]
 	grid_width = int(current_grid_size.x)
 	grid_height = int(current_grid_size.y)
 	
@@ -941,7 +1099,7 @@ func update_boundary_visuals():
 func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
 	var total_segments = snake_body_segments.size()
-	var ghost_color = Color("AFEEEE80") # transparent, pale turquoise
+	var ghost_color = Color("AFEEEE60") # transparent, pale turquoise
 
 	# Loop through all segments and set their state
 	for i in range(total_segments):

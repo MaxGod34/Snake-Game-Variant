@@ -25,17 +25,12 @@ var score_at_level_start = 0
 var fruits_eaten_this_run: int = 0
 var total_sp_this_run: int = 0
 #----Upgrade Data Tracking----#
-var speed_upgrade_level = 0
 var fruit_reward = 1
 var max_fruits_on_screen = 1
-	#--------Burrow Uprade Shit--------#
-var burrow_level = 0
-var burrow_charges = 0
+
 	#-------New Phase Shift Upgrade Shit------#
 var phase_shift_level = 0
 var phase_shift_charges = 0
-	#-------Perimeter Upgrade Shit-----------#
-var grid_size_level = 0
 	#-------Extra Life Shit-------------#
 var extra_lives = 0
 	#----Active Ability Flags----#
@@ -44,7 +39,7 @@ var is_phasing = false
 var is_bounty_active = false
 var autotomy_is_active = false
 	#--------Perimeter Upgrade Sizes-------#
-var grid_size_data = [
+var edge_lord_data = [
 	Vector2(20, 15), # Level 0
 	Vector2(24, 18), # Level 1
 	Vector2(28, 21), # Level 2
@@ -100,6 +95,20 @@ var pop_rocks_unlocked = false
 var autotomy_unlocked = false
 var autotomy_used_this_garden = false
 
+#------------THE ARCHITECT-----------#
+var edge_lord_level = 0
+var zoning_ordinance_level = 0
+var border_czar_unlocked = false
+var surveyed_land_unlocked = false
+var burrow_level = 0
+var burrow_charges = 0
+var pocket_garden_unlocked = false
+# Ultimate Keystones
+var fold_space_unlocked = false
+var masters_blueprint_unlocked = false
+var shatter_reality_unlocked = false
+
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -154,7 +163,10 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	},
 	"warlock": {
@@ -181,7 +193,10 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	},
 	"inchworm": {
@@ -208,7 +223,10 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	},
 	"phoenix_coil": {
@@ -235,7 +253,10 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	},
 	"sidewinder": {
@@ -262,7 +283,10 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	},
 	"the_zealot": {
@@ -289,7 +313,10 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	},
 	"the_alchemist": {
@@ -316,18 +343,81 @@ var class_data = {
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
-			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Survey Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
 		}
 	}
 }
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
-	"increase_burrow_charges": { # Changed from "unlock_burrow"
-		"display_name": "Burrow Ability",
-		"description": "Burrow your way through those blasted walls!\nPress space to burrow through to the other side in one piece!\nOne charge per level",
-		"costs": [5, 5, 5], # Cost for each additional charge
-		"max_level": 3
+	# --- ARCHITECT PATH ---
+	"Edge Lord": {
+		"display_name": "Edge Lord",
+		"description": "Increases the size\nof the play area.\nLvl 1: small\nLvl 2: not so small\nLvl 3: not BIG\nLvl 4: what you're lookin' for",
+		"costs": [2, 3, 4, 5],
+		"max_level": 4
+	},
+	"Zoning Ordinance": {
+		"display_name": "Zoning Ordinance",
+		"description": "Designate a quadrant as a\n'safe zone' with fewer obstacles.",
+		"costs": [2, 3, 3, 4],
+		"max_level": 4,
+		"prerequisite": {"upgrade": "Edge Lord", "level": 3}
+	},
+	"Border Czar": {
+		"display_name": "Border Czar",
+		"description": "Fruit that spawns on the edge\nof the garden has a higher chance to be special.",
+		"costs": [3],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Edge Lord", "level": 3}
+	},
+	"Surveyed Land": {
+		"display_name": "Surveyed Land",
+		"description": "The quadrant opposite your 'safe zone' becomes\na 'wilderness' with better fruit but more obstacles.",
+		"costs": [2],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Zoning Ordinance", "level": 1}
+	},
+	"Burrow": {
+		"display_name": "Burrow",
+		"description": "Active Ability: Pass through one wall\nand emerge on the opposite side.",
+		"costs": [5, 5, 5],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "Edge Lord", "level": 5} # This should be 4 to match max_level
+	},
+	"Pocket Garden": {
+		"display_name": "Pocket Garden",
+		"description": "Active Ability: Sacrifice 10 tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Edge Lord", "level": 5} # This should be 4
+	},
+	"Fold Space": {
+		"display_name": "Fold Space", 
+		"description": "Removes all walls, making the garden wrap around on itself.",
+		"costs": [8], 
+		"max_level": 1, 
+		"prerequisite": {"upgrade": "Edge Lord", "level": 4},
+		"exclusive_with": "Shatter Reality" # <-- NEW: This makes it mutually exclusive
+	},
+	"Shatter Reality": {
+		"display_name": "Shatter Reality", 
+		"description": "Splits the garden into four quadrants with connecting portals.",
+		"costs": [8], 
+		"max_level": 1, 
+		"prerequisite": {"upgrade": "Edge Lord", "level": 4},
+		"exclusive_with": "Fold Space" # <-- This makes it mutually exclusive
+	},
+	"Master's Blueprint": {
+		"display_name": "Master's Blueprint", 
+		"description": "Transforms the game's visuals into a clean,\nglowing 'blueprint' grid for the rest of the run.",
+		"costs": [8], 
+		"max_level": 1, 
+		"prerequisite": {"upgrade": "Edge Lord", "level": 4}
+		# This one is independent and has no 'exclusive_with' key
 	},
 	"increase_phase_charges": {
 		"display_name": "Phase Shift Ability",
@@ -498,13 +588,10 @@ func start_game():
 	total_sp_this_run = 0
 	total_sp_this_run = skill_points
 	
-	speed_upgrade_level = 0
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
-	grid_size_level = 0
 
-	burrow_charges = 0
-	burrow_level = 0
+	
 	phase_shift_level = 0
 	phase_shift_level = 0
 	extra_lives = 0
@@ -537,6 +624,18 @@ func start_game():
 	autotomy_unlocked = false
 	autotomy_is_active = false
 	autotomy_used_this_garden = false
+	#-----Reset Architect Upgrades
+	# Architect Path
+	edge_lord_level = 0
+	zoning_ordinance_level = 0
+	border_czar_unlocked = false
+	surveyed_land_unlocked = false
+	burrow_charges = 0
+	burrow_level = 0
+	pocket_garden_unlocked = false
+	fold_space_unlocked = false
+	masters_blueprint_unlocked = false
+	shatter_reality_unlocked = false
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn")
