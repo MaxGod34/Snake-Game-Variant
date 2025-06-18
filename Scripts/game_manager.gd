@@ -141,7 +141,7 @@ var difficulty_data = {
 var class_data = {
 	"speedster": {
 		"name": "Speedster",
-		"description": "Starts fast. Speed upgrades are more effective. Defensive upgrades are more expensive.",
+		"description": "Starts fast.\nSpeed upgrades are more effective.\nDefensive upgrades are more expensive.",
 		"start_length": 1,
 		"start_speed": 0.18,
 		"start_fruit_reward": 1,
@@ -171,7 +171,7 @@ var class_data = {
 	},
 	"warlock": {
 		"name": "Warlock",
-		"description": "Grows faster by default. Fruit-based upgrades are cheaper.",
+		"description": "Grows faster by default.\nFruit-based upgrades are cheaper.",
 		"start_length": 3,
 		"start_speed": 0.25,
 		"start_fruit_reward": 2, # Starts with a better reward
@@ -201,7 +201,7 @@ var class_data = {
 	},
 	"inchworm": {
 		"name": "Inchworm",
-		"description": "Starts long and slow. Defensive and world-expanding upgrades are cheaper.",
+		"description": "Starts long and slow.\nDefensive and world-expanding upgrades are cheaper.",
 		"start_length": 5,
 		"start_speed": 0.3,
 		"start_fruit_reward": 1,
@@ -231,7 +231,7 @@ var class_data = {
 	},
 	"phoenix_coil": {
 		"name": "Phoenix Coil",
-		"description": "Starts with an extra life. Can purchase more lives cheaply.",
+		"description": "Starts with an extra life.\nCan purchase more lives cheaply.",
 		"start_length": 3,
 		"start_speed": 0.25,
 		"start_fruit_reward": 1,
@@ -261,7 +261,7 @@ var class_data = {
 	},
 	"sidewinder": {
 		"name": "Sidewinder",
-		"description": "A trickster. Every time you use an ability, there's a 25% chance the charge is not consumed.",
+		"description": "A trickster. Every time you use an ability,\nthere's a 25% chance the charge is not consumed.",
 		"start_length": 3,
 		"start_speed": 0.25,
 		"start_fruit_reward": 1,
@@ -291,7 +291,7 @@ var class_data = {
 	},
 	"the_zealot": {
 		"name": "The Zealot",
-		"description": "Cannot gain extra lives. Receives a massive +5 SP bonus for completing a Garden without dying.",
+		"description": "Cannot gain extra lives.\nReceives a massive +5 SP bonus for completing a Garden without dying.",
 		"start_length": 1,
 		"start_speed": 0.2,
 		"start_fruit_reward": 1,
@@ -362,14 +362,14 @@ var upgrade_data = {
 	},
 	"Zoning Ordinance": {
 		"display_name": "Zoning Ordinance",
-		"description": "Designate a quadrant as a\n'safe zone' with fewer obstacles.",
+		"description": "Designate a quadrant as a\n'safe zone' with fewer obstacles\nLvl 1: Top Left\nLvl 2: Top Half\nLvl 3: Bottom-Left Safe as well\nLvl 4: Complete control",
 		"costs": [2, 3, 3, 4],
 		"max_level": 4,
 		"prerequisite": {"upgrade": "Edge Lord", "level": 3}
 	},
 	"Border Czar": {
 		"display_name": "Border Czar",
-		"description": "Fruit that spawns on the edge\nof the garden has a higher chance to be special.",
+		"description": "Fruit that spawns on the edge\nof the garden has a higher chance to be special\nGolden fruit chances doubled!",
 		"costs": [3],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Edge Lord", "level": 3}
@@ -383,7 +383,7 @@ var upgrade_data = {
 	},
 	"Burrow": {
 		"display_name": "Burrow",
-		"description": "Active Ability: Pass through one wall\nand emerge on the opposite side.",
+		"description": "Active Ability: Pass through one wall\nand emerge on the opposite side\n+ 1 charge per upgrade\nAbility lasts until next wall hit!",
 		"costs": [5, 5, 5],
 		"max_level": 3,
 		"prerequisite": {"upgrade": "Edge Lord", "level": 5} # This should be 4 to match max_level

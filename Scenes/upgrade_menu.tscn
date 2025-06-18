@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=22 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://vqx6foqi46a7" path="res://Assets/Styles/panel_container_prototype1.tres" id="2_6gn5s"]
@@ -10,8 +10,10 @@
 [ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Assets/Styles/panel_bg.tres" id="5_m70ya"]
 [ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Assets/Styles/panel_shadow_temp.tres" id="7_60tjm"]
 [ext_resource type="StyleBox" uid="uid://c5n012lqx25ow" path="res://Assets/Styles/tab_selected.tres" id="7_lpopj"]
+[ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_button_hovered.tres" id="8_fm0cu"]
 [ext_resource type="StyleBox" uid="uid://cmealg0fw7fl0" path="res://Assets/Styles/tabbar_bg.tres" id="8_v4egn"]
 [ext_resource type="StyleBox" uid="uid://bjn0757ol7po2" path="res://Assets/Styles/base_button_template.tres" id="10_d1lbs"]
+[ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_button_normal.tres" id="11_s2rwv"]
 
 [sub_resource type="Theme" id="Theme_d1lbs"]
 
@@ -111,10 +113,11 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 0
+current_tab = 4
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -365,12 +368,12 @@ theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Elephant-Sized Portions (1 SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/ElephantSizedPortionsRow"]
@@ -447,7 +450,7 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="MoreMiceButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow"]
-custom_minimum_size = Vector2(340, 70)
+custom_minimum_size = Vector2(256, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
@@ -459,12 +462,12 @@ theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "More Mice! (2 SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/MoreMiceRow"]
@@ -510,7 +513,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="GoldenSeedsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
-custom_minimum_size = Vector2(660, 0)
+custom_minimum_size = Vector2(640, 0)
 layout_mode = 2
 offset_top = 284.0
 offset_right = 398.0
@@ -520,7 +523,7 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="GoldenSeedsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow"]
-custom_minimum_size = Vector2(340, 70)
+custom_minimum_size = Vector2(256, 70)
 layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
@@ -531,12 +534,12 @@ theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Golden Seeds (? SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/GoldenSeedsRow"]
@@ -568,7 +571,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="PatientGardenerRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton"]
-custom_minimum_size = Vector2(660, 0)
+custom_minimum_size = Vector2(630, 0)
 layout_mode = 2
 offset_top = 368.0
 offset_right = 394.0
@@ -578,7 +581,7 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="PatientGardenerButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow"]
-custom_minimum_size = Vector2(340, 70)
+custom_minimum_size = Vector2(288, 70)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
@@ -590,12 +593,12 @@ theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Patient Gardener (? SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/PatientGardenerRow"]
@@ -631,7 +634,7 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="BananaBountyButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/BananaBountyRow"]
-custom_minimum_size = Vector2(340, 70)
+custom_minimum_size = Vector2(256, 70)
 layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
@@ -642,12 +645,12 @@ theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Banana Bounty (? SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/BananaBountyRow"]
@@ -677,7 +680,7 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="TheSatchelButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/TheSatchelRow"]
-custom_minimum_size = Vector2(340, 70)
+custom_minimum_size = Vector2(256, 70)
 layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.929412, 0.717647, 0, 1)
@@ -688,12 +691,12 @@ theme_override_colors/font_focus_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.929412, 0.717647, 0, 1)
 theme_override_constants/outline_size = 14
 theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("3_f5dmy")
+theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("2_11363")
 theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
 theme_override_styles/hover = ExtResource("3_f5dmy")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/normal = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "The Satchel (? SP)"
 
 [node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Glutton/TheSatchelRow"]
@@ -1086,7 +1089,6 @@ layout_mode = 2
 metadata/_tab_index = 3
 
 [node name="Architect" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1682,11 +1684,11 @@ theme_override_styles/tabbar_background = ExtResource("8_v4egn")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 0
 tabs_position = 1
 deselect_enabled = true
 
 [node name="Planner" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")

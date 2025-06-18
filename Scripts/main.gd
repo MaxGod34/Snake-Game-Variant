@@ -46,14 +46,14 @@ func _ready():
 	var class_data = GameManager.class_data[p_class]
 	GameManager.has_died_this_garden = false
 	GameManager.garden_weaver_used_this_garden = false
+	GameManager.fruits_eaten_this_run = 0
 	
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
 	
-	spawned_obstacles.clear()
 	# Bounds and Tile Offset cuz center origin omfg i'll kms
 	update_boundary_visuals()
-	tile_offset = Vector2(tile_size / 2, tile_size / 2)
+	tile_offset = Vector2(tile_size / 2.0, tile_size / 2.0)
 	
 	# --- CREATE HEAD ---
 	head = head_scene.instantiate()
@@ -71,6 +71,7 @@ func _ready():
 		var segment_pos = (grid_pos * tile_size) + tile_offset
 		add_body_segment_at(segment_pos)
 	
+	spawned_obstacles.clear()
 	trail_pieces.clear()
 	# --- CONNECT SIGNALS ---
 	head.moved.connect(on_snake_head_moved)
@@ -86,11 +87,7 @@ func _ready():
 	SceneTransition.transition_finished.connect(_on_transition_finished)
 	# --- FINAL SETUP ---#
 	#-----SET OBSTACLSE-----#
-	var obstacle_count = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
-	# Zone Ord check
-	if GameManager.zoning_ordinance_level < 4:
-		for i in range(obstacle_count):
-			spawn_rock()
+	setup_initial_obstacles()
 	#------SPAWN FRUITS----#
 	for i in range(GameManager.max_fruits_on_screen):
 		update_fruit_prediction()
@@ -99,7 +96,6 @@ func _ready():
 	update_fruit_prediction()
 	
 	time_since_last_fruit = 0.0
-	GameManager.fruits_eaten_this_run = 0
 
 	
 	# --- FINAL SETUP & START ---
@@ -404,20 +400,39 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	
 		
 func spawn_fruit():
-	var fruit = null
-	var current_gs_level = GameManager.golden_seeds_level
+	# Find a safe position first
+	var safe_position = calculate_safe_spawn_position()
 	
-	if current_gs_level > 0 and randf() < GameManager.golden_seeds_data[current_gs_level]["chance"]:
+	# ---BORDER CZAR LOGIC ---
+	# Convert our safe world position back to a grid position to check it.
+	var grid_pos = Vector2i((safe_position - tile_offset) / tile_size)
+	
+	var is_on_border = false
+	# Check if the position is within 3 tiles of any edge
+	if grid_pos.x < 3 or grid_pos.x >= grid_width - 3 or \
+	   grid_pos.y < 3 or grid_pos.y >= grid_height - 3:
+		is_on_border = true
+
+	# Now, we determine the chance of spawning a golden fruit.
+	var golden_chance = 0.0
+	if GameManager.golden_seeds_level > 0:
+		golden_chance = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["chance"]
+		# If we have Border Czar and we're on the border, double the chance!
+		if GameManager.border_czar_unlocked and is_on_border:
+			golden_chance *= 2.0
+			print("BORDER CZAR BONUS! Golden chance is now: ", golden_chance)
+
+	# --- Spawning Logic ---
+	var fruit = null
+	if randf() < golden_chance:
 		fruit = preload("res://Scenes/golden_fruit.tscn").instantiate()
 	else:
 		fruit = fruit_scene.instantiate()
-	
-	# Add to group so we can check against it
-	fruit.add_to_group("fruits") 
-	# Find a safe spot NOW and place it there.
-	fruit.position = next_fruit_position
+		
+	fruit.add_to_group("fruits")
+	fruit.position = safe_position # Use the safe position we already calculated
 	call_deferred("add_child", fruit)
-	print("Fruit spawned at a guaranteed safe location.")
+	print("Fruit spawned at a safe location.")
 
 func destroy_obstacle(obstacle_node):
 	# First, check if the obstacle is still valid (it might have already been destroyed by a shockwave)
@@ -463,63 +478,83 @@ func trigger_pop_rocks_shockwave(origin_rock_pos: Vector2):
 		destroy_obstacle(rock)
 
 
+
+# A new function to handle all initial obstacle spawning
+# In main.gd
+
+func setup_initial_obstacles():
+	spawned_obstacles.clear()
+	
+	var obstacle_count = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
+
+	# Only try to spawn rocks if Zoning Ordinance is not maxed out.
+	if GameManager.zoning_ordinance_level < 4:
+		for i in range(obstacle_count):
+			spawn_rock()
+
+
+func is_in_safe_zone(grid_pos: Vector2i) -> bool:
+	var zone_level = GameManager.zoning_ordinance_level
+	if zone_level <= 0:
+		return false
+
+	var half_width = grid_width / 2.0
+	var half_height = grid_height / 2.0
+	
+	# Level 1 protects Top-Left
+	if zone_level >= 1 and grid_pos.x < half_width and grid_pos.y < half_height:
+		return true
+	# Level 2 also protects Top-Right
+	if zone_level >= 2 and grid_pos.x >= half_width and grid_pos.y < half_height:
+		return true
+	# Level 3 also protects Bottom-Left
+	if zone_level >= 3 and grid_pos.x < half_width and grid_pos.y >= half_height:
+		return true
+	# Level 4 also protects Bottom-Right
+	if zone_level >= 4 and grid_pos.x >= half_width and grid_pos.y >= half_height:
+		return true
+		
+	return false
+
+
+
 func spawn_rock():
 	var rock = rock_scene.instantiate()
-	var potential_position: Vector2
-	var random_grid_pos: Vector2i # We'll calculate this inside the loop
-	var is_safe_to_spawn = false
-	
-	# This loop will continue until we find a position that is safe from EVERYTHING
-	while not is_safe_to_spawn:
-		# Step 1: Pick a random grid coordinate
-		var x_pos = randi() % grid_width
-		var y_pos = randi() % grid_height
-		random_grid_pos = Vector2i(x_pos, y_pos)
-		
-		# --- NEW ZONING ORDINANCE LOGIC ---
-		var zone_level = GameManager.zoning_ordinance_level
-		var is_in_safe_zone = false
-		
-		# Check if the chosen spot is in a protected quadrant
-		# Level 1 protects the top-left quadrant
-		if zone_level >= 1 and x_pos < grid_width / 2 and y_pos < grid_height / 2:
-			is_in_safe_zone = true
-		# Level 2 also protects the bottom-right
-		if zone_level >= 2 and x_pos >= grid_width / 2 and y_pos >= grid_height / 2:
-			is_in_safe_zone = true
-		# Level 3 also protects the top-right
-		if zone_level >= 3 and x_pos >= grid_width / 2 and y_pos < grid_height / 2:
-			is_in_safe_zone = true
-		# Level 4 protects all four quadrants
-		if zone_level >= 4 and x_pos < grid_width / 2 and y_pos >= grid_height / 2:
-			is_in_safe_zone = true
+	var potential_pos: Vector2
+	var is_valid_spawn = false
+	var attempt_counter = 0
 
-		# If it's a safe zone, we must re-roll. 'continue' skips to the next loop iteration.
-		if is_in_safe_zone:
-			continue
-			
-		# --- Full Safety Check ---
-		potential_position = (Vector2(random_grid_pos) * tile_size) + tile_offset
+	while not is_valid_spawn:
+		attempt_counter += 1
+		if attempt_counter > 5000:
+			print_debug("Could not find a valid spot for an obstacle.")
+			return
+
+		var random_grid_pos = Vector2i(randi() % grid_width, randi() % grid_height)
 		
-		var is_on_snake = is_any_body_part_at(potential_position) or positions_are_equal(potential_position, head.global_position)
+		# We now call our new, smarter function to check ALL protected zones.
+		if is_in_safe_zone(random_grid_pos):
+			continue # If it's a safe zone, re-roll immediately.
+		
+		potential_pos = (Vector2(random_grid_pos) * tile_size) + tile_offset
+		
+		# Check for collisions with other rocks and the snake
 		var is_on_another_rock = false
-		for placed_rock in spawned_obstacles:
-			if positions_are_equal(potential_position, placed_rock.position):
+		for r in spawned_obstacles:
+			if positions_are_equal(potential_pos, r.position):
 				is_on_another_rock = true
 				break
 		
-		# If we pass all checks, we can exit the loop
-		if not is_on_snake and not is_on_another_rock:
-			is_safe_to_spawn = true
+		if not is_any_body_part_at(potential_pos) and not is_on_another_rock:
+			is_valid_spawn = true
 
-	# Now that we have a guaranteed safe position, create and place the rock
+	# Once a valid spot is found, spawn the rock there.
 	var gray_value = randf_range(0.4, 0.7)
-	var random_gray_color = Color(gray_value, gray_value, gray_value)
-	rock.get_node("FillSprite").modulate = random_gray_color
-	
-	rock.position = potential_position
+	rock.get_node("FillSprite").modulate = Color(gray_value, gray_value, gray_value)
+	rock.position = potential_pos
 	spawned_obstacles.append(rock)
 	add_child(rock)
+
 
 func spawn_trail_piece(position: Vector2):
 	var trail_piece = ColorRect.new()
@@ -858,6 +893,7 @@ func on_snake_ate_food(fruit):
 			f.queue_free()
 		# Now it's safe to respawn everything.
 		for i in range(GameManager.max_fruits_on_screen):
+			update_fruit_prediction()
 			spawn_fruit()
 	else:
 		# Otherwise, just kill the tween on the one fruit that was eaten.

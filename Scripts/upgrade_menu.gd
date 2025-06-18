@@ -15,6 +15,7 @@ signal resume_game_pressed
 @onready var sp_label = $BottomRowHbox/BottomSPLabel
 @onready var resume_button = $ResumeButton
 
+
 # This dictionary will store a reference to every single upgrade button.
 # We will build this dictionary once in _ready() to make updating them easier later.
 var upgrade_buttons: Dictionary = {}
@@ -35,6 +36,7 @@ func connect_all_signals():
 	
 	# --- Connect Resume Button ---
 	resume_button.pressed.connect(_on_resume_button_pressed)
+
 
 	# --- Connect All Upgrade Buttons ---
 	# This loop is very powerful. It goes through every upgrade defined in your GameManager.
@@ -192,6 +194,7 @@ func update_button_display(upgrade_key):
 		block.visible = (i <= rules["max_level"])
 		if block.visible:
 			block.color = Color.GOLD if i <= current_level else Color.DARK_CYAN
+			
 
 # --- SIGNAL HANDLER FUNCTIONS ---
 
@@ -212,6 +215,14 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 			emit_signal("upgrade_selected", upgrade_key)
 			button_node.release_focus()
 			update_all_displays()
+
+func _on_zone_button_pressed(quadrant_index):
+	# We only allow changing the zone if we have enough levels.
+	if GameManager.zoning_ordinance_level > quadrant_index:
+		GameManager.zoned_quadrant = quadrant_index
+		print("Safe zone set to quadrant: ", quadrant_index)
+		# You could add visual feedback here to show which zone is selected
+
 
 func _on_resume_button_pressed():
 	emit_signal("resume_game_pressed")
