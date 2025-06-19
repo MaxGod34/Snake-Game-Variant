@@ -109,10 +109,11 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Border Czar": return 1 if GameManager.border_czar_unlocked else 0
 		"Surveyed Land": return 1 if GameManager.surveyed_land_unlocked else 0
 		"Burrow": return GameManager.burrow_level
-		"Pocket Garden": return 1 if GameManager.pocket_garden_unlocked else 0
+		"Pocket Garden": return GameManager.pocket_garden_level
 		"Fold Space": return 1 if GameManager.fold_space_unlocked else 0
 		"Shatter Reality": return 1 if GameManager.shatter_reality_unlocked else 0
 		"Master's Blueprint": return 1 if GameManager.masters_blueprint_unlocked else 0
+		"Four Corner Cobra": return 1 if GameManager.four_corner_cobra_unlocked else 0
 		#------Glutton------#
 		"elephant_sized_portions": return GameManager.es_portions_level
 		"more_mice": return GameManager.more_mice_level
@@ -135,7 +136,7 @@ func update_stats_tab():
 	if is_instance_valid(side_stats_panel):
 		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
-		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [GameManager.edge_lord_data[GameManager.edge_lord_level].x, GameManager.edge_lord_data[GameManager.edge_lord_level].y]
+		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [20 + 4 * GameManager.edge_lord_level, 15 + 3 * GameManager.edge_lord_level]
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
 		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: " + str(GameManager.total_sp_this_run) + " SP"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"
@@ -172,7 +173,7 @@ func update_button_display(upgrade_key):
 		if get_upgrade_level_from_key(exclusive_key) > 0:
 			prereqs_met = false
 	
-	button_node.get_parent().visible = prereqs_met
+	button_node.disabled = not prereqs_met
 	if not prereqs_met: return
 
 	# Cost and Text Update
@@ -184,7 +185,7 @@ func update_button_display(upgrade_key):
 		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
 		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
 		var final_cost = max(1, base_cost + diff_mod + class_mod)
-		button_node.text = rules["display_name"] + " (" + str(final_cost) + " SP)"
+		button_node.text = rules["display_name"] + "\n(" + str(final_cost) + " SP)"
 		button_node.disabled = false
 	
 	# Indicator Block Update

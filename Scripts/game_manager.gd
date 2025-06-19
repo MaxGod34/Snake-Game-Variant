@@ -38,14 +38,7 @@ var burrow_is_active = false
 var is_phasing = false 
 var is_bounty_active = false
 var autotomy_is_active = false
-	#--------Perimeter Upgrade Sizes-------#
-var edge_lord_data = [
-	Vector2(20, 15), # Level 0
-	Vector2(24, 18), # Level 1
-	Vector2(28, 21), # Level 2
-	Vector2(32, 24), # Level 3
-	Vector2(40, 30)  # Level 4 (MAX)
-]
+
 #------The Planner-------#
 var diet_slith_level = 0
 var fruit_foresight_unlocked = false
@@ -57,6 +50,7 @@ var meditative_state_charges = 0
 var meditative_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
 var garden_weaver_used_this_garden = false
+
 #-----------THE GLUTTON----------------#
 var es_portions_level = 0
 var more_mice_level = 0
@@ -97,16 +91,33 @@ var autotomy_used_this_garden = false
 
 #------------THE ARCHITECT-----------#
 var edge_lord_level = 0
+var edge_lord_data = [
+	Vector2(20, 15), # Level 0
+	Vector2(24, 18), # Level 1
+	Vector2(28, 21), # Level 2
+	Vector2(32, 24), # Level 3
+	Vector2(36, 27), # Level 4
+	Vector2(40, 30)  # Level 5
+]
 var zoning_ordinance_level = 0
 var border_czar_unlocked = false
 var surveyed_land_unlocked = false
 var burrow_level = 0
 var burrow_charges = 0
-var pocket_garden_unlocked = false
+var pocket_garden_level = 0
+var pocket_garden_charges = 0
+var pocket_garden_data = [
+	{}, # Level 0
+	{"cost": 10, "duration": 20.0}, # Level 1
+	{"cost": 20, "duration": 30.0}, # Level 2
+	{"cost": 30, "duration": 60.0}  # Level 3
+]
+var active_pocket_garden_rect = null
 # Ultimate Keystones
 var fold_space_unlocked = false
 var masters_blueprint_unlocked = false
 var shatter_reality_unlocked = false
+
 
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
@@ -166,7 +177,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0,
 		}
 	},
 	"warlock": {
@@ -196,7 +208,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0,
 		}
 	},
 	"inchworm": {
@@ -226,7 +239,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0, 
 		}
 	},
 	"phoenix_coil": {
@@ -256,7 +270,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0,
 		}
 	},
 	"sidewinder": {
@@ -286,7 +301,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0,
 		}
 	},
 	"the_zealot": {
@@ -316,7 +332,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0,
 		}
 	},
 	"the_alchemist": {
@@ -346,7 +363,8 @@ var class_data = {
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Survey Land": 0,
-			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, "Shatter Reality": 0
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
+			"Shatter Reality": 0,
 		}
 	}
 }
@@ -357,8 +375,8 @@ var upgrade_data = {
 	"Edge Lord": {
 		"display_name": "Edge Lord",
 		"description": "Increases the size\nof the play area.\nLvl 1: small\nLvl 2: not so small\nLvl 3: not BIG\nLvl 4: what you're lookin' for",
-		"costs": [2, 3, 4, 5],
-		"max_level": 4
+		"costs": [2, 2, 2, 2, 2],
+		"max_level": 5
 	},
 	"Zoning Ordinance": {
 		"display_name": "Zoning Ordinance",
@@ -386,21 +404,21 @@ var upgrade_data = {
 		"description": "Active Ability: Pass through one wall\nand emerge on the opposite side\n+ 1 charge per upgrade\nAbility lasts until next wall hit!",
 		"costs": [5, 5, 5],
 		"max_level": 3,
-		"prerequisite": {"upgrade": "Edge Lord", "level": 5} # This should be 4 to match max_level
+		"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4 to match max_level
 	},
 	"Pocket Garden": {
 		"display_name": "Pocket Garden",
-		"description": "Active Ability: Sacrifice 10 tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.",
-		"costs": [5],
-		"max_level": 1,
-		"prerequisite": {"upgrade": "Edge Lord", "level": 5} # This should be 4
+		"description": "Active Ability: Sacrifice tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.\nLvl 1: 10 segs cost and 20s duration\nLvl 2: 20 segs cost and 30s duration\nLvl 3: 30 segs cost and 60s duration",
+		"costs": [5, 5, 7],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4
 	},
 	"Fold Space": {
 		"display_name": "Fold Space", 
 		"description": "Removes all walls, making the garden wrap around on itself.",
 		"costs": [8], 
 		"max_level": 1, 
-		"prerequisite": {"upgrade": "Edge Lord", "level": 4},
+		"prerequisite": {"upgrade": "Edge Lord", "level": 5},
 		"exclusive_with": "Shatter Reality" # <-- NEW: This makes it mutually exclusive
 	},
 	"Shatter Reality": {
@@ -408,7 +426,7 @@ var upgrade_data = {
 		"description": "Splits the garden into four quadrants with connecting portals.",
 		"costs": [8], 
 		"max_level": 1, 
-		"prerequisite": {"upgrade": "Edge Lord", "level": 4},
+		"prerequisite": {"upgrade": "Edge Lord", "level": 5},
 		"exclusive_with": "Fold Space" # <-- This makes it mutually exclusive
 	},
 	"Master's Blueprint": {
@@ -416,7 +434,7 @@ var upgrade_data = {
 		"description": "Transforms the game's visuals into a clean,\nglowing 'blueprint' grid for the rest of the run.",
 		"costs": [8], 
 		"max_level": 1, 
-		"prerequisite": {"upgrade": "Edge Lord", "level": 4}
+		"prerequisite": {"upgrade": "Edge Lord", "level": 5}
 		# This one is independent and has no 'exclusive_with' key
 	},
 	"increase_phase_charges": {
@@ -424,12 +442,6 @@ var upgrade_data = {
 		"description": "Phase through yourself...whenever you feel like it!\nPress e to pass through your own body for 2 seconds!",
 		"costs": [3, 4, 5],
 		"max_level": 3
-	},
-	"increase_grid_size": {
-		"display_name": "Edge Lord",
-		"description": "INCREASE PERIMETER SIZE M'LORD!",
-		"costs": [3, 6, 9, 12],
-		"max_level": 4
 	},
 	"buy_extra_life": {
 		"display_name": "Mulligan Munchie",
@@ -632,7 +644,9 @@ func start_game():
 	surveyed_land_unlocked = false
 	burrow_charges = 0
 	burrow_level = 0
-	pocket_garden_unlocked = false
+	pocket_garden_level = 0
+	pocket_garden_charges = 0
+	active_pocket_garden_rect = null
 	fold_space_unlocked = false
 	masters_blueprint_unlocked = false
 	shatter_reality_unlocked = false

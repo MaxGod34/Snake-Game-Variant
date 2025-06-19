@@ -34,16 +34,27 @@ var fruit_scene = preload("res://Scenes/fruit.tscn")
 var rock_scene = preload("res://Scenes/rock.tscn")
 var pause_scene = preload("res://Scenes/pause_menu.tscn")
 
+
+
+@onready var boundary_indicator = $BoundaryIndicator
+@onready var background_rect = $"Background-Color-Rect" 
+@onready var dividing_wall_tilemap = $DividingWallTileMap
+@onready var camera = $Camera2D
+var current_camera_quadrant: int = 0
+
 #-------SIGNALS--------#
 
 signal game_is_over(score)
 
 func _ready():
 	 # --- GAME SETUP ---
+	rebuild_world_layout()
+	
 	var difficulty = GameManager.chosen_difficulty
 	var p_class = GameManager.chosen_class
 	var diff_data = GameManager.difficulty_data[difficulty]
 	var class_data = GameManager.class_data[p_class]
+	
 	GameManager.has_died_this_garden = false
 	GameManager.garden_weaver_used_this_garden = false
 	GameManager.fruits_eaten_this_run = 0
@@ -51,9 +62,12 @@ func _ready():
 	initial_snake_length = class_data["start_length"]
 	var start_speed = class_data["start_speed"] * diff_data["speed_multiplier"]
 	
+	
+	
 	# Bounds and Tile Offset cuz center origin omfg i'll kms
-	update_boundary_visuals()
 	tile_offset = Vector2(tile_size / 2.0, tile_size / 2.0)
+	
+	
 	
 	# --- CREATE HEAD ---
 	head = head_scene.instantiate()
@@ -61,13 +75,18 @@ func _ready():
 	head.main = self
 	add_child(head)
 	
+	
 	#--POSITION HEAD AND BODY--#
-	var start_grid_pos = Vector2(grid_width / 2, grid_height / 2)
-	head.position = (start_grid_pos * tile_size) + tile_offset
+	var start_quadrant_center = Vector2(7,7)
+	head.position = (start_quadrant_center * tile_size) + tile_offset
+	
+	current_camera_quadrant = 0
+	
+	move_camera_to_quadrant(0)
 	
 	var behind_direction = -head.current_direction
 	for i in range(initial_snake_length - 1):
-		var grid_pos = (start_grid_pos + (behind_direction * (i + 1)))
+		var grid_pos = (start_quadrant_center + (behind_direction * (i + 1)))
 		var segment_pos = (grid_pos * tile_size) + tile_offset
 		add_body_segment_at(segment_pos)
 	
@@ -103,6 +122,7 @@ func _ready():
 	update_hud()
 	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
+	
 	
 func _process(delta):
 	# First, check for a "hard pause". If the tree is paused, do nothing at all.
@@ -309,6 +329,69 @@ func show_ghost_fruit():
 		ghost_fruit_instance.position = next_fruit_position
 		call_deferred("add_child", ghost_fruit_instance)
 
+# In main.gd
+
+func move_camera_to_quadrant(quadrant_index: int):
+	var final_camera_pos: Vector2
+	
+	if not GameManager.shatter_reality_unlocked:
+		# In single-garden mode, center the camera on the current (expanding) garden
+		print("current grid width and height: ", grid_width, " x ", grid_height)
+		var center_pos = Vector2(grid_width / 2.0, grid_height / 2.0)
+		final_camera_pos = (center_pos * tile_size) + tile_offset
+	else:
+		# In shattered mode, jump between the fixed centers of the 40x30 quadrants
+		var target_pos = Vector2.ZERO
+		match quadrant_index:
+			0: target_pos = Vector2(20, 15) # Center of top-left
+			1: target_pos = Vector2(60, 15) # Center of top-right
+			2: target_pos = Vector2(20, 45) # Center of bottom-left
+			3: target_pos = Vector2(60, 45) # Center of bottom-right
+		final_camera_pos = (target_pos * tile_size) + tile_offset
+	
+	# Use a tween to smoothly pan the camera to its new fixed point.
+	var tween = create_tween()
+	tween.tween_property(camera, "global_position", final_camera_pos, 0.2).set_trans(Tween.TRANS_SINE)
+
+func update_camera_quadrant():
+	# This function only does something if the world is shattered
+	if not GameManager.shatter_reality_unlocked:
+		return
+
+	var head_grid_pos = Vector2i((head.position - tile_offset) / tile_size)
+	var new_quadrant = -1
+
+	# Determine which quadrant the head is currently in
+	var in_right_half = head_grid_pos.x >= 40
+	var in_bottom_half = head_grid_pos.y >= 30
+
+	if not in_right_half and not in_bottom_half: new_quadrant = 0 # Top-Left
+	elif in_right_half and not in_bottom_half: new_quadrant = 1  # Top-Right
+	elif not in_right_half and in_bottom_half: new_quadrant = 2  # Bottom-Left
+	else: new_quadrant = 3                                      # Bottom-Right
+
+	# If the snake has moved to a new quadrant, move the camera
+	if new_quadrant != current_camera_quadrant:
+		print("Changing camera to quadrant: ", new_quadrant)
+		current_camera_quadrant = new_quadrant
+		move_camera_to_quadrant(current_camera_quadrant)
+
+
+
+func update_boundary_visuals():
+	# This function now resizes BOTH the boundary and the background.
+	var world_size_pixels = Vector2(grid_width * tile_size, grid_height * tile_size)
+	boundary_indicator.size = world_size_pixels
+	background_rect.size = world_size_pixels
+	
+	# Ensure they are positioned at the top-left corner.
+	boundary_indicator.position = Vector2.ZERO
+	background_rect.position = Vector2.ZERO
+
+		
+	
+
+
 func update_hud():
 	# Update Level
 	$UI/HUDContainer/BottomGrid/LevelLabel.text = "Level: " + str(GameManager.player_level)
@@ -368,6 +451,10 @@ func update_hud():
 		tenderizer_label.text = "Tender Charges: " + str(GameManager.tenderizer_charges)
 	else:
 		tenderizer_label.visible = false
+	var pocket_garden_label = $UI/HUDContainer/StatsVbox/AbilitySlot6
+	if GameManager.pocket_garden_level > 0:
+		pocket_garden_label.visible = true
+		pocket_garden_label.text = "Pocket Garden [G]: " + str(GameManager.pocket_garden_charges)
 
 	
 	
@@ -402,6 +489,7 @@ func on_snake_head_moved(head_previous_position: Vector2):
 		spawn_trail_piece(tail_previous_position)
 
 	update_tail_visuals()
+	update_camera_quadrant()
 	
 	if upgrade_menu_is_pending:
 		upgrade_menu_is_pending = false # Reset the flag
@@ -490,7 +578,31 @@ func trigger_pop_rocks_shockwave(origin_rock_pos: Vector2):
 		# We can call our existing destroy function! This creates a cool chain reaction.
 		destroy_obstacle(rock)
 
+func update_grid_dimensions():
+	if GameManager.shatter_reality_unlocked:
+		# If shattered, the world is a fixed super-grid.
+		grid_width = 80
+		grid_height = 60
+	else:
+		# Otherwise, the size is determined by the Edge Lord upgrade level.
+		var current_size = GameManager.edge_lord_data[GameManager.edge_lord_level]
+		grid_width = int(current_size.x)
+		grid_height = int(current_size.y)
 
+
+func rebuild_world_layout():
+	# The order of these calls is CRITICAL.
+	# 1. First, always calculate the correct grid dimensions.
+	update_grid_dimensions()
+	
+	# 2. Then, draw the boundary to match those new dimensions.
+	update_boundary_visuals()
+	
+	# 3. Finally, draw the dividing walls if necessary, using the new dimensions.
+	setup_shattered_reality()
+	
+	# 4. Position the camera correctly.
+	move_camera_to_quadrant(0)
 
 # A new function to handle all initial obstacle spawning
 # In main.gd
@@ -601,6 +713,46 @@ func grow_snake(segments_to_add: int):
 	update_score_display()
 
 
+func is_position_on_dividing_wall(grid_pos: Vector2i) -> bool:
+	# If Shatter Reality isn't unlocked, there are no dividing walls.
+	if not GameManager.shatter_reality_unlocked:
+		return false
+		
+	# get_cell_source_id returns -1 if the cell is empty.
+	# So, if it's NOT -1, it means there's a wall tile there.
+	return dividing_wall_tilemap.get_cell_source_id(0, grid_pos) != -1
+
+
+func setup_shattered_reality():
+	dividing_wall_tilemap.clear() # Clear any old walls
+
+	if not GameManager.shatter_reality_unlocked:
+		return # Do nothing if the upgrade isn't active
+
+	var dividing_line_x = 40
+	var dividing_line_y = 30
+	var dash_pattern = 4 # Draw a tile every 4 spaces to create a dashed line
+	
+	# Draw the vertical dashed line
+	for y in range(grid_height):
+		if y % dash_pattern < dash_pattern / 2: # This creates the on/off pattern
+			dividing_wall_tilemap.set_cell(0, Vector2i(dividing_line_x, y), 0, Vector2i(0,0))
+
+	# Draw the horizontal dashed line
+	for x in range(grid_width):
+		if x % dash_pattern < dash_pattern / 2:
+			dividing_wall_tilemap.set_cell(0, Vector2i(x, dividing_line_y), 0, Vector2i(0,0))
+
+
+func _update_snake_after_teleport(new_position: Vector2):
+	# Set the head's new position
+	head.global_position = new_position
+	# Now that the head has moved, we can safely update the body's position to follow it.
+	on_snake_head_moved(new_position)
+
+
+
+
 func update_upgrade_prompt():
 	# Show the prompt only if the player has SP to spend.
 	var has_sp = GameManager.skill_points > 0
@@ -654,7 +806,7 @@ func level_up():
 		GameManager.score_needed_for_next_level += 10
 	else:
 		GameManager.score_needed_for_next_level += 5
-	#RECHARGE BURROW IF UNLOCKED
+	#RECHARGE ABILITIES IF UNLOCKED
 	if GameManager.burrow_level > 0:
 		GameManager.burrow_charges = GameManager.burrow_level
 	if GameManager.phase_shift_level > 0:
@@ -665,6 +817,8 @@ func level_up():
 		GameManager.banana_bounty_charges = GameManager.banana_bounty_level
 	if GameManager.tenderizer_level > 0:
 		GameManager.tenderizer_charges = GameManager.tenderizer_level
+	if GameManager.pocket_garden_level > 0:
+		GameManager.pocket_garden_charges = GameManager.pocket_garden_level
 
 func _on_upgrade_menu_resume_game_pressed():
 	# Block input for the transition out
@@ -790,9 +944,9 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.autotomy_unlocked = true
 	#---------Architect---------
 	elif upgrade_name == "Edge Lord":
-		if GameManager.edge_lord_level < 4:
+		if GameManager.edge_lord_level < 5:
 			GameManager.edge_lord_level += 1
-			update_boundary_visuals() # Immediately resize the world
+			rebuild_world_layout()
 
 	elif upgrade_name == "Zoning Ordinance":
 		if GameManager.zoning_ordinance_level < 4:
@@ -809,11 +963,14 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Burrow":
 		GameManager.burrow_level += 1
 		GameManager.burrow_charges += 1
+		$UI/HUDContainer/StatsVbox/AbilitySlot1.visible = true
 		print("Burrow Charge + 1!")
 
 	elif upgrade_name == "Pocket Garden":
-		if not GameManager.pocket_garden_unlocked:
-			GameManager.pocket_garden_unlocked = true
+		if GameManager.pocket_garden_level < 3:
+			GameManager.pocket_garden_level += 1
+			GameManager.pocket_garden_charges += 1
+			$UI/HUDContainer/StatsVbox/AbilitySlot6.visible = true
 	
 	elif upgrade_name == "Fold Space":
 		if not GameManager.fold_space_unlocked:
@@ -822,11 +979,17 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Shatter Reality":
 		if not GameManager.shatter_reality_unlocked:
 			GameManager.shatter_reality_unlocked = true
+			print("current: grid size pending...")
+			rebuild_world_layout()
+			print("currnet: grid size (w x h): ", grid_width, " x ", grid_height)
 			
 	elif upgrade_name == "Master's Blueprint":
 		if not GameManager.masters_blueprint_unlocked:
 			GameManager.masters_blueprint_unlocked = true
-			
+	
+	elif upgrade_name == "Four Corner Cobra":
+		if not GameManager.four_corner_cobra_unlocked:
+			GameManager.four_corner_cobra_unlocked = true
 	
 	# Phase Shift Ability Upgrade Logic
 	elif upgrade_name == "increase_phase_charges":
@@ -864,7 +1027,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.garden_weaver_unlocked = true
 			
 			
-		
+	update_hud()
 	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
 
 func on_snake_ate_food(fruit):
@@ -956,8 +1119,17 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			return Vector2(-100, -100) #spawn off screen
 		var random_grid_pos: Vector2i
 		
+		# --- POCKET GARDEN CHECK --- #
+		if GameManager.active_pocket_garden_rect != null and randf() < 0.9: # 90% chance
+			# If yes, force the spawn to be inside it
+			var pg_rect = GameManager.active_pocket_garden_rect
+			var x_pos = randi_range(pg_rect.position.x, pg_rect.end.x)
+			var y_pos = randi_range(pg_rect.position.y, pg_rect.end.y)
+			random_grid_pos = Vector2i(Vector2(x_pos, y_pos) / tile_size)
+		
+		
 		# --- Logic to pick a random spot (including trail bonus) ---
-		if trail_level == 2 and not trail_pieces.is_empty() and randf() < 0.7:
+		elif trail_level == 2 and not trail_pieces.is_empty() and randf() < 0.7:
 			var random_trail_piece = trail_pieces.pick_random()
 			var trail_grid_pos = Vector2i((random_trail_piece.node.position + tile_offset) / tile_size)
 			var offset = Vector2i(randi_range(-2, 2), randi_range(-2, 2))
@@ -1048,7 +1220,7 @@ func use_extra_life():
 		var segment_to_remove = snake_body_segments.pop_back()
 		segment_to_remove.queue_free()
 	
-	var start_grid_pos = Vector2(grid_width / 2, grid_height / 2)
+	var start_grid_pos = Vector2(grid_width / 4, grid_height / 4)
 	head.position = (start_grid_pos * tile_size) + tile_offset
 	on_snake_head_moved(head.position)
 	
@@ -1109,8 +1281,8 @@ func is_position_occupied(check_pos: Vector2) -> bool:
 
 func is_position_out_of_bounds(check_pos: Vector2) -> bool:
 	var grid_pos = (check_pos / tile_size).round()
-	if grid_pos.x < 0 or grid_pos.x > grid_width or \
-	   grid_pos.y < 0 or grid_pos.y > grid_height:
+	if grid_pos.x < 0 or grid_pos.x > grid_width + tile_offset.x or \
+	   grid_pos.y < 0 or grid_pos.y > grid_height + tile_offset.y:
 		return true
 	return false
 
@@ -1160,13 +1332,6 @@ func _on_garden_complete_continue_pressed() -> void:
 		print("ZEALOT BONUS! +", bonus_sp, " SP for a perfect run!")
 		GameManager.skill_points += bonus_sp
 
-func update_boundary_visuals():
-	var current_grid_size = GameManager.edge_lord_data[GameManager.edge_lord_level]
-	grid_width = int(current_grid_size.x)
-	grid_height = int(current_grid_size.y)
-	
-	var boundary_container = $BoundaryIndicator
-	boundary_container.size = Vector2(grid_width * tile_size, grid_height * tile_size)
 
 func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
@@ -1271,3 +1436,49 @@ func perform_autotomy(collided_segment):
 	# Update the score and HUD to reflect the shorter snake
 	update_score_display()
 	update_hud()
+
+
+func create_pocket_garden():
+	var level = GameManager.pocket_garden_level
+	var rules = GameManager.pocket_garden_data[level]
+	var segment_cost = rules["cost"]
+	
+	if snake_body_segments.size() < segment_cost:
+		print("Not enough segments!")
+		return
+
+	GameManager.pocket_garden_charges -= 1
+	update_hud()
+	for i in range(segment_cost):
+		snake_body_segments.pop_back().queue_free()
+	update_score_display()
+
+	var garden_size = Vector2(5 * tile_size, 5 * tile_size)
+	var garden_pos = head.global_position - (garden_size / 2)
+	var garden_rect = Rect2(garden_pos, garden_size)
+
+	# --- edge case
+	# Clear any obstacles or fruit that are inside the new garden's area
+	for rock in get_tree().get_nodes_in_group("rocks"):
+		if garden_rect.has_point(rock.position):
+			rock.queue_free()
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		if garden_rect.has_point(fruit.position):
+			fruit.queue_free()
+	
+	# Now create the visual and store the rect
+	var garden_vis = ColorRect.new()
+	garden_vis.color = Color("DARK_GREEN", 0.5)
+	garden_vis.size = garden_size
+	garden_vis.position = garden_pos
+	$PocketGardenContainer.add_child(garden_vis)
+	
+	GameManager.active_pocket_garden_rect = garden_rect
+	$PocketGardenTimer.start(rules["duration"])
+
+func _on_pocket_garden_timer_timeout():
+	print("Pocket Garden has faded.")
+	# Reset the global variable
+	GameManager.active_pocket_garden_rect = null
+	for child in $PocketGardenContainer.get_children():
+		child.queue_free()

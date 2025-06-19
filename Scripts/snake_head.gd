@@ -109,12 +109,25 @@ func _unhandled_input(event: InputEvent):
 			# Visual Feedback
 			get_node("FillSprite").modulate = Color.ORANGE_RED
 			
+	if event.is_action_pressed("activate_pocket_garden"):
+		if GameManager.pocket_garden_charges > 0:
+			main.create_pocket_garden()
+			
 
 # --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():
 	var next_position = global_position + (current_direction * tile_size)
-
+	var next_grid_pos = Vector2i((next_position - main.tile_offset) / main.tile_size)
+	
+	
 	# --- Collision Checks ---
+
+
+	if not GameManager.is_phasing and not juke_and_jive_is_active and main.is_position_occupied(next_position):
+		emit_signal("hit_self")
+		return
+	
+	
 	if main.is_position_out_of_bounds(next_position):
 		if GameManager.burrow_is_active:
 			var grid_pos = (next_position / tile_size).round()
@@ -125,6 +138,7 @@ func on_move_timer_timeout():
 			next_position = (grid_pos * tile_size) + main.tile_offset
 			GameManager.burrow_is_active = false
 			main.update_hud()
+			reset_head_color()
 		else:
 			emit_signal("hit_self")
 			return
@@ -139,8 +153,14 @@ func on_move_timer_timeout():
 func _on_head_area_area_entered(area):
 	if area is Fruit or area is GoldenFruit:
 		emit_signal("ate_fruit", area)
+		return
 	
-	elif area is SnakeBody:
+	if area.is_in_group("dividng_walls"):
+		emit_signal("hit_self")
+		return
+	
+	
+	if area is SnakeBody:
 		# Check all invulnerability states
 		if not GameManager.is_phasing and not juke_and_jive_is_active:
 			if GameManager.autotomy_is_active:
@@ -151,14 +171,17 @@ func _on_head_area_area_entered(area):
 				reset_head_color()
 			else:
 				emit_signal("hit_self")
+				return
+	
 		
-	elif area is Rock:
+	if area is Rock:
 		if GameManager.tenderizer_charges > 0:
 			GameManager.tenderizer_charges -= 1
 			main.update_hud()
 			main.destroy_obstacle(area)
 		else:
 			emit_signal("hit_self")
+		return
 
 #------AFTERBURNER-----#
 func check_for_afterburner():

@@ -13,3 +13,9 @@ func _on_options_button_pressed() -> void:
 
 func _on_quit_button_pressed() -> void:
 	get_tree().quit()
+
+
+func _on_the_pit_button_pressed() -> void:
+	GameManager.chosen_class = "warlock"
+	GameManager.chosen_difficulty = "hatchling"
+	GameManager.start_game()
