@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=16 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/upgrade_menu.tscn" id="3_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
 [ext_resource type="StyleBox" uid="uid://b4x8o38qx0owk" path="res://Assets/Styles/HUD_label_template.tres" id="6_6bp64"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="6_ynf5e"]
 [ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/PNGs/ShopTransitionTileSet.png" id="7_344ge"]
 
 [sub_resource type="Gradient" id="Gradient_6bp64"]
@@ -115,6 +116,7 @@ color = Color(0.152941, 0, 0.176471, 1)
 
 [node name="CountdownLabel" type="Label" parent="UI"]
 visible = false
+z_index = 11
 clip_contents = true
 anchors_preset = -1
 anchor_left = 0.5
@@ -131,9 +133,10 @@ theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_constants/outline_size = 24
 theme_override_font_sizes/font_size = 48
 text = "SNAKE OFF!"
+horizontal_alignment = 1
 
 [node name="HUDContainer" type="Panel" parent="UI"]
-modulate = Color(1, 1, 1, 0.509804)
+modulate = Color(1, 1, 1, 0.607843)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -146,9 +149,9 @@ custom_minimum_size = Vector2(1080, 0)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.1
-anchor_top = 0.95
+anchor_top = 0.975
 anchor_right = 0.9
-anchor_bottom = 0.95
+anchor_bottom = 0.975
 offset_top = -102.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -164,9 +167,12 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "ID: No-Armed Bandit"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="ScoreLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -175,10 +181,12 @@ size_flags_vertical = 6
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Score: 1"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HUDSPLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -187,10 +195,12 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "SP: 0"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GardenGoalLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 custom_minimum_size = Vector2(280, 0)
@@ -200,10 +210,12 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Garden Goal: 500"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="XPProgressBar" type="ProgressBar" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -221,10 +233,12 @@ size_flags_vertical = 6
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Level: 1"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GardenCurrentNameLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -233,10 +247,12 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "\"The Snake Pit\""
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="GardenCurrentNumberLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -245,10 +261,12 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Garden 1 / 5"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="NextLevelLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 layout_mode = 2
@@ -257,10 +275,12 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 16
-theme_override_font_sizes/font_size = 22
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = ExtResource("6_6bp64")
-text = "Next Level: "
+text = "Next Level @  segs "
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="UpgradePromptLabel" type="Label" parent="UI/HUDContainer/BottomGrid"]
 visible = false
@@ -270,15 +290,18 @@ size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.719436, 0.735401, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 1, 0, 1)
 theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Press [ U ] to Upgrade"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="StatsVbox" type="VBoxContainer" parent="UI/HUDContainer"]
+custom_minimum_size = Vector2(240, 0)
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.7
+anchor_left = 0.775
 anchor_top = 0.2
 anchor_right = 0.775
 anchor_bottom = 0.2
@@ -294,27 +317,33 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 1: "
+vertical_alignment = 1
 
 [node name="AbilitySlot2" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 2:"
+vertical_alignment = 1
 
 [node name="AbilitySlot3" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 3:"
+vertical_alignment = 1
 
 [node name="AbilitySlot4" type="Label" parent="UI/HUDContainer/StatsVbox"]
 visible = false
@@ -322,9 +351,11 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 4:"
+vertical_alignment = 1
 
 [node name="AbilitySlot5" type="Label" parent="UI/HUDContainer/StatsVbox"]
 visible = false
@@ -332,9 +363,11 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 5:"
+vertical_alignment = 1
 
 [node name="AbilitySlot6" type="Label" parent="UI/HUDContainer/StatsVbox"]
 visible = false
@@ -342,9 +375,11 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 6:"
+vertical_alignment = 1
 
 [node name="AbilitySlot7" type="Label" parent="UI/HUDContainer/StatsVbox"]
 visible = false
@@ -352,63 +387,77 @@ layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 24
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Ability Slot 7:"
+vertical_alignment = 1
 
 [node name="FriutRewardLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.298039, 0.807843, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Growth: + "
+vertical_alignment = 1
 
 [node name="MaxFruitsLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.287307, 0.225237, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "# of fruits: "
+vertical_alignment = 1
 
 [node name="TimeSinceLastFruitLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.999995, 0.494367, 0.42619, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "TSLFruit:"
+vertical_alignment = 1
 
 [node name="FPMLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "FPM: "
+vertical_alignment = 1
 
 [node name="RunTimerLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Run Time: --:--"
+vertical_alignment = 1
 
 [node name="LivesLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
-theme_override_font_sizes/font_size = 28
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Lives: "
+vertical_alignment = 1
 
 [node name="ShopTransitionTileMap" type="TileMap" parent="UI"]
 z_index = 9

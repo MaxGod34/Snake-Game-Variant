@@ -1,0 +1,9 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://bopt61ixlb04i"]
+
+[ext_resource type="Texture2D" uid="uid://bx3jyj02lw1sa" path="res://Assets/PNGs/snake_lime.png" id="1_whwfx"]
+
+[resource]
+texture = ExtResource("1_whwfx")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(0.396889, 0.396889, 0.396889, 0.333333)

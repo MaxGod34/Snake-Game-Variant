@@ -12,12 +12,15 @@
 offsets = PackedFloat32Array(0, 0.6, 1)
 colors = PackedColorArray(0, 0.431373, 0.054902, 1, 0.133333, 0.133333, 0.133333, 1, 0.133333, 0.133333, 0.133333, 1)
 metadata/_snap_enabled = true
+metadata/_snap_count = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhxw7"]
 content_margin_left = 80.0
 bg_color = Color(0, 0, 0, 0)
-border_width_bottom = 10
+border_width_bottom = 16
 border_color = Color(0.843137, 1, 0, 1)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
 corner_radius_bottom_right = 120
 corner_radius_bottom_left = 120
 corner_detail = 20
@@ -64,22 +67,22 @@ grow_vertical = 2
 color = Color(0.152941, 0, 0.176471, 1)
 
 [node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
-amount = 50
+z_index = 5
+amount = 30
 texture = ExtResource("2_opfnp")
 lifetime = 0.33
-speed_scale = 0.25
-randomness = 0.26
-lifetime_randomness = 0.23
+speed_scale = 0.33
+randomness = 0.33
+lifetime_randomness = 0.3
 emission_shape = 3
 emission_rect_extents = Vector2(1280, 960)
-direction = Vector2(100, -10)
+direction = Vector2(-32, -100)
 spread = 0.0
-initial_velocity_min = 10.0
-initial_velocity_max = 25.0
-angular_velocity_min = -10.0
+initial_velocity_min = 45.0
+initial_velocity_max = 55.0
 scale_amount_min = 0.15
 scale_amount_max = 0.2
-color = Color(0.8, 0.733333, 0, 1)
+color = Color(0, 1, 0, 1)
 color_ramp = SubResource("Gradient_cp0ys")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -131,8 +134,8 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.75
 anchor_top = 0.95
-anchor_right = 0.85
-anchor_bottom = 1.08
+anchor_right = 0.82
+anchor_bottom = 1.07
 grow_horizontal = 2
 grow_vertical = 0
 rotation = -0.436332
@@ -142,10 +145,10 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_16hvj")
 z_index = -1
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.15
+anchor_left = 0.18
 anchor_top = 0.89
 anchor_right = 0.25
-anchor_bottom = 1.02
+anchor_bottom = 1.03
 grow_horizontal = 2
 grow_vertical = 0
 rotation = 0.436332
@@ -253,12 +256,14 @@ text = "Quit"
 
 [node name="TextureRect" type="TextureRect" parent="."]
 anchors_preset = -1
-anchor_left = 0.35
+anchor_left = 0.4
+anchor_top = 0.2
 anchor_right = 0.95
-anchor_bottom = 1.0
+anchor_bottom = 0.9
 grow_horizontal = 0
 grow_vertical = 2
 texture = ExtResource("2_1ehe0")
+stretch_mode = 4
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]

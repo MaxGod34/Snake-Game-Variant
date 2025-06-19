@@ -205,7 +205,7 @@ func open_upgrade_menu_with_transition():
 	$UI/InputBlocker.show()
 
 	var tile_map = $UI/ShopTransitionTileMap
-	var size = Vector2i(GameManager.edge_lord_data[GameManager.edge_lord_level].x, GameManager.edge_lord_data[GameManager.edge_lord_level].y)
+	var size = Vector2i(40, 30)
 	var max_steps = size.x + size.y
 
 	# --- COVER SCREEN ANIMATION ---
@@ -217,7 +217,17 @@ func open_upgrade_menu_with_transition():
 		await get_tree().create_timer(0.01).timeout
 
 	# --- SHOW THE FUNKY MESSAGE ---
-	$UI/CountdownLabel.text = "shop shop shop"
+	var welcome_to_shop_messages = [
+		"shop shop shop", "he's/she's/they're doin' it!", 
+		"My thought exaclty", "Way to get out of there!", 
+		"The timer starts after you read this message!", 
+		"Speed is overhated!", "Glutton is overrated!", 
+		"Pick something new old timer!"
+	]
+	var random_welcome_int = randi() % welcome_to_shop_messages.size()
+	var random_message = welcome_to_shop_messages[random_welcome_int]
+	
+	$UI/CountdownLabel.text = random_message
 	$UI/CountdownLabel.visible = true
 	await get_tree().create_timer(1.5).timeout
 	$UI/CountdownLabel.visible = false
@@ -302,6 +312,7 @@ func show_ghost_fruit():
 func update_hud():
 	# Update Level
 	$UI/HUDContainer/BottomGrid/LevelLabel.text = "Level: " + str(GameManager.player_level)
+	
 
 	# Update Progress Bar
 	var current_score = snake_body_segments.size() + 1
@@ -314,6 +325,8 @@ func update_hud():
 	
 	# Set the Bar's current fill value
 	xp_bar.value = current_score
+	
+	$UI/HUDContainer/BottomGrid/NextLevelLabel.text = "Next Level: " + str(int(GameManager.score_needed_for_next_level))
 	# Update values for selected class, difficulty, and which garden currently on
 	$UI/HUDContainer/BottomGrid/GardenGoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
 	$UI/HUDContainer/BottomGrid/HUDSPLabel.text = "SP: " + str(GameManager.skill_points)
@@ -666,9 +679,26 @@ func _on_upgrade_menu_resume_game_pressed():
 	# Now that it's gone, make it officially invisible
 	upgrade_menu.visible = false
 	
+	var resume_game_from_shop_messages = \
+	["You chose...poorly!", "Why...what balls!\nYou didn't even pick a good upgrade!",
+	"Whatcha doin' around 5?", "Make 'em pay!", "EAAAAAAAAAT!", "Wow, never woulda guessed that pick!",
+	"Back to the game!", "Back to our correspondant on the ground!", "Hint: you can only pull up\nthe upgrade menu with at least 1 SP"]
+	var messages_size = resume_game_from_shop_messages.size()
+	var random_message = randi() % messages_size
+	
+	
+	$UI/CountdownLabel.visible = true
+	$UI/CountdownLabel.text = resume_game_from_shop_messages[random_message]
+	
+	await get_tree().create_timer(1.5).timeout
+	
+	$UI/CountdownLabel.visible = false
+	$UI/CountdownLabel.text = ""
+	
+	
 	# --- UNCOVER SCREEN ANIMATION ---
 	var tile_map = $UI/ShopTransitionTileMap
-	var size = Vector2i(GameManager.edge_lord_data[GameManager.edge_lord_level].x, GameManager.edge_lord_data[GameManager.edge_lord_level].y)
+	var size = Vector2i(40, 30)
 	var max_steps = size.x + size.y
 	for step in range(max_steps):
 		for x in range(step + 1):
@@ -1222,7 +1252,6 @@ func activate_banana_bounty():
 	
 	# Store a reference to this new tween
 	target_fruit.active_tween = tween
-
 
 func perform_autotomy(collided_segment):
 	print("SEVERING TAIL!")
