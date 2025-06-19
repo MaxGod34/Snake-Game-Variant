@@ -88,7 +88,6 @@ func find_upgrade_button(upgrade_key: String):
 func get_upgrade_level_from_key(upgrade_key):
 	match upgrade_key:
 		"increase_phase_charges": return GameManager.phase_shift_level
-		"buy_extra_life": return GameManager.extra_lives
 		#---Planner---#
 		"diet_slith": return GameManager.diet_slith_level
 		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
@@ -120,6 +119,14 @@ func get_upgrade_level_from_key(upgrade_key):
 		"patient_gardener": return GameManager.patient_gardener_level
 		"banana_bounty": return GameManager.banana_bounty_level
 		"the_satchel": return 1 if GameManager.the_satchel_unlocked else 0
+		#-------SURVIVOR-------#
+		"Mulligan Munchie": return GameManager.extra_lives
+		"Phoenix Dawn": return 1 if GameManager.phoenix_dawn_unlocked else 0
+		"Last Stand": return 1 if GameManager.last_stand_unlocked else 0
+		"Sacrificial Molt": return 1 if GameManager.sacrificial_molt_used else 0
+		"Death Defied": return 1 if GameManager.death_defied_unlocked else 0
+		"Martyrdom": return 1 if GameManager.martyrdom_unlocked else 0
+		"Ouroboros Loop": return 1 if GameManager.ouroboros_loop_active else 0
 	return 0
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---

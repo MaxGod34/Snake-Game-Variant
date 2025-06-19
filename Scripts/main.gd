@@ -1010,8 +1010,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		GameManager.phase_shift_level += 1
 		GameManager.phase_shift_charges += 1
 		print("Phase Shift Charge + 1!")
-	elif upgrade_name == "buy_extra_life":
-		GameManager.extra_lives += 1
+
 	#-----------THE PLANNER--------#
 	elif upgrade_name == "diet_slith":
 		if GameManager.diet_slith_level < 5:
@@ -1039,7 +1038,32 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "garden_weaver":
 		if not GameManager.garden_weaver_unlocked:
 			GameManager.garden_weaver_unlocked = true
-			
+	#--------SURVIVOR--------#
+	elif upgrade_name == "Mulligan Munchie":
+		if GameManager.extra_lives > 10:
+			GameManager.extra_lives += 1
+			print("Extra life added, thanks to ol' Mulligan!")
+	
+	elif upgrade_name == "Phoenix Dawn": 
+		if not GameManager.phoenix_dawn_unlocked:
+			GameManager.phoenix_dawn_unlocked = true
+	
+	elif upgrade_name == "Last Stand":
+		if not GameManager.last_stand_unlocked:
+			GameManager.last_stand_unlocked = true
+	elif upgrade_name == "Sacrificial Molt": 
+		if not GameManager.sacrificial_molt_used:
+			GameManager.sacrificial_molt_used = true
+	elif upgrade_name == "Death Defied": 
+		if not GameManager.death_defied_unlocked:
+			GameManager.death_defied_unlocked = true
+	elif upgrade_name == "Martyrdom": 
+		if not GameManager.martyrdom_unlocked:
+			GameManager.martyrdom_unlocked = true
+	elif upgrade_name =="Ouroboros Loop": 
+		if not GameManager.ouroboros_loop_active:
+			GameManager.ouroboros_loop_active = true
+					
 			
 	update_hud()
 	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in

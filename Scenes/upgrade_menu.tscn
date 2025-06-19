@@ -75,7 +75,6 @@ corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
 [node name="UpgradeMenu" type="CanvasLayer"]
-visible = false
 script = ExtResource("1_ltp0x")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -108,13 +107,14 @@ theme_override_colors/font_unselected_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_hovered_color = Color(0.610372, 0.726582, 0, 1)
 theme_override_colors/font_selected_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/tab_focus = ExtResource("3_mpwqm")
 theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 4
+current_tab = 5
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
@@ -141,6 +141,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Class:"
@@ -154,6 +155,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Difficulty:"
@@ -167,6 +169,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Level:"
@@ -180,6 +183,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Skill Points: 0"
@@ -218,6 +222,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "Growth / fruit = "
 
@@ -232,6 +237,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "Max fruits = "
 
@@ -246,6 +252,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "Grid Size = 
 "
@@ -261,6 +268,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "Total Fruits Grabbed This Run:"
 
@@ -275,6 +283,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "SP earned this Run:"
 
@@ -290,6 +299,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "Abiities Used This Run:
 "
@@ -305,6 +315,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "Next Garden at:"
 
@@ -319,6 +330,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
 text = "# of obstacles next Garden:"
 
@@ -1571,6 +1583,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Architect" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -2082,13 +2095,12 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Survivor" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 5
 
-[node name="ExtraLifeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+[node name="MulliganMuchnieRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.15
@@ -2096,7 +2108,7 @@ anchor_bottom = 0.15
 size_flags_horizontal = 0
 theme_override_constants/separation = 24
 
-[node name="ExtraLifeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/ExtraLifeRow"]
+[node name="MulliganMunchieButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MulliganMuchnieRow"]
 custom_minimum_size = Vector2(164, 80)
 layout_mode = 2
 theme_override_colors/font_disabled_color = Color(1, 1, 1, 1)
@@ -2119,29 +2131,29 @@ text = "Mulligan Munchie
 (4 SP)"
 icon_alignment = 1
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/ExtraLifeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MulliganMuchnieRow"]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/ExtraLifeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MulliganMuchnieRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/ExtraLifeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MulliganMuchnieRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/ExtraLifeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MulliganMuchnieRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+[node name="PhoenixDawnRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.35
@@ -2150,7 +2162,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow"]
+[node name="PhoenixDawnButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/PhoenixDawnRow"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -2169,39 +2181,21 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Phoenix Dawn
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/PhoenixDawnRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/PhoenixDawnRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+[node name="LastStandRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
@@ -2210,7 +2204,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow2"]
+[node name="LastStandButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/LastStandRow"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -2230,39 +2224,39 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Last Stand
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow2"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/LastStandRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow2/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/LastStandRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow2/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/LastStandRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow2/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/LastStandRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow2/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/LastStandRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow3" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+[node name="SacrificialMoltRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.65
@@ -2271,7 +2265,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow3"]
+[node name="SacrificialMoltButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/SacrificialMoltRow"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -2291,39 +2285,21 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Sacrificial Molt
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow3"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/SacrificialMoltRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow3/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/SacrificialMoltRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow3/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow3/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow3/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow4" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+[node name="DeathDefiedRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.8
@@ -2332,7 +2308,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow4"]
+[node name="DeathDefiedButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/DeathDefiedRow"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -2352,39 +2328,102 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Death Defied
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow4"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/DeathDefiedRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow4/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/DeathDefiedRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow4/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/DeathDefiedRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow4/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/DeathDefiedRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow4/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/DeathDefiedRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow5" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+[node name="MartyrdomRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="MartyrdomButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MartyrdomRow"]
+custom_minimum_size = Vector2(192, 80)
+layout_mode = 2
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = ExtResource("8_fm0cu")
+theme_override_styles/disabled = ExtResource("12_s2rwv")
+theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
+theme_override_styles/hover = ExtResource("8_fm0cu")
+theme_override_styles/pressed = ExtResource("8_fm0cu")
+theme_override_styles/normal = ExtResource("11_s2rwv")
+text = "Martyrdom
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MartyrdomRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MartyrdomRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MartyrdomRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MartyrdomRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/MartyrdomRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="OuroborosLoopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -2395,8 +2434,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow5"]
-custom_minimum_size = Vector2(160, 80)
+[node name="OuroborosLoopButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/OuroborosLoopRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -2415,96 +2454,33 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Ouroboros Loop
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow5"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/OuroborosLoopRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow5/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/OuroborosLoopRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow5/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/OuroborosLoopRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow5/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/OuroborosLoopRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow6" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor"]
-layout_direction = 3
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.65
-anchor_right = 0.5
-anchor_bottom = 0.65
-grow_vertical = 2
-size_flags_horizontal = 0
-theme_override_constants/separation = 32
-
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow6"]
-custom_minimum_size = Vector2(160, 80)
-layout_mode = 2
-size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_constants/outline_size = 14
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
-(3 SP)"
-
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow6"]
-layout_mode = 2
-theme_override_constants/separation = 24
-alignment = 2
-
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/UpgradeRow6/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Survivor/OuroborosLoopRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -2992,6 +2968,7 @@ theme_override_colors/font_unselected_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_hovered_color = Color(0.553852, 0.66019, 0, 1)
 theme_override_colors/font_selected_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/tab_focus = ExtResource("3_mpwqm")
 theme_override_styles/tabbar_background = ExtResource("8_v4egn")
@@ -5691,6 +5668,7 @@ theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = ExtResource("7_60tjm")
 text = "Description text"
@@ -5699,21 +5677,22 @@ vertical_alignment = 1
 justification_flags = 35
 
 [node name="ResumeButton" type="Button" parent="."]
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(160, 48)
 anchors_preset = -1
-anchor_left = 0.8
+anchor_left = 0.77
 anchor_top = 0.875
 anchor_right = 0.92
 anchor_bottom = 0.928
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.686275, 0.933333, 0.933333, 1)
+theme_override_colors/font_hover_color = Color(0.686275, 0.933333, 0.933333, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.686275, 0.933333, 0.933333, 1)
+theme_override_colors/font_focus_color = Color(0.686275, 0.933333, 0.933333, 1)
+theme_override_colors/font_pressed_color = Color(0.686275, 0.933333, 0.933333, 1)
 theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/focus = ExtResource("16_vdgk6")
 theme_override_styles/disabled = ExtResource("17_dd5dw")

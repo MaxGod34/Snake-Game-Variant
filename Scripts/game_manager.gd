@@ -31,8 +31,7 @@ var max_fruits_on_screen = 1
 	#-------New Phase Shift Upgrade Shit------#
 var phase_shift_level = 0
 var phase_shift_charges = 0
-	#-------Extra Life Shit-------------#
-var extra_lives = 0
+
 	#----Active Ability Flags----#
 var burrow_is_active = false
 var is_phasing = false 
@@ -117,7 +116,18 @@ var active_pocket_garden_rect = null
 var fold_space_unlocked = false
 var masters_blueprint_unlocked = false
 var shatter_reality_unlocked = false
-
+#------------------------------------#
+#---------SURVIVOR PATH----------#
+	#-------Extra Life Shit-------------#
+var extra_lives = 0
+var phoenix_dawn_unlocked = false
+var last_stand_unlocked = false
+var sacrificial_molt_used = false
+var sacrificial_molt_unlocked = false
+var death_defied_unlocked = false
+var martyrdom_unlocked = false
+var times_died_this_run = 0
+var ouroboros_loop_active = false
 
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
@@ -371,6 +381,50 @@ var class_data = {
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+	
+		# --- SURVIVOR PATH ---
+	"Mulligan Munchie": {
+		"display_name": "Mulligan Munchie",
+		"description": "Grants one Extra Life.\nThe cost increases dramatically with each purchase.",
+		"costs": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], # Example scaling costs
+		"max_level": 10
+	},
+	"Phoenix Dawn": {
+		"display_name": "Phoenix Dawn",
+		"description": "After using an Extra Life,\nthe next fruit you eat restores 25% of your lost length.",
+		"costs": [3], "max_level": 1,
+		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
+	},
+	"Last Stand": {
+		"display_name": "Last Stand",
+		"description": "While on your final life,\nthe chance for Golden Apples to spawn is significantly increased.",
+		"costs": [3], "max_level": 1,
+		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
+	},
+	"Sacrificial Molt": {
+		"display_name": "Sacrificial Molt",
+		"description": "Active Ability (Once per RUN):\nHalve your current length to instantly gain one Extra Life charge.",
+		"costs": [4], "max_level": 1,
+		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
+	},
+	"Death Defied": {
+		"display_name": "Death Defied",
+		"description": "Every time you use an Extra Life,\npermanently gain +1 to your Fruit Reward and Max Fruits\non Screen for this run.",
+		"costs": [5], "max_level": 1,
+		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
+	},
+	"Martyrdom": {
+		"display_name": "Martyrdom",
+		"description": "Upon your final death, your snake explodes,\nharvesting all fruit on screen\nfor a final score boost.",
+		"costs": [5], "max_level": 1,
+		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
+	},
+	"Ouroboros Loop": {
+		"display_name": "Ouroboros Loop",
+		"description": "PRESTIGE! If you reach the final Garden without dying,\nyou may choose to restart at Garden 1 with all upgrades\nand double SP gain.",
+		"costs": [1], "max_level": 1,
+		# The prerequisite for this one will be handled in code, not here.
+	},
 	# --- ARCHITECT PATH ---
 	"Edge Lord": {
 		"display_name": "Edge Lord",
@@ -431,8 +485,8 @@ var upgrade_data = {
 	},
 	"Master's Blueprint": {
 		"display_name": "Master's Blueprint", 
-		"description": "Transforms the game's visuals into a clean,\nglowing 'blueprint' grid for the rest of the run.",
-		"costs": [8], 
+		"description": "Transforms the game's visuals into a clean,\nglowing 'blueprint' grid for the rest of the run.\nVisual changes only, enjoy!",
+		"costs": [3], 
 		"max_level": 1, 
 		"prerequisite": {"upgrade": "Edge Lord", "level": 5}
 		# This one is independent and has no 'exclusive_with' key
@@ -443,12 +497,6 @@ var upgrade_data = {
 		"costs": [3, 4, 5],
 		"max_level": 3
 	},
-	"buy_extra_life": {
-		"display_name": "Mulligan Munchie",
-		"description": "We all make mistakes.\nHere's a free life if ya need it!\nReset to 1 length and keep all your buffs!\n3 per run!",
-		"costs": [3, 7, 10],
-		"max_level": 3
-	}, 
 	#------------------------THE ACROBAT--------------------------#
 	"Slither Sauce": {
 		"display_name": "Slither Sauce",
@@ -650,6 +698,15 @@ func start_game():
 	fold_space_unlocked = false
 	masters_blueprint_unlocked = false
 	shatter_reality_unlocked = false
+	# SURVIVOR PATH
+	phoenix_dawn_unlocked = false
+	last_stand_unlocked = false
+	sacrificial_molt_used = false
+	sacrificial_molt_unlocked = false
+	death_defied_unlocked = false
+	martyrdom_unlocked = false
+	times_died_this_run = 0
+	ouroboros_loop_active = false
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
