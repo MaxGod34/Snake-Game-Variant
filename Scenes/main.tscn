@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=21 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
@@ -9,6 +9,17 @@
 [ext_resource type="StyleBox" uid="uid://b4x8o38qx0owk" path="res://Assets/Styles/HUD_label_template.tres" id="6_6bp64"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="6_ynf5e"]
 [ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/PNGs/ShopTransitionTileSet.png" id="7_344ge"]
+[ext_resource type="Texture2D" uid="uid://6o6bur1ea26j" path="res://Assets/PNGs/grid_tile.png" id="10_hptm8"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1ilt"]
+texture = ExtResource("10_hptm8")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+0:0/0/z_index = -8
+
+[sub_resource type="TileSet" id="TileSet_6iyac"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_d1ilt")
 
 [sub_resource type="Gradient" id="Gradient_6bp64"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -72,6 +83,10 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color(0.133333, 0.133333, 0.133333, 1)
+
+[node name="BlueprintGridTileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_6iyac")
+format = 2
 
 [node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
 position = Vector2(640, 480)

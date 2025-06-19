@@ -122,6 +122,7 @@ func _ready():
 	update_hud()
 	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
+	apply_blueprint_visuals()
 	
 	
 func _process(delta):
@@ -338,7 +339,7 @@ func move_camera_to_quadrant(quadrant_index: int):
 		# In single-garden mode, center the camera on the current (expanding) garden
 		print("current grid width and height: ", grid_width, " x ", grid_height)
 		var center_pos = Vector2(grid_width / 2.0, grid_height / 2.0)
-		final_camera_pos = (center_pos * tile_size) + tile_offset
+		final_camera_pos = (center_pos * tile_size)
 	else:
 		# In shattered mode, jump between the fixed centers of the 40x30 quadrants
 		var target_pos = Vector2.ZERO
@@ -347,7 +348,7 @@ func move_camera_to_quadrant(quadrant_index: int):
 			1: target_pos = Vector2(60, 15) # Center of top-right
 			2: target_pos = Vector2(20, 45) # Center of bottom-left
 			3: target_pos = Vector2(60, 45) # Center of bottom-right
-		final_camera_pos = (target_pos * tile_size) + tile_offset
+		final_camera_pos = (target_pos * tile_size)
 	
 	# Use a tween to smoothly pan the camera to its new fixed point.
 	var tween = create_tween()
@@ -379,16 +380,21 @@ func update_camera_quadrant():
 
 
 func update_boundary_visuals():
+	
+	if GameManager.fold_space_unlocked:
+		$BoundaryIndicator.visible = false
+		return
+	
+	$BoundaryIndicator.visible = true
+	
 	# This function now resizes BOTH the boundary and the background.
-	var world_size_pixels = Vector2(grid_width * tile_size, grid_height * tile_size)
+	var world_size_pixels = Vector2(grid_width * tile_size, grid_height * tile_size) + tile_offset
 	boundary_indicator.size = world_size_pixels
 	background_rect.size = world_size_pixels
 	
 	# Ensure they are positioned at the top-left corner.
 	boundary_indicator.position = Vector2.ZERO
 	background_rect.position = Vector2.ZERO
-
-		
 	
 
 
@@ -530,10 +536,19 @@ func spawn_fruit():
 	else:
 		fruit = fruit_scene.instantiate()
 		
+	if GameManager.masters_blueprint_unlocked:
+		var blueprint_glow_color = Color("AFEEEE") # A bright, pale cyan
+		fruit.get_node("FillSprite").modulate = blueprint_glow_color
+		print("do u see cool fruit? you're supposed to!")
+	else:
+		print("spawning normal colored fruit!")
+		
 	fruit.add_to_group("fruits")
 	fruit.position = safe_position # Use the safe position we already calculated
 	call_deferred("add_child", fruit)
 	print("Fruit spawned at a safe location.")
+	
+	
 
 func destroy_obstacle(obstacle_node):
 	# First, check if the obstacle is still valid (it might have already been destroyed by a shockwave)
@@ -975,6 +990,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Fold Space":
 		if not GameManager.fold_space_unlocked:
 			GameManager.fold_space_unlocked = true
+			update_boundary_visuals()
 			
 	elif upgrade_name == "Shatter Reality":
 		if not GameManager.shatter_reality_unlocked:
@@ -986,10 +1002,8 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Master's Blueprint":
 		if not GameManager.masters_blueprint_unlocked:
 			GameManager.masters_blueprint_unlocked = true
+			apply_blueprint_visuals()
 	
-	elif upgrade_name == "Four Corner Cobra":
-		if not GameManager.four_corner_cobra_unlocked:
-			GameManager.four_corner_cobra_unlocked = true
 	
 	# Phase Shift Ability Upgrade Logic
 	elif upgrade_name == "increase_phase_charges":
@@ -1078,7 +1092,6 @@ func on_snake_ate_food(fruit):
 	GameManager.fruits_eaten_this_run += 1
 	# --- Cleanup and Respawning ---
 	if was_bounty_target:
-		# --- THIS IS THE FIX ---
 		# If it was a bounty, kill ALL tweens before clearing the board.
 		for f in get_tree().get_nodes_in_group("fruits"):
 			if is_instance_valid(f.active_tween):
@@ -1175,6 +1188,47 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			
 	return potential_position
 
+
+func apply_blueprint_visuals():
+	# This function only runs if the upgrade is unlocked.
+	if not GameManager.masters_blueprint_unlocked:
+		return
+
+	print("Applying Master's Blueprint visuals!")
+	
+	# Define our new color scheme
+	var blueprint_bg_color = Color("0d1b2a") # A dark navy blue
+	var blueprint_grid_color = Color("415a77", 0.2) # A muted blue-gray
+	var blueprint_glow_color = Color("AFEEEE") # A bright, pale cyan
+	
+	# Change the visuals of the main world elements
+	$"Background-Color-Rect".color = blueprint_bg_color
+	$BoundaryIndicator.modulate = blueprint_grid_color
+	$DividingWallTileMap.modulate = blueprint_grid_color
+	
+	
+	var grid_tilemap = $BlueprintGridTileMap
+	grid_tilemap.clear() # Clear any old grid
+	for y in range(grid_height):
+		for x in range(grid_width):
+			# Place a grid tile at every single coordinate
+			grid_tilemap.set_cell(0, Vector2i(x, y), 0, Vector2i(0,0))
+	# Modulate the entire tilemap to make the lines subtle
+	grid_tilemap.modulate = blueprint_grid_color
+	
+	
+	# Change the visuals of all existing game objects
+	head.get_node("FillSprite").modulate = blueprint_glow_color
+	for segment in snake_body_segments:
+		segment.get_node("FillSprite").modulate = blueprint_glow_color
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		fruit.get_node("FillSprite").modulate = blueprint_glow_color
+	for rock in spawned_obstacles:
+		rock.get_node("FillSprite").modulate = Color.BLACK
+	update_tail_visuals()
+
+
+
 func is_any_body_part_at(check_pos: Vector2) -> bool:
 	# This function ignores ghost rules and just checks every segment.
 	for segment in snake_body_segments:
@@ -1244,6 +1298,11 @@ func update_score_display():
 func create_colored_segment(position: Vector2) -> Node2D:
 	var segment = body_scene.instantiate()
 	segment.position = position
+	
+	if GameManager.masters_blueprint_unlocked:
+		segment.get_node("FillSprite").modulate = Color("AFEEEE")
+		return segment
+	
 	#Change these values for the alternating snake pattern
 	var color_a = Color("8A00C4") #Purple-neon
 	var color_b = Color("BA8E23") #Dark Yellow
@@ -1280,9 +1339,9 @@ func is_position_occupied(check_pos: Vector2) -> bool:
 	return false
 
 func is_position_out_of_bounds(check_pos: Vector2) -> bool:
-	var grid_pos = (check_pos / tile_size).round()
-	if grid_pos.x < 0 or grid_pos.x > grid_width + tile_offset.x or \
-	   grid_pos.y < 0 or grid_pos.y > grid_height + tile_offset.y:
+	var grid_pos = (check_pos - tile_offset) / tile_size
+	if grid_pos.x < 0 or grid_pos.x > grid_width or \
+	   grid_pos.y < 0 or grid_pos.y > grid_height:
 		return true
 	return false
 
@@ -1337,7 +1396,14 @@ func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
 	var total_segments = snake_body_segments.size()
 	var ghost_color = Color("AFEEEE60") # transparent, pale turquoise
-
+	
+	if GameManager.masters_blueprint_unlocked:
+		var blueprint_glow_color = Color("AFEEEE")
+		for segment in snake_body_segments:
+			segment.get_node("FillSprite").modulate = blueprint_glow_color
+		return # IMPORTANT: Stop here!
+	
+	
 	# Loop through all segments and set their state
 	for i in range(total_segments):
 		var segment = snake_body_segments[i]

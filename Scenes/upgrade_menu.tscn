@@ -2081,53 +2081,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="FourCornerCobraRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect"]
-layout_direction = 3
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.075
-anchor_top = 0.75
-anchor_right = 0.075
-anchor_bottom = 0.75
-grow_vertical = 2
-size_flags_horizontal = 0
-theme_override_constants/separation = 32
-
-[node name="FourCornerCobraButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/FourCornerCobraRow"]
-custom_minimum_size = Vector2(224, 80)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_constants/outline_size = 14
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "four corner cobra
-(3 SP)"
-
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/FourCornerCobraRow"]
-layout_mode = 2
-theme_override_constants/separation = 24
-alignment = 2
-
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Architect/FourCornerCobraRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
 [node name="Survivor" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
 custom_minimum_size = Vector2(0, 720)

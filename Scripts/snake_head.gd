@@ -129,7 +129,15 @@ func on_move_timer_timeout():
 	
 	
 	if main.is_position_out_of_bounds(next_position):
-		if GameManager.burrow_is_active:
+		if GameManager.fold_space_unlocked:
+			var grid_pos = (next_position - main.tile_offset) / main.tile_size
+			if grid_pos.x < 0: grid_pos.x = main.grid_width - 1
+			if grid_pos.x >= main.grid_width: grid_pos.x = 0
+			if grid_pos.y < 0: grid_pos.y = main.grid_height - 1
+			if grid_pos.y >= main.grid_height: grid_pos.y = 0
+			next_position = (grid_pos * tile_size) + main.tile_offset
+		
+		elif GameManager.burrow_is_active:
 			var grid_pos = (next_position / tile_size).round()
 			if grid_pos.x < 0: grid_pos.x = main.grid_width - 1
 			if grid_pos.x >= main.grid_width: grid_pos.x = 0

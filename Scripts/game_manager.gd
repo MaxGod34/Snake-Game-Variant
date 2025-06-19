@@ -131,7 +131,7 @@ var difficulty_data = {
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
 		"sp_cost_modifier": 0,    # Upgrades cost the normal amount
-		"starting_sp": 34          # Start with 5 free skill points!
+		"starting_sp": 69          # Start with 5 free skill points!
 	},
 	"viper": {	#Medium
 		"name": "Viper",
@@ -418,8 +418,8 @@ var upgrade_data = {
 		"description": "Removes all walls, making the garden wrap around on itself.",
 		"costs": [8], 
 		"max_level": 1, 
-		"prerequisite": {"upgrade": "Edge Lord", "level": 5},
-		"exclusive_with": "Shatter Reality" # <-- NEW: This makes it mutually exclusive
+		"prerequisite": {"upgrade": "Edge Lord", "level": 5, "and": "Burrow", "and_level": 3},
+		"exclusive_with": "Shatter Reality" # <-- makes it mutually exclusive
 	},
 	"Shatter Reality": {
 		"display_name": "Shatter Reality", 
@@ -427,7 +427,7 @@ var upgrade_data = {
 		"costs": [8], 
 		"max_level": 1, 
 		"prerequisite": {"upgrade": "Edge Lord", "level": 5},
-		"exclusive_with": "Fold Space" # <-- This makes it mutually exclusive
+		"exclusive_with": "Fold Space" # <-- makes it mutually exclusive
 	},
 	"Master's Blueprint": {
 		"display_name": "Master's Blueprint", 

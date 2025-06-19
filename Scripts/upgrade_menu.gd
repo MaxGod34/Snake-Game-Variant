@@ -113,7 +113,6 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Fold Space": return 1 if GameManager.fold_space_unlocked else 0
 		"Shatter Reality": return 1 if GameManager.shatter_reality_unlocked else 0
 		"Master's Blueprint": return 1 if GameManager.masters_blueprint_unlocked else 0
-		"Four Corner Cobra": return 1 if GameManager.four_corner_cobra_unlocked else 0
 		#------Glutton------#
 		"elephant_sized_portions": return GameManager.es_portions_level
 		"more_mice": return GameManager.more_mice_level

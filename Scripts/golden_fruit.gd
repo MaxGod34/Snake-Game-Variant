@@ -7,12 +7,16 @@ var time_left_to_ripen: float = -1.0
 var is_bounty_target = false
 var active_tween: Tween = null
 
+@export var fill_color: Color = Color.GOLD
 @onready var fill_sprite = $FillSprite
 
 func _ready():
+	fill_sprite.modulate = fill_color
 	var gardener_level = GameManager.patient_gardener_level
 	if gardener_level > 0:
 		time_left_to_ripen = GameManager.patient_gardener_data[gardener_level]["time"]
+	if GameManager.masters_blueprint_unlocked:
+		fill_sprite.modulate = Color("FFC200")
 
 func ripen():
 	# If this fruit is already the bounty target, do nothing.

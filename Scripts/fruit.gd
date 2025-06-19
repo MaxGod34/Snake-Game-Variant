@@ -18,6 +18,8 @@ func _ready():
 	if gardener_level > 0:
 		# If yes, set the time left based on our data.
 		time_left_to_ripen = GameManager.patient_gardener_data[gardener_level]["time"]
+	if GameManager.masters_blueprint_unlocked:
+		fill_sprite.modulate = Color("AFEEEE")
 
 # This new function can be called by main.gd when the time is up
 func ripen():
