@@ -96,6 +96,13 @@ func find_upgrade_button(upgrade_key: String):
 # This helper gets the correct current level for any given upgrade.
 func get_upgrade_level_from_key(upgrade_key):
 	match upgrade_key:
+		#----Frenzy---#
+		"Sugar Rush": return 1 if GameManager.sugar_rush_unlocked else 0
+		"Chain Reaction": return GameManager.chain_reaction_level
+		"Overdrive": return GameManager.overdrive_level
+		"Lingering Rush": return GameManager.lingering_rush_level
+		"Juggernaut": return 1 if GameManager.juggernaut_unlocked else 0
+		"Zenith": return 1 if GameManager.zenith_unlocked else 0
 		#---Planner---#
 		"diet_slith": return GameManager.diet_slith_level
 		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0

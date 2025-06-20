@@ -23,7 +23,7 @@
 [sub_resource type="Theme" id="Theme_d1lbs"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d1lbs"]
-bg_color = Color(0, 0.560784, 0.392157, 0.117647)
+bg_color = Color(0, 0.560784, 0.392157, 0.176471)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -33,7 +33,7 @@ corner_radius_top_left = 15
 corner_radius_top_right = 15
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
-expand_margin_top = 12.0
+expand_margin_top = 1.0
 expand_margin_bottom = 1.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_m70ya"]
@@ -116,6 +116,7 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
+current_tab = 3
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
@@ -1128,13 +1129,32 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Frenzy" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 3
 
-[node name="UpgradeRow7" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+[node name="FrenzyTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.02
+anchor_right = 1.0
+anchor_bottom = 0.02
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 48
+theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
+text = "Combo Maxxing For All"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SugarRushRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.2
@@ -1143,366 +1163,222 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow7"]
-custom_minimum_size = Vector2(160, 80)
+[node name="SugarRushButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/SugarRushRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.745768, 0.311435, 9.62615e-08, 0.796078)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_focus_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 7
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Sugar Rush
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow7"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/SugarRushRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow7/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/SugarRushRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+[node name="ChainReactionRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.35
+anchor_right = 0.05
 anchor_bottom = 0.35
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow"]
-custom_minimum_size = Vector2(160, 80)
+[node name="ChainReactionButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ChainReactionRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.745768, 0.311435, 9.62615e-08, 0.796078)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_focus_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 7
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Chain Reaction
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ChainReactionRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ChainReactionRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ChainReactionRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ChainReactionRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+[node name="OverdriveRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.5
+anchor_right = 0.05
 anchor_bottom = 0.5
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow2"]
-custom_minimum_size = Vector2(160, 80)
+[node name="OverdriveButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/OverdriveRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.745768, 0.311435, 9.62615e-08, 0.796078)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_focus_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 7
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Overdrive
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow2"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/OverdriveRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow2/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/OverdriveRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow2/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/OverdriveRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow2/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow2/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow3" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+[node name="LingeringRushRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.65
+anchor_right = 0.05
 anchor_bottom = 0.65
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow3"]
-custom_minimum_size = Vector2(160, 80)
+[node name="LingeringRushButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.745768, 0.311435, 9.62615e-08, 0.796078)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_focus_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 7
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Lingering Rush
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow3"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow3/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow3/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow3/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow3/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow4" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.8
-anchor_bottom = 0.8
-grow_vertical = 2
-size_flags_horizontal = 0
-theme_override_constants/separation = 32
-
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow4"]
-custom_minimum_size = Vector2(160, 80)
-layout_mode = 2
-size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_constants/outline_size = 14
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
-(3 SP)"
-
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow4"]
-layout_mode = 2
-theme_override_constants/separation = 24
-alignment = 2
-
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow4/IndicatorContainer"]
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/LingeringRushRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow4/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow4/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow4/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow5" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
-layout_direction = 3
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.8
-anchor_right = 0.5
-anchor_bottom = 0.8
-grow_vertical = 2
-size_flags_horizontal = 0
-theme_override_constants/separation = 32
-
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow5"]
-custom_minimum_size = Vector2(160, 80)
-layout_mode = 2
-size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_constants/outline_size = 14
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
-(3 SP)"
-
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow5"]
-layout_mode = 2
-theme_override_constants/separation = 24
-alignment = 2
-
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow6" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+[node name="JuggernautRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -1513,75 +1389,86 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow6"]
-custom_minimum_size = Vector2(160, 80)
+[node name="JuggernautButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/JuggernautRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
-theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.745768, 0.311435, 9.62615e-08, 0.796078)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_focus_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 7
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Juggernaut
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow6"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/JuggernautRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow6/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/JuggernautRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="AcrobatTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+[node name="ZenithRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy"]
+layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
-anchor_right = 1.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+anchor_top = 0.8
+anchor_right = 0.5
+anchor_bottom = 0.8
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="ZenithButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ZenithRow"]
+custom_minimum_size = Vector2(192, 80)
+layout_mode = 2
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.745768, 0.311435, 9.62615e-08, 0.796078)
+theme_override_colors/font_hover_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_hover_color = Color(1, 0.501961, 0.239216, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 16
+theme_override_colors/font_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_focus_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.501961, 0.239216, 1)
+theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 7
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 42
-theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
-text = "Combo Maxxing For All"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("8_fm0cu")
+theme_override_styles/disabled = ExtResource("12_s2rwv")
+theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
+theme_override_styles/hover = ExtResource("8_fm0cu")
+theme_override_styles/pressed = ExtResource("8_fm0cu")
+theme_override_styles/normal = ExtResource("11_s2rwv")
+text = "Zenith
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ZenithRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Frenzy/ZenithRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="Architect" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
@@ -2994,7 +2881,6 @@ theme_override_styles/panel = ExtResource("5_m70ya")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 1
 tabs_position = 1
 deselect_enabled = true
 
@@ -3288,6 +3174,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Illusionist" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -5514,7 +5401,7 @@ anchors_preset = -1
 anchor_left = 0.45
 anchor_top = 0.3
 anchor_right = 0.75
-anchor_bottom = 0.75
+anchor_bottom = 0.63
 grow_horizontal = 0
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
@@ -5524,7 +5411,7 @@ theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = ExtResource("7_60tjm")
 text = "Description text"
 horizontal_alignment = 1
@@ -5534,9 +5421,9 @@ justification_flags = 35
 [node name="ResumeButton" type="Button" parent="."]
 custom_minimum_size = Vector2(160, 48)
 anchors_preset = -1
-anchor_left = 0.76
-anchor_top = 0.89
-anchor_right = 0.91
+anchor_left = 0.77
+anchor_top = 0.875
+anchor_right = 0.925
 anchor_bottom = 0.94
 size_flags_horizontal = 3
 size_flags_vertical = 4

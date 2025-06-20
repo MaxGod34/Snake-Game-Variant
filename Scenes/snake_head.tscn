@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://bblrs0njpa5u0"]
+[gd_scene load_steps=7 format=3 uid="uid://bblrs0njpa5u0"]
 
 [ext_resource type="Script" uid="uid://cl1mtl2tjul3d" path="res://Scripts/snake_head.gd" id="1_bbogs"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_2n2nm"]
@@ -7,6 +7,9 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1ssvg"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gkmwg"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_2n2nm"]
+size = Vector2(14, 8)
 
 [node name="SnakeHead" type="CharacterBody2D"]
 process_mode = 1
@@ -52,5 +55,19 @@ one_shot = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HeadArea"]
 shape = SubResource("RectangleShape2D_gkmwg")
+
+[node name="OverdriveParticles" type="CPUParticles2D" parent="."]
+emitting = false
+amount = 34
+texture = SubResource("PlaceholderTexture2D_2n2nm")
+emission_shape = 3
+emission_rect_extents = Vector2(1, 20)
+direction = Vector2(0, 0)
+spread = 0.0
+initial_velocity_min = 100.0
+initial_velocity_max = 150.0
+scale_amount_min = 0.2
+scale_amount_max = 0.6
+color = Color(1, 0.721569, 0.290196, 1)
 
 [connection signal="area_entered" from="HeadArea" to="." method="_on_head_area_area_entered"]

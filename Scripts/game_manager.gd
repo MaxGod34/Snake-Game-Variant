@@ -35,6 +35,7 @@ var burrow_is_active = false
 var is_phasing = false 
 var is_bounty_active = false
 var autotomy_is_active = false
+var is_zenith_active = false
 
 #------The Planner-------#
 var diet_slith_level = 0
@@ -135,6 +136,20 @@ var three_card_monty_unlocked = false
 var fractured_self_unlocked = false
 var dazzle_pie_unlocked = false
 
+# --- Frenzy Path ---
+var sugar_rush_unlocked = false
+var chain_reaction_level = 0
+var chain_reaction_data = [1, 5, 10, 999] # Lvl 0, 1, 2, 3
+var overdrive_level = 0
+var lingering_rush_level = 0
+var lingering_rush_data = [5.0, 5.5, 6.0, 6.5, 7.0, 7.5]
+var juggernaut_unlocked = false
+var zenith_unlocked = false
+var zenith_charges = 0
+# track the combo itself
+var current_combo = 0
+var combo_is_pure = true
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -177,6 +192,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -210,6 +228,9 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -243,6 +264,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -276,6 +300,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -309,6 +336,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -344,6 +374,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -377,6 +410,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
 			# Illusionist Modifiers
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
@@ -402,6 +438,49 @@ var class_data = {
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+	# --- FRENZY PATH ---
+	"Sugar Rush": {
+		"display_name": "Sugar Rush",
+		"description": "Unlocks the Combo Meter,\nwhich tracks fruits eaten in quick succession.",
+		"costs": [1],
+		"max_level": 1
+	},
+	"Chain Reaction": {
+		"display_name": "Chain Reaction",
+		"description": "Your combo meter now also acts\nas a score multiplier.\nEach level increases the max combo.",
+		"costs": [2, 3, 4],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
+	},
+	"Overdrive": {
+		"display_name": "Overdrive",
+		"description": "While combo is active,\nhold your current direction key for a speed boost.",
+		"costs": [2, 1], # Lvl 2 is cheap for the cosmetic!
+		"max_level": 2,
+		"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
+	},
+	"Lingering Rush": {
+		"display_name": "Lingering Rush",
+		"description": "Increases the duration of the combo timer,\nmaking it easier to chain fruits.",
+		"costs": [2, 2, 3, 3, 4],
+		"max_level": 5,
+		"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
+	},
+	"Juggernaut": {
+		"display_name": "Juggernaut",
+		"description": "While your combo is pure\n(you haven't opened the upgrade menu),\nthe combo timer is paused.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Lingering Rush", "level": 5}
+	},
+	"Zenith": {
+		"display_name": "Zenith",
+		"description": "Active Ability (Once per Garden):\nInstantly set your combo to 10\nand make the timer not decrease for 10 seconds.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Lingering Rush", "level": 5} # Example prerequisite
+	},
+	
 	#------ILLUSIONIST PATH-------#
 	"Ghost Tail": {
 		"display_name": "Ghost Tail",
@@ -770,7 +849,17 @@ func start_game():
 	three_card_monty_unlocked = false
 	fractured_self_unlocked = false
 	dazzle_pie_unlocked = false
-	
+	# --- Frenzy Path ---
+	sugar_rush_unlocked = false
+	chain_reaction_level = 0
+	overdrive_level = 0
+	lingering_rush_level = 0
+	juggernaut_unlocked = false
+	zenith_unlocked = false
+	zenith_charges = 0
+	is_zenith_active = false
+	current_combo = 0
+	combo_is_pure = true
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false

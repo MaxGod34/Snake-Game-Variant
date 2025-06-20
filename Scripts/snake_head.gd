@@ -29,6 +29,9 @@ var juke_and_jive_is_active: bool = false
 @onready var meditative_state_timer: Timer = $MeditativeStateTimer
 @onready var afterburner_timer: Timer = $AfterburnerTimer
 @onready var autotomy_timer: Timer = $AutotomyTimer 
+#------Overdrive--------
+@onready var overdrive_particles = $OverdriveParticles
+var is_overdrive_active = false
 
 # --- GODOT'S BUILT-IN FUNCTIONS ---
 
@@ -43,6 +46,40 @@ func _ready():
 	phase_timer.timeout.connect(_on_phase_timer_timeout)
 	meditative_state_timer.timeout.connect(_on_meditative_state_timer_timeout)
 	autotomy_timer.timeout.connect(_on_autotomy_timer_timeout)
+
+
+func _process(delta):
+
+	# This ability only works if the player has unlocked it and has an active combo.
+	if GameManager.overdrive_level == 0 or GameManager.current_combo == 0:
+		# If the conditions aren't met, make sure Overdrive is turned off.
+		if is_overdrive_active:
+			deactivate_overdrive()
+		return
+
+	# Check if the player is holding the key for their current direction of travel.
+	var is_holding_key = Input.is_action_pressed(get_direction_action(current_direction))
+
+	if is_holding_key and not is_overdrive_active:
+		# If they are holding the key and the boost isn't active yet, turn it on.
+		activate_overdrive()
+	elif not is_holding_key and is_overdrive_active:
+		# If they release the key and the boost is active, turn it off.
+		deactivate_overdrive()
+		
+		#---jug--------------------------------------
+	
+
+# new helper function to get the action name ("ui_up", etc.) from a Vector2
+func get_direction_action(direction: Vector2) -> String:
+	if direction == Vector2.UP: return "up"
+	if direction == Vector2.DOWN: return "down"
+	if direction == Vector2.LEFT: return "left"
+	if direction == Vector2.RIGHT: return "right"
+	return ""
+
+
+
 
 func _unhandled_input(event: InputEvent):
 	if not can_change_direction:
@@ -122,6 +159,11 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.blink_charges > 0:
 			main.perform_blink()
 			
+	if event.is_action_pressed("activate_zenith"):
+		# Check if we have charges and the ability isn't already active
+		if GameManager.zenith_charges > 0 and not GameManager.is_zenith_active:
+			main.activate_zenith()
+			
 
 # --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():
@@ -176,24 +218,27 @@ func _on_head_area_area_entered(area):
 		emit_signal("ate_fruit", area)
 		return
 	
-	if area.is_in_group("dividng_walls"):
-		emit_signal("hit_self")
-		return
 	
 	
 	if area is SnakeBody:
 		# Check all invulnerability states
 		if not GameManager.is_phasing and not juke_and_jive_is_active:
+				
 			if GameManager.autotomy_is_active:
 				main.perform_autotomy(area)
 				GameManager.autotomy_is_active = false
 				GameManager.autotomy_used_this_garden = true
 				$AutotomyTimer.stop()
 				reset_head_color()
+
+			
 			else:
 				emit_signal("hit_self")
 				return
 	
+	if area.is_in_group("dividng_walls"):
+		emit_signal("hit_self")
+		return
 		
 	if area is Rock:
 		if GameManager.tenderizer_charges > 0:
@@ -203,6 +248,28 @@ func _on_head_area_area_entered(area):
 		else:
 			emit_signal("hit_self")
 		return
+
+
+func activate_overdrive():
+	print("OVERDRIVE ENGAGED!")
+	is_overdrive_active = true
+	# We temporarily make the move timer faster.
+	move_timer.wait_time *= 0.5 # 50% faster
+
+	# If we have level 2, turn on the cool particle effect!
+	if GameManager.overdrive_level >= 2:
+		overdrive_particles.emitting = true
+		
+func deactivate_overdrive():
+	print("Overdrive disengaged.")
+	is_overdrive_active = false
+	# We restore the move timer to its normal speed.
+	main.apply_persistent_upgrades()
+	
+	# Always turn off the particles when the boost ends.
+	overdrive_particles.emitting = false
+
+
 
 #------AFTERBURNER-----#
 func check_for_afterburner():
@@ -275,6 +342,9 @@ func _on_autotomy_timer_timeout():
 
 # helper function to safely reset the head color
 func reset_head_color():
+	
 	# Only reset if no other ability is currently giving a color
-	if not GameManager.is_phasing and not juke_and_jive_is_active and not GameManager.burrow_is_active and not GameManager.autotomy_is_active:
+	if not GameManager.is_phasing and not juke_and_jive_is_active and \
+	not GameManager.burrow_is_active and not GameManager.autotomy_is_active:
+		
 		get_node("FillSprite").modulate = head_color

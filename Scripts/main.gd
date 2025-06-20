@@ -36,7 +36,7 @@ var pause_scene = preload("res://Scenes/pause_menu.tscn")
 var trippy_grid_shader = preload("res://trippy_grid.gdshader")
 
 
-
+@onready var combo_timer = $ComboTimer
 @onready var boundary_indicator = $BoundaryIndicator
 @onready var background_rect = $"Background-Color-Rect" 
 @onready var dividing_wall_tilemap = $DividingWallTileMap
@@ -116,7 +116,9 @@ func _ready():
 	update_fruit_prediction()
 	
 	time_since_last_fruit = 0.0
-
+	
+	combo_timer.timeout.connect(_on_combo_timer_timeout)
+	$ZenithTimer.timeout.connect(_on_zenith_timer_timeout)
 	
 	# --- FINAL SETUP & START ---
 	update_score_display()
@@ -148,8 +150,32 @@ func _process(delta):
 			time_string = "%02d.%d" % [seconds, tenths]
 		$UI/HUDContainer/StatsVbox/RunTimerLabel.text = "Run Time: " + time_string
 		
-		# --- NEW: Time Since Last Fruit Display ---
-		$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "TSLFruit: %.1f" % time_since_last_fruit
+		var last_fruit_label = $UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel
+		if GameManager.sugar_rush_unlocked and !$ComboTimer.is_stopped():
+			last_fruit_label.visible = true
+			last_fruit_label.text = "Combo Window: %.1f" % $ComboTimer.time_left
+		else:
+			$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "TSLFruit: %.1f" % time_since_last_fruit
+		
+		# --- NEW JUGGERNAUT COMBO TIMER LOGIC ---
+	var combo_timer = $ComboTimer # Get a reference to the timer
+	var last_fruit_label = $UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel
+	
+	if GameManager.sugar_rush_unlocked and not combo_timer.is_stopped():
+		last_fruit_label.visible = true
+		
+		# --- THIS IS THE NEW JUGGERNAUT LOGIC ---
+		# First, check if the timer should be paused.
+		if GameManager.juggernaut_unlocked and GameManager.combo_is_pure:
+			combo_timer.paused = true
+			last_fruit_label.text = "COMBO LOCKED!" # Give cool feedback
+		else:
+			# Otherwise, make sure it's running.
+			combo_timer.paused = false
+			last_fruit_label.text = "Combo Window: %.1f" % combo_timer.time_left
+	else:
+		last_fruit_label.visible = false
+		
 
 		# --- NEW: Fruits Per Minute (FPM) Display ---
 		var fpm = 0.0
@@ -212,15 +238,33 @@ func toggle_pause():
 		$PauseMenu.visible = true
 
 func apply_persistent_upgrades():
-	# Re-apply speed upgrades
-	for i in range(GameManager.slither_sauce_level):
-		if head.move_timer.wait_time > 0.05:
-			var speed_mod = GameManager.class_data[GameManager.chosen_class]["speed_upgrade_mod"]
-			head.move_timer.wait_time *= speed_mod
+
+	# This function now calculates the final speed from base values every time.
+	
+	# 1. Get the base speed for the current class and difficulty.
+	var difficulty = GameManager.chosen_difficulty
+	var p_class = GameManager.chosen_class
+	var base_speed = GameManager.class_data[p_class]["start_speed"] * GameManager.difficulty_data[difficulty]["speed_multiplier"]
+
+	# 2. Get the modification values.
+	var speed_mod = GameManager.class_data[p_class]["speed_upgrade_mod"]
+	var slither_sauce_lvl = GameManager.slither_sauce_level
+
+	# 3. Calculate the final speed using the power function.
+	# This applies the multiplier the correct number of times to the base speed.
+	var final_speed = base_speed * pow(speed_mod, slither_sauce_lvl)
+	
+	# 4. Set the timer's wait_time to the final calculated speed.
+	# We add a clamp to ensure it never gets TOO fast.
+	head.move_timer.wait_time = clamp(final_speed, 0.05, 1.0)
+
+
+
 
 func open_upgrade_menu_with_transition():
 	# Stop the snake and block input
 	head.move_timer.stop()
+	GameManager.combo_is_pure = false
 	$UI/InputBlocker.show()
 
 	var tile_map = $UI/ShopTransitionTileMap
@@ -376,7 +420,7 @@ func update_boundary_visuals():
 	$BoundaryIndicator.visible = true
 	
 	# This function now resizes BOTH the boundary and the background.
-	var world_size_pixels = Vector2(grid_width * tile_size, grid_height * tile_size) + tile_offset
+	var world_size_pixels = Vector2(grid_width * tile_size, grid_height * tile_size)
 	boundary_indicator.size = world_size_pixels
 	background_rect.size = world_size_pixels
 	
@@ -400,6 +444,13 @@ func update_hud():
 	
 	# Set the Bar's current fill value
 	xp_bar.value = current_score
+	
+	#--------COMBO LABEL--------#
+	if GameManager.sugar_rush_unlocked:
+		$UI/HUDContainer/StatsVbox/ComboLabel.visible = true
+		$UI/HUDContainer/StatsVbox/ComboLabel.text = "COMBO: " + str(GameManager.current_combo)
+	else:
+		$UI/HUDContainer/StatsVbox/ComboLabel.visible = false
 	
 	$UI/HUDContainer/BottomGrid/NextLevelLabel.text = "Next Level: " + str(int(GameManager.score_needed_for_next_level))
 	# Update values for selected class, difficulty, and which garden currently on
@@ -816,6 +867,8 @@ func level_up():
 		GameManager.tenderizer_charges = GameManager.tenderizer_level
 	if GameManager.pocket_garden_level > 0:
 		GameManager.pocket_garden_charges = GameManager.pocket_garden_level
+	if GameManager.blink_level > 0:
+		GameManager.blink_charges = GameManager.blink_level
 
 func _on_upgrade_menu_resume_game_pressed():
 	# Block input for the transition out
@@ -863,10 +916,36 @@ func _on_upgrade_menu_resume_game_pressed():
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
-	# Upgrades implemented: Speed and Fruit Reward
+	#---------FRENZY------------#
+	if upgrade_name == "Sugar Rush":
+		if not GameManager.sugar_rush_unlocked:
+			GameManager.sugar_rush_unlocked = true
+	
+	elif upgrade_name == "Chain Reaction":
+		if GameManager.chain_reaction_level < 3:
+			GameManager.chain_reaction_level += 1
+			
+	elif upgrade_name == "Overdrive":
+		if GameManager.overdrive_level < 2:
+			GameManager.overdrive_level += 1
+	
+	elif upgrade_name == "Lingering Rush":
+		if GameManager.lingering_rush_level < 5:
+			GameManager.lingering_rush_level += 1
+			
+	elif upgrade_name == "Juggernaut":
+		if not GameManager.juggernaut_unlocked:
+			GameManager.juggernaut_unlocked = true
+			print("Juggernaut Ability purchased - debug")
+			
+	elif upgrade_name == "Zenith":
+		if not GameManager.zenith_unlocked:
+			GameManager.zenith_unlocked = true
+			GameManager.zenith_charges += 1
+			update_hud()
 	#-------------Glutton----------------#
 		#---ESP---#
-	if upgrade_name == "elephant_sized_portions":
+	elif upgrade_name == "elephant_sized_portions":
 		GameManager.es_portions_level += 1
 		GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
 		print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
@@ -1074,6 +1153,22 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	update_hud()
 	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
 
+func _on_combo_timer_timeout():
+	print("Combo Dropped!")
+	GameManager.current_combo = 0
+	update_hud()
+
+func _on_zenith_timer_timeout():
+	# When the timer is up, the effect ends.
+	print("Zenith has ended.")
+	GameManager.is_zenith_active = false
+	GameManager.current_combo = 0 # Reset the combo
+	head.reset_head_color() # A helper to safely reset the head's color
+	update_hud()
+
+
+
+
 func on_snake_ate_food(fruit):
 	print("Snake ate food!")
 	
@@ -1081,6 +1176,27 @@ func on_snake_ate_food(fruit):
 	var sp_reward = 0
 	
 	var was_bounty_target = fruit.is_bounty_target
+	
+	if GameManager.sugar_rush_unlocked:
+		
+		if GameManager.current_combo == 0:
+			GameManager.combo_is_pure = true
+		
+		if not GameManager.is_zenith_active:
+			
+			GameManager.current_combo += 1
+			print(GameManager.current_combo, "<- Current Combo")
+		else:
+			GameManager.current_combo += 2 # idk a bonus?
+		
+		# --- NEW: Chain Reaction Combo Cap ---
+		var max_combo = GameManager.chain_reaction_data[GameManager.chain_reaction_level]
+		if GameManager.current_combo > max_combo:
+			GameManager.current_combo = max_combo
+		
+		var combo_duration = GameManager.lingering_rush_data[GameManager.lingering_rush_level]
+		combo_timer.start(combo_duration)
+	
 	
 	
 	if GameManager.segments_to_restore > 0:
@@ -1122,7 +1238,7 @@ func on_snake_ate_food(fruit):
 				sp_reward += 1
 		elif fruit.has_method("ripen") and fruit.is_ripe:
 			growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
-		segments_to_add = get_effective_fruit_reward() * growth_multiplier
+		segments_to_add = get_effective_fruit_reward() * growth_multiplier * GameManager.current_combo
 
 	# --- Apply rewards ---
 	GameManager.skill_points += sp_reward
@@ -1617,6 +1733,33 @@ func perform_garden_weave():
 	# 4. Now that all real fruit have been moved, update the ghost's prediction.
 	update_fruit_prediction()
 
+
+func activate_zenith():
+	print("ZENITH ACTIVATED!")
+	
+	# 1. Spend the resources
+	GameManager.zenith_charges -= 1
+	
+	
+	# 2. Set the state
+	GameManager.is_zenith_active = true
+	GameManager.current_combo = 10 # Instantly set combo to 10
+	
+	update_hud()
+	
+	# 3. Stop any existing combo timer and start the new Zenith timer
+	$ComboTimer.stop()
+	$ZenithTimer.start(10.0) # 10-second duration
+	
+	# 4. Give some awesome visual feedback
+	play_screen_flash(Color.MAGENTA)
+	head.get_node("FillSprite").modulate = Color.MAGENTA
+	
+	if snake_body_segments.size() + 1 >= GameManager.garden_data[GameManager.current_garden]["score_goal"]:
+		$ZenithTimer.stop()
+
+
+
 func activate_banana_bounty():
 	var all_fruits = get_tree().get_nodes_in_group("fruits")
 	if all_fruits.is_empty():
@@ -1814,3 +1957,19 @@ func play_screen_flash(flash_color: Color):
 	tween.tween_property(flash_overlay, "color:a", 0.0, 0.4).set_ease(Tween.EASE_IN)
 	# When the animation finishes, hide the overlay again
 	tween.tween_callback(flash_overlay.hide)
+
+func destroy_body_segment(segment_node):
+	# safely removes a single snake segment.
+	
+	# 1. Check if the segment is still valid and in our array.
+	if is_instance_valid(segment_node) and segment_node in snake_body_segments:
+		# 2. Remove it from our tracking array.
+		snake_body_segments.erase(segment_node)
+		
+		# 3. Add a cool effect and delete it for good.
+		var tween = create_tween()
+		tween.tween_property(segment_node, "scale", Vector2.ZERO, 0.2)
+		tween.tween_callback(segment_node.queue_free)
+		
+		# 4. Update the score to reflect the shorter snake.
+		update_score_display()

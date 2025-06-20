@@ -323,7 +323,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="StatsVbox" type="VBoxContainer" parent="UI/HUDContainer"]
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(256, 0)
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.775
@@ -446,9 +446,20 @@ theme_override_colors/font_color = Color(0.999995, 0.494367, 0.42619, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
 theme_override_constants/outline_size = 12
 theme_override_fonts/font = ExtResource("6_ynf5e")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = ExtResource("6_6bp64")
 text = "TSLFruit:"
+vertical_alignment = 1
+
+[node name="ComboLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.878431, 0.494118, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "COMBO:"
 vertical_alignment = 1
 
 [node name="FPMLabel" type="Label" parent="UI/HUDContainer/StatsVbox"]
@@ -544,6 +555,12 @@ limit_left = 0
 limit_top = 0
 limit_right = 2560
 limit_bottom = 1920
+
+[node name="ComboTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="ZenithTimer" type="Timer" parent="."]
+one_shot = true
 
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
 [connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
