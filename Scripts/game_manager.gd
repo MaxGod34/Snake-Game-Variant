@@ -133,7 +133,7 @@ var blink_level = 0
 var blink_charges = 0
 var three_card_monty_unlocked = false
 var fractured_self_unlocked = false
-var dazzle_camouflage_unlocked = false
+var dazzle_pie_unlocked = false
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
@@ -178,8 +178,8 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -211,8 +211,8 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -244,8 +244,8 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -277,8 +277,8 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -310,8 +310,8 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -345,8 +345,8 @@ var class_data = {
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -378,8 +378,8 @@ var class_data = {
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
 			# Illusionist Modifiers
-			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
-			"Fractured Self": 0, "Dazzle Camouflage": 0,
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -424,7 +424,7 @@ var upgrade_data = {
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 2},
 		"exclusive_with": "Phase Shift"
 	},
-	"3-Card Monty": {
+	"3 Card Monty": {
 		"display_name": "3-Card Monty",
 		"description": "Permanently reduces the SP cost of all other upgrades by 1 (to a minimum of 1).",
 		"costs": [5],
@@ -438,8 +438,8 @@ var upgrade_data = {
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
 	},
-	"Dazzle Camouflage": {
-		"display_name": "Dazzle Camouflage",
+	"Dazzle Pie": {
+		"display_name": "Dazzle Pie",
 		"description": "A permanent, purely aesthetic transformation that adds a chromatic aberration effect to the game.",
 		"costs": [8],
 		"max_level": 1,
@@ -769,7 +769,7 @@ func start_game():
 	blink_charges = 0
 	three_card_monty_unlocked = false
 	fractured_self_unlocked = false
-	dazzle_camouflage_unlocked = false
+	dazzle_pie_unlocked = false
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")

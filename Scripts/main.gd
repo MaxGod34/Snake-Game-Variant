@@ -33,6 +33,7 @@ var body_scene = preload("res://Scenes/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/fruit.tscn")
 var rock_scene = preload("res://Scenes/rock.tscn")
 var pause_scene = preload("res://Scenes/pause_menu.tscn")
+var trippy_grid_shader = preload("res://trippy_grid.gdshader")
 
 
 
@@ -122,7 +123,7 @@ func _ready():
 	update_hud()
 	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
-	apply_blueprint_visuals()
+	apply_cosmetic_upgrades()
 	
 func _process(delta):
 	# First, check for a "hard pause". If the tree is paused, do nothing at all.
@@ -982,14 +983,40 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Master's Blueprint":
 		if not GameManager.masters_blueprint_unlocked:
 			GameManager.masters_blueprint_unlocked = true
-			apply_blueprint_visuals()
+			apply_cosmetic_upgrades()
 	
+	#----------ILLUSIONIST---------#
+	elif upgrade_name == "Ghost Tail":
+		if GameManager.ghost_tail_level < 5:
+			GameManager.ghost_tail_level += 1
+			print("Ghost Tail Upgraded! New ghost length: ", GameManager.ghost_tail_data[GameManager.ghost_tail_level])
 	
-	# Phase Shift Ability Upgrade Logic
-	elif upgrade_name == "increase_phase_charges":
-		GameManager.phase_shift_level += 1
-		GameManager.phase_shift_charges += 1
-		print("Phase Shift Charge + 1!")
+	elif upgrade_name == "Phase Shift":
+		if GameManager.phase_shift_level < 3:
+			GameManager.phase_shift_level += 1
+			GameManager.phase_shift_charges += 1
+			print("Phase Shift Charge + 1!")
+			
+	elif upgrade_name == "Blink":
+		if GameManager.blink_level < 3:
+			GameManager.blink_level += 1
+			GameManager.blink_charges += 1
+			print("Blink Charge + 1")
+			
+	elif upgrade_name == "3 Card Monty":
+		if not GameManager.three_card_monty_unlocked:
+			GameManager.three_card_monty_unlocked = true
+			print("3-Card Monty! Swindler's Discount! -1SP")
+
+	elif upgrade_name == "Fractured Self":
+		if not GameManager.fractured_self_unlocked:
+			GameManager.fractured_self_unlocked = true
+			
+	elif upgrade_name == "Dazzle Pie":
+		if not GameManager.dazzle_pie_unlocked and not GameManager.masters_blueprint_unlocked:
+			GameManager.dazzle_pie_unlocked = true
+			print("Dazzle Pie loading...yum")
+			apply_cosmetic_upgrades()
 
 	#-----------THE PLANNER--------#
 	elif upgrade_name == "diet_slith":
@@ -1001,10 +1028,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		if not GameManager.fruit_foresight_unlocked:
 			GameManager.fruit_foresight_unlocked = true
 			show_ghost_fruit()
-	elif upgrade_name == "ghost_tail":
-		if GameManager.ghost_tail_level < 3:
-			GameManager.ghost_tail_level += 1
-			print("Ghost Tail Upgraded! New ghost length: ", GameManager.ghost_tail_data[GameManager.ghost_tail_level])
+	
 	elif upgrade_name == "sovereign_trail":
 		if GameManager.sovereign_trail_level < 2:
 			GameManager.sovereign_trail_level += 1
@@ -1201,6 +1225,24 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			is_safe_position = true
 			
 	return potential_position
+
+
+func apply_cosmetic_upgrades():
+	# This function will check for any purely visual upgrades
+	if GameManager.dazzle_pie_unlocked:
+		$UI/DazzleOverlay.visible = true
+		var mat = ShaderMaterial.new()
+		mat.shader = trippy_grid_shader
+		background_rect.material = mat
+	else:
+		var mat = null
+		background_rect.color = Color("#222222")
+		$UI/DazzleOverlay.visible = false
+		
+	if GameManager.masters_blueprint_unlocked:
+		apply_blueprint_visuals()
+
+
 
 func apply_blueprint_visuals():
 	# This function only runs if the upgrade is unlocked.
@@ -1511,7 +1553,25 @@ func update_tail_visuals():
 		# This check is crucial to prevent crashes if a node is missing
 		if not is_instance_valid(fill_sprite) or not is_instance_valid(collision_shape):
 			continue
-
+		
+		
+		# --- FRACTURED SELF LOGIC ---
+		# First, we check if we have the ultimate upgrade.
+		if GameManager.fractured_self_unlocked:
+			# "3 solid, 3 blank" idea.
+			# We use integer division and the modulo operator to find the chunk number.
+			var chunk_index = i / 3
+			if chunk_index % 2 != 0: # Every other chunk is invisible
+				segment.visible = false
+				collision_shape.disabled = true
+				continue # Skip the rest of the logic for this invisible segment
+			else:
+				# If it's part of a visible chunk, make sure it's enabled.
+				segment.visible = true
+				collision_shape.disabled = false
+		
+		
+		
 		# Check if this segment should be a ghost using the same logic as our collision check
 		var is_ghost = (i >= total_segments - ghost_segment_count)
 		
@@ -1687,6 +1747,59 @@ func perform_sacrificial_molt():
 	# After a short delay, fade it back to its normal color
 	head_tween.tween_property(head, "modulate", head.head_color, 0.3).set_delay(0.2)
 	
+
+
+func perform_blink():
+	print("BLINK ACTIVATED!")
+	
+	# 1. Calculate the path of the blink
+	var blink_path = []
+	for i in range(1, 4): # Check all 3 tiles in front
+		var check_pos = head.global_position + (head.current_direction * (i * tile_size))
+		blink_path.append(check_pos)
+
+	# 2. Check if the entire path is safe
+	for pos in blink_path:
+		var grid_pos = Vector2i((pos - tile_offset) / tile_size)
+		# We check against walls, obstacles, and our own SOLID body parts
+		if is_position_out_of_bounds(pos) or is_position_on_dividing_wall(grid_pos) or is_position_occupied(pos):
+			print("Blink failed: Path is blocked.")
+			play_screen_flash(Color.CRIMSON)
+			return
+
+	# 3. If it's safe, spend the charge and perform the teleport
+	GameManager.blink_charges -= 1
+	update_hud()
+	
+	# The final destination is the last point in our path
+	var destination = blink_path.back()
+	
+
+	# We now manually update the entire snake's position instantly.
+	
+	# First, store all the old positions of the head and body
+	var old_positions = [head.global_position]
+	for segment in snake_body_segments:
+		old_positions.append(segment.global_position)
+		
+	# Now, move the head to the new destination
+	head.global_position = destination
+	
+	# Finally, loop through the body and move each segment to the
+	# position of the segment that was in front of it.
+	for i in range(snake_body_segments.size()):
+		snake_body_segments[i].global_position = old_positions[i]
+	
+	# Since we moved everything manually, we still need to update the visuals
+	update_tail_visuals()
+	
+	# Add a cool visual effect
+	play_screen_flash(Color.WHITE)
+	
+		
+
+
+
 func play_screen_flash(flash_color: Color):
 	var flash_overlay = $UI/FlashOverlay
 	

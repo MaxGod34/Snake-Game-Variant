@@ -118,6 +118,10 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.sacrificial_molt_unlocked and not GameManager.sacrificial_molt_used_this_run:
 			main.perform_sacrificial_molt()
 			
+	if event.is_action_pressed("activate_blink"):
+		if GameManager.blink_charges > 0:
+			main.perform_blink()
+			
 
 # --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():

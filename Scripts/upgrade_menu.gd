@@ -138,9 +138,9 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Ghost Tail": return GameManager.ghost_tail_level
 		"Phase Shift": return GameManager.phase_shift_level
 		"Blink": return GameManager.blink_level
-		"3-Card Monty": return 1 if GameManager.three_card_monty_unlocked else 0
+		"3 Card Monty": return 1 if GameManager.three_card_monty_unlocked else 0
 		"Fractured Self": return 1 if GameManager.fractured_self_unlocked else 0
-		"Dazzle Camouflage": return 1 if GameManager.dazzle_camouflage_unlocked else 0
+		"Dazzle Pie": return 1 if GameManager.dazzle_pie_unlocked else 0
 	return 0
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
@@ -208,6 +208,14 @@ func update_button_display(upgrade_key):
 		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
 		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
 		var final_cost = max(1, base_cost + diff_mod + class_mod)
+		
+		if GameManager.three_card_monty_unlocked:
+			if upgrade_key != "3 Card Monty":
+				final_cost -= 1 if GameManager.three_card_monty_unlocked else 0
+		
+		final_cost = max(1, final_cost)
+		
+		
 		button_node.text = rules["display_name"] + "\n(" + str(final_cost) + " SP)"
 		button_node.disabled = false
 	
@@ -233,6 +241,13 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
 		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
 		var final_cost = max(1, base_cost + diff_mod + class_mod)
+		
+		if GameManager.three_card_monty_unlocked:
+			if upgrade_key != "3 Card Monty":
+				final_cost -= 1 if GameManager.three_card_monty_unlocked else 0
+			
+		final_cost = max(1, final_cost)
+		
 		
 		if GameManager.skill_points >= final_cost:
 			GameManager.skill_points -= final_cost
