@@ -108,7 +108,7 @@ func _ready():
 	#-----SET OBSTACLSE-----#
 	setup_initial_obstacles()
 	#------SPAWN FRUITS----#
-	for i in range(GameManager.max_fruits_on_screen):
+	for i in range(get_effective_max_fruits()):
 		update_fruit_prediction()
 		spawn_fruit()
 	
@@ -423,8 +423,8 @@ func update_hud():
 	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
 	#---------Stats Vbox-------#
 	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
-	$UI/HUDContainer/StatsVbox/FriutRewardLabel.text = "Growth: " + str(GameManager.fruit_reward)
-	$UI/HUDContainer/StatsVbox/MaxFruitsLabel.text = "# of fruits: " + str(GameManager.max_fruits_on_screen)
+	$UI/HUDContainer/StatsVbox/FriutRewardLabel.text = "Growth: " + str(get_effective_fruit_reward())
+	$UI/HUDContainer/StatsVbox/MaxFruitsLabel.text = "# of fruits: " + str(get_effective_max_fruits())
 	
 		#------------ABILITY LABELS----------#
 	var burrow_label = $UI/HUDContainer/StatsVbox/AbilitySlot1
@@ -529,10 +529,19 @@ func spawn_fruit():
 			golden_chance *= 2.0
 			print("BORDER CZAR BONUS! Golden chance is now: ", golden_chance)
 
+	# --- NEW LOGIC ---
+	# Now, check for the Last Stand state
+	if GameManager.last_stand_unlocked and GameManager.extra_lives == 0:
+		print("LAST STAND ACTIVE! Golden chance boosted! ")
+		# Add a massive flat bonus to the chance. Let's say +40%.
+		golden_chance += 0.40
+
+
 	# --- Spawning Logic ---
 	var fruit = null
 	if randf() < golden_chance:
 		fruit = preload("res://Scenes/golden_fruit.tscn").instantiate()
+		print("Golden Fruit Spawned! Odds: ", golden_chance * 100.0, "%")
 	else:
 		fruit = fruit_scene.instantiate()
 		
@@ -805,15 +814,19 @@ func level_up():
 	
 	#SP SCALE
 	if GameManager.chosen_class != "the_alchemist":
-		if GameManager.player_level >= 10:
-			GameManager.skill_points += 3
-			GameManager.total_sp_this_run += 3
-		elif GameManager.player_level >= 5:
-			GameManager.skill_points += 2
-			GameManager.total_sp_this_run += 2
-		else:
-			GameManager.skill_points += 1
-			GameManager.total_sp_this_run += 1
+		var sp_to_add = 0
+		if GameManager.player_level >= 10: sp_to_add = 3
+		elif GameManager.player_level >= 5: sp_to_add = 2
+		else: sp_to_add = 1
+		
+
+		# If prestige mode is active, double the reward!
+		if GameManager.new_game_s_plus_active:
+			sp_to_add *= 2
+			print("NEW GAME S+ BONUS! Gained %s SP!" % sp_to_add)
+			
+		GameManager.skill_points += sp_to_add
+		
 	#EXP/SCORE SCALE
 	if GameManager.player_level >= 10:
 		GameManager.score_needed_for_next_level += 15
@@ -888,7 +901,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	if upgrade_name == "elephant_sized_portions":
 		GameManager.es_portions_level += 1
 		GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
-		print("ESP bought! New Fruit Reward: ", GameManager.fruit_reward)
+		print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
 		#---More Mice---#
 	elif upgrade_name == "more_mice":
 			if GameManager.more_mice_level < 6: # Your max level
@@ -898,7 +911,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				# Instead of just spawning one fruit, we now check how many are
 				# on screen vs. how many SHOULD be, and spawn the difference.
 				var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
-				var target_fruit_count = GameManager.max_fruits_on_screen
+				var target_fruit_count = get_effective_max_fruits()
 				var fruits_to_spawn = target_fruit_count - current_fruit_count
 				
 				print("Player bought More Mice! Spawning %s new fruit." % fruits_to_spawn)
@@ -1040,7 +1053,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			GameManager.garden_weaver_unlocked = true
 	#--------SURVIVOR--------#
 	elif upgrade_name == "Mulligan Munchie":
-		if GameManager.extra_lives > 10:
+		if GameManager.extra_lives < 10:
 			GameManager.extra_lives += 1
 			print("Extra life added, thanks to ol' Mulligan!")
 	
@@ -1052,17 +1065,19 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		if not GameManager.last_stand_unlocked:
 			GameManager.last_stand_unlocked = true
 	elif upgrade_name == "Sacrificial Molt": 
-		if not GameManager.sacrificial_molt_used:
-			GameManager.sacrificial_molt_used = true
+		if not GameManager.sacrificial_molt_unlocked:
+			GameManager.sacrificial_molt_unlocked = true
 	elif upgrade_name == "Death Defied": 
 		if not GameManager.death_defied_unlocked:
 			GameManager.death_defied_unlocked = true
 	elif upgrade_name == "Martyrdom": 
 		if not GameManager.martyrdom_unlocked:
 			GameManager.martyrdom_unlocked = true
-	elif upgrade_name =="Ouroboros Loop": 
-		if not GameManager.ouroboros_loop_active:
-			GameManager.ouroboros_loop_active = true
+	elif upgrade_name == "New Game S+": 
+		if not GameManager.new_game_s_plus_active:
+			GameManager.new_game_s_plus_active = true
+			GameManager.current_garden = 1
+			SceneTransition.transition_to("res://Scenes/main.tscn")
 					
 			
 	update_hud()
@@ -1076,13 +1091,22 @@ func on_snake_ate_food(fruit):
 	
 	var was_bounty_target = fruit.is_bounty_target
 	
+	
+	if GameManager.segments_to_restore > 0:
+		print("Phoenix Dawn triggered! Restoring segments.")
+		# Grow by the restored amount IN ADDITION to the normal growth
+		grow_snake(GameManager.segments_to_restore)
+		# Reset the counter so it only happens once
+		GameManager.segments_to_restore = 0
+	
+	
 	head.check_for_afterburner()
 	
 	# --- Check for all fruit states ---
 	if was_bounty_target:
 		# SUCCESS: You ate the correct fruit.
 		print("BOUNTY COLLECTED!")
-		segments_to_add = GameManager.max_fruits_on_screen * GameManager.fruit_reward
+		segments_to_add = get_effective_max_fruits() * get_effective_fruit_reward()
 		GameManager.is_bounty_active = false
 	elif GameManager.is_bounty_active:
 		# FAILURE: You ate the wrong fruit. Cancel the bounty.
@@ -1096,7 +1120,7 @@ func on_snake_ate_food(fruit):
 				f.scale = Vector2(1, 1)
 				f.get_node("FillSprite").modulate = Color.GOLD if f is GoldenFruit else Color.RED
 				break
-		segments_to_add = GameManager.fruit_reward
+		segments_to_add = get_effective_fruit_reward()
 	else:
 		# If no bounty is active, calculate rewards normally.
 		var growth_multiplier = 1
@@ -1107,7 +1131,7 @@ func on_snake_ate_food(fruit):
 				sp_reward += 1
 		elif fruit.has_method("ripen") and fruit.is_ripe:
 			growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
-		segments_to_add = GameManager.fruit_reward * growth_multiplier
+		segments_to_add = get_effective_fruit_reward() * growth_multiplier
 
 	# --- Apply rewards ---
 	GameManager.skill_points += sp_reward
@@ -1122,7 +1146,7 @@ func on_snake_ate_food(fruit):
 				f.active_tween.kill()
 			f.queue_free()
 		# Now it's safe to respawn everything.
-		for i in range(GameManager.max_fruits_on_screen):
+		for i in range(get_effective_max_fruits()):
 			update_fruit_prediction()
 			spawn_fruit()
 	else:
@@ -1260,31 +1284,109 @@ func is_any_body_part_at(check_pos: Vector2) -> bool:
 			return true # Found a body part here.
 	return false # No parts found.
 
-func add_body_segment_at(position: Vector2):
-	var new_segment = create_colored_segment(position)
+func add_body_segment_at(spawn_pos: Vector2):
+	var new_segment = create_colored_segment(spawn_pos)
 	add_child(new_segment)
 	snake_body_segments.append(new_segment)
+
+
+func _start_game_over_sequence():
+	var final_score = snake_body_segments.size() + 1
+	# Check if the player has the martyrdom upgrade.
+	if GameManager.martyrdom_unlocked:
+		print("MARTYRDOM! A final, glorious harvest!")
+		$UI/CountdownLabel.text = "MARTRYDOM! HARVEST OF " + str(get_effective_fruit_reward() * get_effective_max_fruits()) + "!"
+		# Get a list of all fruit currently on the screen.
+		var fruits_on_screen = get_tree().get_nodes_in_group("fruits")
+		var segments_to_add = 0
+		
+		# For each fruit, calculate its value and add it to a total.
+		for fruit in fruits_on_screen:
+			if fruit is GoldenFruit:
+				segments_to_add += 2
+			elif fruit.has_method("ripen") and fruit.is_ripe:
+				var multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
+				segments_to_add += get_effective_fruit_reward() * multiplier
+			else:
+				segments_to_add += get_effective_fruit_reward()
+			
+		final_score += segments_to_add
+		
+		var last_pos = head.global_position
+		if not snake_body_segments.is_empty():
+			last_pos = snake_body_segments.back().global_position
+			
+		# Create a visual explosion of dummy segments
+		for i in range(segments_to_add):
+			var dummy_segment = body_scene.instantiate()
+			# We don't add these to the main snake_body_segments array.
+			# They are purely for show.
+			dummy_segment.position = last_pos
+			# Disable their collision so they don't cause issues
+			dummy_segment.get_node("CollisionShape2D").disabled = true
+			add_child(dummy_segment)
+			
+			# Create a tween to make them fly outwards and fade away
+			var tween = create_tween()
+			var end_pos = last_pos + Vector2(randf_range(-100, 100), randf_range(-100, 100))
+			tween.tween_property(dummy_segment, "position", end_pos, 0.5)
+			tween.parallel().tween_property(dummy_segment, "modulate:a", 0.0, 0.5)
+			tween.tween_callback(dummy_segment.queue_free)
+
+		# Update the score MANUALLY based on the martyrdom growth
+		$UI/HUDContainer/BottomGrid/ScoreLabel.text = "Score: " + str(final_score)
+		$UI/GameOverScreen.get_node("ScoreLabel").text = "Score: " + str(final_score)
+		# Add a cool visual effect here, like a screen flash!
+		play_screen_flash(Color.CRIMSON)
+		
+		# Wait for the visual effect to play out
+		await get_tree().create_timer(0.7).timeout
+
+	# Now, proceed with the normal game over sequence.
+	print("Game Over!")
+	
+	await SceneTransition.play_cover_animation("spiral")
+	$UI/GameOverScreen.visible = true
+	game_is_over.emit(final_score)
+	await SceneTransition.uncover_screen("spiral")
+
+
+
 	
 func game_over():
 	if GameManager.extra_lives > 0:
 		use_extra_life()
-	else:
-		is_game_over = true
-		head.move_timer.stop()
-		print("Game Over!")
+		GameManager.has_died_this_garden = true
+		return
 		
-		await SceneTransition.play_cover_animation("spiral")
-		$UI/GameOverScreen.visible = true
-		var final_score = snake_body_segments.size() + 1
-		game_is_over.emit(final_score)
-		await SceneTransition.uncover_screen("spiral")
+	is_game_over = true
+	head.move_timer.stop()
+		
+	call_deferred("_start_game_over_sequence")
+
 		
 		
-		
+func get_effective_fruit_reward() -> int:
+	var reward = GameManager.fruit_reward
+	# If we have the upgrade, add the bonus from our death counter
+	if GameManager.death_defied_unlocked:
+		reward += GameManager.times_died_this_run
+	return reward
+
+func get_effective_max_fruits() -> int:
+	var max_fruits = GameManager.max_fruits_on_screen
+	# If we have the upgrade, add the bonus from our death counter
+	if GameManager.death_defied_unlocked:
+		max_fruits += GameManager.times_died_this_run
+	return max_fruits
+
 
 func use_extra_life():
+	GameManager.times_died_this_run += 1
 	GameManager.has_died_this_garden = true
 	print("Used an extra life!")
+	
+	var segments_before_death = snake_body_segments.size()
 	
 	# 1. Stop the snake and start the fade to black
 	head.move_timer.stop()
@@ -1298,9 +1400,28 @@ func use_extra_life():
 		var segment_to_remove = snake_body_segments.pop_back()
 		segment_to_remove.queue_free()
 	
+	if GameManager.phoenix_dawn_unlocked:
+		var segments_lost = segments_before_death - snake_body_segments.size()
+		# Store 25% of the lost amount, rounded down
+		GameManager.segments_to_restore = floor(segments_lost * 0.25)
+		print("Phoenix Dawn active! %s segments will be restored." % GameManager.segments_to_restore)
+	
+	
 	var start_grid_pos = Vector2(grid_width / 4, grid_height / 4)
 	head.position = (start_grid_pos * tile_size) + tile_offset
 	on_snake_head_moved(head.position)
+	
+	# After resetting the snake, check if we need to add more fruit
+	# because of the Death Defied buff.
+	var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
+	var target_fruit_count = get_effective_max_fruits() # Use our smart helper
+	var fruits_to_spawn = target_fruit_count - current_fruit_count
+	
+	if fruits_to_spawn > 0:
+		print("Death Defied grants %s extra fruit!" % fruits_to_spawn)
+		for i in range(fruits_to_spawn):
+			spawn_fruit()
+	
 	
 	# 3. Give a moment of invincibility
 	GameManager.is_phasing = true
@@ -1364,8 +1485,8 @@ func is_position_occupied(check_pos: Vector2) -> bool:
 
 func is_position_out_of_bounds(check_pos: Vector2) -> bool:
 	var grid_pos = (check_pos - tile_offset) / tile_size
-	if grid_pos.x < 0 or grid_pos.x > grid_width or \
-	   grid_pos.y < 0 or grid_pos.y > grid_height:
+	if grid_pos.x < 0 or grid_pos.x >= grid_width or \
+	   grid_pos.y < 0 or grid_pos.y >= grid_height:
 		return true
 	return false
 
@@ -1380,7 +1501,7 @@ func start_countdown() -> void:
 	countdown.text = "1"
 	await get_tree().create_timer(1.0).timeout
 	# GIVE THE GAME SOME PERSONALITY AND RANDOMNESS
-	var go_messages = ["SNAKE OFF!", "GET GROWING", "FEED THE BEAST!"]
+	var go_messages = ["SNAKE OFF!", "GET GROWING", "FEED THE BEAST!", "MUNCHA MUNCHA", "FEEL THE BURN", "I CAN'T HEAR YOU", "0, -1, jk"]
 	countdown.text = go_messages.pick_random()
 	await get_tree().create_timer(1.0).timeout
 	# HIDE THE LABEL AND START THE GAME!
@@ -1470,6 +1591,8 @@ func perform_garden_weave():
 	# 2. This array will keep track of the new positions we've chosen
 	#    to prevent spawning two fruits in the same new spot.
 	var new_positions = []
+	
+	play_screen_flash(Color.RED)
 
 	# 3. Loop through each existing fruit and give it a new home.
 	for fruit in fruit_nodes:
@@ -1572,3 +1695,61 @@ func _on_pocket_garden_timer_timeout():
 	GameManager.active_pocket_garden_rect = null
 	for child in $PocketGardenContainer.get_children():
 		child.queue_free()
+
+
+func perform_sacrificial_molt():
+	var current_body_length = snake_body_segments.size()
+	
+	# We need at least 2 body segments to be able to halve it.
+	if current_body_length < 2:
+		print("Molt failed: Snake is too short!")
+		return
+
+	print("SACRIFICIAL MOLT ACTIVATED!")
+	
+	# Set the flag so it can't be used again this run
+	GameManager.sacrificial_molt_used_this_run = true
+	
+	# 1. Calculate how many segments to remove
+	var segments_to_remove = floor(current_body_length / 2.0)
+	
+	# 2. Loop that many times, destroying the tail
+	for i in range(segments_to_remove):
+		# Make sure we don't try to remove from an empty array
+		if not snake_body_segments.is_empty():
+			snake_body_segments.pop_back().queue_free()
+
+	# 3. Grant the reward
+	GameManager.extra_lives += 1
+	
+	# 4. Update all UI to reflect the changes
+	update_score_display()
+	update_hud()
+	
+	# Optional: Add a cool visual/sound effect here!
+	# --- NEW VISUAL FEEDBACK ---
+	# Play our new screen flash effect
+	play_screen_flash(Color.GOLD)
+	
+	# Also make the snake's head pulse with golden light
+	var head_tween = create_tween()
+	head_tween.tween_property(head, "modulate", Color.ORANGE_RED, 0.2)
+	# After a short delay, fade it back to its normal color
+	head_tween.tween_property(head, "modulate", head.head_color, 0.3).set_delay(0.2)
+	
+	
+	
+func play_screen_flash(flash_color: Color):
+	var flash_overlay = $UI/FlashOverlay
+	
+	# Set the color and make it semi-transparent
+	flash_overlay.color = Color(flash_color.r, flash_color.g, flash_color.b, 0.4)
+	flash_overlay.visible = true
+	
+	
+	
+	# Create an animation to fade it out quickly
+	var tween = create_tween()
+	tween.tween_property(flash_overlay, "color:a", 0.0, 0.4).set_ease(Tween.EASE_IN)
+	# When the animation finishes, hide the overlay again
+	tween.tween_callback(flash_overlay.hide)

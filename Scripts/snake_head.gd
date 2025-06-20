@@ -113,11 +113,16 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.pocket_garden_charges > 0:
 			main.create_pocket_garden()
 			
+	if event.is_action_pressed("activate_molt"):
+		# Check all conditions before allowing the ability to fire
+		if GameManager.sacrificial_molt_unlocked and not GameManager.sacrificial_molt_used_this_run:
+			main.perform_sacrificial_molt()
+			
 
 # --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():
 	var next_position = global_position + (current_direction * tile_size)
-	var next_grid_pos = Vector2i((next_position - main.tile_offset) / main.tile_size)
+
 	
 	
 	# --- Collision Checks ---
@@ -159,6 +164,10 @@ func on_move_timer_timeout():
 
 # --- SIGNAL HANDLERS ---
 func _on_head_area_area_entered(area):
+	
+	if main.is_game_over:
+		return
+	
 	if area is Fruit or area is GoldenFruit:
 		emit_signal("ate_fruit", area)
 		return

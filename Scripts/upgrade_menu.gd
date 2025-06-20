@@ -71,17 +71,26 @@ func update_all_displays():
 	# This powerful loop updates every single upgrade button automatically.
 	for upgrade_key in GameManager.upgrade_data.keys():
 		update_button_display(upgrade_key)
+	
+	var ng_plus_button = find_upgrade_button("New Game S+")
+	if is_instance_valid(ng_plus_button):
+		var can_prestige = (GameManager.current_garden == 5 and GameManager.times_died_this_run == 0)
+		ng_plus_button.get_parent().visible = can_prestige
+		if can_prestige:
+			update_button_display("New Game S+")
 
 # --- HELPER FUNCTIONS  ---
 
 # This helper finds any button by its key, no matter which tab it's in.
 func find_upgrade_button(upgrade_key: String):
 	# We build the expected button name from the key.
-	# e.g., "increase_speed" -> "IncreaseSpeedButton"
-	var button_name = upgrade_key.to_pascal_case() + "Button"
+	# e.g., "Edge Lord" -> "EdgeLordButton"
+	var button_name = upgrade_key.replace(" ", "").to_pascal_case() + "Button"
 	
-	# find_child() is good
+	# find_child() is the correct recursive search function for Godot 4.
 	var button = find_child(button_name, true, false)
+	if not is_instance_valid(button):
+		print_debug("Warning: Could not find button named '", button_name, "'")
 	return button
 
 # This helper gets the correct current level for any given upgrade.
@@ -123,10 +132,10 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Mulligan Munchie": return GameManager.extra_lives
 		"Phoenix Dawn": return 1 if GameManager.phoenix_dawn_unlocked else 0
 		"Last Stand": return 1 if GameManager.last_stand_unlocked else 0
-		"Sacrificial Molt": return 1 if GameManager.sacrificial_molt_used else 0
+		"Sacrificial Molt": return 1 if GameManager.sacrificial_molt_unlocked else 0
 		"Death Defied": return 1 if GameManager.death_defied_unlocked else 0
 		"Martyrdom": return 1 if GameManager.martyrdom_unlocked else 0
-		"Ouroboros Loop": return 1 if GameManager.ouroboros_loop_active else 0
+		"New Game S+": return 1 if GameManager.new_game_s_plus_active else 0
 	return 0
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
@@ -146,9 +155,12 @@ func update_stats_tab():
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
 		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: " + str(GameManager.total_sp_this_run) + " SP"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"
-		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden + 1]["score_goal"])
-		side_stats_panel.get_node("NextGardenObstacles#Label").text = "# of obstacles next garden: " + str(GameManager.garden_data[GameManager.current_garden + 1]["obstacle_count"])
-		
+
+		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.garden_data[min(GameManager.current_garden + 1, 5)]["score_goal"])
+		side_stats_panel.get_node("NextGardenObstacles#Label").text = "# of obstacles next garden: " + str(GameManager.garden_data[min(GameManager.current_garden + 1, 5)]["obstacle_count"])
+		if GameManager.current_garden == 5:
+			side_stats_panel.get_node("NextGardenGoalLabel").visible = false
+			side_stats_panel.get_node("NextGardenObstacles#Label").visible = false
 
 func update_skill_points_label():
 	sp_label.text = "Skill Points: " + str(GameManager.skill_points)

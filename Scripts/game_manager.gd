@@ -24,6 +24,7 @@ var score_needed_for_next_level = 5
 var score_at_level_start = 0
 var fruits_eaten_this_run: int = 0
 var total_sp_this_run: int = 0
+var segments_to_restore = 0
 #----Upgrade Data Tracking----#
 var fruit_reward = 1
 var max_fruits_on_screen = 1
@@ -118,16 +119,15 @@ var masters_blueprint_unlocked = false
 var shatter_reality_unlocked = false
 #------------------------------------#
 #---------SURVIVOR PATH----------#
-	#-------Extra Life Shit-------------#
 var extra_lives = 0
 var phoenix_dawn_unlocked = false
 var last_stand_unlocked = false
-var sacrificial_molt_used = false
+var sacrificial_molt_used_this_run = false
 var sacrificial_molt_unlocked = false
 var death_defied_unlocked = false
 var martyrdom_unlocked = false
 var times_died_this_run = 0
-var ouroboros_loop_active = false
+var new_game_s_plus_active = false 
 
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
@@ -172,10 +172,7 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_burrow_charges": 1, # +1 SP cost
 			"increase_phase_charges": 1,  # +1 SP cost
-			"increase_grid_size": 2,      # +2 SP cost
-			"buy_extra_life": 2,           # +2 SP cost
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -189,6 +186,9 @@ var class_data = {
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
 			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	},
 	"warlock": {
@@ -203,10 +203,7 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_burrow_charges": 1,
 			"increase_phase_charges": 1,
-			"increase_grid_size": 0,
-			"buy_extra_life": 1,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -220,6 +217,9 @@ var class_data = {
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
 			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	},
 	"inchworm": {
@@ -234,10 +234,7 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_burrow_charges": 1, # +1 SP cost
 			"increase_phase_charges": 1,  # +1 SP cost
-			"increase_grid_size": -1,      # Cheaper 1 (min. 1)
-			"buy_extra_life": 2,           # +2 SP cost
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -250,7 +247,10 @@ var class_data = {
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
-			"Shatter Reality": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	},
 	"phoenix_coil": {
@@ -265,10 +265,7 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_burrow_charges": 0,
 			"increase_phase_charges": 0,
-			"increase_grid_size": 1,
-			"buy_extra_life": -5, # Makes the 10 SP cost only 5
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -282,6 +279,9 @@ var class_data = {
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
 			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	},
 	"sidewinder": {
@@ -296,10 +296,7 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_burrow_charges": -3,
 			"increase_phase_charges": -1,
-			"increase_grid_size": 1,
-			"buy_extra_life": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -313,6 +310,9 @@ var class_data = {
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
 			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	},
 	"the_zealot": {
@@ -327,10 +327,7 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
-			"increase_burrow_charges": 0,
 			"increase_phase_charges": 0,
-			"increase_grid_size": 0,
-			"buy_extra_life": 0,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -344,6 +341,9 @@ var class_data = {
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
 			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	},
 	"the_alchemist": {
@@ -358,10 +358,7 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_burrow_charges": -1,
 			"increase_phase_charges": -1,
-			"increase_grid_size": 2,
-			"buy_extra_life": -1,
 			# Planner Path Modifiers
 			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
@@ -375,6 +372,9 @@ var class_data = {
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Survey Land": 0,
 			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Master's Blueprint": 0, 
 			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
 		}
 	}
 }
@@ -399,7 +399,6 @@ var upgrade_data = {
 		"display_name": "Last Stand",
 		"description": "While on your final life,\nthe chance for Golden Apples to spawn is significantly increased.",
 		"costs": [3], "max_level": 1,
-		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
 	},
 	"Sacrificial Molt": {
 		"display_name": "Sacrificial Molt",
@@ -419,8 +418,8 @@ var upgrade_data = {
 		"costs": [5], "max_level": 1,
 		"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
 	},
-	"Ouroboros Loop": {
-		"display_name": "Ouroboros Loop",
+	"New Game S+": {
+		"display_name": "New Game S+",
 		"description": "PRESTIGE! If you reach the final Garden without dying,\nyou may choose to restart at Garden 1 with all upgrades\nand double SP gain.",
 		"costs": [1], "max_level": 1,
 		# The prerequisite for this one will be handled in code, not here.
@@ -647,6 +646,7 @@ func start_game():
 	fruits_eaten_this_run = 0
 	total_sp_this_run = 0
 	total_sp_this_run = skill_points
+	segments_to_restore = 0
 	
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
@@ -701,12 +701,12 @@ func start_game():
 	# SURVIVOR PATH
 	phoenix_dawn_unlocked = false
 	last_stand_unlocked = false
-	sacrificial_molt_used = false
+	sacrificial_molt_used_this_run = false
 	sacrificial_molt_unlocked = false
 	death_defied_unlocked = false
 	martyrdom_unlocked = false
 	times_died_this_run = 0
-	ouroboros_loop_active = false
+	new_game_s_plus_active = false 
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
