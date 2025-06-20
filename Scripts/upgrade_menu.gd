@@ -96,11 +96,9 @@ func find_upgrade_button(upgrade_key: String):
 # This helper gets the correct current level for any given upgrade.
 func get_upgrade_level_from_key(upgrade_key):
 	match upgrade_key:
-		"increase_phase_charges": return GameManager.phase_shift_level
 		#---Planner---#
 		"diet_slith": return GameManager.diet_slith_level
 		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
-		"ghost_tail": return GameManager.ghost_tail_level
 		"sovereign_trail": return GameManager.sovereign_trail_level
 		"meditative_state": return GameManager.meditative_state_level
 		"garden_weaver": return 1 if GameManager.garden_weaver_unlocked else 0
@@ -136,6 +134,13 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Death Defied": return 1 if GameManager.death_defied_unlocked else 0
 		"Martyrdom": return 1 if GameManager.martyrdom_unlocked else 0
 		"New Game S+": return 1 if GameManager.new_game_s_plus_active else 0
+		#-----ILLUSIONIST-----#
+		"Ghost Tail": return GameManager.ghost_tail_level
+		"Phase Shift": return GameManager.phase_shift_level
+		"Blink": return GameManager.blink_level
+		"3-Card Monty": return 1 if GameManager.three_card_monty_unlocked else 0
+		"Fractured Self": return 1 if GameManager.fractured_self_unlocked else 0
+		"Dazzle Camouflage": return 1 if GameManager.dazzle_camouflage_unlocked else 0
 	return 0
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---

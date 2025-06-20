@@ -124,7 +124,6 @@ func _ready():
 	apply_persistent_upgrades() # Removed head_timer.start() here
 	apply_blueprint_visuals()
 	
-	
 func _process(delta):
 	# First, check for a "hard pause". If the tree is paused, do nothing at all.
 	if get_tree().paused:
@@ -218,8 +217,6 @@ func apply_persistent_upgrades():
 			var speed_mod = GameManager.class_data[GameManager.chosen_class]["speed_upgrade_mod"]
 			head.move_timer.wait_time *= speed_mod
 
-
-
 func open_upgrade_menu_with_transition():
 	# Stop the snake and block input
 	head.move_timer.stop()
@@ -270,9 +267,6 @@ func open_upgrade_menu_with_transition():
 	# Unblock input so the player can use the menu
 	$UI/InputBlocker.hide()
 
-
-
-
 func show_upgrade_menu():
 	# Stop the snake and block input
 	head.move_timer.stop()
@@ -304,8 +298,6 @@ func show_upgrade_menu():
 
 	transition_rect.visible = false
 
-
-
 func show_garden_complete_screen():
 	head.move_timer.stop()
 	var garden_id = GameManager.current_garden
@@ -316,7 +308,6 @@ func show_garden_complete_screen():
 	
 	$UI/GardenCompleteScreen.setup(garden_name, score, is_final_garden, is_final_win)
 	$UI/GardenCompleteScreen.visible = true
-
 
 func show_ghost_fruit():
 	# Remove any old ghost
@@ -329,8 +320,6 @@ func show_ghost_fruit():
 		# Find a safe spot for the GHOST and place it there.
 		ghost_fruit_instance.position = next_fruit_position
 		call_deferred("add_child", ghost_fruit_instance)
-
-# In main.gd
 
 func move_camera_to_quadrant(quadrant_index: int):
 	var final_camera_pos: Vector2
@@ -377,8 +366,6 @@ func update_camera_quadrant():
 		current_camera_quadrant = new_quadrant
 		move_camera_to_quadrant(current_camera_quadrant)
 
-
-
 func update_boundary_visuals():
 	
 	if GameManager.fold_space_unlocked:
@@ -396,8 +383,6 @@ func update_boundary_visuals():
 	boundary_indicator.position = Vector2.ZERO
 	background_rect.position = Vector2.ZERO
 	
-
-
 func update_hud():
 	# Update Level
 	$UI/HUDContainer/BottomGrid/LevelLabel.text = "Level: " + str(GameManager.player_level)
@@ -462,8 +447,6 @@ func update_hud():
 		pocket_garden_label.visible = true
 		pocket_garden_label.text = "Pocket Garden [G]: " + str(GameManager.pocket_garden_charges)
 
-	
-	
 
 func update_fruit_prediction():
 	next_fruit_position = calculate_safe_spawn_position()
@@ -505,7 +488,7 @@ func on_snake_head_moved(head_previous_position: Vector2):
 		garden_complete_is_pending = false # Reset the flag
 		show_garden_complete_screen() # Show the garden complete screen
 	
-		
+
 func spawn_fruit():
 	# Find a safe position first
 	var safe_position = calculate_safe_spawn_position()
@@ -556,8 +539,7 @@ func spawn_fruit():
 	fruit.position = safe_position # Use the safe position we already calculated
 	call_deferred("add_child", fruit)
 	print("Fruit spawned at a safe location.")
-	
-	
+
 
 func destroy_obstacle(obstacle_node):
 	# First, check if the obstacle is still valid (it might have already been destroyed by a shockwave)
@@ -613,7 +595,6 @@ func update_grid_dimensions():
 		grid_width = int(current_size.x)
 		grid_height = int(current_size.y)
 
-
 func rebuild_world_layout():
 	# The order of these calls is CRITICAL.
 	# 1. First, always calculate the correct grid dimensions.
@@ -628,9 +609,6 @@ func rebuild_world_layout():
 	# 4. Position the camera correctly.
 	move_camera_to_quadrant(0)
 
-# A new function to handle all initial obstacle spawning
-# In main.gd
-
 func setup_initial_obstacles():
 	spawned_obstacles.clear()
 	
@@ -640,7 +618,6 @@ func setup_initial_obstacles():
 	if GameManager.zoning_ordinance_level < 4:
 		for i in range(obstacle_count):
 			spawn_rock()
-
 
 func is_in_safe_zone(grid_pos: Vector2i) -> bool:
 	var zone_level = GameManager.zoning_ordinance_level
@@ -664,8 +641,6 @@ func is_in_safe_zone(grid_pos: Vector2i) -> bool:
 		return true
 		
 	return false
-
-
 
 func spawn_rock():
 	var rock = rock_scene.instantiate()
@@ -704,7 +679,6 @@ func spawn_rock():
 	spawned_obstacles.append(rock)
 	add_child(rock)
 
-
 func spawn_trail_piece(position: Vector2):
 	var trail_piece = ColorRect.new()
 	trail_piece.color = Color("LIGHT_CYAN", 0.3)
@@ -736,7 +710,6 @@ func grow_snake(segments_to_add: int):
 	# We only update the score display once at the very end.
 	update_score_display()
 
-
 func is_position_on_dividing_wall(grid_pos: Vector2i) -> bool:
 	# If Shatter Reality isn't unlocked, there are no dividing walls.
 	if not GameManager.shatter_reality_unlocked:
@@ -745,7 +718,6 @@ func is_position_on_dividing_wall(grid_pos: Vector2i) -> bool:
 	# get_cell_source_id returns -1 if the cell is empty.
 	# So, if it's NOT -1, it means there's a wall tile there.
 	return dividing_wall_tilemap.get_cell_source_id(0, grid_pos) != -1
-
 
 func setup_shattered_reality():
 	dividing_wall_tilemap.clear() # Clear any old walls
@@ -767,15 +739,11 @@ func setup_shattered_reality():
 		if x % dash_pattern < dash_pattern / 2:
 			dividing_wall_tilemap.set_cell(0, Vector2i(x, dividing_line_y), 0, Vector2i(0,0))
 
-
 func _update_snake_after_teleport(new_position: Vector2):
 	# Set the head's new position
 	head.global_position = new_position
 	# Now that the head has moved, we can safely update the body's position to follow it.
 	on_snake_head_moved(new_position)
-
-
-
 
 func update_upgrade_prompt():
 	# Show the prompt only if the player has SP to spend.
@@ -891,7 +859,6 @@ func _on_upgrade_menu_resume_game_pressed():
 	
 	$UI/InputBlocker.hide()
 	start_countdown()
-	
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
@@ -1165,7 +1132,6 @@ func on_snake_ate_food(fruit):
 	if head.can_reverse:
 		head.can_reverse = false
 
-
 func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> Vector2:
 	var potential_position: Vector2
 	var is_safe_position = false
@@ -1236,7 +1202,6 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			
 	return potential_position
 
-
 func apply_blueprint_visuals():
 	# This function only runs if the upgrade is unlocked.
 	if not GameManager.masters_blueprint_unlocked:
@@ -1275,8 +1240,6 @@ func apply_blueprint_visuals():
 		rock.get_node("FillSprite").modulate = Color.BLACK
 	update_tail_visuals()
 
-
-
 func is_any_body_part_at(check_pos: Vector2) -> bool:
 	# This function ignores ghost rules and just checks every segment.
 	for segment in snake_body_segments:
@@ -1288,7 +1251,6 @@ func add_body_segment_at(spawn_pos: Vector2):
 	var new_segment = create_colored_segment(spawn_pos)
 	add_child(new_segment)
 	snake_body_segments.append(new_segment)
-
 
 func _start_game_over_sequence():
 	var final_score = snake_body_segments.size() + 1
@@ -1350,9 +1312,6 @@ func _start_game_over_sequence():
 	game_is_over.emit(final_score)
 	await SceneTransition.uncover_screen("spiral")
 
-
-
-	
 func game_over():
 	if GameManager.extra_lives > 0:
 		use_extra_life()
@@ -1364,8 +1323,6 @@ func game_over():
 		
 	call_deferred("_start_game_over_sequence")
 
-		
-		
 func get_effective_fruit_reward() -> int:
 	var reward = GameManager.fruit_reward
 	# If we have the upgrade, add the bonus from our death counter
@@ -1379,7 +1336,6 @@ func get_effective_max_fruits() -> int:
 	if GameManager.death_defied_unlocked:
 		max_fruits += GameManager.times_died_this_run
 	return max_fruits
-
 
 func use_extra_life():
 	GameManager.times_died_this_run += 1
@@ -1434,12 +1390,10 @@ func use_extra_life():
 	# 5. Start the countdown
 	start_countdown()
 
-
 func update_score_display():
 	var score = (snake_body_segments.size() + 1)
 	$UI/HUDContainer/BottomGrid/ScoreLabel.text = "Score: " + str(score)
 
-	
 func create_colored_segment(position: Vector2) -> Node2D:
 	var segment = body_scene.instantiate()
 	segment.position = position
@@ -1462,7 +1416,6 @@ func positions_are_equal(pos1: Vector2, pos2: Vector2) -> bool:
 		return true
 	else:
 		return false
-
 
 func is_position_occupied(check_pos: Vector2) -> bool:
 	# Get how many segments at the end of the tail should be ghosts.
@@ -1535,7 +1488,6 @@ func _on_garden_complete_continue_pressed() -> void:
 		var bonus_sp = GameManager.class_data[p_class]["sp_on_perfect_garden"]
 		print("ZEALOT BONUS! +", bonus_sp, " SP for a perfect run!")
 		GameManager.skill_points += bonus_sp
-
 
 func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
@@ -1650,7 +1602,6 @@ func perform_autotomy(collided_segment):
 	update_score_display()
 	update_hud()
 
-
 func create_pocket_garden():
 	var level = GameManager.pocket_garden_level
 	var rules = GameManager.pocket_garden_data[level]
@@ -1696,7 +1647,6 @@ func _on_pocket_garden_timer_timeout():
 	for child in $PocketGardenContainer.get_children():
 		child.queue_free()
 
-
 func perform_sacrificial_molt():
 	var current_body_length = snake_body_segments.size()
 	
@@ -1736,8 +1686,6 @@ func perform_sacrificial_molt():
 	head_tween.tween_property(head, "modulate", Color.ORANGE_RED, 0.2)
 	# After a short delay, fade it back to its normal color
 	head_tween.tween_property(head, "modulate", head.head_color, 0.3).set_delay(0.2)
-	
-	
 	
 func play_screen_flash(flash_color: Color):
 	var flash_overlay = $UI/FlashOverlay

@@ -29,9 +29,6 @@ var segments_to_restore = 0
 var fruit_reward = 1
 var max_fruits_on_screen = 1
 
-	#-------New Phase Shift Upgrade Shit------#
-var phase_shift_level = 0
-var phase_shift_charges = 0
 
 	#----Active Ability Flags----#
 var burrow_is_active = false
@@ -42,8 +39,6 @@ var autotomy_is_active = false
 #------The Planner-------#
 var diet_slith_level = 0
 var fruit_foresight_unlocked = false
-var ghost_tail_level = 0
-var ghost_tail_data = [0, 7, 10, 15]
 var sovereign_trail_level = 0
 var meditative_state_level = 0
 var meditative_state_charges = 0
@@ -129,6 +124,16 @@ var martyrdom_unlocked = false
 var times_died_this_run = 0
 var new_game_s_plus_active = false 
 
+#-----------#illusionist------------#
+var ghost_tail_level = 0
+var ghost_tail_data = [0, 7, 10, 15, 20, 34] # Lvl 0, 1, 2, 3, 4, 5
+var phase_shift_level = 0
+var phase_shift_charges = 0
+var blink_level = 0
+var blink_charges = 0
+var three_card_monty_unlocked = false
+var fractured_self_unlocked = false
+var dazzle_camouflage_unlocked = false
 
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
@@ -172,9 +177,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_phase_charges": 1,  # +1 SP cost
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -203,9 +210,11 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_phase_charges": 1,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
@@ -234,9 +243,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_phase_charges": 1,  # +1 SP cost
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -265,9 +276,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_phase_charges": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -296,9 +309,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_phase_charges": -1,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -312,7 +327,9 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			
+			
 		}
 	},
 	"the_zealot": {
@@ -327,9 +344,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
-			"increase_phase_charges": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -358,9 +377,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
-			"increase_phase_charges": -1,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3-Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Camouflage": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "ghost_tail": 0, "sovereign_trail": 0,
+			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
 			"meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
@@ -381,6 +402,50 @@ var class_data = {
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+	#------ILLUSIONIST PATH-------#
+	"Ghost Tail": {
+		"display_name": "Ghost Tail",
+		"description": "Your last few tail segments become intangible.\nLvl 1: 7\nLvl 2: 10\nLvl 3: 15\nLvl 4: 20\nLvl 5: 34",
+		"costs": [2, 2, 3, 3, 4],
+		"max_level": 5
+	},
+	"Phase Shift": {
+		"display_name": "Phase Shift",
+		"description": "Active Ability: Become intangible to your own body for a short time.",
+		"costs": [3, 4, 5],
+		"max_level": 3,
+		"exclusive_with": "Blink" # Can't have both
+	},
+	"Blink": {
+		"display_name": "Blink",
+		"description": "Active Ability: Instantly teleport forward 3 tiles.",
+		"costs": [3, 4, 5],
+		"max_level": 3,
+		"prerequisite": {"upgrade": "Ghost Tail", "level": 2},
+		"exclusive_with": "Phase Shift"
+	},
+	"3-Card Monty": {
+		"display_name": "3-Card Monty",
+		"description": "Permanently reduces the SP cost of all other upgrades by 1 (to a minimum of 1).",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Ghost Tail", "level": 3}
+	},
+	"Fractured Self": {
+		"display_name": "Fractured Self",
+		"description": "Your body is now rendered in 3-segment chunks with a 1-tile gap between each, allowing you to pass through.",
+		"costs": [8],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
+	},
+	"Dazzle Camouflage": {
+		"display_name": "Dazzle Camouflage",
+		"description": "A permanent, purely aesthetic transformation that adds a chromatic aberration effect to the game.",
+		"costs": [8],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Ghost Tail", "level": 5},
+		"exclusive_with": "Master's Blueprint"
+	},
 	
 		# --- SURVIVOR PATH ---
 	"Mulligan Munchie": {
@@ -490,12 +555,7 @@ var upgrade_data = {
 		"prerequisite": {"upgrade": "Edge Lord", "level": 5}
 		# This one is independent and has no 'exclusive_with' key
 	},
-	"increase_phase_charges": {
-		"display_name": "Phase Shift Ability",
-		"description": "Phase through yourself...whenever you feel like it!\nPress e to pass through your own body for 2 seconds!",
-		"costs": [3, 4, 5],
-		"max_level": 3
-	},
+
 	#------------------------THE ACROBAT--------------------------#
 	"Slither Sauce": {
 		"display_name": "Slither Sauce",
@@ -553,13 +613,6 @@ var upgrade_data = {
 		"costs": [3], # One-time purchase
 		"max_level": 1,
 		"prerequisite": {"upgrade": "diet_slith", "level": 2} # Requires Diet Slith Lvl 2
-	},
-	"ghost_tail": {
-		"display_name": "Ghost Tail",
-		"description": "Makes your tail specifically passable\nLvl 1: 7 seg, Lvl 2: 10 seg, Lvl 3: 15 seg!",
-		"costs": [2, 2, 3], # 3 levels (e.g., 7 -> 10 -> 15 segments)
-		"max_level": 3,
-		"prerequisite": {"upgrade": "diet_slith", "level": 2}
 	},
 	"sovereign_trail": {
 		"display_name": "Sovereign Trail",
@@ -648,14 +701,13 @@ func start_game():
 	total_sp_this_run = skill_points
 	segments_to_restore = 0
 	
+	#----BASE REWARD AND ENGINE---#
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
 
 	
-	phase_shift_level = 0
-	phase_shift_level = 0
-	extra_lives = 0
-	extra_lives += p_class_data["start_lives"]
+
+	
 	#------Reset Planner Upgrades-----#
 	diet_slith_level = 0
 	fruit_foresight_unlocked = false
@@ -699,6 +751,8 @@ func start_game():
 	masters_blueprint_unlocked = false
 	shatter_reality_unlocked = false
 	# SURVIVOR PATH
+	extra_lives = 0
+	extra_lives += p_class_data["start_lives"]
 	phoenix_dawn_unlocked = false
 	last_stand_unlocked = false
 	sacrificial_molt_used_this_run = false
@@ -706,7 +760,16 @@ func start_game():
 	death_defied_unlocked = false
 	martyrdom_unlocked = false
 	times_died_this_run = 0
-	new_game_s_plus_active = false 
+	new_game_s_plus_active = false
+	# Illusionist Path
+	ghost_tail_level = 0
+	phase_shift_level = 0
+	phase_shift_charges = 0
+	blink_level = 0
+	blink_charges = 0
+	three_card_monty_unlocked = false
+	fractured_self_unlocked = false
+	dazzle_camouflage_unlocked = false
 	
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
