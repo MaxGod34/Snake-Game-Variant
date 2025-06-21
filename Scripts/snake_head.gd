@@ -32,6 +32,9 @@ var juke_and_jive_is_active: bool = false
 #------Overdrive--------
 @onready var overdrive_particles = $OverdriveParticles
 var is_overdrive_active = false
+#--------THE ROCKEATERS--------#
+@onready var kinetic_feast_timer: Timer = $KineticFeastTimer
+@onready var stones_burden_timer: Timer = $StonesBurdenTimer
 
 # --- GODOT'S BUILT-IN FUNCTIONS ---
 
@@ -46,9 +49,11 @@ func _ready():
 	phase_timer.timeout.connect(_on_phase_timer_timeout)
 	meditative_state_timer.timeout.connect(_on_meditative_state_timer_timeout)
 	autotomy_timer.timeout.connect(_on_autotomy_timer_timeout)
+	kinetic_feast_timer.timeout.connect(_on_kinetic_feast_timer_timeout)
+	stones_burden_timer.timeout.connect(_on_stones_burden_timer_timeout)
 
 
-func _process(delta):
+func _process(_delta):
 
 	# This ability only works if the player has unlocked it and has an active combo.
 	if GameManager.overdrive_level == 0 or GameManager.current_combo == 0:
@@ -241,13 +246,47 @@ func _on_head_area_area_entered(area):
 		return
 		
 	if area is Rock:
-		if GameManager.tenderizer_charges > 0:
+		var chosen_path = GameManager.rockeater_type
+		
+		if chosen_path != "":
+			main.destroy_obstacle(area)
+			
+			match chosen_path:
+				"Rockmuncher":
+					print("ROCKMUNCHER! Gained +2 growth")
+					main.grow_snake(2)
+				"Geode Cracker":
+					print("GEODE CRACKER! Gained + 1 SP")
+				"Kinetic Feast":
+					activate_kinetic_feast()
+				"Stones Burden":
+					activate_stones_burden()
+		
+		elif GameManager.tenderizer_charges > 0:
 			GameManager.tenderizer_charges -= 1
 			main.update_hud()
 			main.destroy_obstacle(area)
 		else:
 			emit_signal("hit_self")
 		return
+
+func activate_stones_burden():
+	print("STONE'S BURDEN! Slow down and phase activated.")
+	GameManager.is_phasing = true # Become intangible to self
+	$FillSprite.modulate = Color.DARK_SLATE_GRAY
+	# Temporarily make the move timer much slower.
+	move_timer.wait_time *= 1.5 # 50% slower
+	# Start a timer to turn it off.
+	$StonesBurdenTimer.start(4.0)
+
+
+func activate_kinetic_feast():
+	print("KINETIC FEAST! Speed boost activated.")
+	# Temporarily make the move timer faster.
+	move_timer.wait_time *= 0.5 # 50% faster
+	# Start a timer to turn it off.
+	$KineticFeastTimer.start(3.0)
+
 
 
 func activate_overdrive():
@@ -348,3 +387,14 @@ func reset_head_color():
 	not GameManager.burrow_is_active and not GameManager.autotomy_is_active:
 		
 		get_node("FillSprite").modulate = head_color
+
+
+func _on_kinetic_feast_timer_timeout() -> void:
+	print("Kinetic Feast has ended")
+	main.apply_persistent_upgrades()
+
+
+func _on_stones_burden_timer_timeout() -> void:
+	GameManager.is_phasing = false
+	reset_head_color()
+	main.apply_persistent_upgrades()

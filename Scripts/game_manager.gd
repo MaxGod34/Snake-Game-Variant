@@ -40,6 +40,7 @@ var is_zenith_active = false
 #------The Planner-------#
 var diet_slith_level = 0
 var fruit_foresight_unlocked = false
+var geological_survey_unlocked = false
 var sovereign_trail_level = 0
 var meditative_state_level = 0
 var meditative_state_charges = 0
@@ -150,6 +151,16 @@ var zenith_charges = 0
 var current_combo = 0
 var combo_is_pure = true
 
+
+# --- Geomancer Path ---
+var fertile_ground_level = 0
+var mineral_rich_soil_level = 0
+var tectonic_shift_level = 0
+var heavy_foundation_level = 0
+# We need to know which Rockeater upgrade they chose
+var rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
+var calculated_risk_unlocked = false
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -192,6 +203,10 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -199,13 +214,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
@@ -219,7 +234,7 @@ var class_data = {
 	"warlock": {
 		"name": "Warlock",
 		"description": "Grows faster by default.\nFruit-based upgrades are cheaper.",
-		"start_length": 3,
+		"start_length": 1,
 		"start_speed": 0.25,
 		"start_fruit_reward": 2, # Starts with a better reward
 		"start_max_fruits": 1,
@@ -228,6 +243,10 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -235,13 +254,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
@@ -264,6 +283,10 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -271,13 +294,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
@@ -300,6 +323,10 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -307,13 +334,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
@@ -336,6 +363,10 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -343,13 +374,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
@@ -374,6 +405,10 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -381,13 +416,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
@@ -410,6 +445,10 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
 			#Frenzy Modifiers
 			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
 			"Juggernaut": 0, "Zenith": 0,
@@ -417,13 +456,13 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0, "sovereign_trail": 0,
-			"meditative_state": 0, "garden_weaver": 0,
+			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
+			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
 			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
-			"Slither Sauce": 0, "Tenderizer": 0, "Juke & Jive": 0,
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 			# Architect Modifiers
 			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Survey Land": 0,
@@ -438,6 +477,55 @@ var class_data = {
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+	# --- GEOMANCER PATH ---
+	"Fertile Ground": {
+		"display_name": "Fertile Ground", "max_level": 3, "costs": [2, 3, 4],
+		"description": "Each level grants +1 to Max Fruits but adds +5 rocks to every garden."
+	},
+	"Mineral Rich Soil": {
+		"display_name": "Mineral-Rich Soil", "max_level": 3, "costs": [2, 3, 4],
+		"description": "Each level grants +1 to Fruit Reward but adds +5 rocks to every garden."
+	},
+	"Tectonic Shift": {
+		"display_name": "Tectonic Shift", "max_level": 3, "costs": [2, 3, 4],
+		"description": "Each level grants a speed boost but adds +5 rocks to every garden."
+	},
+	"Heavy Foundation": {
+		"display_name": "Heavy Foundation", "max_level": 3, "costs": [2, 3, 4],
+		"description": "Each level grants a speed decrease but adds +5 rocks to every garden."
+	},
+
+	# --- GEOMANCER TIER 2 (ROCKEATERS) ---
+	"Rockmuncher": {
+		"display_name": "Rockmuncher", "max_level": 1, "costs": [4],
+		"description": "You can now eat rocks, which grant +2 growth.",
+		"prerequisite": {"upgrade": "Fertile Ground", "level": 3}
+	},
+	"Geode Cracker": {
+		"display_name": "Geode Cracker", "max_level": 1, "costs": [4],
+		"description": "You can now eat rocks, which have a chance to grant +1 SP.",
+		"prerequisite": {"upgrade": "Mineral Rich Soil", "level": 3}
+	},
+	"Kinetic Feast": {
+		"display_name": "Kinetic Feast", "max_level": 1, "costs": [4],
+		"description": "You can eat rocks and\nyou get a speed boost after eating the rock",
+		"prerequisite": {"upgrade": "Tectonic Shift", "level": 3}
+	},
+	"Stones Burden": {
+		"display_name": "Stone's Burden", "max_level": 1, "costs": [4],
+		"description": "You can now eat rocks.\nEating a rock temporarily slows you down even further,\nbut it also makes you immune to self-collision for 3 seconds.",
+		"prerequisite": {"upgrade": "Heavy Foundation", "level": 3}
+	},
+
+	# --- GEOMANCER KEYSTONE ---
+	"Calculated Risk": {
+		"display_name": "Calculated Risk", "max_level": 1, "costs": [8],
+		"description": "Doubles the SP bonus from Geological Survey.",
+		"prerequisite": {"upgrade": "Geological Survey", "level": 1} 
+		# The check for having a Rockeater upgrade will be handled in code
+	},
+	
+	
 	# --- FRENZY PATH ---
 	"Sugar Rush": {
 		"display_name": "Sugar Rush",
@@ -649,8 +737,8 @@ var upgrade_data = {
 		"max_level": 3,
 		"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
 	},
-	"Juke & Jive": {
-		"display_name": "Juke & Jive",
+	"Juke N Jive": {
+		"display_name": "Juke 'N Jive",
 		"description": "Changing direction 4 times in 1 second\nlets you phase through a single body segment\nGet groovin'",
 		"costs": [4],
 		"max_level": 1,
@@ -692,6 +780,12 @@ var upgrade_data = {
 		"costs": [3], # One-time purchase
 		"max_level": 1,
 		"prerequisite": {"upgrade": "diet_slith", "level": 2} # Requires Diet Slith Lvl 2
+	},
+	#New geological survey... ooo lala
+	"Geological Survey": {
+	"display_name": "Geological Survey", "max_level": 1, "costs": [4],
+	"description": "Gain bonus SP at the end of each Garden\nbased on how many rocks are left on screen.",
+	"prerequisite": {"upgrade": "diet_slith", "level": 3}
 	},
 	"sovereign_trail": {
 		"display_name": "Sovereign Trail",
@@ -785,12 +879,20 @@ func start_game():
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
 
 	
-
+	# --- Geomancer Path ---
+	fertile_ground_level = 0
+	mineral_rich_soil_level = 0
+	tectonic_shift_level = 0
+	heavy_foundation_level = 0
+	# We need to know which Rockeater upgrade they chose
+	rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
+	calculated_risk_unlocked = false
 	
 	#------Reset Planner Upgrades-----#
 	diet_slith_level = 0
 	fruit_foresight_unlocked = false
 	ghost_tail_level = 0
+	geological_survey_unlocked = false
 	sovereign_trail_level = 0
 	meditative_state_level = 0
 	meditative_state_charges = 0

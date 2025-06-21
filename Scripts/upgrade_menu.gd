@@ -71,6 +71,8 @@ func update_all_displays():
 	# This powerful loop updates every single upgrade button automatically.
 	for upgrade_key in GameManager.upgrade_data.keys():
 		update_button_display(upgrade_key)
+		
+	
 	
 	var ng_plus_button = find_upgrade_button("New Game S+")
 	if is_instance_valid(ng_plus_button):
@@ -106,13 +108,14 @@ func get_upgrade_level_from_key(upgrade_key):
 		#---Planner---#
 		"diet_slith": return GameManager.diet_slith_level
 		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
+		"Geological Survey": return 1 if GameManager.geological_survey_unlocked else 0
 		"sovereign_trail": return GameManager.sovereign_trail_level
 		"meditative_state": return GameManager.meditative_state_level
 		"garden_weaver": return 1 if GameManager.garden_weaver_unlocked else 0
 		#-------Acrobat------#
 		"Slither Sauce": return GameManager.slither_sauce_level
 		"Tenderizer": return GameManager.tenderizer_level
-		"Juke & Jive": return 1 if GameManager.juke_and_jive_unlocked else 0
+		"Juke N Jive": return 1 if GameManager.juke_and_jive_unlocked else 0
 		"Afterburner": return GameManager.afterburner_level
 		"Pop Rocks": return 1 if GameManager.pop_rocks_unlocked else 0
 		"Autotomy": return 1 if GameManager.autotomy_unlocked else 0
@@ -148,6 +151,17 @@ func get_upgrade_level_from_key(upgrade_key):
 		"3 Card Monty": return 1 if GameManager.three_card_monty_unlocked else 0
 		"Fractured Self": return 1 if GameManager.fractured_self_unlocked else 0
 		"Dazzle Pie": return 1 if GameManager.dazzle_pie_unlocked else 0
+		# --- Geomancer Path ---
+		"Fertile Ground": return GameManager.fertile_ground_level
+		"Mineral Rich Soil": return GameManager.mineral_rich_soil_level
+		"Tectonic Shift": return GameManager.tectonic_shift_level
+		"Heavy Foundation": return GameManager.heavy_foundation_level
+		# For Rockeater upgrades, we check if it's the chosen type
+		"Rockmuncher": return 1 if GameManager.rockeater_type == "Rockmuncher" else 0
+		"Geode Cracker": return 1 if GameManager.rockeater_type == "Geode Cracker" else 0
+		"Kinetic Feast": return 1 if GameManager.rockeater_type == "Kinetic Feast" else 0
+		"Stones Burden": return 1 if GameManager.rockeater_type == "Stones Burden" else 0
+		"Calculated Risk": return 1 if GameManager.calculated_risk_unlocked else 0
 	return 0
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
@@ -205,6 +219,20 @@ func update_button_display(upgrade_key):
 	
 	button_node.disabled = not prereqs_met
 	if not prereqs_met: return
+
+
+	var rockeater_keys = ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]
+	# Check if the upgrade we are updating is one of the Rockeaters
+	if upgrade_key in rockeater_keys:
+		# Now, check if a choice has already been made
+		if GameManager.rockeater_type != "" and GameManager.rockeater_type != upgrade_key:
+			# If a choice was made and it wasn't THIS one, disable this button.
+			button_node.disabled = true
+			# Optional: Change the text to show it's locked.
+			button_node.text = "Path Chosen"
+			# We can return here to stop any further updates on this locked button.
+			return
+
 
 	# Cost and Text Update
 	if current_level >= rules["max_level"]:

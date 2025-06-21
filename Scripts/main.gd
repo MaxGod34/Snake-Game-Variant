@@ -25,6 +25,7 @@ var ghost_fruit_instance = null
 
 
 var time_since_last_fruit: float = 0.0
+@onready var last_fruit_label = $UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel
 
 
 
@@ -149,8 +150,7 @@ func _process(delta):
 		else:
 			time_string = "%02d.%d" % [seconds, tenths]
 		$UI/HUDContainer/StatsVbox/RunTimerLabel.text = "Run Time: " + time_string
-		
-		var last_fruit_label = $UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel
+
 		if GameManager.sugar_rush_unlocked and !$ComboTimer.is_stopped():
 			last_fruit_label.visible = true
 			last_fruit_label.text = "Combo Window: %.1f" % $ComboTimer.time_left
@@ -158,8 +158,7 @@ func _process(delta):
 			$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "TSLFruit: %.1f" % time_since_last_fruit
 		
 		# --- NEW JUGGERNAUT COMBO TIMER LOGIC ---
-	var combo_timer = $ComboTimer # Get a reference to the timer
-	var last_fruit_label = $UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel
+	
 	
 	if GameManager.sugar_rush_unlocked and not combo_timer.is_stopped():
 		last_fruit_label.visible = true
@@ -247,16 +246,18 @@ func apply_persistent_upgrades():
 	var base_speed = GameManager.class_data[p_class]["start_speed"] * GameManager.difficulty_data[difficulty]["speed_multiplier"]
 
 	# 2. Get the modification values.
-	var speed_mod = GameManager.class_data[p_class]["speed_upgrade_mod"]
-	var slither_sauce_lvl = GameManager.slither_sauce_level
+	var speed_up_mod = GameManager.class_data[p_class]["speed_upgrade_mod"]
+	var speed_up_level = GameManager.slither_sauce_level
+	var slow_down_level = GameManager.heavy_foundation_level + GameManager.diet_slith_level
 
-	# 3. Calculate the final speed using the power function.
-	# This applies the multiplier the correct number of times to the base speed.
-	var final_speed = base_speed * pow(speed_mod, slither_sauce_lvl)
+	# 3. Calculate the final speed using the power function for both speed-ups and slow-downs.
+	var final_speed = base_speed * pow(speed_up_mod, speed_up_level) * pow(1.1, slow_down_level)
 	
 	# 4. Set the timer's wait_time to the final calculated speed.
 	# We add a clamp to ensure it never gets TOO fast.
 	head.move_timer.wait_time = clamp(final_speed, 0.05, 1.0)
+	print("Speed updated. New wait time: ", head.move_timer.wait_time)
+
 
 
 
@@ -421,8 +422,8 @@ func update_boundary_visuals():
 	
 	# This function now resizes BOTH the boundary and the background.
 	var world_size_pixels = Vector2(grid_width * tile_size, grid_height * tile_size)
-	boundary_indicator.size = world_size_pixels
-	background_rect.size = world_size_pixels
+	boundary_indicator.set_deferred("size", world_size_pixels)
+	background_rect.set_deferred("size", world_size_pixels)
 	
 	# Ensure they are positioned at the top-left corner.
 	boundary_indicator.position = Vector2.ZERO
@@ -664,11 +665,20 @@ func rebuild_world_layout():
 func setup_initial_obstacles():
 	spawned_obstacles.clear()
 	
-	var obstacle_count = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
+	# 1. Start with the base number of rocks for the current garden.
+	var total_rocks_to_spawn = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
+	
+	# 2. Add the penalty from each of our Geomancer upgrades.
+	total_rocks_to_spawn += (GameManager.fertile_ground_level * 5)
+	total_rocks_to_spawn += (GameManager.mineral_rich_soil_level * 5)
+	total_rocks_to_spawn += (GameManager.tectonic_shift_level * 5)
+	total_rocks_to_spawn += (GameManager.heavy_foundation_level * 5)
+	
+	print("This garden will have %s rocks." % total_rocks_to_spawn)
 
-	# Only try to spawn rocks if Zoning Ordinance is not maxed out.
+	# 3. Now, loop for the final, correct number of times.
 	if GameManager.zoning_ordinance_level < 4:
-		for i in range(obstacle_count):
+		for i in range(total_rocks_to_spawn):
 			spawn_rock()
 
 func is_in_safe_zone(grid_pos: Vector2i) -> bool:
@@ -731,12 +741,12 @@ func spawn_rock():
 	spawned_obstacles.append(rock)
 	add_child(rock)
 
-func spawn_trail_piece(position: Vector2):
+func spawn_trail_piece(pos: Vector2):
 	var trail_piece = ColorRect.new()
 	trail_piece.color = Color("LIGHT_CYAN", 0.3)
 	trail_piece.size = Vector2(tile_size, tile_size)
 	# We subtract the offset because a ColorRect's origin is its top-left.
-	trail_piece.position = position - tile_offset
+	trail_piece.position = pos - tile_offset
 	
 	$TrailContainer.add_child(trail_piece)
 	trail_pieces.append({"node": trail_piece, "time_left": 5.0})
@@ -783,12 +793,12 @@ func setup_shattered_reality():
 	
 	# Draw the vertical dashed line
 	for y in range(grid_height):
-		if y % dash_pattern < dash_pattern / 2: # This creates the on/off pattern
+		if y % dash_pattern < dash_pattern / 2.0: # This creates the on/off pattern
 			dividing_wall_tilemap.set_cell(0, Vector2i(dividing_line_x, y), 0, Vector2i(0,0))
 
 	# Draw the horizontal dashed line
 	for x in range(grid_width):
-		if x % dash_pattern < dash_pattern / 2:
+		if x % dash_pattern < dash_pattern / 2.0:
 			dividing_wall_tilemap.set_cell(0, Vector2i(x, dividing_line_y), 0, Vector2i(0,0))
 
 func _update_snake_after_teleport(new_position: Vector2):
@@ -805,15 +815,14 @@ func update_upgrade_prompt():
 func update_progression():
 	
 	var current_score = snake_body_segments.size() + 1
-	# Level Up Check
-	var leveled_up_this_frame = false # Flag to check for multi-leveling in one fruit grab
+
 	
 	while current_score >= GameManager.score_needed_for_next_level:
 		print("Level Up! Score is: ", current_score)
 		# Award level and skill point(s)
 		level_up()
 		# Set a flag to know we should show the menu at a "later" time
-		leveled_up_this_frame = true
+
 
 	
 	# Garden Completion Check
@@ -936,13 +945,73 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Juggernaut":
 		if not GameManager.juggernaut_unlocked:
 			GameManager.juggernaut_unlocked = true
-			print("Juggernaut Ability purchased - debug")
+
 			
 	elif upgrade_name == "Zenith":
 		if not GameManager.zenith_unlocked:
 			GameManager.zenith_unlocked = true
 			GameManager.zenith_charges += 1
 			update_hud()
+	# --- GEOMANCER PATH ---
+	elif upgrade_name == "Fertile Ground":
+		if GameManager.fertile_ground_level < 3:
+			GameManager.fertile_ground_level += 1
+			spawn_fruit()
+			# The cost is adding more obstacles to the world!
+
+	elif upgrade_name == "Mineral Rich Soil":
+		if GameManager.mineral_rich_soil_level < 3:
+			GameManager.mineral_rich_soil_level += 1
+
+	elif upgrade_name == "Tectonic Shift":
+		if GameManager.tectonic_shift_level < 3:
+			GameManager.tectonic_shift_level += 1
+			apply_persistent_upgrades()
+
+	elif upgrade_name == "Heavy Foundation":
+		if GameManager.heavy_foundation_level < 3:
+			GameManager.heavy_foundation_level += 1
+			apply_persistent_upgrades()
+
+	# --- Rockeater Specialization ---
+	# check if a type has already been chosen.
+	elif upgrade_name in ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]:
+	# Check if a path has already been chosen. This is a safety check.
+		if GameManager.rockeater_type == "":
+			print("Geomancer path chosen: ", upgrade_name)
+			# Set the chosen path in our global manager
+			GameManager.rockeater_type = upgrade_name
+	
+	
+	elif upgrade_name == "Rockmuncher":
+		if GameManager.rockeater_type == "":
+			GameManager.rockeater_type = "Rockmuncher"
+		else:
+			print("You have already chosen a Rockeater path!")
+			
+	elif upgrade_name == "Geode Cracker":
+		if GameManager.rockeater_type == "":
+			GameManager.rockeater_type = "Geode Cracker"
+		else:
+			print("You have already chosen a Rockeater path!")
+			
+	elif upgrade_name == "Kinetic Feast":
+		if GameManager.rockeater_type == "":
+			GameManager.rockeater_type = "Kinetic Feast"
+		else:
+			print("You have already chosen a Rockeater path!")
+	
+	elif upgrade_name == "Stones Burden":
+		if GameManager.rockeater_type == "":
+			GameManager.rockeater_type = "Stones Burden"
+		else:
+			print("You have already chosen a Rockeater path!")
+			
+	elif upgrade_name == "Calculated Risk":
+		if not GameManager.calculated_risk_unlocked:
+			GameManager.calculated_risk_unlocked = true		
+			
+	
 	#-------------Glutton----------------#
 		#---ESP---#
 	elif upgrade_name == "elephant_sized_portions":
@@ -1005,7 +1074,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		if GameManager.tenderizer_level < 3:
 			GameManager.tenderizer_charges += 1
 			GameManager.tenderizer_level += 1
-	elif upgrade_name == "Juke & Jive":
+	elif upgrade_name == "Juke N Jive":
 		if not GameManager.juke_and_jive_unlocked:
 			GameManager.juke_and_jive_unlocked = true
 	elif upgrade_name == "Afterburner":
@@ -1107,6 +1176,11 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		if not GameManager.fruit_foresight_unlocked:
 			GameManager.fruit_foresight_unlocked = true
 			show_ghost_fruit()
+	
+	elif upgrade_name == "Geological Survey":
+		if not GameManager.geological_survey_unlocked:
+			GameManager.geological_survey_unlocked = true
+	
 	
 	elif upgrade_name == "sovereign_trail":
 		if GameManager.sovereign_trail_level < 2:
@@ -1238,7 +1312,7 @@ func on_snake_ate_food(fruit):
 				sp_reward += 1
 		elif fruit.has_method("ripen") and fruit.is_ripe:
 			growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
-		segments_to_add = get_effective_fruit_reward() * growth_multiplier * GameManager.current_combo
+		segments_to_add = get_effective_fruit_reward() * growth_multiplier * max(1,GameManager.current_combo)
 
 	# --- Apply rewards ---
 	GameManager.skill_points += sp_reward
@@ -1353,6 +1427,7 @@ func apply_cosmetic_upgrades():
 	else:
 		var mat = null
 		background_rect.color = Color("#222222")
+		background_rect.material = mat
 		$UI/DazzleOverlay.visible = false
 		
 	if GameManager.masters_blueprint_unlocked:
@@ -1521,7 +1596,7 @@ func use_extra_life():
 		print("Phoenix Dawn active! %s segments will be restored." % GameManager.segments_to_restore)
 	
 	
-	var start_grid_pos = Vector2(grid_width / 4, grid_height / 4)
+	var start_grid_pos = Vector2(grid_width / 4.0, grid_height / 4.0)
 	head.position = (start_grid_pos * tile_size) + tile_offset
 	on_snake_head_moved(head.position)
 	
@@ -1552,9 +1627,9 @@ func update_score_display():
 	var score = (snake_body_segments.size() + 1)
 	$UI/HUDContainer/BottomGrid/ScoreLabel.text = "Score: " + str(score)
 
-func create_colored_segment(position: Vector2) -> Node2D:
+func create_colored_segment(next_pos: Vector2) -> Node2D:
 	var segment = body_scene.instantiate()
-	segment.position = position
+	segment.position = next_pos
 	
 	if GameManager.masters_blueprint_unlocked:
 		segment.get_node("FillSprite").modulate = Color("AFEEEE")
@@ -1646,6 +1721,27 @@ func _on_garden_complete_continue_pressed() -> void:
 		var bonus_sp = GameManager.class_data[p_class]["sp_on_perfect_garden"]
 		print("ZEALOT BONUS! +", bonus_sp, " SP for a perfect run!")
 		GameManager.skill_points += bonus_sp
+		
+	 # --- GEOLOGICAL SURVEY LOGIC ---
+	# First, check if the player has the upgrade.
+	if GameManager.geological_survey_unlocked:
+		# Get the number of rocks left on the screen.
+		var remaining_rocks = spawned_obstacles.size()
+		
+		# Define the reward. Let's say +1 SP for every 5 rocks left.
+		var bonus_per_rock = 0.2 
+		
+		# Check for the synergy with our Geomancer keystone!
+		if GameManager.calculated_risk_unlocked:
+			bonus_per_rock *= 2.0 # Double the reward!
+			print("CALCULATED RISK! Geological Survey bonus is doubled!")
+
+		# Calculate the final SP reward, rounding down to the nearest whole number.
+		var bonus_sp = floori(remaining_rocks * bonus_per_rock)
+		
+		if bonus_sp > 0:
+			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_sp, remaining_rocks])
+			GameManager.skill_points += floori(bonus_sp)
 
 func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
@@ -1676,7 +1772,7 @@ func update_tail_visuals():
 		if GameManager.fractured_self_unlocked:
 			# "3 solid, 3 blank" idea.
 			# We use integer division and the modulo operator to find the chunk number.
-			var chunk_index = i / 3
+			var chunk_index = i / 3.0
 			if chunk_index % 2 != 0: # Every other chunk is invisible
 				segment.visible = false
 				collision_shape.disabled = true

@@ -70,4 +70,10 @@ scale_amount_min = 0.2
 scale_amount_max = 0.6
 color = Color(1, 0.721569, 0.290196, 1)
 
+[node name="KineticFeastTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="StonesBurdenTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="HeadArea" to="." method="_on_head_area_area_entered"]

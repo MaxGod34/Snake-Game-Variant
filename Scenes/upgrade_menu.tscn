@@ -116,11 +116,10 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 3
+current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -929,7 +928,7 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Juke&JiveRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat"]
+[node name="JukeNJiveRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat"]
 layout_direction = 2
 layout_mode = 1
 anchors_preset = -1
@@ -942,7 +941,7 @@ grow_horizontal = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="Juke&JiveButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat/Juke&JiveRow"]
+[node name="JukeNJiveButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat/JukeNJiveRow"]
 custom_minimum_size = Vector2(196, 80)
 layout_mode = 2
 size_flags_horizontal = 0
@@ -966,11 +965,11 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Juke & Jive 
 (1 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat/Juke&JiveRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat/JukeNJiveRow"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat/Juke&JiveRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Acrobat/JukeNJiveRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -1129,6 +1128,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Frenzy" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -2881,6 +2881,7 @@ theme_override_styles/panel = ExtResource("5_m70ya")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
+current_tab = 2
 tabs_position = 1
 deselect_enabled = true
 
@@ -3066,6 +3067,55 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/SovereignTrailRow/IndicatorContainer"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="GeologicalSurveyRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.14
+anchor_top = 0.375
+anchor_right = 0.15
+anchor_bottom = 0.375
+theme_override_constants/separation = 32
+
+[node name="GeologicalSurveyButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/GeologicalSurveyRow"]
+custom_minimum_size = Vector2(196, 80)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_disabled_color = Color(0.498039, 1, 0.831373, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.498039, 1, 0.831373, 1)
+theme_override_colors/font_hover_color = Color(0.498039, 1, 0.831373, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.498039, 1, 0.831373, 1)
+theme_override_colors/font_focus_color = Color(0.498039, 1, 0.831373, 1)
+theme_override_colors/font_pressed_color = Color(0.498039, 1, 0.831373, 1)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = ExtResource("8_fm0cu")
+theme_override_styles/disabled = ExtResource("12_s2rwv")
+theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
+theme_override_styles/hover = ExtResource("8_fm0cu")
+theme_override_styles/pressed = ExtResource("8_fm0cu")
+theme_override_styles/normal = ExtResource("11_s2rwv")
+text = "Geological Survey
+(1 SP)"
+icon_alignment = 1
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/GeologicalSurveyRow"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/GeologicalSurveyRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Planner/GeologicalSurveyRow/IndicatorContainer"]
 custom_minimum_size = Vector2(28, 28)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -3523,7 +3573,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Geomancer" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -3532,11 +3581,14 @@ metadata/_tab_index = 2
 [node name="IllusionistTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
+anchor_top = 0.02
 anchor_right = 1.0
+anchor_bottom = 0.02
 grow_horizontal = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 8
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
@@ -3549,17 +3601,19 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
 
-[node name="UpgradeRow7" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="CalculatedRiskRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.2
-anchor_bottom = 0.2
+anchor_left = 0.4
+anchor_top = 0.8
+anchor_right = 0.4
+anchor_bottom = 0.8
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow7"]
-custom_minimum_size = Vector2(160, 80)
+[node name="CalculatedRiskButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/CalculatedRiskRow"]
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3578,39 +3632,21 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Calculated Risk
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow7"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/CalculatedRiskRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow7/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/CalculatedRiskRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="FertileGroundRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.35
@@ -3619,8 +3655,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow"]
-custom_minimum_size = Vector2(160, 80)
+[node name="FertileGroundButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/FertileGroundRow"]
+custom_minimum_size = Vector2(208, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3639,39 +3675,33 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Fertile Ground
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/FertileGroundRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/FertileGroundRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/FertileGroundRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/FertileGroundRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="MineralRichSoilRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
@@ -3680,8 +3710,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow2"]
-custom_minimum_size = Vector2(160, 80)
+[node name="MineralRichSoilButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/MineralRichSoilRow"]
+custom_minimum_size = Vector2(208, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3700,39 +3730,33 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Mineral Rich Soil
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow2"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/MineralRichSoilRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow2/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/MineralRichSoilRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow2/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/MineralRichSoilRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow2/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/MineralRichSoilRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow2/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow3" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="TectonicShiftRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.65
@@ -3741,8 +3765,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow3"]
-custom_minimum_size = Vector2(160, 80)
+[node name="TectonicShiftButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/TectonicShiftRow"]
+custom_minimum_size = Vector2(208, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3761,39 +3785,33 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Tectonic Shift
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow3"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/TectonicShiftRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow3/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/TectonicShiftRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow3/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/TectonicShiftRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow3/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/TectonicShiftRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow3/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow4" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="HeavyFoundationRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.8
@@ -3802,8 +3820,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow4"]
-custom_minimum_size = Vector2(160, 80)
+[node name="HeavyFoundationButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/HeavyFoundationRow"]
+custom_minimum_size = Vector2(208, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3822,39 +3840,33 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Heavy Foundation
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow4"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/HeavyFoundationRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow4/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/HeavyFoundationRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow4/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/HeavyFoundationRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow4/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/HeavyFoundationRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow4/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow5" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="StonesBurdenRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -3865,8 +3877,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow5"]
-custom_minimum_size = Vector2(160, 80)
+[node name="StonesBurdenButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/StonesBurdenRow"]
+custom_minimum_size = Vector2(176, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3885,39 +3897,33 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Stone's Burden
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow5"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/StonesBurdenRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow5/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/StonesBurdenRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow5/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/StonesBurdenRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow5/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/StonesBurdenRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow6" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+[node name="KineticFeastRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -3928,8 +3934,8 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow6"]
-custom_minimum_size = Vector2(160, 80)
+[node name="KineticFeastButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/KineticFeastRow"]
+custom_minimum_size = Vector2(176, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
@@ -3948,33 +3954,141 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Kinetic Feast
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow6"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/KineticFeastRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow6/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/KineticFeastRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow6/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/KineticFeastRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow6/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/KineticFeastRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/UpgradeRow6/IndicatorContainer"]
+[node name="GeodeCrackerRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="GeodeCrackerButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/GeodeCrackerRow"]
+custom_minimum_size = Vector2(176, 80)
+layout_mode = 2
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = ExtResource("8_fm0cu")
+theme_override_styles/disabled = ExtResource("12_s2rwv")
+theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
+theme_override_styles/hover = ExtResource("8_fm0cu")
+theme_override_styles/pressed = ExtResource("8_fm0cu")
+theme_override_styles/normal = ExtResource("11_s2rwv")
+text = "Geode Cracker
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/GeodeCrackerRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/GeodeCrackerRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/GeodeCrackerRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/GeodeCrackerRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="RockmuncherRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
+layout_direction = 3
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.35
+anchor_right = 0.5
+anchor_bottom = 0.35
+grow_vertical = 2
+size_flags_horizontal = 0
+theme_override_constants/separation = 32
+
+[node name="RockmuncherButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/RockmuncherRow"]
+custom_minimum_size = Vector2(176, 80)
+layout_mode = 2
+size_flags_vertical = 5
+theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/focus = ExtResource("8_fm0cu")
+theme_override_styles/disabled = ExtResource("12_s2rwv")
+theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
+theme_override_styles/hover = ExtResource("8_fm0cu")
+theme_override_styles/pressed = ExtResource("8_fm0cu")
+theme_override_styles/normal = ExtResource("11_s2rwv")
+text = "Rockmuncher
+(3 SP)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/RockmuncherRow"]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 2
+
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/RockmuncherRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/RockmuncherRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/RockmuncherRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -4437,14 +4551,14 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Parasite" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
+[node name="Investments" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
 visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 4
 
-[node name="ParasiteTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="ParasiteTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -4463,7 +4577,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
 
-[node name="UpgradeRow7" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow7" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.2
@@ -4472,7 +4586,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow7"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow7"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4495,36 +4609,36 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow7"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow7"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow7/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow7/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow7/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow7/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow7/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow7/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow7/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow7/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.35
@@ -4533,7 +4647,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4556,36 +4670,36 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
@@ -4594,7 +4708,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow2"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow2"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4617,36 +4731,36 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow2"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow2"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow2/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow2/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow2/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow2/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow2/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow2/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow2/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow2/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow3" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow3" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.65
@@ -4655,7 +4769,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow3"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow3"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4678,36 +4792,36 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow3"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow3"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow3/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow3/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow3/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow3/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow3/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow3/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow3/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow3/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow4" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow4" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.8
@@ -4716,7 +4830,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow4"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow4"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4739,36 +4853,36 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow4"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow4"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow4/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow4/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow4/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow4/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow4/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow4/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow4/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow4/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow5" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow5" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -4779,7 +4893,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow5"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow5"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4802,36 +4916,36 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow5"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow5"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow5/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow5/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow5/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow5/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow5/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow5/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow5/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow5/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow6" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite"]
+[node name="UpgradeRow6" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
@@ -4842,7 +4956,7 @@ grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow6"]
+[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow6"]
 custom_minimum_size = Vector2(160, 80)
 layout_mode = 2
 size_flags_vertical = 5
@@ -4865,30 +4979,30 @@ theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Upgrade Button
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow6"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow6"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow6/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow6/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow6/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow6/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow6/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow6/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Parasite/UpgradeRow6/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Investments/UpgradeRow6/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -5421,7 +5535,7 @@ justification_flags = 35
 [node name="ResumeButton" type="Button" parent="."]
 custom_minimum_size = Vector2(160, 48)
 anchors_preset = -1
-anchor_left = 0.77
+anchor_left = 0.8
 anchor_top = 0.875
 anchor_right = 0.925
 anchor_bottom = 0.94
