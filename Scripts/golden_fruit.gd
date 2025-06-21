@@ -1,6 +1,7 @@
 extends Area2D
 
 class_name GoldenFruit
+var fruit_type = "GoldenFruit"
 
 var is_ripe = false
 var time_left_to_ripen: float = -1.0

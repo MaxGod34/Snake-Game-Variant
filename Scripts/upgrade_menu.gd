@@ -105,6 +105,14 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Lingering Rush": return GameManager.lingering_rush_level
 		"Juggernaut": return 1 if GameManager.juggernaut_unlocked else 0
 		"Zenith": return 1 if GameManager.zenith_unlocked else 0
+		#----Chef---#
+		"Golden Seed Extract": return GameManager.golden_seed_extract_level
+		"Exotic Seeds": return GameManager.exotic_seeds_level
+		"The Cookbook": return 1 if GameManager.the_cookbook_unlocked else 0
+		"Expanded Palate": return 1 if GameManager.expanded_palate_unlocked else 0
+		"Golden Glaze": return 1 if GameManager.golden_glaze_unlocked else 0
+		"Mise en Place": return 1 if GameManager.mise_en_place_unlocked else 0
+		"Custom Cuisine": return 1 if GameManager.custom_cuisine_unlocked else 0
 		#---Planner---#
 		"diet_slith": return GameManager.diet_slith_level
 		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0

@@ -91,7 +91,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(1080, 810)
+custom_minimum_size = Vector2(1088, 810)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("2_6gn5s")
 
@@ -116,10 +116,10 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -2881,7 +2881,7 @@ theme_override_styles/panel = ExtResource("5_m70ya")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 2
+current_tab = 3
 tabs_position = 1
 deselect_enabled = true
 
@@ -3573,6 +3573,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Geomancer" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -3585,7 +3586,7 @@ anchor_top = 0.02
 anchor_right = 1.0
 anchor_bottom = 0.02
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 8
@@ -3604,13 +3605,13 @@ text_direction = 1
 [node name="CalculatedRiskRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.4
+anchor_left = 0.375
 anchor_top = 0.8
 anchor_right = 0.4
 anchor_bottom = 0.8
 grow_vertical = 2
 size_flags_horizontal = 0
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="CalculatedRiskButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/CalculatedRiskRow"]
 custom_minimum_size = Vector2(224, 80)
@@ -3620,12 +3621,12 @@ theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3656,19 +3657,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="FertileGroundButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/FertileGroundRow"]
-custom_minimum_size = Vector2(208, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3711,19 +3712,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="MineralRichSoilButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/MineralRichSoilRow"]
-custom_minimum_size = Vector2(208, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3766,19 +3767,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="TectonicShiftButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/TectonicShiftRow"]
-custom_minimum_size = Vector2(208, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3821,19 +3822,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="HeavyFoundationButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/HeavyFoundationRow"]
-custom_minimum_size = Vector2(208, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3871,26 +3872,25 @@ layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.8
-anchor_right = 0.5
 anchor_bottom = 0.8
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="StonesBurdenButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/StonesBurdenRow"]
-custom_minimum_size = Vector2(176, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3935,19 +3935,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="KineticFeastButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/KineticFeastRow"]
-custom_minimum_size = Vector2(176, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -3992,19 +3992,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="GeodeCrackerButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/GeodeCrackerRow"]
-custom_minimum_size = Vector2(176, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -4049,19 +4049,19 @@ size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
 [node name="RockmuncherButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Geomancer/RockmuncherRow"]
-custom_minimum_size = Vector2(176, 80)
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.266667, 0.266667, 0.266667, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/focus = ExtResource("8_fm0cu")
 theme_override_styles/disabled = ExtResource("12_s2rwv")
 theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
@@ -4095,7 +4095,6 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="Chef" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -4104,9 +4103,11 @@ metadata/_tab_index = 3
 [node name="ChefTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_mode = 1
 anchors_preset = -1
+anchor_top = 0.02
 anchor_right = 1.0
+anchor_bottom = 0.02
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
@@ -4120,27 +4121,30 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
 
-[node name="UpgradeRow7" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="GoldenSeedExtractRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.2
+anchor_right = 0.05
 anchor_bottom = 0.2
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow7"]
-custom_minimum_size = Vector2(160, 80)
+[node name="GoldenSeedExtractButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenSeedExtractRow"]
+custom_minimum_size = Vector2(224, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4149,59 +4153,56 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Golden Seed Extract
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow7"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenSeedExtractRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow7/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenSeedExtractRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow7/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenSeedExtractRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow7/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenSeedExtractRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow7/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="ExoticSeedsRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.35
+anchor_right = 0.05
 anchor_bottom = 0.35
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow"]
-custom_minimum_size = Vector2(160, 80)
+[node name="ExoticSeedsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4210,59 +4211,68 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Exotic Seeds
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow2" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="Block5" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExoticSeedsRow/IndicatorContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="TheCookbookRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.1
 anchor_top = 0.5
+anchor_right = 0.1
 anchor_bottom = 0.5
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow2"]
-custom_minimum_size = Vector2(160, 80)
+[node name="TheCookbookButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/TheCookbookRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4271,59 +4281,44 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "The Cookbook
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow2"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/TheCookbookRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow2/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/TheCookbookRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow2/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow2/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow2/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow3" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="ExpandedPalateRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.1
 anchor_top = 0.65
+anchor_right = 0.1
 anchor_bottom = 0.65
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow3"]
-custom_minimum_size = Vector2(160, 80)
+[node name="ExpandedPalateButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExpandedPalateRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4332,59 +4327,62 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Expanded Palate
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow3"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExpandedPalateRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow3/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExpandedPalateRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow3/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExpandedPalateRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow3/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExpandedPalateRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow3/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/ExpandedPalateRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow4" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="GoldenGlazeRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.1
 anchor_top = 0.8
+anchor_right = 0.1
 anchor_bottom = 0.8
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow4"]
-custom_minimum_size = Vector2(160, 80)
+[node name="GoldenGlazeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenGlazeRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4393,61 +4391,63 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Golden Glaze
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow4"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenGlazeRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow4/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenGlazeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow4/IndicatorContainer"]
+[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenGlazeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow4/IndicatorContainer"]
+[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenGlazeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow4/IndicatorContainer"]
+[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/GoldenGlazeRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="UpgradeRow5" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="CustomCuisineRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.8
-anchor_right = 0.5
+anchor_right = 0.05
 anchor_bottom = 0.8
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow5"]
-custom_minimum_size = Vector2(160, 80)
+[node name="CustomCuisineButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/CustomCuisineRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4456,61 +4456,45 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Custom Cuisine
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow5"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/CustomCuisineRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow5/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/CustomCuisineRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow5/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="UpgradeRow6" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
+[node name="MiseenPlaceRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef"]
 layout_direction = 3
 layout_mode = 1
 anchors_preset = -1
+anchor_left = 0.05
 anchor_top = 0.65
-anchor_right = 0.5
+anchor_right = 0.05
 anchor_bottom = 0.65
 grow_vertical = 2
 size_flags_horizontal = 0
 theme_override_constants/separation = 32
 
-[node name="UpgradeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow6"]
-custom_minimum_size = Vector2(160, 80)
+[node name="MiseenPlaceButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/MiseenPlaceRow"]
+custom_minimum_size = Vector2(192, 80)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_hover_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.733333, 0.733333, 0.733333, 1)
 theme_override_colors/font_focus_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_colors/font_pressed_color = Color(0.74902, 0.596078, 1, 1)
 theme_override_constants/outline_size = 14
+theme_override_constants/line_spacing = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
@@ -4519,33 +4503,15 @@ theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
 theme_override_styles/hover = ExtResource("8_fm0cu")
 theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
-text = "Upgrade Button
+text = "Mise en Place
 (3 SP)"
 
-[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow6"]
+[node name="IndicatorContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/MiseenPlaceRow"]
 layout_mode = 2
 theme_override_constants/separation = 24
 alignment = 2
 
-[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block2" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block3" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow6/IndicatorContainer"]
-custom_minimum_size = Vector2(20, 20)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-
-[node name="Block4" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/UpgradeRow6/IndicatorContainer"]
+[node name="Block1" type="ColorRect" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs/Chef/MiseenPlaceRow/IndicatorContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 size_flags_horizontal = 4

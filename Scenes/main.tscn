@@ -161,7 +161,7 @@ text = "SNAKE OFF!"
 horizontal_alignment = 1
 
 [node name="HUDContainer" type="Panel" parent="UI"]
-modulate = Color(1, 1, 1, 0.607843)
+modulate = Color(1, 1, 1, 0.309804)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -495,6 +495,34 @@ theme_override_styles/normal = ExtResource("6_6bp64")
 text = "Lives: "
 vertical_alignment = 1
 
+[node name="CookbookUI" type="VBoxContainer" parent="UI/HUDContainer"]
+visible = false
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.08
+anchor_top = 0.7
+anchor_right = 0.08
+anchor_bottom = 0.7
+
+[node name="RecipeNameLabel" type="Label" parent="UI/HUDContainer/CookbookUI"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.54902)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = ExtResource("6_6bp64")
+text = "Simple Skewer:"
+vertical_alignment = 1
+
+[node name="IngredientsContainer" type="HBoxContainer" parent="UI/HUDContainer/CookbookUI"]
+custom_minimum_size = Vector2(196, 48)
+layout_mode = 2
+theme_override_constants/separation = 2
+alignment = 1
+
 [node name="ShopTransitionTileMap" type="TileMap" parent="UI"]
 z_index = 9
 tile_set = SubResource("TileSet_hptm8")
@@ -560,6 +588,11 @@ limit_bottom = 1920
 one_shot = true
 
 [node name="ZenithTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="FruitFloodTickTimer" type="Timer" parent="."]
+
+[node name="FruitFloodDurationTimer" type="Timer" parent="."]
 one_shot = true
 
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]

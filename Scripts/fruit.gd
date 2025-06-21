@@ -1,5 +1,6 @@
 extends Area2D
 class_name Fruit
+var fruit_type = "Fruit"
 
 # A variable to track the state of this specific fruit
 var is_ripe = false

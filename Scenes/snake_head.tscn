@@ -76,4 +76,7 @@ one_shot = true
 [node name="StonesBurdenTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="TempSpeedBoostTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="area_entered" from="HeadArea" to="." method="_on_head_area_area_entered"]

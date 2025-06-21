@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://byufsj10r5vr6"]
+
+[ext_resource type="Script" uid="uid://cfyyxegnj84h4" path="res://Scripts/dragon_fruit.gd" id="1_28eyy"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_28eyy"]
+[ext_resource type="Texture2D" uid="uid://psq4jgvn6heq" path="res://Assets/PNGs/snake_border.png" id="3_qg0p5"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="4_qg0p5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dajs1"]
+
+[node name="DragonFruit" type="Area2D"]
+modulate = Color(1, 0, 1, 1)
+script = ExtResource("1_28eyy")
+
+[node name="FillSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.95, 0.95)
+texture = ExtResource("2_28eyy")
+
+[node name="BorderSprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("3_qg0p5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+modulate = Color(0.71189, 0.989394, 1, 1)
+shape = SubResource("RectangleShape2D_dajs1")
+
+[node name="DFLabel" type="Label" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -10.5
+offset_top = -10.5
+offset_right = 10.5
+offset_bottom = 10.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.505882, 0.709804, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("4_qg0p5")
+theme_override_font_sizes/font_size = 20
+text = "DF"

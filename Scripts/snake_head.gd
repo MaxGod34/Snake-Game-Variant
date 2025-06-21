@@ -36,6 +36,8 @@ var is_overdrive_active = false
 @onready var kinetic_feast_timer: Timer = $KineticFeastTimer
 @onready var stones_burden_timer: Timer = $StonesBurdenTimer
 
+@onready var temp_speed_boost_timer: Timer = $TempSpeedBoostTimer
+
 # --- GODOT'S BUILT-IN FUNCTIONS ---
 
 func _ready():
@@ -51,6 +53,7 @@ func _ready():
 	autotomy_timer.timeout.connect(_on_autotomy_timer_timeout)
 	kinetic_feast_timer.timeout.connect(_on_kinetic_feast_timer_timeout)
 	stones_burden_timer.timeout.connect(_on_stones_burden_timer_timeout)
+	temp_speed_boost_timer.timeout.connect(_on_temp_speed_boost_timer_timeout)
 
 
 func _process(_delta):
@@ -126,8 +129,7 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.phase_shift_level > 0 and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
 			GameManager.is_phasing = true
 			GameManager.phase_shift_charges -= 1
-			phase_timer.start()
-			get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
+			activate_phase_shift(2.0)
 			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
 				GameManager.phase_shift_charges += 1
 			main.update_hud()
@@ -219,7 +221,7 @@ func _on_head_area_area_entered(area):
 	if main.is_game_over:
 		return
 	
-	if area is Fruit or area is GoldenFruit:
+	if area is Fruit or area is GoldenFruit or area is JumpingBean or area is GhostPepper or area is IronCherry or area is DragonFruit:
 		emit_signal("ate_fruit", area)
 		return
 	
@@ -287,6 +289,20 @@ func activate_kinetic_feast():
 	# Start a timer to turn it off.
 	$KineticFeastTimer.start(3.0)
 
+func activate_phase_shift(duration: float):
+	# This function can now be called from anywhere to start a phase shift.
+	
+	# Don't do anything if we are already phasing, to prevent bugs.
+	if GameManager.is_phasing:
+		return
+	
+	
+	print("PHASE SHIFTING for ", duration, " seconds!")
+	GameManager.is_phasing = true
+	$FillSprite.modulate = Color.DARK_MAGENTA
+	# We set the timer's duration directly here before starting it.
+	phase_timer.wait_time = duration
+	phase_timer.start()
 
 
 func activate_overdrive():
@@ -397,4 +413,20 @@ func _on_kinetic_feast_timer_timeout() -> void:
 func _on_stones_burden_timer_timeout() -> void:
 	GameManager.is_phasing = false
 	reset_head_color()
+	main.apply_persistent_upgrades()
+	
+	
+func activate_temporary_speed_boost(speed_multiplier: float, duration: float):
+	print("Recipe buff: SPEED BOOST for %s seconds!" % duration)
+	
+	# We apply the multiplier directly to the current wait_time
+	move_timer.wait_time *= speed_multiplier
+	
+	# Start the timer to turn the effect off
+	temp_speed_boost_timer.start(duration)
+
+# This runs when the timer is up
+func _on_temp_speed_boost_timer_timeout():
+	print("Speed boost has ended.")
+	# Restore the snake's speed to its normal, upgraded value
 	main.apply_persistent_upgrades()

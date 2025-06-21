@@ -32,6 +32,10 @@ var time_since_last_fruit: float = 0.0
 var head_scene = preload("res://Scenes/snake_head.tscn")
 var body_scene = preload("res://Scenes/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/fruit.tscn")
+var jumping_bean_scene = preload("res://Scenes/jumping_bean.tscn")
+var ghost_pepper_scene = preload("res://Scenes/ghost_pepper.tscn")
+var iron_cherry_scene = preload("res://Scenes/iron_cherry.tscn")
+var dragon_fruit_scene = preload("res://Scenes/dragon_fruit.tscn")
 var rock_scene = preload("res://Scenes/rock.tscn")
 var pause_scene = preload("res://Scenes/pause_menu.tscn")
 var trippy_grid_shader = preload("res://trippy_grid.gdshader")
@@ -43,6 +47,9 @@ var trippy_grid_shader = preload("res://trippy_grid.gdshader")
 @onready var dividing_wall_tilemap = $DividingWallTileMap
 @onready var camera = $Camera2D
 var current_camera_quadrant: int = 0
+@onready var cookbook_ui = $UI/HUDContainer/CookbookUI
+@onready var recipe_name_label = $UI/HUDContainer/CookbookUI/RecipeNameLabel
+@onready var ingredients_container = $UI/HUDContainer/CookbookUI/IngredientsContainer
 
 #-------SIGNALS--------#
 
@@ -120,13 +127,15 @@ func _ready():
 	
 	combo_timer.timeout.connect(_on_combo_timer_timeout)
 	$ZenithTimer.timeout.connect(_on_zenith_timer_timeout)
-	
+	$FruitFloodTickTimer.timeout.connect(_on_fruit_flood_tick_timer_timeout)
+	$FruitFloodDurationTimer.timeout.connect(_on_fruit_flood_duration_timer_timeout)
 	# --- FINAL SETUP & START ---
 	update_score_display()
 	update_hud()
 	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
 	apply_cosmetic_upgrades()
+	pick_new_recipe()
 	
 func _process(delta):
 	# First, check for a "hard pause". If the tree is paused, do nothing at all.
@@ -543,55 +552,77 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	
 
 func spawn_fruit():
-	# Find a safe position first
+	# First, always find a safe position before we decide what to spawn there.
 	var safe_position = calculate_safe_spawn_position()
 	
-	# ---BORDER CZAR LOGIC ---
-	# Convert our safe world position back to a grid position to check it.
-	var grid_pos = Vector2i((safe_position - tile_offset) / tile_size)
-	
-	var is_on_border = false
-	# Check if the position is within 3 tiles of any edge
-	if grid_pos.x < 3 or grid_pos.x >= grid_width - 3 or \
-	   grid_pos.y < 3 or grid_pos.y >= grid_height - 3:
-		is_on_border = true
-
-	# Now, we determine the chance of spawning a golden fruit.
-	var golden_chance = 0.0
-	if GameManager.golden_seeds_level > 0:
-		golden_chance = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["chance"]
-		# If we have Border Czar and we're on the border, double the chance!
-		if GameManager.border_czar_unlocked and is_on_border:
-			golden_chance *= 2.0
-			print("BORDER CZAR BONUS! Golden chance is now: ", golden_chance)
-
-	# --- NEW LOGIC ---
-	# Now, check for the Last Stand state
-	if GameManager.last_stand_unlocked and GameManager.extra_lives == 0:
-		print("LAST STAND ACTIVE! Golden chance boosted! ")
-		# Add a massive flat bonus to the chance. Let's say +40%.
-		golden_chance += 0.40
-
-
-	# --- Spawning Logic ---
+	# --- The New "Loot Table" ---
 	var fruit = null
-	if randf() < golden_chance:
+	
+	# --- STEP 1: Calculate Golden Fruit Chance ---
+	var golden_chance = 0.0
+	var extract_level = GameManager.golden_seed_extract_level
+	var golden_seed_level = GameManager.golden_seeds_level
+	if extract_level > 0:
+		# Get the base chance from our data array
+		golden_chance += GameManager.golden_seed_extract_data[extract_level]
+	if golden_seed_level> 0:
+		golden_chance += GameManager.golden_seeds_data[golden_seed_level]
+		
+	# Check for Border Czar synergy
+	if GameManager.border_czar_unlocked and is_on_border(safe_position):
+		golden_chance *= 2.0
+	
+	# Check for Last Stand synergy
+	if GameManager.last_stand_unlocked and GameManager.extra_lives == 0:
+		golden_chance += 0.40 # Add a flat 40% bonus
+		
+	# --- STEP 2: Roll for a Golden Fruit ---
+	if randf() < min(1, golden_chance):
+		print("A Golden Apple has appeared! (Chance: %.1f%%)" % (golden_chance * 100.0))
 		fruit = preload("res://Scenes/golden_fruit.tscn").instantiate()
-		print("Golden Fruit Spawned! Odds: ", golden_chance * 100.0, "%")
+	
+	# --- STEP 3: If no Golden Fruit, Roll for an Exotic Fruit ---
 	else:
+		var exotic_level = GameManager.exotic_seeds_level
+		var exotic_chance = 0.10 # Base 10% chance
+		if exotic_level >= 5:
+			exotic_chance = 0.20 # Level 5 upgrade doubles the chance
+			
+		if exotic_level > 0 and randf() < exotic_chance:
+			# Success! Let's pick one of the exotic fruits we have unlocked.
+			var unlocked_fruits = []
+			for i in range(1, exotic_level + 1):
+				unlocked_fruits.append(GameManager.exotic_seeds_data[i])
+			
+			var chosen_fruit_key = unlocked_fruits.pick_random()
+			
+			# Use a match statement to create the correct scene
+			match chosen_fruit_key:
+				"jumping_bean":
+					fruit = jumping_bean_scene.instantiate()
+				"ghost_pepper":
+					fruit = ghost_pepper_scene.instantiate()
+				"iron_cherry":
+					fruit = iron_cherry_scene.instantiate()
+				"dragon_fruit":
+					fruit = dragon_fruit_scene.instantiate()
+		else:
+			# --- STEP 4: If all else fails, spawn a normal fruit ---
+			fruit = fruit_scene.instantiate()
+	
+	if fruit == null:
 		fruit = fruit_scene.instantiate()
-		
+	
+	
+	# --- FINAL SETUP & SPAWNING ---
+	# Apply blueprint visuals if necessary
 	if GameManager.masters_blueprint_unlocked:
-		var blueprint_glow_color = Color("AFEEEE") # A bright, pale cyan
-		fruit.get_node("FillSprite").modulate = blueprint_glow_color
-		print("do u see cool fruit? you're supposed to!")
-	else:
-		print("spawning normal colored fruit!")
-		
+		fruit.get_node("FillSprite").modulate = Color("AFEEEE")
+			
+	# Add the chosen fruit to the game.
 	fruit.add_to_group("fruits")
-	fruit.position = safe_position # Use the safe position we already calculated
+	fruit.position = safe_position
 	call_deferred("add_child", fruit)
-	print("Fruit spawned at a safe location.")
 
 
 func destroy_obstacle(obstacle_node):
@@ -1011,6 +1042,37 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		if not GameManager.calculated_risk_unlocked:
 			GameManager.calculated_risk_unlocked = true		
 			
+	#----CHEF PATH----#
+	elif upgrade_name == "Golden Seed Extract":
+		if GameManager.golden_seed_extract_level < 3:
+			GameManager.golden_seed_extract_level += 1
+
+	elif upgrade_name == "Exotic Seeds":
+		if GameManager.exotic_seeds_level < 5:
+			GameManager.exotic_seeds_level += 1
+			
+	elif upgrade_name == "The Cookbook":
+		if not GameManager.the_cookbook_unlocked:
+			GameManager.the_cookbook_unlocked = true
+			pick_new_recipe()
+			
+	elif upgrade_name == "Expanded Palate":
+		if not GameManager.expanded_palate_unlocked:
+			GameManager.expanded_palate_unlocked = true
+			
+	elif upgrade_name == "Golden Glaze":
+		if not GameManager.golden_glaze_unlocked:
+			GameManager.golden_glaze_unlocked = true
+			
+	elif upgrade_name == "Mise en Place":
+		if not GameManager.mise_en_place_unlocked:
+			GameManager.mise_en_place_unlocked = true
+			
+	elif upgrade_name == "Custom Cuisine":
+		if not GameManager.custom_cuisine_unlocked:
+			GameManager.custom_cuisine_unlocked = true
+	
+	
 	
 	#-------------Glutton----------------#
 		#---ESP---#
@@ -1241,10 +1303,73 @@ func _on_zenith_timer_timeout():
 	update_hud()
 
 
+func apply_recipe_buff(buff_data: Dictionary):
+	match buff_data["type"]:
+		"speed_boost":
+			# This requires a new helper function in snake_head.gd
+			head.activate_temporary_speed_boost(buff_data["value"], buff_data["duration"])
+		"sp_boost":
+			GameManager.skill_points += buff_data["value"]
+			update_hud()
+		"full_recharge":
+			print("ABILITIES RECHARGED")
+			#RECHARGE ABILITIES IF UNLOCKED
+			if GameManager.burrow_level > 0:
+				GameManager.burrow_charges = GameManager.burrow_level
+			if GameManager.phase_shift_level > 0:
+				GameManager.phase_shift_charges = GameManager.phase_shift_level
+			if GameManager.meditative_state_level > 0:
+				GameManager.meditative_state_charges = GameManager.meditative_state_level
+			if GameManager.banana_bounty_level > 0:
+				GameManager.banana_bounty_charges = GameManager.banana_bounty_level
+			if GameManager.tenderizer_level > 0:
+				GameManager.tenderizer_charges = GameManager.tenderizer_level
+			if GameManager.pocket_garden_level > 0:
+				GameManager.pocket_garden_charges = GameManager.pocket_garden_level
+			if GameManager.blink_level > 0:
+				GameManager.blink_charges = GameManager.blink_level
+		"fruit_flood":
+			# This requires a new timer and logic to spawn fruit rapidly
+			start_fruit_flood(buff_data["duration"])
 
 
+# --- CORRECTED ON_SNAKE_ATE_FOOD FUNCTION ---
 func on_snake_ate_food(fruit):
-	print("Snake ate food!")
+	# --- Cookbook Logic ---
+	if GameManager.the_cookbook_unlocked and not GameManager.active_recipe.is_empty():
+		var recipe = GameManager.active_recipe
+		var progress = GameManager.recipe_progress
+		
+		var required_ingredient = recipe["sequence"][progress]
+		var required_type_string = required_ingredient["type"]
+		
+		# --- THIS IS THE FIX ---
+		# We now compare the fruit's "name tag" to the string from the recipe.
+		var is_correct_type = (fruit.fruit_type == required_type_string)
+		
+		var properties_match = true
+		if required_ingredient.has("properties"):
+			for prop in required_ingredient["properties"]:
+				if not fruit.has(prop) or fruit.get(prop) != required_ingredient["properties"][prop]:
+					properties_match = false
+		
+		var is_wildcard = (GameManager.golden_glaze_unlocked and fruit is GoldenFruit)
+
+		if (is_correct_type and properties_match) or is_wildcard:
+			# SUCCESS!
+			GameManager.recipe_progress += 1
+			if GameManager.recipe_progress >= recipe["sequence"].size():
+				print("RECIPE COMPLETE: ", recipe["name"])
+				apply_recipe_buff(recipe["buff"])
+				pick_new_recipe()
+		else:
+			# FAILURE!
+			print("Wrong ingredient! Recipe progress reset.")
+			GameManager.recipe_progress = 0
+			
+		update_recipe_display()
+	
+	
 	
 	var segments_to_add = 0
 	var sp_reward = 0
@@ -1280,6 +1405,24 @@ func on_snake_ate_food(fruit):
 		# Reset the counter so it only happens once
 		GameManager.segments_to_restore = 0
 	
+	# --- NEW FRUIT EFFECT LOGIC ---
+	if fruit is GhostPepper:
+		print("ATE A GHOST PEPPER!")
+
+		head.activate_phase_shift(3.0) # Assume you create this helper in snake_head.gd
+	
+	elif fruit is IronCherry:
+		print("ATE AN IRON CHERRY! Max fruits +1")
+		GameManager.max_fruits_on_screen += 1
+		# Immediately spawn a new fruit to reflect the change
+		spawn_fruit()
+		
+	elif fruit is DragonFruit:
+		print("ATE A DRAGON FRUIT! Fruit reward +1")
+		GameManager.fruit_reward += 1
+	
+	elif fruit is JumpingBean:
+		print("Caught the Jumping Bean! Make it do something!")
 	
 	head.check_for_afterburner()
 	
@@ -1855,6 +1998,9 @@ func activate_zenith():
 		$ZenithTimer.stop()
 
 
+	
+	# Give some visual feedback
+	get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
 
 func activate_banana_bounty():
 	var all_fruits = get_tree().get_nodes_in_group("fruits")
@@ -2036,7 +2182,19 @@ func perform_blink():
 	play_screen_flash(Color.WHITE)
 	
 		
-
+func is_on_border(world_pos: Vector2) -> bool:
+	# First, convert the world position (like 320, 256) back to a grid coordinate (like 10, 8).
+	# We subtract the tile_offset to get the top-left corner before dividing.
+	var grid_pos = Vector2i((world_pos - tile_offset) / tile_size)
+	
+	# Now, check if the grid position is within 3 tiles of any edge.
+	# The valid grid is from 0 to width-1 and 0 to height-1.
+	if grid_pos.x < 3 or grid_pos.x >= grid_width - 3 or \
+	   grid_pos.y < 3 or grid_pos.y >= grid_height - 3:
+		return true # It's on the border!
+		
+	# If it's not near any edge, it's in the center.
+	return false
 
 
 func play_screen_flash(flash_color: Color):
@@ -2069,3 +2227,93 @@ func destroy_body_segment(segment_node):
 		
 		# 4. Update the score to reflect the shorter snake.
 		update_score_display()
+
+
+func pick_new_recipe():
+	# This function only runs if the cookbook is unlocked.
+	if not GameManager.the_cookbook_unlocked:
+		return
+
+	# Create a pool of available recipes
+	var available_recipes = GameManager.basic_recipes
+	# If the player has Expanded Palate, add the exotic recipes to the pool
+	if GameManager.expanded_palate_unlocked:
+		available_recipes += GameManager.exotic_recipes
+		
+	# Pick a random recipe from the pool
+	GameManager.active_recipe = available_recipes.pick_random()
+	# Reset the progress for the new recipe
+	GameManager.recipe_progress = 0
+	
+	print("New Recipe: ", GameManager.active_recipe["name"])
+	
+	# Immediately update the UI to show the new recipe
+	update_recipe_display()
+
+
+func update_recipe_display():
+	if not GameManager.the_cookbook_unlocked:
+		cookbook_ui.visible = false
+		return
+
+	cookbook_ui.visible = true
+
+	for child in ingredients_container.get_children():
+		child.queue_free()
+
+	var recipe = GameManager.active_recipe
+	if recipe.is_empty():
+		recipe_name_label.text = "No Active Recipe"
+		return
+
+	recipe_name_label.text = recipe["name"]
+
+	for i in range(recipe["sequence"].size()):
+		var ingredient_data = recipe["sequence"][i]
+		var ingredient_type = ingredient_data["type"]
+		
+		var icon = TextureRect.new()
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.custom_minimum_size = Vector2(24, 24)
+
+		match ingredient_type:
+			"Fruit":
+				icon.texture = preload("res://Assets/PNGs/snake_fruit_red.png")
+			"GoldenFruit":
+				icon.texture = preload("res://Assets/PNGs/golden_fruit_icon.png")
+			"GhostPepper":
+				icon.texture = preload("res://Assets/PNGs/ghost_pepper_icon.png")
+			"JumpingBean":
+				icon.texture = preload("res://Assets/PNGs/jumping_bean_icon.png")
+			"IronCherry":
+				icon.texture = preload("res://Assets/PNGs/iron_cherry_icon.png")
+			"DragonFruit":
+				icon.texture = preload("res://Assets/PNGs/dragon_fruit_icon.png")
+			_:
+				print("No icon assigned for ingredient type: ", ingredient_type)
+
+		if i < GameManager.recipe_progress:
+			icon.modulate = Color(0.3, 0.3, 0.3)
+
+		ingredients_container.add_child(icon)
+		
+		
+# This function is called from apply_recipe_buff
+func start_fruit_flood(duration: float):
+	print("FRUIT FLOOD activated for %s seconds!" % duration)
+	# Start both timers
+	$FruitFloodTickTimer.start()
+	$FruitFloodDurationTimer.start(duration)
+
+# This runs every 1 second while the flood is active
+func _on_fruit_flood_tick_timer_timeout():
+	print("Fruit flood tick!")
+	# Spawn one extra fruit
+	spawn_fruit()
+	update_fruit_prediction() # Update the ghost for the next spawn
+
+# This runs when the total duration is over
+func _on_fruit_flood_duration_timer_timeout():
+	print("Fruit flood has ended.")
+	# Stop the ticking timer
+	$FruitFloodTickTimer.stop()

@@ -161,6 +161,27 @@ var heavy_foundation_level = 0
 var rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
 var calculated_risk_unlocked = false
 
+# --- Chef Path ---
+var golden_seed_extract_level = 0
+var golden_seed_extract_data = [0.0, 0.05, 0.10, 0.15]
+var exotic_seeds_level = 0
+var exotic_seeds_data = [
+	"", # Level 0 - Nothing
+	"jumping_bean", # Level 1
+	"ghost_pepper", # Level 2
+	"iron_cherry",  # Level 3
+	"dragon_fruit", # Level 4
+	"boost_chance"  # Level 5
+]
+var the_cookbook_unlocked = false
+var active_recipe: Dictionary = {} # Will hold the current recipe's data
+var recipe_progress: int = 0      # Tracks which step of the recipe we're on
+var expanded_palate_unlocked = false
+var golden_glaze_unlocked = false
+var custom_cuisine_unlocked = false
+var mise_en_place_used_this_run = false
+var mise_en_place_unlocked = false
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -228,7 +249,10 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
 	"warlock": {
@@ -268,7 +292,10 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
 	"inchworm": {
@@ -308,7 +335,10 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
 	"phoenix_coil": {
@@ -348,7 +378,10 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
 	"sidewinder": {
@@ -389,6 +422,9 @@ var class_data = {
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
 			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 			
 			
 		}
@@ -430,7 +466,10 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
 	"the_alchemist": {
@@ -470,13 +509,65 @@ var class_data = {
 			"Shatter Reality": 0,
 			# Survivor Modifiers
 			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
-			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0
+			"Death Defied": 0, "Martyrdom": 0, "New Game S+": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	}
 }
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+		# --- CHEF PATH ---
+	"Golden Seed Extract": {
+		"display_name": "Golden Seed Extract",
+		"description": "Increases the spawn chance of valuable Golden Apples.",
+		"costs": [3, 4, 5], # Example costs for 3 levels
+		"max_level": 3
+	},
+	"Exotic Seeds": {
+		"display_name": "Exotic Seeds",
+		"description": "Adds new, rare fruits to the spawn pool with each level.",
+		"costs": [3, 3, 4, 4, 5], # 5 levels
+		"max_level": 5
+	},
+	"The Cookbook": {
+		"display_name": "The Cookbook",
+		"description": "Unlocks the Recipe system, granting temporary buffs for eating fruit in a specific sequence.",
+		"costs": [2],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Exotic Seeds", "level": 1}
+	},
+	"Expanded Palate": {
+		"display_name": "Expanded Palate",
+		"description": "Adds new, more complex and powerful recipes to your Cookbook.",
+		"costs": [4],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "The Cookbook", "level": 1}
+	},
+	"Golden Glaze": {
+		"display_name": "Golden Glaze",
+		"description": "Golden Apples now act as a 'wild card' ingredient for any step in your current recipe.",
+		"costs": [4],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "The Cookbook", "level": 1}
+	},
+	"Custom Cuisine": {
+		"display_name": "Custom Cuisine",
+		"description": "Permanently enhances all special fruits with powerful secondary effects.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1}
+	},
+	"Mise en Place": {
+		"display_name": "Mise en Place",
+		"description": "Active Ability (Once per RUN): Instantly transforms all normal fruits on screen into random special fruits.",
+		"costs": [5],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1}
+	},
+	
 	# --- GEOMANCER PATH ---
 	"Fertile Ground": {
 		"display_name": "Fertile Ground", "max_level": 3, "costs": [2, 3, 4],
@@ -853,6 +944,38 @@ var upgrade_data = {
 	},
 }
 
+# --- CORRECTED RECIPE DATA ---
+var basic_recipes = [
+	{
+		"name": "Simple Skewer",
+		"sequence": [ {"type": "Fruit"}, {"type": "Fruit"} ],
+		"buff": {"type": "speed_boost", "value": 0.8, "duration": 5.0}
+	},
+	{
+		"name": "Golden Snack",
+		"sequence": [ {"type": "Fruit"}, {"type": "GoldenFruit"} ],
+		"buff": {"type": "sp_boost", "value": 1, "duration": 0}
+	}
+]
+var exotic_recipes = [
+	{
+		"name": "Spicy Surprise",
+		"sequence": [ {"type": "Fruit"}, {"type": "GhostPepper"}, {"type": "Fruit"} ],
+		"buff": {"type": "full_recharge", "duration": 0}
+	},
+	{
+		"name": "Bountiful Harvest",
+		"sequence": [ 
+			{"type": "Fruit", "properties": {"is_ripe": true}}, 
+			{"type": "IronCherry"} 
+		],
+		"buff": {"type": "fruit_flood", "duration": 10.0}
+	}
+]
+
+
+
+
 #----------FUNCTIONS-----------#
 func go_to_scene(scene_path):
 	get_tree().change_scene_to_file(scene_path)
@@ -962,6 +1085,17 @@ func start_game():
 	is_zenith_active = false
 	current_combo = 0
 	combo_is_pure = true
+		# --- Chef Path ---
+	golden_seed_extract_level = 0
+	exotic_seeds_level = 0
+	the_cookbook_unlocked = false
+	active_recipe = {} 
+	recipe_progress = 0    
+	expanded_palate_unlocked = false
+	golden_glaze_unlocked = false
+	custom_cuisine_unlocked = false
+	mise_en_place_used_this_run = false
+	mise_en_place_unlocked = false
 	
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false
