@@ -595,6 +595,12 @@ one_shot = true
 [node name="FruitFloodDurationTimer" type="Timer" parent="."]
 one_shot = true
 
+[node name="IronCherryBuffTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="DragonFruitBuffTimer" type="Timer" parent="."]
+one_shot = true
+
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
 [connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
 [connection signal="continue_pressed" from="UI/GardenCompleteScreen" to="." method="_on_garden_complete_continue_pressed"]

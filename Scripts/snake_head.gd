@@ -171,6 +171,10 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.zenith_charges > 0 and not GameManager.is_zenith_active:
 			main.activate_zenith()
 			
+	if event.is_action_released("activate_mise_en_place"):
+		if GameManager.mise_en_place_unlocked and not GameManager.mise_en_place_used_this_run:
+			main.perform_mise_en_place()
+			
 
 # --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():

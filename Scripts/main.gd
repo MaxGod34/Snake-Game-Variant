@@ -50,6 +50,8 @@ var current_camera_quadrant: int = 0
 @onready var cookbook_ui = $UI/HUDContainer/CookbookUI
 @onready var recipe_name_label = $UI/HUDContainer/CookbookUI/RecipeNameLabel
 @onready var ingredients_container = $UI/HUDContainer/CookbookUI/IngredientsContainer
+@onready var iron_cherry_buff_timer = $IronCherryBuffTimer
+@onready var dragon_fruit_buff_timer = $DragonFruitBuffTimer
 
 #-------SIGNALS--------#
 
@@ -129,6 +131,8 @@ func _ready():
 	$ZenithTimer.timeout.connect(_on_zenith_timer_timeout)
 	$FruitFloodTickTimer.timeout.connect(_on_fruit_flood_tick_timer_timeout)
 	$FruitFloodDurationTimer.timeout.connect(_on_fruit_flood_duration_timer_timeout)
+	iron_cherry_buff_timer.timeout.connect(_on_iron_cherry_buff_timer_timeout)
+	dragon_fruit_buff_timer.timeout.connect(_on_dragon_fruit_buff_timer_timeout)
 	# --- FINAL SETUP & START ---
 	update_score_display()
 	update_hud()
@@ -1059,6 +1063,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Expanded Palate":
 		if not GameManager.expanded_palate_unlocked:
 			GameManager.expanded_palate_unlocked = true
+			pick_new_recipe()
 			
 	elif upgrade_name == "Golden Glaze":
 		if not GameManager.golden_glaze_unlocked:
@@ -1335,7 +1340,34 @@ func apply_recipe_buff(buff_data: Dictionary):
 
 # --- CORRECTED ON_SNAKE_ATE_FOOD FUNCTION ---
 func on_snake_ate_food(fruit):
-	# --- Cookbook Logic ---
+	# --- NEW COOKBOOK LOGIC ---
+	
+	if GameManager.custom_cuisine_unlocked:
+		if fruit is JumpingBean:
+			# Recharge a random ability
+			var abilities = ["Burrow", "Phase Shift", "Blink", "Banana Bounty", "Tenderizer"] # Add all chargeable abilities here
+			var random_ability = abilities.pick_random()
+			match random_ability:
+				"burrow": GameManager.burrow_charges += 1
+				# ... etc.
+			print("CUSTOM CUISINE: Ability recharges!")
+			
+		elif fruit is IronCherry:
+			# Grant a temporary, massive max fruit boost
+			GameManager.iron_cherry_buff_active = true
+			$IronCherryBuffTimer.start(10.0) # 10-second duration
+			# Spawn a bunch of new fruit immediately
+			for i in range(5): spawn_fruit() 
+			
+		elif fruit is DragonFruit:
+			# Grant a temporary, massive growth multiplier
+			GameManager.dragon_fruit_buff_active = true
+			$DragonFruitBuffTimer.start(10.0)
+		
+		elif fruit is GhostPepper:
+			head.activate_phase_shift(10.0)
+	
+	
 	if GameManager.the_cookbook_unlocked and not GameManager.active_recipe.is_empty():
 		var recipe = GameManager.active_recipe
 		var progress = GameManager.recipe_progress
@@ -1343,16 +1375,25 @@ func on_snake_ate_food(fruit):
 		var required_ingredient = recipe["sequence"][progress]
 		var required_type_string = required_ingredient["type"]
 		
-		# --- THIS IS THE FIX ---
-		# We now compare the fruit's "name tag" to the string from the recipe.
+		# --- Start checking if the fruit we ate is correct ---
+		# First, check if the fruit's "name tag" matches the recipe's required type.
 		var is_correct_type = (fruit.fruit_type == required_type_string)
 		
+		# Now, check if the fruit meets any special property requirements (like 'is_ripe').
 		var properties_match = true
 		if required_ingredient.has("properties"):
-			for prop in required_ingredient["properties"]:
-				if not fruit.has(prop) or fruit.get(prop) != required_ingredient["properties"][prop]:
+			# Loop through all required properties (e.g., "is_ripe": true)
+			for prop_name in required_ingredient["properties"]:
+				var required_value = required_ingredient["properties"][prop_name]
+				
+
+				# We directly access the property on the fruit object and compare its value.
+				# This check works because both fruit.gd and golden_fruit.gd have the 'is_ripe' variable.
+				if fruit.get(prop_name) != required_value:
 					properties_match = false
+					break # A property didn't match, so we can stop checking.
 		
+		# Check for the Golden Glaze synergy (Golden Fruit is a wild card)
 		var is_wildcard = (GameManager.golden_glaze_unlocked and fruit is GoldenFruit)
 
 		if (is_correct_type and properties_match) or is_wildcard:
@@ -1366,6 +1407,7 @@ func on_snake_ate_food(fruit):
 			# FAILURE!
 			print("Wrong ingredient! Recipe progress reset.")
 			GameManager.recipe_progress = 0
+			pick_new_recipe()
 			
 		update_recipe_display()
 	
@@ -1406,7 +1448,7 @@ func on_snake_ate_food(fruit):
 		GameManager.segments_to_restore = 0
 	
 	# --- NEW FRUIT EFFECT LOGIC ---
-	if fruit is GhostPepper:
+	if fruit is GhostPepper and not GameManager.is_phasing:
 		print("ATE A GHOST PEPPER!")
 
 		head.activate_phase_shift(3.0) # Assume you create this helper in snake_head.gd
@@ -1704,6 +1746,10 @@ func get_effective_fruit_reward() -> int:
 	# If we have the upgrade, add the bonus from our death counter
 	if GameManager.death_defied_unlocked:
 		reward += GameManager.times_died_this_run
+		
+	if GameManager.dragon_fruit_buff_active:
+		reward *= 3
+		
 	return reward
 
 func get_effective_max_fruits() -> int:
@@ -1711,6 +1757,10 @@ func get_effective_max_fruits() -> int:
 	# If we have the upgrade, add the bonus from our death counter
 	if GameManager.death_defied_unlocked:
 		max_fruits += GameManager.times_died_this_run
+		
+	if GameManager.iron_cherry_buff_active:
+		max_fruits += 5 # Add a flat bonus	
+		
 	return max_fruits
 
 func use_extra_life():
@@ -2028,6 +2078,60 @@ func activate_banana_bounty():
 	# Store a reference to this new tween
 	target_fruit.active_tween = tween
 
+func perform_mise_en_place():
+	print("MISE EN PLACE! The garden transforms!")
+	
+	# Set the flag so it can't be used again this run
+	GameManager.mise_en_place_used_this_run = true
+	update_hud() # Update any UI that might show the ability is used
+
+	# 1. First, build a list of all normal fruits and their positions.
+	var normal_fruits_to_replace = []
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		# We only want to transform the basic "Fruit" type
+		if fruit is Fruit:
+			normal_fruits_to_replace.append(fruit)
+			
+	# 2. Build a "loot table" of all the special fruits the player has unlocked.
+	var unlocked_special_fruits = []
+	# Add Golden Apple if unlocked
+	if GameManager.golden_seed_extract_level > 0:
+		unlocked_special_fruits.append("golden_fruit")
+	# Add all unlocked Exotic Seeds
+	for i in range(1, GameManager.exotic_seeds_level + 1):
+		unlocked_special_fruits.append(GameManager.exotic_seeds_data[i])
+		
+	# If there are no special fruits unlocked, we can't do anything.
+	if unlocked_special_fruits.is_empty():
+		return
+
+	# 3. Now, loop through the fruits we need to replace.
+	for old_fruit in normal_fruits_to_replace:
+		var new_fruit_key = unlocked_special_fruits.pick_random()
+		var new_fruit_instance = null
+		
+		# Instantiate the correct new fruit scene
+		match new_fruit_key:
+			"golden_fruit": new_fruit_instance = preload("res://Scenes/golden_fruit.tscn").instantiate()
+			"jumping_bean": new_fruit_instance = jumping_bean_scene.instantiate()
+			"ghost_pepper": new_fruit_instance = ghost_pepper_scene.instantiate()
+			"iron_cherry": new_fruit_instance = iron_cherry_scene.instantiate()
+			"dragon_fruit": new_fruit_instance = dragon_fruit_scene.instantiate()
+			
+		if new_fruit_instance != null:
+			# Position the new fruit exactly where the old one was
+			new_fruit_instance.position = old_fruit.position
+			new_fruit_instance.add_to_group("fruits")
+			add_child(new_fruit_instance)
+			
+			# Destroy the old fruit
+			old_fruit.queue_free()
+			
+	# Add a cool screen flash to signify the transformation!
+	play_screen_flash(Color.WHITE)
+
+
+
 func perform_autotomy(collided_segment):
 	print("SEVERING TAIL!")
 	# First, find the index of the segment we hit in our array
@@ -2317,3 +2421,13 @@ func _on_fruit_flood_duration_timer_timeout():
 	print("Fruit flood has ended.")
 	# Stop the ticking timer
 	$FruitFloodTickTimer.stop()
+
+
+
+func _on_iron_cherry_buff_timer_timeout():
+	GameManager.iron_cherry_buff_active = false
+	print("Iron Cherry buff has expired.")
+
+func _on_dragon_fruit_buff_timer_timeout():
+	GameManager.dragon_fruit_buff_active = false
+	print("Dragon Fruit buff has expired.")

@@ -36,6 +36,8 @@ var is_phasing = false
 var is_bounty_active = false
 var autotomy_is_active = false
 var is_zenith_active = false
+var iron_cherry_buff_active = false
+var dragon_fruit_buff_active = false
 
 #------The Planner-------#
 var diet_slith_level = 0
@@ -537,7 +539,7 @@ var upgrade_data = {
 		"description": "Unlocks the Recipe system, granting temporary buffs for eating fruit in a specific sequence.",
 		"costs": [2],
 		"max_level": 1,
-		"prerequisite": {"upgrade": "Exotic Seeds", "level": 1}
+		"prerequisite": {"upgrade": "Golden Seed Extract", "level": 1}
 	},
 	"Expanded Palate": {
 		"display_name": "Expanded Palate",
@@ -565,7 +567,7 @@ var upgrade_data = {
 		"description": "Active Ability (Once per RUN): Instantly transforms all normal fruits on screen into random special fruits.",
 		"costs": [5],
 		"max_level": 1,
-		"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1}
+		"prerequisite": {"upgrade": "Exotic Seeds", "level": 5}
 	},
 	
 	# --- GEOMANCER PATH ---
@@ -1094,6 +1096,8 @@ func start_game():
 	expanded_palate_unlocked = false
 	golden_glaze_unlocked = false
 	custom_cuisine_unlocked = false
+	iron_cherry_buff_active = false
+	dragon_fruit_buff_active = false
 	mise_en_place_used_this_run = false
 	mise_en_place_unlocked = false
 	
