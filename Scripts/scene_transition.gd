@@ -36,6 +36,8 @@ func cover_screen(animation_type: String):
 			await cover_screen_drip()
 		"spiral":
 			await cover_screen_spiral()
+		"flakes":
+			await cover_screen_flakes()
 
 func uncover_screen(animation_type: String):
 	var choice = animation_type
@@ -165,3 +167,20 @@ func uncover_screen_diagonal():
 				tile_map.erase_cell(0, Vector2i(x, y))
 		if transition_speed > 0:
 			await get_tree().create_timer(transition_speed).timeout
+
+
+#Flake Animation -------
+func cover_screen_flakes():
+	var size = Vector2i(get_viewport().size / 32)
+	
+	var all_tiles = []
+	for y in range(size.y):
+		for x in range(size.x):
+			all_tiles.append(Vector2i(x,y))
+			
+	all_tiles.shuffle()
+	
+	for pos in all_tiles:
+		tile_map.set_cell(0, pos, 0, Vector2i(0,0))
+		if transition_speed > 0:
+			await get_tree().create_timer(transition_speed * 0.01).timeout

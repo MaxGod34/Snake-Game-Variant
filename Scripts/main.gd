@@ -39,6 +39,7 @@ var dragon_fruit_scene = preload("res://Scenes/dragon_fruit.tscn")
 var rock_scene = preload("res://Scenes/rock.tscn")
 var pause_scene = preload("res://Scenes/pause_menu.tscn")
 var trippy_grid_shader = preload("res://trippy_grid.gdshader")
+var exclamation_scene = preload("res://Scenes/exclamation.tscn")
 
 
 @onready var combo_timer = $ComboTimer
@@ -359,14 +360,78 @@ func show_upgrade_menu():
 
 func show_garden_complete_screen():
 	head.move_timer.stop()
+	
 	var garden_id = GameManager.current_garden
 	var garden_name = GameManager.garden_data[garden_id]["name"]
 	var score = snake_body_segments.size() + 1
-	var is_final_garden = (garden_id == 5)
-	var is_final_win = (is_final_garden and score >= 666)
 	
-	$UI/GardenCompleteScreen.setup(garden_name, score, is_final_garden, is_final_win)
+	# --- CALCULATE BONUSES ---
+	var bonuses_earned: Array = []
+	var total_scales_this_garden: int = 0
+	var bonus_data = GameManager.garden_bonus_data
+	
+	# 1. Base Score Bonus
+	total_scales_this_garden += score
+	bonuses_earned.append("Score: +%s Scales" % score)
+	
+	# 2. Check for Par Time
+	var garden_time = GameManager.run_time - GameManager.garden_start_time
+	if garden_time < bonus_data["par_time"]["time_limit"]:
+		var reward = bonus_data["par_time"]["base_reward"]
+		total_scales_this_garden += reward
+		bonuses_earned.append("Par Time: +%s Scales" % reward)
+		
+	# 3. Check for No Death
+	if not GameManager.has_died_this_garden:
+		var reward = bonus_data["no_death"]["reward"]
+		total_scales_this_garden += reward
+		bonuses_earned.append("Flawless Bonus: +%s Scales" % reward)
+	
+	if GameManager.sp_spent_this_garden == 0:
+		var reward = bonus_data["ascetic"]["reward"]
+		total_scales_this_garden += reward
+		bonuses_earned.append("No Upgrade Bonus: + %s Scales" % reward)
+		
+	if GameManager.abilities_used_this_garden == 0:
+		var reward = bonus_data["pacifist"]["reward"]
+		total_scales_this_garden += reward
+		bonuses_earned.append("No Ability Bonus: + %s Scales" % reward)
+		
+	if GameManager.sp_spent_this_garden > 1:
+		var reward = bonus_data["engagement"]["reward"]
+		total_scales_this_garden += reward
+		bonuses_earned.append("Engagement Bonus + %s Scales" % reward)
+	
+	# Add the earned scales to our run's total
+	GameManager.snake_scales += total_scales_this_garden
+	
+	# --- CHECK FOR FINAL GARDEN ---
+	# This is your existing logic, which is perfect.
+	var is_final_garden = (garden_id == 13) # Updated to 13 gardens
+	var is_final_win = (is_final_garden and score >= 666) # Or your final goal
+	
+	# --- TRANSITION AND DISPLAY ---
+	await SceneTransition.play_cover_animation("flakes")
+	
+	$UI/GardenCompleteScreen.update_garden_complete()
+	# Pass all the necessary data to the results screen
+	
 	$UI/GardenCompleteScreen.visible = true
+	await SceneTransition.uncover_screen("drip") # Use our new "drip" animation
+	
+	$UI/GardenCompleteScreen.display_results(
+		garden_name,
+		bonuses_earned,
+		total_scales_this_garden,
+		is_final_garden,
+		is_final_win
+	)
+	
+	# Reset garden-specific stats for the next level
+	GameManager.has_died_this_garden = false
+	GameManager.sp_spent_this_garden = 0
+
+
 
 func show_ghost_fruit():
 	# Remove any old ghost
@@ -470,7 +535,7 @@ func update_hud():
 	# Update values for selected class, difficulty, and which garden currently on
 	$UI/HUDContainer/BottomGrid/GardenGoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
 	$UI/HUDContainer/BottomGrid/HUDSPLabel.text = "SP: " + str(GameManager.skill_points)
-	$UI/HUDContainer/BottomGrid/GardenCurrentNumberLabel.text = "Garden %s/5" % GameManager.current_garden
+	$UI/HUDContainer/BottomGrid/GardenCurrentNumberLabel.text = "Garden %s/13" % GameManager.current_garden
 	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
 	#---------Stats Vbox-------#
 	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
@@ -868,6 +933,12 @@ func update_progression():
 		print("Garden ", current_garden_id, " complete! Pending screen.")
 		#Show garden function coming soon
 		garden_complete_is_pending = true
+		
+		var exclamation = exclamation_scene.instantiate()
+		# Position it right on top of the snake's head
+		exclamation.global_position = head.global_position
+		# Add it to the game world
+		add_child(exclamation)
 
 func level_up():
 	print("Level up!")
@@ -1898,9 +1969,16 @@ func _on_transition_finished():
 func _on_garden_complete_continue_pressed() -> void:
 	var garden_id = GameManager.current_garden
 	var score = snake_body_segments.size() + 1
-	if garden_id == 5 and score >= 666:
+	
+	GameManager.abilities_used_this_garden = 0
+	GameManager.sp_spent_this_garden = 0
+	GameManager.garden_start_time = GameManager.run_time
+	
+	
+	
+	if garden_id == 13 and score >= 666:
 		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
-	elif garden_id == 5:
+	elif garden_id == 13:
 		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
 	else:
 		GameManager.current_garden += 1

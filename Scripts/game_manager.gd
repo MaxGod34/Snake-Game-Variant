@@ -8,13 +8,35 @@ var run_time: float = 0.0
 var has_died_this_garden = false
 var current_garden = 1
 var garden_data = {
-	1: {"name": "The First Coil", "score_goal": 50, "obstacle_count": 1},
-	2: {"name": "Maximum Over-Bite", "score_goal": 125, "obstacle_count": 5},
-	3: {"name": "The Juice Box", "score_goal": 250, "obstacle_count": 10},
-	4: {"name": "The Forked Tongue Bistro", "score_goal": 420, "obstacle_count": 15},
-	5: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 20}
+	# --- The Early Game (Learning the Ropes) ---
+	1: {"name": "The First Coil", "score_goal": 20, "obstacle_count": 0},
+	2: {"name": "The Juice Box", "score_goal": 35, "obstacle_count": 3},
+	3: {"name": "The Danger Noodle Den", "score_goal": 55, "obstacle_count": 5},
+	
+	# --- The Mid-Game (Testing Your Build) ---
+	4: {"name": "The Forked Tongue Bistro", "score_goal": 80, "obstacle_count": 8},
+	5: {"name": "Rhythm & Haste", "score_goal": 110, "obstacle_count": 10},
+	6: {"name": "The Architect's Grid", "score_goal": 150, "obstacle_count": 12},
+	7: {"name": "The Razor's Edge", "score_goal": 200, "obstacle_count": 15},
+
+	# --- The Late Game (Mastering Your Path) ---
+	8: {"name": "The Glitch Garden", "score_goal": 260, "obstacle_count": 20},
+	9: {"name": "The Basilisk's Lair", "score_goal": 330, "obstacle_count": 25},
+	10: {"name": "The Kill Screen Quarry", "score_goal": 410, "obstacle_count": 30},
+	
+	# --- The Endgame (The Final Challenge) ---
+	11: {"name": "The Apex Arena", "score_goal": 500, "obstacle_count": 35},
+	12: {"name": "The Endless Labyrinth", "score_goal": 500, "obstacle_count": 40},
+	13: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 50}
 }
 
+var garden_bonus_data = {
+	"par_time": {"base_reward": 50, "time_limit": 60.0}, # 50 Scales if garden is beaten in under 60s
+	"no_death": {"reward": 25}, # 25 Scales for a flawless, no-death garden
+	"ascetic": {"reward": 50}, # 100 Scales if no upgrades were purchased this garden
+	"pacifist": {"reward": 15}, # 15 Scales if no active abilities were used
+	"engagement": {"reward": 2} # +2 Scales for every SP spent on upgrades this garden
+}
 
 
 #-----Player Stats--------#
@@ -25,9 +47,16 @@ var score_at_level_start = 0
 var fruits_eaten_this_run: int = 0
 var total_sp_this_run: int = 0
 var segments_to_restore = 0
+var snake_scales = 0
+# --- BONUS TRACKING VARS ---
+var sp_spent_this_garden = 0
+var abilities_used_this_garden = 0
+var garden_start_time = 0.0
+
 #----Upgrade Data Tracking----#
 var fruit_reward = 1
 var max_fruits_on_screen = 1
+
 
 
 	#----Active Ability Flags----#
@@ -998,7 +1027,11 @@ func start_game():
 	total_sp_this_run = 0
 	total_sp_this_run = skill_points
 	segments_to_restore = 0
-	
+	snake_scales = 0
+
+	sp_spent_this_garden = 0
+	abilities_used_this_garden = 0
+	garden_start_time = 0.0 
 	#----BASE REWARD AND ENGINE---#
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]

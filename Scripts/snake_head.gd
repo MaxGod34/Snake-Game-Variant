@@ -114,12 +114,14 @@ func _unhandled_input(event: InputEvent):
 	# --- Ability Activation Logic ---
 	if event.is_action_pressed("activate_bounty"):
 		if GameManager.banana_bounty_charges > 0 and not GameManager.is_bounty_active:
+			GameManager.abilities_used_this_garden += 1
 			main.activate_banana_bounty()
 	
 	if event.is_action_pressed("activate_ability_burrow"):
 		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
 			GameManager.burrow_is_active = true
 			GameManager.burrow_charges -= 1
+			GameManager.abilities_used_this_garden += 1
 			get_node("FillSprite").modulate = Color.WHITE
 			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
 				GameManager.burrow_charges += 1
@@ -129,6 +131,7 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.phase_shift_level > 0 and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
 			GameManager.is_phasing = true
 			GameManager.phase_shift_charges -= 1
+			GameManager.abilities_used_this_garden += 1
 			activate_phase_shift(2.0)
 			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
 				GameManager.phase_shift_charges += 1
@@ -137,6 +140,7 @@ func _unhandled_input(event: InputEvent):
 	if event.is_action_pressed("activate_meditation"):
 		if GameManager.meditative_state_level > 0 and GameManager.meditative_state_charges > 0:
 			GameManager.meditative_state_charges -= 1
+			GameManager.abilities_used_this_garden += 1
 			main.update_hud()
 			move_timer.stop()
 			var duration = GameManager.meditative_state_data[GameManager.meditative_state_level]
@@ -149,30 +153,36 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.autotomy_unlocked and not GameManager.autotomy_used_this_garden and not GameManager.autotomy_is_active:
 			print("AUTOTOMY ACTIVATED! You have 2 seconds to sever your tail.")
 			GameManager.autotomy_is_active = true
+			GameManager.abilities_used_this_garden += 1
 			$AutotomyTimer.start(2.0) # Start the 2-second window
 			# Visual Feedback
 			get_node("FillSprite").modulate = Color.ORANGE_RED
 			
 	if event.is_action_pressed("activate_pocket_garden"):
 		if GameManager.pocket_garden_charges > 0:
+			GameManager.abilities_used_this_garden += 1
 			main.create_pocket_garden()
 			
 	if event.is_action_pressed("activate_molt"):
 		# Check all conditions before allowing the ability to fire
 		if GameManager.sacrificial_molt_unlocked and not GameManager.sacrificial_molt_used_this_run:
+			GameManager.abilities_used_this_garden += 1
 			main.perform_sacrificial_molt()
 			
 	if event.is_action_pressed("activate_blink"):
 		if GameManager.blink_charges > 0:
+			GameManager.abilities_used_this_garden += 1
 			main.perform_blink()
 			
 	if event.is_action_pressed("activate_zenith"):
 		# Check if we have charges and the ability isn't already active
 		if GameManager.zenith_charges > 0 and not GameManager.is_zenith_active:
+			GameManager.abilities_used_this_garden += 1
 			main.activate_zenith()
 			
 	if event.is_action_released("activate_mise_en_place"):
 		if GameManager.mise_en_place_unlocked and not GameManager.mise_en_place_used_this_run:
+			GameManager.abilities_used_this_garden += 1
 			main.perform_mise_en_place()
 			
 

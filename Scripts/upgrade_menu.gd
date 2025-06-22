@@ -294,6 +294,7 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 		
 		if GameManager.skill_points >= final_cost:
 			GameManager.skill_points -= final_cost
+			GameManager.sp_spent_this_garden += final_cost
 			emit_signal("upgrade_selected", upgrade_key)
 			button_node.release_focus()
 			update_all_displays()
