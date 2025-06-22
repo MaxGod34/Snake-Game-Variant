@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://m05jh0kydp6u"]
+
+[ext_resource type="Script" uid="uid://bcj5kdg31hijm" path="res://Scenes/ability_slot.gd" id="1_n8tg8"]
+[ext_resource type="Texture2D" uid="uid://dcv4ik47l7s76" path="res://Assets/PNGs/ghost_pepper_icon.png" id="1_vodii"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_n8tg8"]
+
+[node name="AbilitySlot" type="Panel"]
+custom_minimum_size = Vector2(64, 64)
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_n8tg8")
+
+[node name="Icon" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_vodii")
+
+[node name="HotkeyLabel" type="Label" parent="."]
+layout_mode = 1
+offset_right = 12.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.470588)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 12
+text = "[1]"
+
+[node name="ChargeCountLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -17.0
+offset_top = -33.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.266667, 0.929412, 0.756863, 0.760784)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_n8tg8")
+theme_override_font_sizes/font_size = 32
+text = "1"
+horizontal_alignment = 1
+
+[node name="ClickButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+flat = true

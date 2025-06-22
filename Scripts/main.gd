@@ -25,7 +25,7 @@ var ghost_fruit_instance = null
 
 
 var time_since_last_fruit: float = 0.0
-@onready var last_fruit_label = $UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel
+@onready var last_fruit_label = $UI/MarginContainer/HBoxContainer/InformationPanel.get_node("HBoxContainer/VBoxContainer/FrenzyMeter/ComboWindowLabel")
 
 
 
@@ -48,11 +48,13 @@ var exclamation_scene = preload("res://Scenes/exclamation.tscn")
 @onready var dividing_wall_tilemap = $DividingWallTileMap
 @onready var camera = $Camera2D
 var current_camera_quadrant: int = 0
-@onready var cookbook_ui = $UI/HUDContainer/CookbookUI
-@onready var recipe_name_label = $UI/HUDContainer/CookbookUI/RecipeNameLabel
-@onready var ingredients_container = $UI/HUDContainer/CookbookUI/IngredientsContainer
+
 @onready var iron_cherry_buff_timer = $IronCherryBuffTimer
 @onready var dragon_fruit_buff_timer = $DragonFruitBuffTimer
+
+@onready var ability_hotbar = $UI/MarginContainer/HBoxContainer/VBoxContainer/AbilityHotbar
+@onready var player_banner = $UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner
+@onready var information_panel = $UI/MarginContainer/HBoxContainer/InformationPanel
 
 #-------SIGNALS--------#
 
@@ -78,6 +80,17 @@ func _ready():
 	
 	# Bounds and Tile Offset cuz center origin omfg i'll kms
 	tile_offset = Vector2(tile_size / 2.0, tile_size / 2.0)
+	
+	var spacer = Control.new()
+	spacer.custom_minimum_size = Vector2(8, 0)
+	ability_hotbar.add_child(spacer)
+	# This loop will create our 10 ability slots dynamically.
+	for i in range(10):
+		var slot = preload("res://Scenes/ability_slot.tscn").instantiate()
+		ability_hotbar.add_child(slot)
+		# Set the hotkey label text (1, 2, ..., 9, 0)
+		slot.get_node("HotkeyLabel").text = str((i + 1) % 10)
+	
 	
 	
 	
@@ -154,22 +167,7 @@ func _process(delta):
 		GameManager.run_time += delta
 		time_since_last_fruit += delta # Also increment our new timer
 		
-		# --- Run Timer Display ---
-		var minutes = int(GameManager.run_time / 60)
-		var seconds = int(GameManager.run_time) % 60
-		var tenths = int(fmod(GameManager.run_time, 1.0) * 10)
-		var time_string = ""
-		if minutes > 0:
-			time_string = "%d:%02d.%d" % [minutes, seconds, tenths]
-		else:
-			time_string = "%02d.%d" % [seconds, tenths]
-		$UI/HUDContainer/StatsVbox/RunTimerLabel.text = "Run Time: " + time_string
-
-		if GameManager.sugar_rush_unlocked and !$ComboTimer.is_stopped():
-			last_fruit_label.visible = true
-			last_fruit_label.text = "Combo Window: %.1f" % $ComboTimer.time_left
-		else:
-			$UI/HUDContainer/StatsVbox/TimeSinceLastFruitLabel.text = "TSLFruit: %.1f" % time_since_last_fruit
+		update_hud()
 		
 		# --- NEW JUGGERNAUT COMBO TIMER LOGIC ---
 	
@@ -190,11 +188,7 @@ func _process(delta):
 		last_fruit_label.visible = false
 		
 
-		# --- NEW: Fruits Per Minute (FPM) Display ---
-		var fpm = 0.0
-		if GameManager.run_time > 0: # Avoid division by zero at the start
-			fpm = (GameManager.fruits_eaten_this_run / GameManager.run_time) * 60.0
-		$UI/HUDContainer/StatsVbox/FPMLabel.text = "FPM: %.1f" % fpm
+		
 
 	# The trail logic is separate. It should ONLY run when the snake is actively moving.
 	if not head.move_timer.is_stopped():
@@ -228,10 +222,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		toggle_pause()
 	if event.is_action_pressed("show_hud"):
 		var tween = create_tween()
-		tween.tween_property($UI/HUDContainer, "modulate:a", 1.0, 0.2)
+		tween.tween_property($UI/MarginContainer, "modulate:a", 1.0, 0.2)
 	elif event.is_action_released("show_hud"):
 		var tween = create_tween()
-		tween.tween_property($UI/HUDContainer, "modulate:a", 0.1, 1.0)
+		tween.tween_property($UI/MarginContainer, "modulate:a", 0.1, 1.0)
 	if event.is_action_pressed("open_upgrade_menu"):
 	# Check if the player has SP and the game is in an active state
 		if GameManager.juice > 0 and not get_tree().paused and not is_game_over:
@@ -397,7 +391,7 @@ func show_garden_complete_screen():
 		total_pulp_this_garden += reward
 		bonuses_earned.append("Flawless Bonus: +%s Pulp" % reward)
 	
-	if GameManager.sp_spent_this_garden == 0:
+	if GameManager.juice_spent_this_garden == 0:
 		var reward = bonus_data["ascetic"]["reward"]
 		total_pulp_this_garden += reward
 		bonuses_earned.append("No Upgrade Bonus: + %s Pulp" % reward)
@@ -407,7 +401,7 @@ func show_garden_complete_screen():
 		total_pulp_this_garden += reward
 		bonuses_earned.append("No Ability Bonus: + %s Pulp" % reward)
 		
-	if GameManager.sp_spent_this_garden > 1:
+	if GameManager.juice_spent_this_garden > 1:
 		var reward = bonus_data["engagement"]["reward"]
 		total_pulp_this_garden += reward
 		bonuses_earned.append("Engagement Bonus + %s Pulp" % reward)
@@ -439,7 +433,7 @@ func show_garden_complete_screen():
 	
 	# Reset garden-specific stats for the next level
 	GameManager.has_died_this_garden = false
-	GameManager.sp_spent_this_garden = 0
+	GameManager.juice_spent_this_garden = 0
 
 
 
@@ -518,75 +512,58 @@ func update_boundary_visuals():
 	background_rect.position = Vector2.ZERO
 	
 func update_hud():
-	# Update Level
-	$UI/HUDContainer/BottomGrid/LevelLabel.text = "Level: " + str(GameManager.player_level)
+	# --- 1. GATHER ALL DATA ---
+	var data = {} # Create an empty dictionary to hold all our info
 	
-
-	# Update Progress Bar
-	var current_score = snake_body_segments.size() + 1
-	var xp_bar = $UI/HUDContainer/BottomGrid/XPProgressBar
+	# Player Stats
+	data["player_name"] = GameManager.chosen_class.capitalize()
+	data["level"] = GameManager.player_level
+	data["xp_value"] = snake_body_segments.size() + 1
+	data["xp_max"] = GameManager.score_needed_for_next_level
+	data["xp_min"] = GameManager.score_at_level_start
+	data["juice"] = GameManager.juice
 	
-	# Set range for the bar
-	xp_bar.max_value = GameManager.score_needed_for_next_level
-	# The bar starts at the previous goal!
-	xp_bar.min_value = GameManager.score_at_level_start
+	# Timers & Performance
+	var minutes = int(GameManager.run_time / 60)
+	var seconds = int(GameManager.run_time) % 60
+	var tenths = int(fmod(GameManager.run_time, 1.0) * 10)
+	data["run_time_string"] = "%d:%02d.%d" % [minutes, seconds, tenths] if minutes > 0 else "%02d.%d" % [seconds, tenths]
 	
-	# Set the Bar's current fill value
-	xp_bar.value = current_score
+	# Frenzy Stats
+	data["combo_is_active"] = not $ComboTimer.is_stopped()
+	data["combo_window_time"] = $ComboTimer.time_left
+	data["combo_count"] = GameManager.current_combo
+	data["active_recipe"] = GameManager.active_recipe
+	data["recipe_progress"] = GameManager.recipe_progress
 	
-	#--------COMBO LABEL--------#
-	if GameManager.sugar_rush_unlocked:
-		$UI/HUDContainer/StatsVbox/ComboLabel.visible = true
-		$UI/HUDContainer/StatsVbox/ComboLabel.text = "COMBO: " + str(GameManager.current_combo)
-	else:
-		$UI/HUDContainer/StatsVbox/ComboLabel.visible = false
+	# Garden Info
+	data["garden_name"] = GameManager.garden_data[GameManager.current_garden]["name"]
+	data["garden_number"] = GameManager.current_garden
+	data["current_score"] = snake_body_segments.size() + 1
+	data["garden_goal"] = GameManager.garden_data[GameManager.current_garden]["score_goal"]
 	
-	$UI/HUDContainer/BottomGrid/NextLevelLabel.text = "Next Level: " + str(int(GameManager.score_needed_for_next_level))
-	# Update values for selected class, difficulty, and which garden currently on
-	$UI/HUDContainer/BottomGrid/GardenGoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
-	$UI/HUDContainer/BottomGrid/HUDSPLabel.text = "Juice: " + str(GameManager.juice) +"oz"
-	$UI/HUDContainer/BottomGrid/GardenCurrentNumberLabel.text = "Garden %s / 13" % GameManager.current_garden
-	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
-	#---------Stats Vbox-------#
-	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
-	$UI/HUDContainer/StatsVbox/FriutRewardLabel.text = "Growth: " + str(get_effective_fruit_reward())
-	$UI/HUDContainer/StatsVbox/MaxFruitsLabel.text = "# of fruits: " + str(get_effective_max_fruits())
+	# --- 2. SEND DATA TO UI ---
+	# Now, we pass this big dictionary to our UI scenes.
+	player_banner.update_display(data) # Assumes you create this function in player_banner.gd
+	information_panel.update_display(data)
 	
-		#------------ABILITY LABELS----------#
-	var burrow_label = $UI/HUDContainer/StatsVbox/AbilitySlot1
-	if GameManager.burrow_level > 0:
-		burrow_label.visible = true
-		burrow_label.text = "Burrow Charges (space): " + str(GameManager.burrow_charges)
-	else:
-		burrow_label.visible = false
-	var phase_label = $UI/HUDContainer/StatsVbox/AbilitySlot2
-	if GameManager.phase_shift_level > 0:
-		phase_label.visible = true
-		phase_label.text = "Phase Charges (e): " + str(GameManager.phase_shift_charges)
-	else:
-		phase_label.visible = false
-	var meditate_label = $UI/HUDContainer/StatsVbox/AbilitySlot3
-	if GameManager.meditative_state_level > 0:
-		meditate_label.visible = true
-		meditate_label.text = "Meditate Charges (r): " + str(GameManager.meditative_state_charges)
-	else:
-		meditate_label.visible = false
-	var banana_bounty_label = $UI/HUDContainer/StatsVbox/AbilitySlot4
-	if GameManager.banana_bounty_level > 0:
-		banana_bounty_label.visible = true
-		banana_bounty_label.text = "Banana Bounty (f): " + str(GameManager.banana_bounty_charges)
-	else:
-		banana_bounty_label.visible = false
-	var tenderizer_label = $UI/HUDContainer/StatsVbox/AbilitySlot5
-	if GameManager.tenderizer_level > 0:
-		tenderizer_label.visible = true
-		tenderizer_label.text = "Tender Charges: " + str(GameManager.tenderizer_charges)
-	else:
-		tenderizer_label.visible = false
-	var pocket_garden_label = $UI/HUDContainer/StatsVbox/AbilitySlot6
-	if GameManager.pocket_garden_level > 0:
-		pocket_garden_label.visible = true
-		pocket_garden_label.text = "Pocket Garden [G]: " + str(GameManager.pocket_garden_charges)
+func get_equipped_abilities() -> Array:
+	var equipped = []
+	# This function checks all abilities and adds them to a list if purchased.
+	if GameManager.burrow_level > 0: equipped.append({"Burrow": GameManager.burrow_charges})
+	if GameManager.phase_shift_level > 0: equipped.append({"Phase Shift": GameManager.phase_shift_charges})
+	if GameManager.mulligan_munchie_level > 0: equipped.append({"Mulligan Munchie": GameManager.extra_lives})
+	if GameManager.meditative_state_level > 0: equipped.append({"Meditative State": GameManager.meditative_state_charges})
+	if GameManager.garden_weaver_unlocked: equipped.append({"Garden Weaver": 0 if GameManager.garden_weaver_used_this_garden else 1})
+	if GameManager.banana_bounty_level > 0: equipped.append({"Banana Bounty": GameManager.banana_bounty_charges})
+	if GameManager.autotomy_unlocked: equipped.append({"Autotomy": 0 if GameManager.autotomy_used_this_garden else 1})
+	if GameManager.pocket_garden_level > 0: equipped.append({"Pocket Garden": GameManager.pocket_garden_charges})
+	if GameManager.sacrificial_molt_unlocked: equipped.append({"Sacrificial Molt": 0 if GameManager.sacrificial_molt_used_this_run else 0})
+	if GameManager.blink_level > 0: equipped.append({"Blink": GameManager.blink_charges})
+	if GameManager.zenith_unlocked: equipped.append({"Zenith": GameManager.zenith_charges})
+	if GameManager.mise_en_place_unlocked: equipped.append({"Mise en Place": 0 if GameManager.mise_en_place_used_this_run else 1})
+	return equipped
+	
 
 
 func update_fruit_prediction():
@@ -638,36 +615,40 @@ func spawn_fruit():
 	var fruit = null
 	
 	# --- STEP 1: Calculate Golden Fruit Chance ---
-	var golden_chance = 0.0
+	var base_golden_chance = 0.0
 	var extract_level = GameManager.golden_seed_extract_level
 	var golden_seed_level = GameManager.golden_seeds_level
 	if extract_level > 0:
 		# Get the base chance from our data array
-		golden_chance += GameManager.golden_seed_extract_data[extract_level]
+		base_golden_chance += GameManager.golden_seed_extract_data[extract_level]
 	if golden_seed_level> 0:
-		golden_chance += GameManager.golden_seeds_data[golden_seed_level]
+		base_golden_chance += GameManager.golden_seeds_data[golden_seed_level]
 		
 	# Check for Border Czar synergy
 	if GameManager.border_czar_unlocked and is_on_border(safe_position):
-		golden_chance *= 2.0
+		base_golden_chance *= 2.0
 	
 	# Check for Last Stand synergy
 	if GameManager.last_stand_unlocked and GameManager.extra_lives == 0:
-		golden_chance += 0.40 # Add a flat 40% bonus
+		base_golden_chance += 0.40 # Add a flat 40% bonus
+		
+	var final_golden_chance = GameManager.get_modified_chance(base_golden_chance)
 		
 	# --- STEP 2: Roll for a Golden Fruit ---
-	if randf() < min(1, golden_chance):
-		print("A Golden Apple has appeared! (Chance: %.1f%%)" % (golden_chance * 100.0))
+	if randf() < min(1, final_golden_chance):
+		print("A Golden Apple has appeared! (Chance: %.1f%%)" % (final_golden_chance * 100.0))
 		fruit = preload("res://Scenes/golden_fruit.tscn").instantiate()
 	
 	# --- STEP 3: If no Golden Fruit, Roll for an Exotic Fruit ---
 	else:
 		var exotic_level = GameManager.exotic_seeds_level
-		var exotic_chance = 0.10 # Base 10% chance
+		var base_exotic_chance = 0.10 # Base 10% chance
 		if exotic_level >= 5:
-			exotic_chance = 0.20 # Level 5 upgrade doubles the chance
+			base_exotic_chance = 0.20 # Level 5 upgrade doubles the chance
 			
-		if exotic_level > 0 and randf() < exotic_chance:
+		var final_exotic_chance = GameManager.get_modified_chance(base_exotic_chance)
+			
+		if exotic_level > 0 and randf() < final_exotic_chance:
 			# Success! Let's pick one of the exotic fruits we have unlocked.
 			var unlocked_fruits = []
 			for i in range(1, exotic_level + 1):
@@ -788,8 +769,8 @@ func setup_initial_obstacles():
 	
 	# --- GEODE COMPASS ---
 	# 3. Get the reduction multiplier from our Geomancer's Compass upgrade.
-	var compass_level = GameManager.geomancers_compass_level
-	var reduction_multiplier = GameManager.geomancers_compass_data[compass_level]
+	var compass_level = GameManager.geode_compass_level
+	var reduction_multiplier = GameManager.geode_compass_data[compass_level]
 	
 	# 4. Calculate the final number of rocks to spawn, rounding to the nearest whole number.
 	var final_obstacle_count = round(total_rocks_before_reduction * reduction_multiplier)
@@ -888,6 +869,7 @@ func grow_snake(segments_to_add: int):
 		var new_segment = create_colored_segment(new_segment_position)
 		call_deferred("add_child", new_segment)
 		snake_body_segments.append(new_segment)
+	update_tail_visuals()
 
 	# We only update the score display once at the very end.
 	update_score_display()
@@ -929,8 +911,9 @@ func _update_snake_after_teleport(new_position: Vector2):
 
 func update_upgrade_prompt():
 	# Show the prompt only if the player has SP to spend.
+	var prompt = $UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.get_node("HBox/StatsContainer/UpgradePromptLabel")
 	var has_juice = GameManager.juice > 0
-	$UI/HUDContainer/BottomGrid/UpgradePromptLabel.visible = has_juice
+	prompt.visible = has_juice
 
 func update_progression():
 	
@@ -1104,7 +1087,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name in ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]:
 	# Check if a path has already been chosen. This is a safety check.
 		if GameManager.rockeater_type == "":
-			print("Geomancer path chosen: ", upgrade_name)
+			print("Geode path chosen: ", upgrade_name)
 			# Set the chosen path in our global manager
 			GameManager.rockeater_type = upgrade_name
 	
@@ -1265,14 +1248,12 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	elif upgrade_name == "Burrow":
 		GameManager.burrow_level += 1
 		GameManager.burrow_charges += 1
-		$UI/HUDContainer/StatsVbox/AbilitySlot1.visible = true
 		print("Burrow Charge + 1!")
 
 	elif upgrade_name == "Pocket Garden":
 		if GameManager.pocket_garden_level < 3:
 			GameManager.pocket_garden_level += 1
 			GameManager.pocket_garden_charges += 1
-			$UI/HUDContainer/StatsVbox/AbilitySlot6.visible = true
 	
 	elif upgrade_name == "Fold Space":
 		if not GameManager.fold_space_unlocked:
@@ -1431,189 +1412,23 @@ func apply_recipe_buff(buff_data: Dictionary):
 
 # --- CORRECTED ON_SNAKE_ATE_FOOD FUNCTION ---
 func on_snake_ate_food(fruit):
-	# --- NEW COOKBOOK LOGIC ---
+	# 1. First, check and update the cookbook progress.
+	check_cookbook_progress(fruit)
+	# 2. Next, calculate all the rewards from the fruit.
+	var rewards = calculate_fruit_rewards(fruit)
+	# 3. Apply rewards
+	GameManager.juice += rewards.juice_reward
+	grow_snake(rewards.segments_to_add)
 	
-	if GameManager.custom_cuisine_unlocked:
-		if fruit is JumpingBean:
-			# Recharge a random ability
-			var abilities = ["Burrow", "Phase Shift", "Blink", "Banana Bounty", "Tenderizer"] # Add all chargeable abilities here
-			var random_ability = abilities.pick_random()
-			match random_ability:
-				"burrow": GameManager.burrow_charges += 1
-				# ... etc.
-			print("CUSTOM CUISINE: Ability recharges!")
-			
-		elif fruit is IronCherry:
-			# Grant a temporary, massive max fruit boost
-			GameManager.iron_cherry_buff_active = true
-			$IronCherryBuffTimer.start(10.0) # 10-second duration
-			# Spawn a bunch of new fruit immediately
-			for i in range(5): spawn_fruit() 
-			
-		elif fruit is DragonFruit:
-			# Grant a temporary, massive growth multiplier
-			GameManager.dragon_fruit_buff_active = true
-			$DragonFruitBuffTimer.start(10.0)
-		
-		elif fruit is GhostPepper:
-			head.activate_phase_shift(10.0)
-	
-	
-	if GameManager.the_cookbook_unlocked and not GameManager.active_recipe.is_empty():
-		var recipe = GameManager.active_recipe
-		var progress = GameManager.recipe_progress
-		
-		var required_ingredient = recipe["sequence"][progress]
-		var required_type_string = required_ingredient["type"]
-		
-		# --- Start checking if the fruit we ate is correct ---
-		# First, check if the fruit's "name tag" matches the recipe's required type.
-		var is_correct_type = (fruit.fruit_type == required_type_string)
-		
-		# Now, check if the fruit meets any special property requirements (like 'is_ripe').
-		var properties_match = true
-		if required_ingredient.has("properties"):
-			# Loop through all required properties (e.g., "is_ripe": true)
-			for prop_name in required_ingredient["properties"]:
-				var required_value = required_ingredient["properties"][prop_name]
-				
-
-				# We directly access the property on the fruit object and compare its value.
-				# This check works because both fruit.gd and golden_fruit.gd have the 'is_ripe' variable.
-				if fruit.get(prop_name) != required_value:
-					properties_match = false
-					break # A property didn't match, so we can stop checking.
-		
-		# Check for the Golden Glaze synergy (Golden Fruit is a wild card)
-		var is_wildcard = (GameManager.golden_glaze_unlocked and fruit is GoldenFruit)
-
-		if (is_correct_type and properties_match) or is_wildcard:
-			# SUCCESS!
-			GameManager.recipe_progress += 1
-			if GameManager.recipe_progress >= recipe["sequence"].size():
-				print("RECIPE COMPLETE: ", recipe["name"])
-				apply_recipe_buff(recipe["buff"])
-				pick_new_recipe()
-		else:
-			# FAILURE!
-			print("Wrong ingredient! Recipe progress reset.")
-			GameManager.recipe_progress = 0
-			pick_new_recipe()
-			
-		update_recipe_display()
-	
-	
-	
-	var segments_to_add = 0
-	var juice_reward = 0
-	
-	var was_bounty_target = fruit.is_bounty_target
-	
-	if GameManager.sugar_rush_unlocked:
-		
-		if GameManager.current_combo == 0:
-			GameManager.combo_is_pure = true
-		
-		if not GameManager.is_zenith_active:
-			
-			GameManager.current_combo += 1
-			print(GameManager.current_combo, "<- Current Combo")
-		else:
-			GameManager.current_combo += 2 # idk a bonus?
-		
-		# --- NEW: Chain Reaction Combo Cap ---
-		var max_combo = GameManager.chain_reaction_data[GameManager.chain_reaction_level]
-		if GameManager.current_combo > max_combo:
-			GameManager.current_combo = max_combo
-		
-		var combo_duration = GameManager.lingering_rush_data[GameManager.lingering_rush_level]
-		combo_timer.start(combo_duration)
-	
-	
-	
-	if GameManager.segments_to_restore > 0:
-		print("Phoenix Dawn triggered! Restoring segments.")
-		# Grow by the restored amount IN ADDITION to the normal growth
-		grow_snake(GameManager.segments_to_restore)
-		# Reset the counter so it only happens once
-		GameManager.segments_to_restore = 0
-	
-	# --- NEW FRUIT EFFECT LOGIC ---
-	if fruit is GhostPepper and not GameManager.is_phasing:
-		print("ATE A GHOST PEPPER!")
-
-		head.activate_phase_shift(3.0) # Assume you create this helper in snake_head.gd
-	
-	elif fruit is IronCherry:
-		print("ATE AN IRON CHERRY! Max fruits +1")
-		GameManager.max_fruits_on_screen += 1
-		# Immediately spawn a new fruit to reflect the change
-		spawn_fruit()
-		
-	elif fruit is DragonFruit:
-		print("ATE A DRAGON FRUIT! Fruit reward +1")
-		GameManager.fruit_reward += 1
-	
-	elif fruit is JumpingBean:
-		print("Caught the Jumping Bean! Make it do something!")
-	
+	# 4. Handle run-specific stats.
+	GameManager.fruits_eaten_this_run += 1
+	time_since_last_fruit = 0.0
 	head.check_for_afterburner()
 	
-	# --- Check for all fruit states ---
-	if was_bounty_target:
-		# SUCCESS: You ate the correct fruit.
-		print("BOUNTY COLLECTED!")
-		segments_to_add = get_effective_max_fruits() * get_effective_fruit_reward()
-		GameManager.is_bounty_active = false
-	elif GameManager.is_bounty_active:
-		# FAILURE: You ate the wrong fruit. Cancel the bounty.
-		print("Wrong fruit! Bounty cancelled.")
-		GameManager.is_bounty_active = false
-		for f in get_tree().get_nodes_in_group("fruits"):
-			if f.is_bounty_target:
-				# Reset the old target's visuals
-				if is_instance_valid(f.active_tween): f.active_tween.kill()
-				f.is_bounty_target = false
-				f.scale = Vector2(1, 1)
-				f.get_node("FillSprite").modulate = Color.GOLD if f is GoldenFruit else Color.RED
-				break
-		segments_to_add = get_effective_fruit_reward()
-	else:
-		# If no bounty is active, calculate rewards normally.
-		var growth_multiplier = 1
-		if fruit is GoldenFruit:
-			juice_reward = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
-			if fruit.is_ripe:
-				growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
-				juice_reward += 1
-		elif fruit.has_method("ripen") and fruit.is_ripe:
-			growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
-		segments_to_add = get_effective_fruit_reward() * growth_multiplier * max(1,GameManager.current_combo)
-
-	# --- Apply rewards ---
-	GameManager.juice += juice_reward
-	grow_snake(segments_to_add)
-	time_since_last_fruit = 0.0
-	GameManager.fruits_eaten_this_run += 1
-	# --- Cleanup and Respawning ---
-	if was_bounty_target:
-		# If it was a bounty, kill ALL tweens before clearing the board.
-		for f in get_tree().get_nodes_in_group("fruits"):
-			if is_instance_valid(f.active_tween):
-				f.active_tween.kill()
-			f.queue_free()
-		# Now it's safe to respawn everything.
-		for i in range(get_effective_max_fruits()):
-			update_fruit_prediction()
-			spawn_fruit()
-	else:
-		# Otherwise, just kill the tween on the one fruit that was eaten.
-		if is_instance_valid(fruit.active_tween):
-			fruit.active_tween.kill()
-		fruit.queue_free()
-		spawn_fruit()
-
-	# --- Final updates ---
+	# 5. Handle cleanup and respawning.
+	cleanup_and_respawn_fruit(fruit, rewards.was_bounty_target)
+	
+	# 6. Final UI and prediction updates.
 	update_fruit_prediction()
 	update_progression()
 	update_hud()
@@ -1621,6 +1436,117 @@ func on_snake_ate_food(fruit):
 	
 	if head.can_reverse:
 		head.can_reverse = false
+	
+func calculate_fruit_rewards(fruit) -> Dictionary:
+	# This function calculates all rewards and returns them in a dictionary.
+	var rewards = {"segments_to_add": 0, "juice_reward": 0, "was_bounty_target": false}
+	
+	# First, check for the highest priority: a bounty.
+	if fruit.is_bounty_target:
+		rewards.segments_to_add = get_effective_max_fruits() * get_effective_fruit_reward()
+		rewards.was_bounty_target = true
+		GameManager.is_bounty_active = false
+		return rewards
+	
+	# If a bounty was active but we ate the wrong fruit...
+	if GameManager.is_bounty_active:
+		GameManager.is_bounty_active = false
+		# ...find and reset the real bounty target.
+		for f in get_tree().get_nodes_in_group("fruits"):
+			if f.is_bounty_target:
+				f.reset_from_bounty() # We'll create this small helper in the fruit scripts
+				break
+				
+	# --- Calculate Normal & Special Rewards ---
+	var growth_multiplier = 1.0
+	
+	# Handle base effects and Custom Cuisine effects together
+	if fruit is GoldenFruit:
+		rewards.sp_reward += GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
+		if GameManager.custom_cuisine_unlocked:
+			head.recharge_random_ability() # We'll create this helper in snake_head
+			
+	elif fruit is GhostPepper:
+		if GameManager.custom_cuisine_unlocked:
+			# Activate long-duration phase
+			head.activate_phase_shift(10.0)
+		else:
+			head.activate_phase_shift(3.0) 
+
+	elif fruit is IronCherry:
+		if GameManager.custom_cuisine_unlocked:
+		# Grant a temporary, massive max fruit boost
+			GameManager.iron_cherry_buff_active = true
+			$IronCherryBuffTimer.start(10.0) # 10-second duration
+			# Spawn a bunch of new fruit immediately
+			for i in range(5): spawn_fruit() 
+		else:
+			GameManager.max_fruits_on_screen += 1
+		
+	elif fruit is DragonFruit:
+		# Grant a temporary, massive growth multiplier
+		GameManager.dragon_fruit_buff_active = true
+		$DragonFruitBuffTimer.start(10.0)
+	
+
+
+			
+	# Handle Ripe property
+	if fruit.has_method("ripen") and fruit.is_ripe:
+		growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
+		if fruit is GoldenFruit:
+			rewards.sp_reward += 1 # Bonus SP for a rare Ripe Golden Fruit
+			
+	rewards.segments_to_add = get_effective_fruit_reward() * growth_multiplier
+	return rewards
+	
+	
+func cleanup_and_respawn_fruit(eaten_fruit, was_bounty: bool):
+	# This function handles deleting old fruits and spawning new ones.
+	if was_bounty:
+		# If it was a bounty, clear the board and respawn everything.
+		for f in get_tree().get_nodes_in_group("fruits"):
+			if is_instance_valid(f.active_tween): f.active_tween.kill()
+			f.queue_free()
+		for i in range(get_effective_max_fruits()):
+			spawn_fruit()
+	else:
+		# Otherwise, just replace the one fruit that was eaten.
+		if is_instance_valid(eaten_fruit.active_tween): eaten_fruit.active_tween.kill()
+		eaten_fruit.queue_free()
+		spawn_fruit()
+	
+	
+	
+func check_cookbook_progress(eaten_fruit):
+	if not GameManager.the_cookbook_unlocked or GameManager.active_recipe.is_empty():
+		return
+
+	var recipe = GameManager.active_recipe
+	var progress = GameManager.recipe_progress
+	var required_ingredient = recipe["sequence"][progress]
+	
+	var is_correct_type = (eaten_fruit.fruit_type == required_ingredient["type"])
+	var properties_match = true
+	if required_ingredient.has("properties"):
+		for prop in required_ingredient["properties"]:
+			if not eaten_fruit.has(prop) or eaten_fruit.get(prop) != required_ingredient["properties"][prop]:
+				properties_match = false
+				break
+				
+	var is_wildcard = (GameManager.golden_glaze_unlocked and eaten_fruit is GoldenFruit)
+
+	if (is_correct_type and properties_match) or is_wildcard:
+		GameManager.recipe_progress += 1
+		if GameManager.recipe_progress >= recipe["sequence"].size():
+			apply_recipe_buff(recipe["buff"])
+			pick_new_recipe()
+	else:
+		GameManager.recipe_progress = 0
+		pick_new_recipe() # Give the player a new recipe on failure
+	
+
+
 
 func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> Vector2:
 	var potential_position: Vector2
@@ -1692,62 +1618,108 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			
 	return potential_position
 
-
-func apply_cosmetic_upgrades():
-	# This function will check for any purely visual upgrades
-	if GameManager.dazzle_pie_unlocked:
-		$UI/DazzleOverlay.visible = true
-		var mat = ShaderMaterial.new()
-		mat.shader = trippy_grid_shader
-		background_rect.material = mat
-	else:
-		var mat = null
-		background_rect.color = Color("#222222")
-		background_rect.material = mat
-		$UI/DazzleOverlay.visible = false
-		
-	if GameManager.masters_blueprint_unlocked:
-		apply_blueprint_visuals()
-
-
-
-func apply_blueprint_visuals():
-	# This function only runs if the upgrade is unlocked.
-	if not GameManager.masters_blueprint_unlocked:
-		return
-
-	print("Applying Master's Blueprint visuals!")
+func draw_grid(grid_color: Color):
+	var grid_tilemap = $BlueprintGridTileMap # We can reuse this TileMap node
+	grid_tilemap.clear()
 	
-	# Define our new color scheme
-	var blueprint_bg_color = Color("0d1b2a") # A dark navy blue
-	var blueprint_grid_color = Color("415a77", 0.2) # A muted blue-gray
-	var blueprint_glow_color = Color("AFEEEE") # A bright, pale cyan
-	
-	# Change the visuals of the main world elements
-	$"Background-Color-Rect".color = blueprint_bg_color
-	$BoundaryIndicator.modulate = blueprint_grid_color
-	$DividingWallTileMap.modulate = blueprint_grid_color
-	
-	
-	var grid_tilemap = $BlueprintGridTileMap
-	grid_tilemap.clear() # Clear any old grid
 	for y in range(grid_height):
 		for x in range(grid_width):
-			# Place a grid tile at every single coordinate
 			grid_tilemap.set_cell(0, Vector2i(x, y), 0, Vector2i(0,0))
-	# Modulate the entire tilemap to make the lines subtle
-	grid_tilemap.modulate = blueprint_grid_color
+			
+	# Modulate the entire tilemap to set the color of the grid lines.
+	grid_tilemap.modulate = grid_color
+
+func apply_cosmetic_upgrades():
+	# This is now the single source of truth for all visual styles.
 	
+	# PRIORITY 1: Master's Blueprint (The ultimate visual override)
+	if GameManager.masters_blueprint_unlocked:
+		apply_blueprint_visuals() # This helper handles all blueprint effects
+		
+	# PRIORITY 2: Dazzle Pie
+	elif GameManager.dazzle_pie_unlocked:
+		apply_dazzle_visuals() # This new helper handles the Dazzle effects
 	
-	# Change the visuals of all existing game objects
+	# PRIORITY 3: Chroma Scales (The default customizable look)
+	else:
+		apply_chroma_scales_visuals() # This helper handles player-chosen colors
+
+func update_snake_visuals_from_chroma():
+	# This function updates the entire snake based on Chroma Scales level
+	if is_instance_valid(head):
+		head.get_node("FillSprite").modulate = GameManager.equipped_head_color
+
+	for i in range(snake_body_segments.size()):
+		var segment = snake_body_segments[i]
+		if GameManager.chroma_scales_level >= 1:
+			var pattern_rate = GameManager.equipped_pattern_rate
+			if (i + 2) % pattern_rate == 0:
+				segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_2
+			else:
+				segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_1
+		else:
+			# Default single color if pattern is not activated
+			segment.get_node("FillSprite").modulate = Color.PURPLE
+
+
+func apply_dazzle_visuals():
+	# This function handles the Dazzle Pie effect.
+	
+	# 1. Turn ON the Dazzle overlay for the chromatic aberration.
+	$UI/DazzleOverlay.visible = true
+	
+	# 2. Ensure the background is in its default state (no shader).
+	background_rect.material = null
+	background_rect.color = Color("#222222")
+	
+	# 3. Draw a unique, subtle grid for the Dazzle effect.
+	draw_grid(Color("FFFFFF", 0.1)) # A faint white grid
+	
+	# 4. Make sure the snake has its normal Chroma Scales colors.
+	update_snake_visuals_from_chroma()
+
+func apply_chroma_scales_visuals():
+	# Turn off all keystone effects
+	$UI/DazzleOverlay.visible = false
+	background_rect.material = null
+	# Check if the player has unlocked the basic grid via Chroma Scales
+	if GameManager.chroma_scales_level >= 4: # Assuming level 4 unlocks the background
+		$BlueprintGridTileMap.clear()
+		draw_grid(Color("FFFFFF", 0.1)) # A very faint white grid
+		background_rect.color = GameManager.equipped_background_color
+	else:
+		# If not, ensure the grid is clear and the background is default
+		$BlueprintGridTileMap.clear()
+		background_rect.color = Color("#222222")
+		
+	# Apply the normal snake colors
+	update_snake_visuals_from_chroma()
+
+func update_all_objects_to_blueprint_color():
+	var blueprint_glow_color = Color("AFEEEE")
 	head.get_node("FillSprite").modulate = blueprint_glow_color
 	for segment in snake_body_segments:
 		segment.get_node("FillSprite").modulate = blueprint_glow_color
 	for fruit in get_tree().get_nodes_in_group("fruits"):
 		fruit.get_node("FillSprite").modulate = blueprint_glow_color
 	for rock in spawned_obstacles:
-		rock.get_node("FillSprite").modulate = Color.BLACK
-	update_tail_visuals()
+		rock.get_node("FillSprite").modulate = Color.BLACK # Your chosen rock color
+
+func apply_blueprint_visuals():
+	# Turn OFF other effects
+	$UI/DazzleOverlay.visible = false
+	
+	# Set the unique background color
+	background_rect.color = Color("0d1b2a")
+	var mat = ShaderMaterial.new()
+	mat.shader = trippy_grid_shader
+	background_rect.material = mat
+
+	# Call our helper to draw the blueprint grid
+	draw_grid(Color("415a77", 0.2))
+	
+	# Apply the object colors
+	update_all_objects_to_blueprint_color()
 
 func is_any_body_part_at(check_pos: Vector2) -> bool:
 	# This function ignores ghost rules and just checks every segment.
@@ -1908,24 +1880,32 @@ func use_extra_life():
 	start_countdown()
 
 func update_score_display():
-	var score = (snake_body_segments.size() + 1)
-	$UI/HUDContainer/BottomGrid/ScoreLabel.text = "Score: " + str(score)
+	var score_label = player_banner.get_node("HBox/StatsContainer/ScoreLabel")
+	var old_score = score_label.text.to_int()
+	var new_score = snake_body_segments.size() + 1
+	
+	score_label.text = str(new_score)
+	
+	# The "CoD Zombies" animation!
+	var points_to_add = new_score - old_score
+	if points_to_add > 0:
+		for i in range(points_to_add):
+			var point_label = Label.new()
+			point_label.text = "+1"
+			# Style it to look good
+			# ...
+			add_child(point_label)
+			point_label.global_position = score_label.global_position
+			
+			var tween = create_tween()
+			tween.tween_property(point_label, "position:y", point_label.position.y - 50, 0.5)
+			tween.parallel().tween_property(point_label, "modulate:a", 0.0, 0.5)
+			tween.tween_callback(point_label.queue_free)
 
 func create_colored_segment(next_pos: Vector2) -> Node2D:
 	var segment = body_scene.instantiate()
 	segment.position = next_pos
-	
-	if GameManager.masters_blueprint_unlocked:
-		segment.get_node("FillSprite").modulate = Color("AFEEEE")
-		return segment
-	
-	#Change these values for the alternating snake pattern
-	var color_a = Color("8A00C4") #Purple-neon
-	var color_b = Color("BA8E23") #Dark Yellow
-	if (snake_body_segments.size() + 2) % 5 == 0:
-		segment.get_node("FillSprite").modulate = color_b
-	else:
-		segment.get_node("FillSprite").modulate = color_a
+	# It no longer sets the color itself.
 	return segment
 
 func positions_are_equal(pos1: Vector2, pos2: Vector2) -> bool:
@@ -1991,7 +1971,7 @@ func _on_garden_complete_continue_pressed() -> void:
 	var score = snake_body_segments.size() + 1
 	
 	GameManager.abilities_used_this_garden = 0
-	GameManager.sp_spent_this_garden = 0
+	GameManager.juice_spent_this_garden = 0
 	GameManager.garden_start_time = GameManager.run_time
 	
 	
@@ -2045,54 +2025,51 @@ func update_tail_visuals():
 			segment.get_node("FillSprite").modulate = blueprint_glow_color
 		return # IMPORTANT: Stop here!
 	
-	
-	# Loop through all segments and set their state
-	for i in range(total_segments):
-		var segment = snake_body_segments[i]
-		# Get references to the nodes we need to change
-		var fill_sprite = segment.get_node_or_null("FillSprite")
-		var collision_shape = segment.get_node_or_null("CollisionShape2D")
+	else:
+		update_snake_visuals_from_chroma()
+		# Loop through all segments and set their state
+		for i in range(total_segments):
+			var segment = snake_body_segments[i]
+			# Get references to the nodes we need to change
+			var fill_sprite = segment.get_node_or_null("FillSprite")
+			var collision_shape = segment.get_node_or_null("CollisionShape2D")
 
-		# This check is crucial to prevent crashes if a node is missing
-		if not is_instance_valid(fill_sprite) or not is_instance_valid(collision_shape):
-			continue
+			# This check is crucial to prevent crashes if a node is missing
+			if not is_instance_valid(fill_sprite) or not is_instance_valid(collision_shape):
+				continue
+			
+			
+			# --- FRACTURED SELF LOGIC ---
+			# First, we check if we have the ultimate upgrade.
+			if GameManager.fractured_self_unlocked:
+				# "3 solid, 3 blank" idea.
+				# We use integer division and the modulo operator to find the chunk number.
+				var chunk_index = i / 3.0
+				if chunk_index % 2 != 0: # Every other chunk is invisible
+					segment.visible = false
+					collision_shape.disabled = true
+					continue # Skip the rest of the logic for this invisible segment
+				else:
+					# If it's part of a visible chunk, make sure it's enabled.
+					segment.visible = true
+					collision_shape.disabled = false
+			
+			
+			
+			# Check if this segment should be a ghost using the same logic as our collision check
+			var is_ghost = (i >= total_segments - ghost_segment_count)
 		
-		
-		# --- FRACTURED SELF LOGIC ---
-		# First, we check if we have the ultimate upgrade.
-		if GameManager.fractured_self_unlocked:
-			# "3 solid, 3 blank" idea.
-			# We use integer division and the modulo operator to find the chunk number.
-			var chunk_index = i / 3.0
-			if chunk_index % 2 != 0: # Every other chunk is invisible
-				segment.visible = false
-				collision_shape.disabled = true
-				continue # Skip the rest of the logic for this invisible segment
+			if is_ghost:
+				# --- GHOST STATE ---
+				fill_sprite.modulate = ghost_color
+				# FIX: Use set_deferred to safely disable the collision shape.
+				collision_shape.set_deferred("disabled", true)
 			else:
-				# If it's part of a visible chunk, make sure it's enabled.
-				segment.visible = true
-				collision_shape.disabled = false
-		
-		
-		
-		# Check if this segment should be a ghost using the same logic as our collision check
-		var is_ghost = (i >= total_segments - ghost_segment_count)
-		
-		if is_ghost:
-			# --- GHOST STATE ---
-			fill_sprite.modulate = ghost_color
-			# Tell the physics engine to ignore this segment
-			collision_shape.disabled = true
-		else:
-			# --- SOLID STATE ---
-			# Restore its original color based on the consistent pattern
-			# This must match your create_colored_segment function!
-			if (i + 2) % 5 == 0:
-				fill_sprite.modulate = Color("BA8E23") # Dark Yellow
-			else:
-				fill_sprite.modulate = Color("8A00C4") # Purple-neon
-			# Tell the physics engine to make it solid again
-			collision_shape.disabled = false
+				# --- SOLID STATE ---
+				# Restore original color based on your Chroma Scales settings.
+				update_snake_visuals_from_chroma() # Assuming this helper exists and works
+				# FIX: Use set_deferred to safely re-enable the collision shape.
+				collision_shape.set_deferred("disabled", false)
 
 func perform_garden_weave():
 	print("GARDEN WEAVER ACTIVATED!")
@@ -2448,58 +2425,9 @@ func pick_new_recipe():
 	GameManager.recipe_progress = 0
 	
 	print("New Recipe: ", GameManager.active_recipe["name"])
-	
-	# Immediately update the UI to show the new recipe
-	update_recipe_display()
 
 
-func update_recipe_display():
-	if not GameManager.the_cookbook_unlocked:
-		cookbook_ui.visible = false
-		return
 
-	cookbook_ui.visible = true
-
-	for child in ingredients_container.get_children():
-		child.queue_free()
-
-	var recipe = GameManager.active_recipe
-	if recipe.is_empty():
-		recipe_name_label.text = "No Active Recipe"
-		return
-
-	recipe_name_label.text = recipe["name"]
-
-	for i in range(recipe["sequence"].size()):
-		var ingredient_data = recipe["sequence"][i]
-		var ingredient_type = ingredient_data["type"]
-		
-		var icon = TextureRect.new()
-		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.custom_minimum_size = Vector2(24, 24)
-
-		match ingredient_type:
-			"Fruit":
-				icon.texture = preload("res://Assets/PNGs/snake_fruit_red.png")
-			"GoldenFruit":
-				icon.texture = preload("res://Assets/PNGs/golden_fruit_icon.png")
-			"GhostPepper":
-				icon.texture = preload("res://Assets/PNGs/ghost_pepper_icon.png")
-			"JumpingBean":
-				icon.texture = preload("res://Assets/PNGs/jumping_bean_icon.png")
-			"IronCherry":
-				icon.texture = preload("res://Assets/PNGs/iron_cherry_icon.png")
-			"DragonFruit":
-				icon.texture = preload("res://Assets/PNGs/dragon_fruit_icon.png")
-			_:
-				print("No icon assigned for ingredient type: ", ingredient_type)
-
-		if i < GameManager.recipe_progress:
-			icon.modulate = Color(0.3, 0.3, 0.3)
-
-		ingredients_container.add_child(icon)
-		
-		
 # This function is called from apply_recipe_buff
 func start_fruit_flood(duration: float):
 	print("FRUIT FLOOD activated for %s seconds!" % duration)

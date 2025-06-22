@@ -116,6 +116,9 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.banana_bounty_charges > 0 and not GameManager.is_bounty_active:
 			GameManager.abilities_used_this_garden += 1
 			main.activate_banana_bounty()
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
+				GameManager.banana_bounty_charges += 1
+			main.update_hud()
 	
 	if event.is_action_pressed("activate_ability_burrow"):
 		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
@@ -123,7 +126,7 @@ func _unhandled_input(event: InputEvent):
 			GameManager.burrow_charges -= 1
 			GameManager.abilities_used_this_garden += 1
 			get_node("FillSprite").modulate = Color.WHITE
-			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
 				GameManager.burrow_charges += 1
 			main.update_hud()
 			
@@ -133,7 +136,7 @@ func _unhandled_input(event: InputEvent):
 			GameManager.phase_shift_charges -= 1
 			GameManager.abilities_used_this_garden += 1
 			activate_phase_shift(2.0)
-			if GameManager.chosen_class == "sidewinder" and randi() % 100 < 25:
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
 				GameManager.phase_shift_charges += 1
 			main.update_hud()
 			
@@ -147,6 +150,9 @@ func _unhandled_input(event: InputEvent):
 			meditative_state_timer.wait_time = duration
 			meditative_state_timer.start()
 			get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
+				GameManager.meditative_state_charges += 1
+			main.update_hud()
 	
 	if event.is_action_pressed("activate_autotomy"):
 	# Check if the ability is unlocked, hasn't been used this garden, and isn't already active
@@ -158,10 +164,14 @@ func _unhandled_input(event: InputEvent):
 			# Visual Feedback
 			get_node("FillSprite").modulate = Color.ORANGE_RED
 			
+			
 	if event.is_action_pressed("activate_pocket_garden"):
 		if GameManager.pocket_garden_charges > 0:
 			GameManager.abilities_used_this_garden += 1
 			main.create_pocket_garden()
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
+				GameManager.pocket_garden_charges += 1
+			main.update_hud()
 			
 	if event.is_action_pressed("activate_molt"):
 		# Check all conditions before allowing the ability to fire
@@ -173,12 +183,18 @@ func _unhandled_input(event: InputEvent):
 		if GameManager.blink_charges > 0:
 			GameManager.abilities_used_this_garden += 1
 			main.perform_blink()
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
+				GameManager.blink_charges += 1
+			main.update_hud()
 			
 	if event.is_action_pressed("activate_zenith"):
 		# Check if we have charges and the ability isn't already active
 		if GameManager.zenith_charges > 0 and not GameManager.is_zenith_active:
 			GameManager.abilities_used_this_garden += 1
 			main.activate_zenith()
+			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
+				GameManager.zenith_charges += 1
+			main.update_hud()
 			
 	if event.is_action_released("activate_mise_en_place"):
 		if GameManager.mise_en_place_unlocked and not GameManager.mise_en_place_used_this_run:
@@ -444,3 +460,40 @@ func _on_temp_speed_boost_timer_timeout():
 	print("Speed boost has ended.")
 	# Restore the snake's speed to its normal, upgraded value
 	main.apply_persistent_upgrades()
+
+
+func recharge_random_ability():
+	print("CUSTOM CUISINE: Recharging a random ability!")
+	
+	# 1. Create a list of all abilities the player has unlocked.
+	var available_abilities = []
+	if GameManager.burrow_level > 0: available_abilities.append("burrow")
+	if GameManager.phase_shift_level > 0: available_abilities.append("phase_shift")
+	if GameManager.blink_level > 0: available_abilities.append("blink")
+	if GameManager.banana_bounty_level > 0: available_abilities.append("banana_bounty")
+	if GameManager.meditative_state_level > 0: available_abilities.append("Meditative State")
+	if GameManager.pocket_garden_level > 0: available_abilities.append("Pocket Garden")
+
+	
+	# 2. If they don't have any abilities, do nothing.
+	if available_abilities.is_empty():
+		return
+		
+	# 3. Pick a random ability from the list and grant one charge.
+	var chosen_ability = available_abilities.pick_random()
+	match chosen_ability:
+		"burrow":
+			GameManager.burrow_charges += 1
+		"phase_shift":
+			GameManager.phase_shift_charges += 1
+		"blink":
+			GameManager.blink_charges += 1
+		"banana_bounty":
+			GameManager.banana_bounty_charges += 1
+		"Meditative State":
+			GameManager.meditative_state_charges += 1
+		"Pocket Garden":
+			GameManager.pocket_garden_charges += 1
+	
+	# 4. Update the HUD to show the new charge count.
+	main.update_hud()

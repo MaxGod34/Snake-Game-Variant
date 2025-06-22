@@ -39,6 +39,29 @@ var garden_bonus_data = {
 }
 
 
+
+# --- PERSISTENT CUSTOMIZATION UNLOCKS (Bought with Fangs) ---
+# These variables would be saved and loaded in a real game.
+var pattern_rate_unlocked = false
+var custom_head_color_unlocked = false
+var custom_body_color_1_unlocked = false
+var custom_body_color_2_unlocked = false
+var custom_trail_unlocked = false
+var custom_ghost_tail_unlocked = false
+var custom_background_unlocked = false
+var custom_SFX_unlocked = false
+# --- PLAYER'S EQUIPPED COSMETICS ---
+var equipped_head_color: Color = Color.LIME_GREEN
+var equipped_body_color_1: Color = Color.PURPLE
+var equipped_body_color_2: Color = Color.GOLD
+var equipped_pattern_rate: int = 5
+var equipped_trail_color: Color = Color.LIGHT_PINK
+var equipped_ghost_tail_color: Color = Color.STEEL_BLUE
+var equipped_background_color: Color = Color.DARK_SLATE_GRAY
+#var equipped_SFX: ???
+
+
+
 #-----Player Stats--------#
 var player_level = 1
 var juice = 0
@@ -63,7 +86,7 @@ var synapse_slots_unlocked: int = 2 # Start with 2 slots by default
 var serpents_coffer_level: int = 0
 var serpents_coffer_data = [0.0, 0.05, 0.10, 0.15, 0.20]
 var geode_compass_level: int = 0
-var geomancers_compass_data = [1.0, 0.9, 0.8, 0.7, 0.6] # % of rocks left
+var geode_compass_data = [1.0, 0.9, 0.8, 0.7, 0.6] # % of rocks left
 var four_leaf_clover_level: int = 0
 var four_leaf_clover_data = [0.0, 0.02, 0.04, 0.07, 0.10] # + % on all luck
 var chroma_scales_level: int = 0
@@ -1011,9 +1034,9 @@ var meta_upgrade_data = {
 		"max_level": 4
 	},
 	"Chroma Scales": {
-		"description": "Unlocks a new cosmetic skin for your snake.",
-		"costs": [50, 50, 50, 50],
-		"max_level": 4
+		"description": "Activate the cosmetic options\nyou've permanently unlocked in the Fang Fund.",
+		"costs": [10, 20, 30, 40, 50, 60],
+		"max_level": 6
 	}
 }
 

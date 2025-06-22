@@ -9,7 +9,7 @@ signal continue_pressed
 @onready var title_label = $CenterContainer/PanelContainer/VBoxContainer/TitleLabel
 @onready var stats_label = $CenterContainer/PanelContainer/VBoxContainer/StatsLabel
 @onready var bonus_list_container = $CenterContainer/PanelContainer/VBoxContainer/BonusListContainer
-@onready var total_scales_label = $CenterContainer/PanelContainer/VBoxContainer/TotalScalesLabel
+@onready var total_pulp_label = $CenterContainer/PanelContainer/VBoxContainer/TotalPulpLabel
 @onready var grand_total_label = $CenterContainer/PanelContainer/VBoxContainer/GrandTotalLabel
 @onready var continue_button = $ContinueButton
 
@@ -17,11 +17,11 @@ signal continue_pressed
 
 # --- The Master "Setup" Function ---
 # This one function now handles EVERYTHING.
-func display_results(garden_name, bonus_list: Array, scales_this_garden: int, is_final_garden: bool, is_final_win: bool):
+func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_final_garden: bool, is_final_win: bool):
 	# --- Part 1: Handle the "Game Win" state ---
 	# This is the logic from your old 'setup' function.
 	bonus_list_container.visible = false
-	total_scales_label.visible = false
+	total_pulp_label.visible = false
 	grand_total_label.visible = false
 	continue_button.visible = false
 
@@ -94,22 +94,22 @@ func display_results(garden_name, bonus_list: Array, scales_this_garden: int, is
 	await get_tree().create_timer(0.5).timeout # A dramatic pause
 
 	# Make the total labels visible for their animation.
-	total_scales_label.visible = true
+	total_pulp_label.visible = true
 	
-	total_scales_label.scale = Vector2.ZERO
+	total_pulp_label.scale = Vector2.ZERO
 	
 
 	# Animate the final totals popping in.
-	total_scales_label.text = "Total This Garden: +%s Scales" % scales_this_garden
+	total_pulp_label.text = "Total This Garden: +%s mgs of Pulp" % pulp_this_garden
 	var tween1 = create_tween()
-	tween1.tween_property(total_scales_label, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
+	tween1.tween_property(total_pulp_label, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
 	await get_tree().create_timer(0.6).timeout  # Wait before showing the next label
 	
 	grand_total_label.modulate.a = 0.0
 	grand_total_label.visible = true
 	grand_total_label.scale = Vector2.ZERO
-	grand_total_label.text = "New Grand Total: %s Scales" % GameManager.snake_scales
+	grand_total_label.text = "New Grand Total: %s mgs of Pulp" % GameManager.pulp
 	var tween2 = create_tween()
 	tween2.tween_property(grand_total_label, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	tween2.parallel().tween_property(grand_total_label, "modulate:a", 1.0, 0.1)

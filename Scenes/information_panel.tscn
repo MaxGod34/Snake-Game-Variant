@@ -1,0 +1,183 @@
+[gd_scene load_steps=7 format=3 uid="uid://cy78aj0eaeuv2"]
+
+[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_3qsp6"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_40xf2"]
+[ext_resource type="Script" uid="uid://b6hfbkpju0rb0" path="res://Scenes/information_panel.gd" id="2_dhsml"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_40xf2"]
+texture = ExtResource("1_3qsp6")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(0, 0.415686, 0.47451, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_w1bqw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cvypg"]
+
+[node name="InformationPanel" type="PanelContainer"]
+custom_minimum_size = Vector2(416, 304)
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -256.0
+offset_top = -190.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxTexture_40xf2")
+script = ExtResource("2_dhsml")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="VSeparator2" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+theme_override_styles/separator = SubResource("StyleBoxEmpty_w1bqw")
+
+[node name="GardenDataContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="HSeparator4" type="HSeparator" parent="HBoxContainer/GardenDataContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cvypg")
+
+[node name="GardenStatus" type="VBoxContainer" parent="HBoxContainer/GardenDataContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="GardenNameLabel" type="Label" parent="HBoxContainer/GardenDataContainer/GardenStatus"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "The Juice Box"
+
+[node name="GardenGoalLabel" type="Label" parent="HBoxContainer/GardenDataContainer/GardenStatus"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "Garden Goal: 420"
+
+[node name="GPS_Tracker" type="Control" parent="HBoxContainer/GardenDataContainer"]
+custom_minimum_size = Vector2(0, 192)
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/GardenDataContainer/GPS_Tracker"]
+offset_right = 114.0
+offset_bottom = 33.0
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "GPS:"
+
+[node name="Graph" type="Line2D" parent="HBoxContainer/GardenDataContainer/GPS_Tracker"]
+width = 3.0
+default_color = Color(0, 1, 0, 1)
+
+[node name="VSeparator" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+theme_override_styles/separator = SubResource("StyleBoxEmpty_w1bqw")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cvypg")
+
+[node name="FrenzyMeter" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RunTimerLabel" type="Label" parent="HBoxContainer/VBoxContainer/FrenzyMeter"]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "Time: 42.6s"
+
+[node name="ComboWindowLabel" type="Label" parent="HBoxContainer/VBoxContainer/FrenzyMeter"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "TSLF: 5.7s"
+
+[node name="ComboCounterLabel" type="Label" parent="HBoxContainer/VBoxContainer/FrenzyMeter"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "COMBO: 5"
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cvypg")
+
+[node name="CookbookUI" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="RecipeNameLabel" type="Label" parent="HBoxContainer/VBoxContainer/CookbookUI"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_40xf2")
+theme_override_font_sizes/font_size = 32
+text = "Recipe:"
+
+[node name="IngredientsContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/CookbookUI"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+
+[node name="HSeparator5" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cvypg")
+
+[node name="HSeparator3" type="HSeparator" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_cvypg")
+
+[node name="VSeparator3" type="VSeparator" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+theme_override_styles/separator = SubResource("StyleBoxEmpty_w1bqw")

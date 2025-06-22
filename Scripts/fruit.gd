@@ -46,3 +46,20 @@ func ripen():
 	
 	# Store a reference to the new tween
 	active_tween = tween
+
+
+func reset_from_bounty():
+	is_bounty_target = false
+	# Kill any active tween (like the bounty pulse)
+	if is_instance_valid(active_tween):
+		active_tween.kill()
+		active_tween = null
+		
+	# Reset the scale and color back to normal
+	scale = Vector2.ONE
+	# Check what type of fruit this is to apply the correct color
+	if self is Fruit:
+		get_node("FillSprite").modulate = Color.GOLD
+	else:
+		# This assumes your normal fruit is red. Change if needed!
+		get_node("FillSprite").modulate = Color.RED 

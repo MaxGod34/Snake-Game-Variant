@@ -85,6 +85,7 @@ corner_radius_bottom_right = 20
 corner_radius_bottom_left = 20
 
 [node name="UpgradeMenu" type="CanvasLayer"]
+visible = false
 script = ExtResource("1_ltp0x")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -2821,11 +2822,11 @@ theme_override_styles/panel = ExtResource("5_m70ya")
 theme_override_styles/tab_selected = ExtResource("7_lpopj")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
+current_tab = 0
 tabs_position = 1
 deselect_enabled = true
 
 [node name="Glutton" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/BottomTabs"]
-visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
