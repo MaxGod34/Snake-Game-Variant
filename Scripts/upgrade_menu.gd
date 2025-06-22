@@ -12,7 +12,7 @@ signal resume_game_pressed
 @onready var stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox
 @onready var side_stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer
 @onready var description_label = $DescriptionText
-@onready var sp_label = $BottomRowHbox/BottomSPLabel
+@onready var juice_label = $BottomRowHbox/BottomJuiceLabel
 @onready var resume_button = $ResumeButton
 
 
@@ -180,14 +180,14 @@ func update_stats_tab():
 		stats_panel.get_node("ClassLabel").text = "Class: " + GameManager.chosen_class.capitalize()
 		stats_panel.get_node("DifficultyLabel").text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
 		stats_panel.get_node("LevelLabel").text = "Level: " + str(GameManager.player_level)
-		stats_panel.get_node("SPLabel").text = "Snake Points: " + str(GameManager.skill_points)
+		stats_panel.get_node("JuiceLabel").text = "JUICE: " + str(GameManager.juice) + " mL"
 	#Check our other stats panel on the side
 	if is_instance_valid(side_stats_panel):
 		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
 		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [20 + 4 * GameManager.edge_lord_level, 15 + 3 * GameManager.edge_lord_level]
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
-		side_stats_panel.get_node("TotalSPStatsLabel").text = "Total SP this run: " + str(GameManager.total_sp_this_run) + " SP"
+		side_stats_panel.get_node("TotalJuiceStatsLabel").text = "Total Juice this run: " + str(GameManager.total_juice_this_run) + " mL"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"
 
 		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.garden_data[min(GameManager.current_garden + 1, 5)]["score_goal"])
@@ -197,7 +197,7 @@ func update_stats_tab():
 			side_stats_panel.get_node("NextGardenObstacles#Label").visible = false
 
 func update_skill_points_label():
-	sp_label.text = "Skill Points: " + str(GameManager.skill_points)
+	juice_label.text = "Juice: " + str(GameManager.juice) + " mL"
 
 # This is our powerful, generic function for updating any button.
 func update_button_display(upgrade_key):
@@ -259,7 +259,7 @@ func update_button_display(upgrade_key):
 		final_cost = max(1, final_cost)
 		
 		
-		button_node.text = rules["display_name"] + "\n(" + str(final_cost) + " SP)"
+		button_node.text = rules["display_name"] + "\n(" + str(final_cost) + " mL)"
 		button_node.disabled = false
 	
 	# Indicator Block Update
@@ -292,9 +292,9 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 		final_cost = max(1, final_cost)
 		
 		
-		if GameManager.skill_points >= final_cost:
-			GameManager.skill_points -= final_cost
-			GameManager.sp_spent_this_garden += final_cost
+		if GameManager.juice >= final_cost:
+			GameManager.juice -= final_cost
+			GameManager.juice_spent_this_garden += final_cost
 			emit_signal("upgrade_selected", upgrade_key)
 			button_node.release_focus()
 			update_all_displays()

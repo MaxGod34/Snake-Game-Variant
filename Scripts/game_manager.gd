@@ -41,15 +41,16 @@ var garden_bonus_data = {
 
 #-----Player Stats--------#
 var player_level = 1
-var skill_points = 0
+var juice = 0
+var pulp = 0
 var score_needed_for_next_level = 5
 var score_at_level_start = 0
 var fruits_eaten_this_run: int = 0
-var total_sp_this_run: int = 0
+var total_juice_this_run: int = 0
 var segments_to_restore = 0
-var snake_scales = 0
+
 # --- BONUS TRACKING VARS ---
-var sp_spent_this_garden = 0
+var juice_spent_this_garden = 0
 var abilities_used_this_garden = 0
 var garden_start_time = 0.0
 
@@ -57,6 +58,15 @@ var garden_start_time = 0.0
 var fruit_reward = 1
 var max_fruits_on_screen = 1
 
+# --- "PULP" META-UPGRADE LEVELS ---
+var synapse_slots_unlocked: int = 2 # Start with 2 slots by default
+var serpents_coffer_level: int = 0
+var serpents_coffer_data = [0.0, 0.05, 0.10, 0.15, 0.20]
+var geode_compass_level: int = 0
+var geomancers_compass_data = [1.0, 0.9, 0.8, 0.7, 0.6] # % of rocks left
+var four_leaf_clover_level: int = 0
+var four_leaf_clover_data = [0.0, 0.02, 0.04, 0.07, 0.10] # + % on all luck
+var chroma_scales_level: int = 0
 
 
 	#----Active Ability Flags----#
@@ -224,21 +234,24 @@ var difficulty_data = {
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
 		"sp_cost_modifier": 0,    # Upgrades cost the normal amount
-		"starting_sp": 69          # Start with 5 free skill points!
+		"starting_sp": 69,          # Start with 5 free skill points!
+		"start_slots": 10
 	},
 	"viper": {	#Medium
 		"name": "Viper",
 		"speed_multiplier": 1.0,  # Normal speed
 		"goal_multiplier": 1.0,   # Normal garden goals
 		"sp_cost_modifier": 1,    # Upgrades cost +1 SP
-		"starting_sp": 0
+		"starting_sp": 0,
+		"start_slots": 8
 	},
 	"basilisk": {	#Hard
 		"name": "Basilisk",
 		"speed_multiplier": 0.8,  # Faster snake
 		"goal_multiplier": 1.25,  # Longer garden goals
 		"sp_cost_modifier": 2,    # Upgrades cost +2 SP
-		"starting_sp": 0
+		"starting_sp": 0,
+		"start_slots": 2
 	}
 }
 #---------CLASS PARAMETERS--------#
@@ -462,7 +475,7 @@ var class_data = {
 	},
 	"the_zealot": {
 		"name": "The Zealot",
-		"description": "Cannot gain extra lives.\nReceives a massive +5 SP bonus for completing a Garden without dying.",
+		"description": "Cannot gain extra lives.\nReceives a massive +5 Juice bonus for completing a Garden without dying.",
 		"start_length": 1,
 		"start_speed": 0.2,
 		"start_fruit_reward": 1,
@@ -505,7 +518,7 @@ var class_data = {
 	},
 	"the_alchemist": {
 		"name": "The Alchemist",
-		"description": "Does not gain SP from leveling up. Every fruit has a 10% chance to grant 1 SP instead.",
+		"description": "Does not gain Juice from leveling up. Every fruit has a 10% chance to grant 1 Juice instead.",
 		"start_length": 3,
 		"start_speed": 0.25,
 		"start_fruit_reward": 1,
@@ -625,7 +638,7 @@ var upgrade_data = {
 	},
 	"Geode Cracker": {
 		"display_name": "Geode Cracker", "max_level": 1, "costs": [4],
-		"description": "You can now eat rocks, which have a chance to grant +1 SP.",
+		"description": "You can now eat rocks, which have a chance to grant +1 Juice.",
 		"prerequisite": {"upgrade": "Mineral Rich Soil", "level": 3}
 	},
 	"Kinetic Feast": {
@@ -642,7 +655,7 @@ var upgrade_data = {
 	# --- GEOMANCER KEYSTONE ---
 	"Calculated Risk": {
 		"display_name": "Calculated Risk", "max_level": 1, "costs": [8],
-		"description": "Doubles the SP bonus from Geological Survey.",
+		"description": "Doubles the Juice bonus from Geological Survey.",
 		"prerequisite": {"upgrade": "Geological Survey", "level": 1} 
 		# The check for having a Rockeater upgrade will be handled in code
 	},
@@ -715,7 +728,7 @@ var upgrade_data = {
 	},
 	"3 Card Monty": {
 		"display_name": "3-Card Monty",
-		"description": "Permanently reduces the SP cost of all other upgrades by 1 (to a minimum of 1).",
+		"description": "Permanently reduces the Juice cost of all other upgrades by 1 (to a minimum of 1).",
 		"costs": [5],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 3}
@@ -774,7 +787,7 @@ var upgrade_data = {
 	},
 	"New Game S+": {
 		"display_name": "New Game S+",
-		"description": "PRESTIGE! If you reach the final Garden without dying,\nyou may choose to restart at Garden 1 with all upgrades\nand double SP gain.",
+		"description": "PRESTIGE! If you reach the final Garden without dying,\nyou may choose to restart at Garden 1 with all upgrades\nand double Juice gain.",
 		"costs": [1], "max_level": 1,
 		# The prerequisite for this one will be handled in code, not here.
 	},
@@ -975,6 +988,37 @@ var upgrade_data = {
 	},
 }
 
+
+var meta_upgrade_data = {
+	"Synapse Slot": {
+		"description": "Unlocks one additional active ability slot.\nA crucial investment for any build.",
+		"costs": [10, 25, 50, 75, 100, 150, 200, 300], # Costs for slots 3 through 10
+		"max_level": 8 # 8 purchasable slots (2 start unlocked)
+	},
+	"Serpent's Coffer": {
+		"description": "Gain 'interest' on your unspent Pulp at the end of each Garden.",
+		"costs": [20, 35, 50, 75],
+		"max_level": 4
+	},
+	"Geode Compass": {
+		"description": "Permanently removes a percentage of obstacles from all subsequent gardens.",
+		"costs": [15, 25, 40, 60],
+		"max_level": 4
+	},
+	"Four Leaf Clover": {
+		"description": "Permanently increases your 'luck,' boosting the chance of all random events.",
+		"costs": [30, 45, 60, 80],
+		"max_level": 4
+	},
+	"Chroma Scales": {
+		"description": "Unlocks a new cosmetic skin for your snake.",
+		"costs": [50, 50, 50, 50],
+		"max_level": 4
+	}
+}
+
+
+
 # --- CORRECTED RECIPE DATA ---
 var basic_recipes = [
 	{
@@ -1011,31 +1055,46 @@ var exotic_recipes = [
 func go_to_scene(scene_path):
 	get_tree().change_scene_to_file(scene_path)
 	
+func get_modified_chance(base_chance: float) -> float:
+	var final_chance = base_chance
+	# Four Leaf Clover --------
+	final_chance += four_leaf_clover_data[four_leaf_clover_level]
+	
+	return clamp(final_chance, 0.0, 1.0)
+	
+	
 func start_game():
 	var p_class_data = class_data[chosen_class]
 	var diff_data = difficulty_data[chosen_difficulty]
 	# Reset all stats for a new run
 	player_level = 1
-	skill_points = 0
-	skill_points += diff_data["starting_sp"]	# add starting sp
+	juice = 0
+	juice += diff_data["starting_sp"]	# add starting sp
+	pulp = 0
 	score_needed_for_next_level = 5
 	score_at_level_start = 0
 	current_garden = 1
 	has_died_this_garden = false
 	run_time = 0.0
 	fruits_eaten_this_run = 0
-	total_sp_this_run = 0
-	total_sp_this_run = skill_points
+	total_juice_this_run = 0
+	total_juice_this_run = juice
 	segments_to_restore = 0
-	snake_scales = 0
+	
 
-	sp_spent_this_garden = 0
+	juice_spent_this_garden = 0
 	abilities_used_this_garden = 0
 	garden_start_time = 0.0 
 	#----BASE REWARD AND ENGINE---#
 	fruit_reward = p_class_data["start_fruit_reward"]
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
 
+	# --- "PULP" META-UPGRADE LEVELS ---
+	synapse_slots_unlocked = diff_data["start_slots"]
+	serpents_coffer_level = 0
+	geode_compass_level = 0
+	four_leaf_clover_level = 0
+	chroma_scales_level = 0
 	
 	# --- Geomancer Path ---
 	fertile_ground_level = 0

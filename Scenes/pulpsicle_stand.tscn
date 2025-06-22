@@ -1,0 +1,430 @@
+[gd_scene load_steps=12 format=3 uid="uid://8jgmx7q20qg5"]
+
+[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_7n2mm"]
+[ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scenes/pulpsicle_stand.gd" id="1_i1qs4"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_4da1l"]
+[ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_button_hovered.tres" id="4_7hsrk"]
+[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_button_disabled.tres" id="5_7gmkh"]
+[ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_button_normal.tres" id="6_20gi1"]
+[ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/yellow_resume_button_hover.tres" id="7_cy6vt"]
+[ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/yellow_resume_block_normal.tres" id="8_b641q"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xm1rl"]
+texture = ExtResource("1_7n2mm")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(2.88785e-07, 0.325762, 0.462288, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_4qtpl"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_igv10"]
+content_margin_left = 20.0
+content_margin_top = 4.0
+content_margin_right = 20.0
+content_margin_bottom = 4.0
+bg_color = Color(0.6, 1, 0.0470588, 1)
+draw_center = false
+
+[node name="PulpsicleStand" type="CanvasLayer"]
+script = ExtResource("1_i1qs4")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_xm1rl")
+
+[node name="MainContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 64
+text = "The Pulp-sicle Stand!"
+horizontal_alignment = 1
+
+[node name="CurrentPulpLabel" type="Label" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 64
+text = "Pulp: 150mg"
+horizontal_alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
+[node name="SynapseRow" type="HBoxContainer" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 36
+
+[node name="Synapse_Title" type="Label" parent="MainContainer/VBoxContainer/SynapseRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Synapse Slots"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Synapse_Button" type="Button" parent="MainContainer/VBoxContainer/SynapseRow"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_7hsrk")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("4_7hsrk")
+theme_override_styles/hover = ExtResource("4_7hsrk")
+theme_override_styles/pressed = ExtResource("4_7hsrk")
+theme_override_styles/normal = ExtResource("6_20gi1")
+text = "Unlock Ability Slot
+(25mg)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer/SynapseRow"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Block1" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block5" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block6" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block7" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block8" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block9" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block10" type="ColorRect" parent="MainContainer/VBoxContainer/SynapseRow/IndicatorContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="HSeparator3" type="HSeparator" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
+[node name="PillarsContainer" type="HBoxContainer" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="Pillar1" type="VBoxContainer" parent="MainContainer/VBoxContainer/PillarsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Pillar1_Title" type="Label" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar1"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Chroma Scales"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pillar1_Button" type="Button" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar1"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_7hsrk")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("4_7hsrk")
+theme_override_styles/hover = ExtResource("4_7hsrk")
+theme_override_styles/pressed = ExtResource("4_7hsrk")
+theme_override_styles/normal = ExtResource("6_20gi1")
+text = "Unlock Visual Effect
+(25mg)"
+
+[node name="Pillar2" type="VBoxContainer" parent="MainContainer/VBoxContainer/PillarsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Pillar2_Title" type="Label" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar2"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Serpent's Coffer"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pillar2_Button" type="Button" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar2"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_7hsrk")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("4_7hsrk")
+theme_override_styles/hover = ExtResource("4_7hsrk")
+theme_override_styles/pressed = ExtResource("4_7hsrk")
+theme_override_styles/normal = ExtResource("6_20gi1")
+text = "Interested?
+(100mg)"
+
+[node name="Pillar3" type="VBoxContainer" parent="MainContainer/VBoxContainer/PillarsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Pillar3_Title" type="Label" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar3"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Geode Compass"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pillar3_Button" type="Button" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar3"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_7hsrk")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("4_7hsrk")
+theme_override_styles/hover = ExtResource("4_7hsrk")
+theme_override_styles/pressed = ExtResource("4_7hsrk")
+theme_override_styles/normal = ExtResource("6_20gi1")
+text = "Remove obstacles
+(50 mg)"
+
+[node name="Pillar4" type="VBoxContainer" parent="MainContainer/VBoxContainer/PillarsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Pillar4_Title" type="Label" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar4"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Four Leaf Clover"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pillar4_Button" type="Button" parent="MainContainer/VBoxContainer/PillarsContainer/Pillar4"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_7hsrk")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("4_7hsrk")
+theme_override_styles/hover = ExtResource("4_7hsrk")
+theme_override_styles/pressed = ExtResource("4_7hsrk")
+theme_override_styles/normal = ExtResource("6_20gi1")
+text = "Increase Luck
+(50 mg)"
+
+[node name="HSeparator4" type="HSeparator" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
+[node name="RouletteContainer" type="VBoxContainer" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="RouletteTitle" type="Label" parent="MainContainer/VBoxContainer/RouletteContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Today's Special:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RotatingItemRow" type="HBoxContainer" parent="MainContainer/VBoxContainer/RouletteContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="RotatingItemButton" type="Button" parent="MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_7hsrk")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("4_7hsrk")
+theme_override_styles/hover = ExtResource("4_7hsrk")
+theme_override_styles/pressed = ExtResource("4_7hsrk")
+theme_override_styles/normal = ExtResource("6_20gi1")
+text = "Rotating Item!
+(25mg)"
+
+[node name="RotatingItemDescription" type="Label" parent="MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Item description:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator5" type="HSeparator" parent="MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
+[node name="ContinueButton" type="Button" parent="MainContainer/VBoxContainer"]
+custom_minimum_size = Vector2(256, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = ExtResource("7_cy6vt")
+theme_override_styles/disabled = ExtResource("5_7gmkh")
+theme_override_styles/hover_pressed = ExtResource("7_cy6vt")
+theme_override_styles/hover = ExtResource("7_cy6vt")
+theme_override_styles/pressed = ExtResource("7_cy6vt")
+theme_override_styles/normal = ExtResource("8_b641q")
+text = "Continue
+"

@@ -234,7 +234,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		tween.tween_property($UI/HUDContainer, "modulate:a", 0.1, 1.0)
 	if event.is_action_pressed("open_upgrade_menu"):
 	# Check if the player has SP and the game is in an active state
-		if GameManager.skill_points > 0 and not get_tree().paused and not is_game_over:
+		if GameManager.juice > 0 and not get_tree().paused and not is_game_over:
 			# Call new transition/show menu function
 			open_upgrade_menu_with_transition()
 
@@ -367,43 +367,53 @@ func show_garden_complete_screen():
 	
 	# --- CALCULATE BONUSES ---
 	var bonuses_earned: Array = []
-	var total_scales_this_garden: int = 0
+	var total_pulp_this_garden: int = 0
 	var bonus_data = GameManager.garden_bonus_data
 	
 	# 1. Base Score Bonus
-	total_scales_this_garden += score
-	bonuses_earned.append("Score: +%s Scales" % score)
+	total_pulp_this_garden += score
+	bonuses_earned.append("Base Pulp: +%s gs" % score)
+	
+	var coffer_level = GameManager.serpents_coffer_level
+	if coffer_level > 0:
+		var interest_rate = GameManager.serpents_coffer_data[coffer_level]
+		var interest_earned = floori(GameManager.pulp * interest_rate)
+		
+		if interest_earned > 0:
+			total_pulp_this_garden += interest_earned
+			bonuses_earned.append("Serpent's Coffer: +%s Pulp" % interest_earned)
+	
 	
 	# 2. Check for Par Time
 	var garden_time = GameManager.run_time - GameManager.garden_start_time
 	if garden_time < bonus_data["par_time"]["time_limit"]:
 		var reward = bonus_data["par_time"]["base_reward"]
-		total_scales_this_garden += reward
-		bonuses_earned.append("Par Time: +%s Scales" % reward)
+		total_pulp_this_garden += reward
+		bonuses_earned.append("Par Time: +%s Pulp" % reward)
 		
 	# 3. Check for No Death
 	if not GameManager.has_died_this_garden:
 		var reward = bonus_data["no_death"]["reward"]
-		total_scales_this_garden += reward
-		bonuses_earned.append("Flawless Bonus: +%s Scales" % reward)
+		total_pulp_this_garden += reward
+		bonuses_earned.append("Flawless Bonus: +%s Pulp" % reward)
 	
 	if GameManager.sp_spent_this_garden == 0:
 		var reward = bonus_data["ascetic"]["reward"]
-		total_scales_this_garden += reward
-		bonuses_earned.append("No Upgrade Bonus: + %s Scales" % reward)
+		total_pulp_this_garden += reward
+		bonuses_earned.append("No Upgrade Bonus: + %s Pulp" % reward)
 		
 	if GameManager.abilities_used_this_garden == 0:
 		var reward = bonus_data["pacifist"]["reward"]
-		total_scales_this_garden += reward
-		bonuses_earned.append("No Ability Bonus: + %s Scales" % reward)
+		total_pulp_this_garden += reward
+		bonuses_earned.append("No Ability Bonus: + %s Pulp" % reward)
 		
 	if GameManager.sp_spent_this_garden > 1:
 		var reward = bonus_data["engagement"]["reward"]
-		total_scales_this_garden += reward
-		bonuses_earned.append("Engagement Bonus + %s Scales" % reward)
+		total_pulp_this_garden += reward
+		bonuses_earned.append("Engagement Bonus + %s Pulp" % reward)
 	
 	# Add the earned scales to our run's total
-	GameManager.snake_scales += total_scales_this_garden
+	GameManager.pulp += total_pulp_this_garden
 	
 	# --- CHECK FOR FINAL GARDEN ---
 	# This is your existing logic, which is perfect.
@@ -422,7 +432,7 @@ func show_garden_complete_screen():
 	$UI/GardenCompleteScreen.display_results(
 		garden_name,
 		bonuses_earned,
-		total_scales_this_garden,
+		total_pulp_this_garden,
 		is_final_garden,
 		is_final_win
 	)
@@ -534,8 +544,8 @@ func update_hud():
 	$UI/HUDContainer/BottomGrid/NextLevelLabel.text = "Next Level: " + str(int(GameManager.score_needed_for_next_level))
 	# Update values for selected class, difficulty, and which garden currently on
 	$UI/HUDContainer/BottomGrid/GardenGoalLabel.text = "Garden Goal: " + str(GameManager.garden_data[GameManager.current_garden]["score_goal"])
-	$UI/HUDContainer/BottomGrid/HUDSPLabel.text = "SP: " + str(GameManager.skill_points)
-	$UI/HUDContainer/BottomGrid/GardenCurrentNumberLabel.text = "Garden %s/13" % GameManager.current_garden
+	$UI/HUDContainer/BottomGrid/HUDSPLabel.text = "Juice: " + str(GameManager.juice) +"oz"
+	$UI/HUDContainer/BottomGrid/GardenCurrentNumberLabel.text = "Garden %s / 13" % GameManager.current_garden
 	$UI/HUDContainer/BottomGrid/GardenCurrentNameLabel.text = "\"" + GameManager.garden_data[GameManager.current_garden]["name"] + "\""
 	#---------Stats Vbox-------#
 	$UI/HUDContainer/StatsVbox/LivesLabel.text = "Lives: " + str(GameManager.extra_lives)
@@ -765,20 +775,30 @@ func rebuild_world_layout():
 func setup_initial_obstacles():
 	spawned_obstacles.clear()
 	
-	# 1. Start with the base number of rocks for the current garden.
-	var total_rocks_to_spawn = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
+	# 1. Get the base number of rocks for the current garden.
+	var base_obstacle_count = GameManager.garden_data[GameManager.current_garden]["obstacle_count"]
 	
-	# 2. Add the penalty from each of our Geomancer upgrades.
-	total_rocks_to_spawn += (GameManager.fertile_ground_level * 5)
-	total_rocks_to_spawn += (GameManager.mineral_rich_soil_level * 5)
-	total_rocks_to_spawn += (GameManager.tectonic_shift_level * 5)
-	total_rocks_to_spawn += (GameManager.heavy_foundation_level * 5)
+	# 2. Add the penalty from each of our Tier 1 Geomancer upgrades.
+	var geomancer_penalty = (GameManager.fertile_ground_level * 5) + \
+							(GameManager.mineral_rich_soil_level * 5) + \
+							(GameManager.tectonic_shift_level * 5) + \
+							(GameManager.heavy_foundation_level * 5)
+							
+	var total_rocks_before_reduction = base_obstacle_count + geomancer_penalty
 	
-	print("This garden will have %s rocks." % total_rocks_to_spawn)
+	# --- GEODE COMPASS ---
+	# 3. Get the reduction multiplier from our Geomancer's Compass upgrade.
+	var compass_level = GameManager.geomancers_compass_level
+	var reduction_multiplier = GameManager.geomancers_compass_data[compass_level]
+	
+	# 4. Calculate the final number of rocks to spawn, rounding to the nearest whole number.
+	var final_obstacle_count = round(total_rocks_before_reduction * reduction_multiplier)
+	
+	print("This garden will have %s rocks." % final_obstacle_count)
 
-	# 3. Now, loop for the final, correct number of times.
+	# 5. Now, loop for the final, correct number of times.
 	if GameManager.zoning_ordinance_level < 4:
-		for i in range(total_rocks_to_spawn):
+		for i in range(final_obstacle_count):
 			spawn_rock()
 
 func is_in_safe_zone(grid_pos: Vector2i) -> bool:
@@ -909,8 +929,8 @@ func _update_snake_after_teleport(new_position: Vector2):
 
 func update_upgrade_prompt():
 	# Show the prompt only if the player has SP to spend.
-	var has_sp = GameManager.skill_points > 0
-	$UI/HUDContainer/BottomGrid/UpgradePromptLabel.visible = has_sp
+	var has_juice = GameManager.juice > 0
+	$UI/HUDContainer/BottomGrid/UpgradePromptLabel.visible = has_juice
 
 func update_progression():
 	
@@ -949,18 +969,18 @@ func level_up():
 	
 	#SP SCALE
 	if GameManager.chosen_class != "the_alchemist":
-		var sp_to_add = 0
-		if GameManager.player_level >= 10: sp_to_add = 3
-		elif GameManager.player_level >= 5: sp_to_add = 2
-		else: sp_to_add = 1
+		var juice_to_add = 0
+		if GameManager.player_level >= 10: juice_to_add = 3
+		elif GameManager.player_level >= 5: juice_to_add = 2
+		else: juice_to_add = 1
 		
 
 		# If prestige mode is active, double the reward!
 		if GameManager.new_game_s_plus_active:
-			sp_to_add *= 2
-			print("NEW GAME S+ BONUS! Gained %s SP!" % sp_to_add)
+			juice_to_add *= 2
+			print("NEW GAME S+ BONUS! Gained %s SP!" % juice_to_add)
 			
-		GameManager.skill_points += sp_to_add
+		GameManager.juice += juice_to_add
 		
 	#EXP/SCORE SCALE
 	if GameManager.player_level >= 10:
@@ -1001,7 +1021,7 @@ func _on_upgrade_menu_resume_game_pressed():
 	var resume_game_from_shop_messages = \
 	["You chose...poorly!", "Why...what balls!\nYou didn't even pick a good upgrade!",
 	"Whatcha doin' around 5?", "Make 'em pay!", "EAAAAAAAAAT!", "Wow, never woulda guessed that pick!",
-	"Back to the game!", "Back to our correspondant on the ground!", "Hint: you can only pull up\nthe upgrade menu with at least 1 SP"]
+	"Back to the game!", "Back to our correspondant on the ground!", "Hint: you can only pull up the upgrade menu\nwith at least 1 oz of juice"]
 	var messages_size = resume_game_from_shop_messages.size()
 	var random_message = randi() % messages_size
 	
@@ -1385,7 +1405,7 @@ func apply_recipe_buff(buff_data: Dictionary):
 			# This requires a new helper function in snake_head.gd
 			head.activate_temporary_speed_boost(buff_data["value"], buff_data["duration"])
 		"sp_boost":
-			GameManager.skill_points += buff_data["value"]
+			GameManager.juice += buff_data["value"]
 			update_hud()
 		"full_recharge":
 			print("ABILITIES RECHARGED")
@@ -1485,7 +1505,7 @@ func on_snake_ate_food(fruit):
 	
 	
 	var segments_to_add = 0
-	var sp_reward = 0
+	var juice_reward = 0
 	
 	var was_bounty_target = fruit.is_bounty_target
 	
@@ -1562,16 +1582,16 @@ func on_snake_ate_food(fruit):
 		# If no bounty is active, calculate rewards normally.
 		var growth_multiplier = 1
 		if fruit is GoldenFruit:
-			sp_reward = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
+			juice_reward = GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
 			if fruit.is_ripe:
 				growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
-				sp_reward += 1
+				juice_reward += 1
 		elif fruit.has_method("ripen") and fruit.is_ripe:
 			growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
 		segments_to_add = get_effective_fruit_reward() * growth_multiplier * max(1,GameManager.current_combo)
 
 	# --- Apply rewards ---
-	GameManager.skill_points += sp_reward
+	GameManager.juice += juice_reward
 	grow_snake(segments_to_add)
 	time_since_last_fruit = 0.0
 	GameManager.fruits_eaten_this_run += 1
@@ -1989,9 +2009,9 @@ func _on_garden_complete_continue_pressed() -> void:
 	# Check if we are a Zealot AND we haven't died this garden
 	if p_class == "the_zealot" and not GameManager.has_died_this_garden:
 		# If so, award the bonus SP
-		var bonus_sp = GameManager.class_data[p_class]["sp_on_perfect_garden"]
-		print("ZEALOT BONUS! +", bonus_sp, " SP for a perfect run!")
-		GameManager.skill_points += bonus_sp
+		var bonus_juice = GameManager.class_data[p_class]["sp_on_perfect_garden"]
+		print("ZEALOT BONUS! +", bonus_juice, " SP for a perfect run!")
+		GameManager.juice += bonus_juice
 		
 	 # --- GEOLOGICAL SURVEY LOGIC ---
 	# First, check if the player has the upgrade.
@@ -2008,11 +2028,11 @@ func _on_garden_complete_continue_pressed() -> void:
 			print("CALCULATED RISK! Geological Survey bonus is doubled!")
 
 		# Calculate the final SP reward, rounding down to the nearest whole number.
-		var bonus_sp = floori(remaining_rocks * bonus_per_rock)
+		var bonus_juice = floori(remaining_rocks * bonus_per_rock)
 		
-		if bonus_sp > 0:
-			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_sp, remaining_rocks])
-			GameManager.skill_points += floori(bonus_sp)
+		if bonus_juice > 0:
+			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_juice, remaining_rocks])
+			GameManager.juice += floori(bonus_juice)
 
 func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]

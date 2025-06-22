@@ -35,7 +35,7 @@ func display_results(garden_name, bonus_list: Array, scales_this_garden: int, is
 		title_label.text = "Garden Complete!"
 		continue_button.text = "Next Garden"
 	
-	stats_label.text = "You cleared %s" % garden_name
+	stats_label.text = "You cleared %s!" % garden_name
 
 	await get_tree().create_timer(0.35).timeout
 
