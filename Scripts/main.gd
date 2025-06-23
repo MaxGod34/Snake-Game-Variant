@@ -323,119 +323,84 @@ func open_upgrade_menu_with_transition():
 	# Unblock input so the player can use the menu
 	$UI/InputBlocker.hide()
 
-func show_upgrade_menu():
-	# Stop the snake and block input
-	head.move_timer.stop()
-	var transition_rect = $UI/ShopTransitionRect
-	transition_rect.visible = true
 
-	# Create a new tween for the animation
-	var tween = create_tween()
 
-	# Animate the curtain wiping IN
-	transition_rect.position.x = -get_viewport_rect().size.x # Start off-screen
-	tween.tween_property(transition_rect, "position:x", 0, 0.3).set_ease(Tween.EASE_IN)
-	await tween.finished
 
-	# Now that the screen is covered, show the message
-	$UI/CountdownLabel.text = "You're here to upgrade, you little cheeseball!\nWelcome to the shop!"
-	$UI/CountdownLabel.visible = true
-	await get_tree().create_timer(1.5).timeout
-	$UI/CountdownLabel.visible = false
 
-	# Update and show the actual upgrade menu
-	$UI/UpgradeMenu.set_initial_state_and_update()
-	$UI/UpgradeMenu.visible = true
 
-	# Animate the curtain wiping OUT
-	var tween_out = create_tween()
-	tween_out.tween_property(transition_rect, "position:x", get_viewport_rect().size.x, 0.3).set_ease(Tween.EASE_OUT)
-	await tween_out.finished
-
-	transition_rect.visible = false
-
-func show_garden_complete_screen():
-	head.move_timer.stop()
-	
-	var garden_id = GameManager.current_garden
-	var garden_name = GameManager.garden_data[garden_id]["name"]
-	var score = snake_body_segments.size() + 1
-	
-	# --- CALCULATE BONUSES ---
-	var bonuses_earned: Array = []
-	var total_pulp_this_garden: int = 0
+func _calculate_garden_bonuses(p_score: int) -> Dictionary:
+	var bonuses = {"bonus_list": [], "total_pulp": 0}
 	var bonus_data = GameManager.garden_bonus_data
+	# Base Score Bonus
+	bonuses.total_pulp += p_score
+	bonuses.bonus_list.append("Score: +%s Pulp" % p_score)
 	
-	# 1. Base Score Bonus
-	total_pulp_this_garden += score
-	bonuses_earned.append("Base Pulp: +%s gs" % score)
-	
+	# Serpent's Coffer Interest
 	var coffer_level = GameManager.serpents_coffer_level
 	if coffer_level > 0:
 		var interest_rate = GameManager.serpents_coffer_data[coffer_level]
 		var interest_earned = floori(GameManager.pulp * interest_rate)
-		
 		if interest_earned > 0:
-			total_pulp_this_garden += interest_earned
-			bonuses_earned.append("Serpent's Coffer: +%s Pulp" % interest_earned)
-	
-	
-	# 2. Check for Par Time
+			bonuses.total_pulp += interest_earned
+			bonuses.bonus_list.append("Serpent's Coffer: +%s Pulp" % interest_earned)
+			
+	# Par Time Bonus
 	var garden_time = GameManager.run_time - GameManager.garden_start_time
-	if garden_time < bonus_data["par_time"]["time_limit"]:
-		var reward = bonus_data["par_time"]["base_reward"]
-		total_pulp_this_garden += reward
-		bonuses_earned.append("Par Time: +%s mgs Pulp" % reward)
+	var par_time_rules = GameManager.garden_bonus_data["par_time"]
+	if garden_time < par_time_rules["time_limit"]:
+		var reward = par_time_rules["base_reward"]
+		bonuses.total_pulp += reward
+		bonuses.bonus_list.append("Par Time: +%s Pulp" % reward)
 		
-	# 3. Check for No Death
 	if not GameManager.has_died_this_garden:
 		var reward = bonus_data["no_death"]["reward"]
-		total_pulp_this_garden += reward
-		bonuses_earned.append("Flawless Bonus: +%s mgs Pulp" % reward)
+		bonuses.total_pulp += reward
+		bonuses.bonus_list.append("Flawless Bonus: +%s mgs Pulp" % reward)
 	
 	if GameManager.juice_spent_this_garden == 0:
 		var reward = bonus_data["ascetic"]["reward"]
-		total_pulp_this_garden += reward
-		bonuses_earned.append("No Upgrade Bonus: + %s mgs Pulp" % reward)
+		bonuses.total_pulp += reward
+		bonuses.bonus_list.append("No Upgrade Bonus: + %s mgs Pulp" % reward)
 		
 	if GameManager.abilities_used_this_garden == 0:
 		var reward = bonus_data["pacifist"]["reward"]
-		total_pulp_this_garden += reward
-		bonuses_earned.append("No Ability Bonus: + %s mgs Pulp" % reward)
+		bonuses.total_pulp += reward
+		bonuses.bonus_list.append("No Ability Bonus: + %s mgs Pulp" % reward)
 		
 	if GameManager.juice_spent_this_garden > 1:
 		var reward = bonus_data["engagement"]["reward"]
-		total_pulp_this_garden += reward
-		bonuses_earned.append("Engagement Bonus + %s mgs Pulp" % reward)
+		bonuses.total_pulp += reward
+		bonuses.bonus_list.append("Engagement Bonus + %s mgs Pulp" % reward)
 	
-	# Add the earned scales to our run's total
-	GameManager.pulp += total_pulp_this_garden
+	# Now, handle JUICE bonuses, which don't add to the Pulp total.
+	if GameManager.chosen_class == "the_zealot" and not GameManager.has_died_this_garden:
+		var bonus_juice = GameManager.class_data[GameManager.chosen_class]["sp_on_perfect_garden"]
+		GameManager.juice += bonus_juice
+		bonuses.bonus_list.append("Zealot's Purity: +%s Juice!" % bonus_juice)
+		
+	if GameManager.geological_survey_unlocked:
+		# Get the number of rocks left on the screen.
+		var remaining_rocks = spawned_obstacles.size()
+		
+		# Define the reward. Let's say +1 SP for every 5 rocks left.
+		var bonus_per_rock = 0.2 
+		
+		# Check for the synergy with our Geomancer keystone!
+		if GameManager.calculated_risk_unlocked:
+			bonus_per_rock *= 2.0 # Double the reward!
+			print("CALCULATED RISK! Geological Survey bonus is doubled!")
+
+		# Calculate the final SP reward, rounding down to the nearest whole number.
+		var bonus_juice = floori(remaining_rocks * bonus_per_rock)
+		
+		if bonus_juice > 0:
+			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_juice, remaining_rocks])
+			GameManager.juice += floori(bonus_juice)
+			
+	return bonuses
+
 	
-	# --- CHECK FOR FINAL GARDEN ---
-	# This is your existing logic, which is perfect.
-	var is_final_garden = (garden_id == 13) # Updated to 13 gardens
-	var is_final_win = (is_final_garden and score >= 666) # Or your final goal
-	
-	# --- TRANSITION AND DISPLAY ---
-	await SceneTransition.play_cover_animation("flakes")
-	
-	$UI/GardenCompleteScreen.update_garden_complete()
-	# Pass all the necessary data to the results screen
-	
-	$UI/GardenCompleteScreen.visible = true
-	await SceneTransition.uncover_screen("drip") # Use our new "drip" animation
-	
-	$UI/GardenCompleteScreen.display_results(
-		garden_name,
-		bonuses_earned,
-		total_pulp_this_garden,
-		is_final_garden,
-		is_final_win
-	)
-	
-	# Reset garden-specific stats for the next level
-	GameManager.has_died_this_garden = false
-	GameManager.juice_spent_this_garden = 0
+
 
 
 
@@ -620,7 +585,7 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	elif garden_complete_is_pending:
 		# If there's no upgrade pending, check if a garden is complete.
 		garden_complete_is_pending = false # Reset the flag
-		show_garden_complete_screen() # Show the garden complete screen
+		_start_end_of_garden_sequence()
 	
 
 func spawn_fruit():
@@ -1051,6 +1016,79 @@ func _on_upgrade_menu_resume_game_pressed():
 	$UI/InputBlocker.hide()
 	start_countdown()
 
+func _start_end_of_garden_sequence():
+	# --- State 1: Game Paused & Bonuses Calculated ---
+	head.move_timer.stop()
+	garden_complete_is_pending = false
+	
+	var score = snake_body_segments.size() + 1
+	var bonus_data = _calculate_garden_bonuses(score)
+	GameManager.pulp += bonus_data.total_pulp
+
+	# --- State 2: Transition to Results Screen ---
+	await SceneTransition.play_cover_animation("flakes")
+	
+	var results_screen = $UI/GardenCompleteScreen
+	var garden_id = GameManager.current_garden
+	var is_final_garden = (garden_id == 13)
+	var is_final_win = (is_final_garden and score >= 666)
+	
+	results_screen.display_results(
+		GameManager.garden_data[garden_id]["name"],
+		bonus_data.bonus_list,
+		bonus_data.total_pulp,
+		is_final_garden,
+		is_final_win
+	)
+	results_screen.visible = true
+	
+	await SceneTransition.uncover_screen("drip")
+
+	# --- State 3: Wait for Player Input ---
+	# The game now pauses here indefinitely until the player clicks "Continue".
+	await results_screen.continue_pressed
+	
+	# If it was the final garden, the run is over.
+	if is_final_garden:
+		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+		return
+
+	# --- State 4: Transition to Pulp-sicle Stand ---
+	await SceneTransition.play_cover_animation("drip")
+	
+	results_screen.visible = false
+	var shop_screen = $UI/PulpsicleStand
+	shop_screen.open_shop() # This just updates displays and makes it visible
+	
+	await SceneTransition.uncover_screen("drip")
+	
+	await shop_screen.animate_in() # Play the shop's slide-in animation
+
+	# --- State 5: Wait for Player to Finish Shopping ---
+	await shop_screen.continue_to_next_garden
+	
+	# --- State 6: Final Transition to Next Garden ---
+	await shop_screen.animate_out() # Animate the shop sliding away
+	await SceneTransition.play_cover_animation("random")
+	
+	# Now that the screen is covered, it is safe to reset stats.
+	GameManager.has_died_this_garden = false
+	GameManager.juice_spent_this_garden = 0
+	GameManager.abilities_used_this_garden = 0
+	GameManager.garden_start_time = GameManager.run_time
+	
+	# Finally, tell the main SceneTransition to go to the next level.
+	GameManager.current_garden += 1
+	SceneTransition.transition_to("res://Scenes/main.tscn", "random")
+
+
+
+
+
+
+
+
+
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
 	#---------FRENZY------------#
@@ -1440,11 +1478,6 @@ func update_combo_meter():
 		
 	# Increment the combo counter.
 	GameManager.current_combo += 1
-	var chain_reaction_level = GameManager.chain_reaction_level
-	if chain_reaction_level > 0:
-		var max_combo = GameManager.chain_reaction_data[chain_reaction_level]
-		if GameManager.current_combo > max_combo:
-			GameManager.current_combo = max_combo
 	
 	# Cap the combo based on the Chain Reaction upgrade level.
 	var max_combo = GameManager.chain_reaction_data[GameManager.chain_reaction_level]
@@ -2021,53 +2054,9 @@ func _on_transition_finished():
 	if is_instance_valid(head) and head.move_timer:
 		start_countdown()
 
-func _on_garden_complete_continue_pressed() -> void:
-	var garden_id = GameManager.current_garden
-	var score = snake_body_segments.size() + 1
-	
-	GameManager.abilities_used_this_garden = 0
-	GameManager.juice_spent_this_garden = 0
-	GameManager.garden_start_time = GameManager.run_time
-	
-	
-	
-	if garden_id == 13 and score >= 666:
-		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
-	elif garden_id == 13:
-		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
-	else:
-		GameManager.current_garden += 1
-		SceneTransition.transition_to("res://Scenes/main.tscn")
-		
-	var p_class = GameManager.chosen_class
-	
-	# Check if we are a Zealot AND we haven't died this garden
-	if p_class == "the_zealot" and not GameManager.has_died_this_garden:
-		# If so, award the bonus SP
-		var bonus_juice = GameManager.class_data[p_class]["sp_on_perfect_garden"]
-		print("ZEALOT BONUS! +", bonus_juice, " SP for a perfect run!")
-		GameManager.juice += bonus_juice
-		
-	 # --- GEOLOGICAL SURVEY LOGIC ---
-	# First, check if the player has the upgrade.
-	if GameManager.geological_survey_unlocked:
-		# Get the number of rocks left on the screen.
-		var remaining_rocks = spawned_obstacles.size()
-		
-		# Define the reward. Let's say +1 SP for every 5 rocks left.
-		var bonus_per_rock = 0.2 
-		
-		# Check for the synergy with our Geomancer keystone!
-		if GameManager.calculated_risk_unlocked:
-			bonus_per_rock *= 2.0 # Double the reward!
-			print("CALCULATED RISK! Geological Survey bonus is doubled!")
 
-		# Calculate the final SP reward, rounding down to the nearest whole number.
-		var bonus_juice = floori(remaining_rocks * bonus_per_rock)
-		
-		if bonus_juice > 0:
-			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_juice, remaining_rocks])
-			GameManager.juice += floori(bonus_juice)
+
+
 
 func update_tail_visuals():
 	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]

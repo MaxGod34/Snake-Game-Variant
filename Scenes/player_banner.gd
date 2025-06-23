@@ -26,7 +26,11 @@ func update_display(data: Dictionary):
 	
 	# --- Animated Score Counter ---
 	var new_score = data["xp_value"]
-	if new_score > current_displayed_score:
+	if current_displayed_score == 0:
+		score_label.text = "Score: " + str(new_score)
+		current_displayed_score = new_score
+	
+	elif new_score > current_displayed_score:
 		animate_score_change(new_score)
 	else:
 		# If score hasn't changed, just make sure the label is correct
@@ -34,7 +38,7 @@ func update_display(data: Dictionary):
 
 func animate_score_change(target_score: int):
 	var score_to_add = target_score - current_displayed_score
-	score_label.text = str(target_score)
+	score_label.text = "Score: " + str(target_score)
 	current_displayed_score = target_score
 	
 	var spawn_position = score_label.get_global_position()

@@ -72,7 +72,7 @@ theme_override_constants/outline_size = 32
 theme_override_fonts/font = ExtResource("3_206wq")
 theme_override_font_sizes/font_size = 64
 theme_override_styles/normal = SubResource("StyleBoxEmpty_tu85b")
-text = "GARDEN COMPLETE!"
+text = "Garden Complete!"
 horizontal_alignment = 1
 vertical_alignment = 1
 

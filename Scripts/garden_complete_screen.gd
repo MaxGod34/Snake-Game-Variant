@@ -24,6 +24,7 @@ func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_f
 	total_pulp_label.visible = false
 	grand_total_label.visible = false
 	continue_button.visible = false
+	
 
 	if is_final_win:
 		title_label.text = "YOU ARE A SNAKE GOD!"
@@ -36,12 +37,12 @@ func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_f
 		continue_button.text = "Next Garden"
 	
 	stats_label.text = "You cleared %s!" % garden_name
-
-	await get_tree().create_timer(0.35).timeout
+	stats_label.visible = true
+	await get_tree().create_timer(1.25).timeout
 
 	# Now, make the bonus section visible and start the animation.
 	bonus_list_container.visible = true
-
+	
 
 	# --- Part 2: Display the Bonuses ---
 	# This is the logic from new 'display_results' function.

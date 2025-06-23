@@ -589,19 +589,19 @@ var upgrade_data = {
 		# --- CHEF PATH ---
 	"Golden Seed Extract": {
 		"display_name": "Golden Seed Extract",
-		"description": "Increases the spawn chance of valuable Golden Apples.",
+		"description": "Increases the spawn chance of valuable Golden Apples.\nEach level adds a 5% chance!",
 		"costs": [3, 4, 5], # Example costs for 3 levels
 		"max_level": 3
 	},
 	"Exotic Seeds": {
 		"display_name": "Exotic Seeds",
-		"description": "Adds new, rare fruits to the spawn pool with each level.",
+		"description": "Adds new, rare fruits to the spawn pool with each level.\nLvl 1: Jumping Bean\nLvl 2: Ghost Pepper\nLvl 3: Iron Cherry\nLvl 4: Dragon Fruit\nLvl 5: Double odds of these special fruits spawning",
 		"costs": [3, 3, 4, 4, 5], # 5 levels
 		"max_level": 5
 	},
 	"The Cookbook": {
 		"display_name": "The Cookbook",
-		"description": "Unlocks the Recipe system, granting temporary buffs for eating fruit in a specific sequence.",
+		"description": "Unlocks the Recipe system,\ngranting temporary buffs for eating fruit in a specific sequence.",
 		"costs": [2],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Golden Seed Extract", "level": 1}
@@ -615,21 +615,21 @@ var upgrade_data = {
 	},
 	"Golden Glaze": {
 		"display_name": "Golden Glaze",
-		"description": "Golden Apples now act as a 'wild card' ingredient for any step in your current recipe.",
+		"description": "Golden Apples now act as a 'wild card' ingredient\nfor any step in your current recipe.",
 		"costs": [4],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "The Cookbook", "level": 1}
 	},
 	"Custom Cuisine": {
 		"display_name": "Custom Cuisine",
-		"description": "Permanently enhances all special fruits with powerful secondary effects.",
+		"description": "Permanently enhances all special fruits with powerful secondary effects!",
 		"costs": [5],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1}
 	},
 	"Mise en Place": {
 		"display_name": "Mise en Place",
-		"description": "Active Ability (Once per RUN): Instantly transforms all normal fruits on screen into random special fruits.",
+		"description": "Active Ability (Once per RUN):\nInstantly transforms all normal fruits on screen into random special fruits.",
 		"costs": [5],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Exotic Seeds", "level": 5}
@@ -638,19 +638,19 @@ var upgrade_data = {
 	# --- GEOMANCER PATH ---
 	"Fertile Ground": {
 		"display_name": "Fertile Ground", "max_level": 3, "costs": [2, 3, 4],
-		"description": "Each level grants +1 to Max Fruits but adds +5 rocks to every garden."
+		"description": "Each level grants +1 to Max Fruits\nbut adds +5 rocks to every garden."
 	},
 	"Mineral Rich Soil": {
 		"display_name": "Mineral-Rich Soil", "max_level": 3, "costs": [2, 3, 4],
-		"description": "Each level grants +1 to Fruit Reward but adds +5 rocks to every garden."
+		"description": "Each level grants +1 to Fruit Reward\nbut adds +5 rocks to every garden."
 	},
 	"Tectonic Shift": {
 		"display_name": "Tectonic Shift", "max_level": 3, "costs": [2, 3, 4],
-		"description": "Each level grants a speed boost but adds +5 rocks to every garden."
+		"description": "Each level grants a speed boost\nbut adds +5 rocks to every garden."
 	},
 	"Heavy Foundation": {
 		"display_name": "Heavy Foundation", "max_level": 3, "costs": [2, 3, 4],
-		"description": "Each level grants a speed decrease but adds +5 rocks to every garden."
+		"description": "Each level grants a speed decrease\nbut adds +5 rocks to every garden."
 	},
 
 	# --- GEOMANCER TIER 2 (ROCKEATERS) ---
@@ -736,14 +736,14 @@ var upgrade_data = {
 	},
 	"Phase Shift": {
 		"display_name": "Phase Shift",
-		"description": "Active Ability: Become intangible to your own body for a short time.",
+		"description": "Active Ability: Become intangible to your own body for a short time.\nEach level grants another charge.",
 		"costs": [3, 4, 5],
 		"max_level": 3,
 		"exclusive_with": "Blink" # Can't have both
 	},
 	"Blink": {
 		"display_name": "Blink",
-		"description": "Active Ability: Instantly teleport forward 3 tiles.",
+		"description": "Active Ability: Instantly teleport forward 3 tiles.\nPass through your old hole!",
 		"costs": [3, 4, 5],
 		"max_level": 3,
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 2},
@@ -751,21 +751,21 @@ var upgrade_data = {
 	},
 	"3 Card Monty": {
 		"display_name": "3-Card Monty",
-		"description": "Permanently reduces the Juice cost of all other upgrades by 1 (to a minimum of 1).",
+		"description": "Permanently reduces the Juice cost of\nall other upgrades by 1 (to a minimum of 1).",
 		"costs": [5],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 3}
 	},
 	"Fractured Self": {
 		"display_name": "Fractured Self",
-		"description": "Your body is now rendered in 3-segment chunks with a 1-tile gap between each, allowing you to pass through.",
+		"description": "Your body is now rendered in 3-segment chunks\nwith a 3-tile gap between each, allowing you to pass through.",
 		"costs": [8],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
 	},
 	"Dazzle Pie": {
 		"display_name": "Dazzle Pie",
-		"description": "A permanent, purely aesthetic transformation that adds a chromatic aberration effect to the game.",
+		"description": "A permanent, purely aesthetic transformation that adds\na chromatic aberration effect to the game.",
 		"costs": [8],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Ghost Tail", "level": 5},
@@ -858,7 +858,7 @@ var upgrade_data = {
 	},
 	"Fold Space": {
 		"display_name": "Fold Space", 
-		"description": "Removes all walls, making the garden wrap around on itself.",
+		"description": "Removes all walls,\nmaking the garden wrap around on itself.",
 		"costs": [8], 
 		"max_level": 1, 
 		"prerequisite": {"upgrade": "Edge Lord", "level": 5, "and": "Burrow", "and_level": 3},
@@ -866,7 +866,7 @@ var upgrade_data = {
 	},
 	"Shatter Reality": {
 		"display_name": "Shatter Reality", 
-		"description": "Splits the garden into four quadrants with connecting portals.",
+		"description": "Splits the garden into\nfour quadrants with connecting portals.",
 		"costs": [8], 
 		"max_level": 1, 
 		"prerequisite": {"upgrade": "Edge Lord", "level": 5},
@@ -970,20 +970,20 @@ var upgrade_data = {
 	#-------------------------------------------the glutton----------------------------#
 	"elephant_sized_portions": {
 		"display_name": "Elephant Sized Portions",
-		"description": "Increases the number of segments you grow per fruit.",
+		"description": "Increases the number of segments you grow per fruit.\n+1 per level (depending on class)",
 		"costs": [1,1,2,2,3,3,4,4,5,5],
 		"max_level": 10
 	},
 	"more_mice": {
 		"display_name": "More Mice!",
-		"description": "Increases the maximum number of fruits on screen at once.",
+		"description": "Increases the maximum number of fruits on screen at once.\n+1 per level",
 		"costs": [2,2,3,3,4,4],
 		"max_level": 6,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
 	},
 	"golden_seeds": {
 		"display_name": "Golden Seeds",
-		"description": "Unlocks a chance for Golden Apples to spawn,\ngranting SP. Each level increases the chance and reward.",
+		"description": "Unlocks a chance for Golden Apples to spawn,\ngranting SP. Each level increases the chance and reward.\nLvl 1: 5%\nLvl 2: 10\nLvl 3: 20\nLvl 4: 33%",
 		"costs": [3,3,4,4],
 		"max_level": 4,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
@@ -1004,7 +1004,7 @@ var upgrade_data = {
 	},
 	"the_satchel": {
 		"display_name": "The Satchel",
-		"description": "Permanently unlocks a third active ability slot.",
+		"description": "Permanently unlocks another active ability slot.",
 		"costs": [8],
 		"max_level": 1,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 10, "and": "golden_seeds", "and_level": 4}
@@ -1024,12 +1024,12 @@ var meta_upgrade_data = {
 		"max_level": 4
 	},
 	"Geode Compass": {
-		"description": "Permanently removes a percentage of obstacles from all subsequent gardens.",
+		"description": "Permanently removes a percentage of\nobstacles from all subsequent gardens.",
 		"costs": [15, 25, 40, 60],
 		"max_level": 4
 	},
 	"Four Leaf Clover": {
-		"description": "Permanently increases your 'luck,' boosting the chance of all random events.",
+		"description": "Permanently increases your 'luck,'\nboosting the chance of all random events.",
 		"costs": [30, 45, 60, 80],
 		"max_level": 4
 	},
@@ -1071,6 +1071,76 @@ var exotic_recipes = [
 	}
 ]
 
+# --- ROTATING SHOP ITEM POOLS ---
+
+var common_items = [
+	{
+		"id": "head_start",
+		"name": "Head Start",
+		"description": "Start the next Garden with +3 Juice.",
+		"cost": 15
+	},
+	{
+		"id": "emergency_rations",
+		"name": "Emergency Rations",
+		"description": "Start the next Garden with +1 Extra Life.",
+		"cost": 25
+	},
+	{
+		"id": "small_coffer_deposit",
+		"name": "Small Coffer Deposit",
+		"description": "Instantly gain +15 Pulp.",
+		"cost": 5 
+	}
+]
+
+var rare_items = [
+	{
+		"id": "deal_with_the_devil",
+		"name": "Deal with the Devil",
+		"description": "Gain +20 Juice NOW.\nFor the rest of the run,\nall Juice costs are permanently +1.",
+		"cost": 0
+	},
+	{
+		"id": "alchemists_flask",
+		"name": "Alchemist's Flask",
+		"description": "The next Golden Apple you eat\nwill grant a massive 5 Juice.",
+		"cost": 40
+	},
+	{
+		"id": "whetstone",
+		"name": "Whetstone",
+		"description": "Your next 'Acrobat' path upgrade costs 50% less.",
+		"cost": 20
+	},
+	{
+		"id": "ghost_trap", # "bad" item idea!
+		"name": "Ghost Trap",
+		"description": "What a shame.\nPermanently -1 to your base Fruit Reward.",
+		"cost": 5
+	}
+]
+
+var legendary_items = [
+	{
+		"id": "serpents_satchel",
+		"name": "The Serpent's Satchel",
+		"description": "Instantly unlocks one additional active ability slot.",
+		"cost": 150
+	},
+	{
+		"id": "gluttons_throne",
+		"name": "Glutton's Throne",
+		"description": "For the next Garden ONLY, every single fruit\nthat spawns will be a Ripe Golden Apple.",
+		"cost": 100
+	},
+	{
+		"id": "perfected_specimen",
+		"name": "Perfected Specimen",
+		"description": "Choose one of your purchased Juice upgrades.\nIt is instantly raised to its maximum level for free.",
+		"cost": 200
+	}
+]
 
 
 

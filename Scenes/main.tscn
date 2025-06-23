@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=25 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://6o6bur1ea26j" path="res://Assets/PNGs/grid_tile.png" id="10_hptm8"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="11_fdnlq"]
 [ext_resource type="PackedScene" uid="uid://cy78aj0eaeuv2" path="res://Scenes/information_panel.tscn" id="12_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://8jgmx7q20qg5" path="res://Scenes/pulpsicle_stand.tscn" id="13_jkdf5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1ilt"]
 texture = ExtResource("10_hptm8")
@@ -230,8 +231,9 @@ alignment = 1
 layout_mode = 2
 
 [node name="VSeparator" type="Panel" parent="UI/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(32, 0)
+custom_minimum_size = Vector2(32, 320)
 layout_mode = 2
+size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxTexture_wsu2k")
 
 [node name="InformationPanel" parent="UI/MarginContainer/HBoxContainer" instance=ExtResource("12_jkdf5")]
@@ -254,6 +256,28 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="PulpsicleStand" parent="UI" instance=ExtResource("13_jkdf5")]
+
+[node name="LoadingScreenLabel" type="Label" parent="UI"]
+visible = false
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -24.5
+offset_bottom = 24.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.233925, 0.233925, 0.233925, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 4
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 64
+text = "Loading Next Garden"
+horizontal_alignment = 1
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 
