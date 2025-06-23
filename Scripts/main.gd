@@ -19,13 +19,15 @@ var snake_body_segments: Array[Node2D] = []
 var head: CharacterBody2D
 var trail_pieces: Array = []
 
+var growth_history: Array = []
+
 var spawned_obstacles: Array = []
 var next_fruit_position: Vector2
 var ghost_fruit_instance = null
 
 
 var time_since_last_fruit: float = 0.0
-@onready var last_fruit_label = $UI/MarginContainer/HBoxContainer/InformationPanel.get_node("HBoxContainer/VBoxContainer/FrenzyMeter/ComboWindowLabel")
+@onready var last_fruit_label = $UI/MarginContainer/HBoxContainer/InformationPanel.get_node("HBoxContainer/GardenDataContainer/FrenzyMeter/ComboWindowLabel")
 
 
 
@@ -82,15 +84,14 @@ func _ready():
 	tile_offset = Vector2(tile_size / 2.0, tile_size / 2.0)
 	
 	var spacer = Control.new()
-	spacer.custom_minimum_size = Vector2(8, 0)
-	ability_hotbar.add_child(spacer)
+	spacer.custom_minimum_size = Vector2(64, 0)
+	#ability_hotbar.add_child(spacer)
 	# This loop will create our 10 ability slots dynamically.
 	for i in range(10):
 		var slot = preload("res://Scenes/ability_slot.tscn").instantiate()
 		ability_hotbar.add_child(slot)
 		# Set the hotkey label text (1, 2, ..., 9, 0)
 		slot.get_node("HotkeyLabel").text = str((i + 1) % 10)
-	
 	
 	
 	
@@ -129,6 +130,7 @@ func _ready():
 	$UI/UpgradeMenu.upgrade_selected.connect(_on_upgrade_menu_upgrade_selected)
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 	SceneTransition.transition_finished.connect(_on_transition_finished)
+	$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.floating_text_container = $UI/FloatingTextContainer
 	# --- FINAL SETUP ---#
 	#-----SET OBSTACLSE-----#
 	setup_initial_obstacles()
@@ -148,7 +150,6 @@ func _ready():
 	iron_cherry_buff_timer.timeout.connect(_on_iron_cherry_buff_timer_timeout)
 	dragon_fruit_buff_timer.timeout.connect(_on_dragon_fruit_buff_timer_timeout)
 	# --- FINAL SETUP & START ---
-	update_score_display()
 	update_hud()
 	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
@@ -157,17 +158,18 @@ func _ready():
 	
 func _process(delta):
 	# First, check for a "hard pause". If the tree is paused, do nothing at all.
-	if get_tree().paused:
+	if get_tree().paused or is_game_over:
 		return
 
 	# 1. The snake's movement timer is NOT stopped (i.e., we are actively playing).
 	# 2. The upgrade menu is currently visible on screen.
-	if not head.move_timer.is_stopped() or $UI/UpgradeMenu.visible:
+	if not head.move_timer.is_stopped():
 		# If either of those is true, the clock runs.
 		GameManager.run_time += delta
 		time_since_last_fruit += delta # Also increment our new timer
 		
 		update_hud()
+
 		
 		# --- NEW JUGGERNAUT COMBO TIMER LOGIC ---
 	
@@ -383,28 +385,28 @@ func show_garden_complete_screen():
 	if garden_time < bonus_data["par_time"]["time_limit"]:
 		var reward = bonus_data["par_time"]["base_reward"]
 		total_pulp_this_garden += reward
-		bonuses_earned.append("Par Time: +%s Pulp" % reward)
+		bonuses_earned.append("Par Time: +%s mgs Pulp" % reward)
 		
 	# 3. Check for No Death
 	if not GameManager.has_died_this_garden:
 		var reward = bonus_data["no_death"]["reward"]
 		total_pulp_this_garden += reward
-		bonuses_earned.append("Flawless Bonus: +%s Pulp" % reward)
+		bonuses_earned.append("Flawless Bonus: +%s mgs Pulp" % reward)
 	
 	if GameManager.juice_spent_this_garden == 0:
 		var reward = bonus_data["ascetic"]["reward"]
 		total_pulp_this_garden += reward
-		bonuses_earned.append("No Upgrade Bonus: + %s Pulp" % reward)
+		bonuses_earned.append("No Upgrade Bonus: + %s mgs Pulp" % reward)
 		
 	if GameManager.abilities_used_this_garden == 0:
 		var reward = bonus_data["pacifist"]["reward"]
 		total_pulp_this_garden += reward
-		bonuses_earned.append("No Ability Bonus: + %s Pulp" % reward)
+		bonuses_earned.append("No Ability Bonus: + %s mgs Pulp" % reward)
 		
 	if GameManager.juice_spent_this_garden > 1:
 		var reward = bonus_data["engagement"]["reward"]
 		total_pulp_this_garden += reward
-		bonuses_earned.append("Engagement Bonus + %s Pulp" % reward)
+		bonuses_earned.append("Engagement Bonus + %s mgs Pulp" % reward)
 	
 	# Add the earned scales to our run's total
 	GameManager.pulp += total_pulp_this_garden
@@ -541,6 +543,20 @@ func update_hud():
 	data["garden_number"] = GameManager.current_garden
 	data["current_score"] = snake_body_segments.size() + 1
 	data["garden_goal"] = GameManager.garden_data[GameManager.current_garden]["score_goal"]
+	
+	# --- NEW: Calculate GPS ---
+	var five_seconds_ago = GameManager.run_time - 5.0
+	var growth_in_last_5s = 0.0
+	# Prune old data from our history array
+	for i in range(growth_history.size() - 1, -1, -1):
+		if growth_history[i].time < five_seconds_ago:
+			growth_history.remove_at(i)
+		else:
+			growth_in_last_5s += growth_history[i].growth
+	
+	# Add the final calculated GPS to our data dictionary
+	data["current_gps"] = growth_in_last_5s / 5.0
+	
 	
 	# --- 2. SEND DATA TO UI ---
 	# Now, we pass this big dictionary to our UI scenes.
@@ -869,10 +885,13 @@ func grow_snake(segments_to_add: int):
 		var new_segment = create_colored_segment(new_segment_position)
 		call_deferred("add_child", new_segment)
 		snake_body_segments.append(new_segment)
+		
+	
+	growth_history.append({"growth": segments_to_add, "time": GameManager.run_time})	
 	update_tail_visuals()
 
 	# We only update the score display once at the very end.
-	update_score_display()
+	update_hud()
 
 func is_position_on_dividing_wall(grid_pos: Vector2i) -> bool:
 	# If Shatter Reality isn't unlocked, there are no dividing walls.
@@ -1410,15 +1429,44 @@ func apply_recipe_buff(buff_data: Dictionary):
 			start_fruit_flood(buff_data["duration"])
 
 
+func update_combo_meter():
+	# If the player hasn't unlocked the combo system, do nothing.
+	if not GameManager.sugar_rush_unlocked:
+		return
+
+	# If the combo was at 0, this is a new chain. Reset the purity flag.
+	if GameManager.current_combo == 0:
+		GameManager.combo_is_pure = true
+		
+	# Increment the combo counter.
+	GameManager.current_combo += 1
+	var chain_reaction_level = GameManager.chain_reaction_level
+	if chain_reaction_level > 0:
+		var max_combo = GameManager.chain_reaction_data[chain_reaction_level]
+		if GameManager.current_combo > max_combo:
+			GameManager.current_combo = max_combo
+	
+	# Cap the combo based on the Chain Reaction upgrade level.
+	var max_combo = GameManager.chain_reaction_data[GameManager.chain_reaction_level]
+	if GameManager.current_combo > max_combo:
+		GameManager.current_combo = max_combo
+		
+	# Start the combo timer with the correct duration from the Lingering Rush upgrade.
+	var combo_duration = GameManager.lingering_rush_data[GameManager.lingering_rush_level]
+	$ComboTimer.start(combo_duration)
+
 # --- CORRECTED ON_SNAKE_ATE_FOOD FUNCTION ---
 func on_snake_ate_food(fruit):
-	# 1. First, check and update the cookbook progress.
+	# 1a. First, update combo meter.
+	update_combo_meter()
+	# 1b. Next, check and update the cookbook progress.
 	check_cookbook_progress(fruit)
 	# 2. Next, calculate all the rewards from the fruit.
 	var rewards = calculate_fruit_rewards(fruit)
 	# 3. Apply rewards
 	GameManager.juice += rewards.juice_reward
 	grow_snake(rewards.segments_to_add)
+	
 	
 	# 4. Handle run-specific stats.
 	GameManager.fruits_eaten_this_run += 1
@@ -1462,7 +1510,7 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 	
 	# Handle base effects and Custom Cuisine effects together
 	if fruit is GoldenFruit:
-		rewards.sp_reward += GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
+		rewards.juice_reward += GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
 		if GameManager.custom_cuisine_unlocked:
 			head.recharge_random_ability() # We'll create this helper in snake_head
 			
@@ -1495,7 +1543,7 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 	if fruit.has_method("ripen") and fruit.is_ripe:
 		growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
 		if fruit is GoldenFruit:
-			rewards.sp_reward += 1 # Bonus SP for a rare Ripe Golden Fruit
+			rewards.juice_reward += 1 # Bonus SP for a rare Ripe Golden Fruit
 			
 	rewards.segments_to_add = get_effective_fruit_reward() * growth_multiplier
 	return rewards
@@ -1660,6 +1708,34 @@ func update_snake_visuals_from_chroma():
 		else:
 			# Default single color if pattern is not activated
 			segment.get_node("FillSprite").modulate = Color.PURPLE
+
+
+func update_gps_graph():
+	# --- Calculate GPS ---
+	var five_seconds_ago = GameManager.run_time - 5.0
+	var growth_in_last_5s = 0
+	# Prune old data and calculate growth in the window
+	for i in range(growth_history.size() - 1, -1, -1):
+		if growth_history[i].time < five_seconds_ago:
+			growth_history.remove_at(i)
+		else:
+			growth_in_last_5s += growth_history[i].growth
+
+	var current_gps = growth_in_last_5s / 5.0
+
+	# --- Update Visuals ---
+	var graph = $UI/MarginContainer/HBoxContainer/InformationPanel/HBoxContainer/GardenDataContainer/GPSTracker/GraphLine
+	
+	# Add a new point to the end of the line graph
+	graph.add_point(Vector2(graph.get_point_count() * 2, -current_gps * 10)) # We multiply to make the graph visible
+	# If the graph is too long, remove the oldest point
+	if graph.get_point_count() > 100:
+		graph.remove_point(0)
+
+	# We could add the color-changing shader logic here later!
+
+
+
 
 
 func apply_dazzle_visuals():
@@ -1879,28 +1955,7 @@ func use_extra_life():
 	# 5. Start the countdown
 	start_countdown()
 
-func update_score_display():
-	var score_label = player_banner.get_node("HBox/StatsContainer/ScoreLabel")
-	var old_score = score_label.text.to_int()
-	var new_score = snake_body_segments.size() + 1
-	
-	score_label.text = str(new_score)
-	
-	# The "CoD Zombies" animation!
-	var points_to_add = new_score - old_score
-	if points_to_add > 0:
-		for i in range(points_to_add):
-			var point_label = Label.new()
-			point_label.text = "+1"
-			# Style it to look good
-			# ...
-			add_child(point_label)
-			point_label.global_position = score_label.global_position
-			
-			var tween = create_tween()
-			tween.tween_property(point_label, "position:y", point_label.position.y - 50, 0.5)
-			tween.parallel().tween_property(point_label, "modulate:a", 0.0, 0.5)
-			tween.tween_callback(point_label.queue_free)
+
 
 func create_colored_segment(next_pos: Vector2) -> Node2D:
 	var segment = body_scene.instantiate()
@@ -2223,7 +2278,6 @@ func perform_autotomy(collided_segment):
 		segment_to_remove.queue_free()
 		
 	# Update the score and HUD to reflect the shorter snake
-	update_score_display()
 	update_hud()
 
 func create_pocket_garden():
@@ -2239,7 +2293,7 @@ func create_pocket_garden():
 	update_hud()
 	for i in range(segment_cost):
 		snake_body_segments.pop_back().queue_free()
-	update_score_display()
+	update_hud()
 
 	var garden_size = Vector2(5 * tile_size, 5 * tile_size)
 	var garden_pos = head.global_position - (garden_size / 2)
@@ -2297,7 +2351,6 @@ func perform_sacrificial_molt():
 	GameManager.extra_lives += 1
 	
 	# 4. Update all UI to reflect the changes
-	update_score_display()
 	update_hud()
 	
 	# Optional: Add a cool visual/sound effect here!
@@ -2405,7 +2458,7 @@ func destroy_body_segment(segment_node):
 		tween.tween_callback(segment_node.queue_free)
 		
 		# 4. Update the score to reflect the shorter snake.
-		update_score_display()
+		update_hud()
 
 
 func pick_new_recipe():

@@ -3,25 +3,42 @@ extends PanelContainer
 # --- NODE REFERENCES ---
 # Get references to all the labels and containers we need to update.
 # Make sure these paths match your scene tree exactly!
-@onready var run_timer_label = $HBoxContainer/VBoxContainer/FrenzyMeter/RunTimerLabel
-@onready var combo_window_label = $HBoxContainer/VBoxContainer/FrenzyMeter/ComboWindowLabel
-@onready var combo_counter_label = $HBoxContainer/VBoxContainer/FrenzyMeter/ComboCounterLabel
-@onready var cookbook_ui_container = $HBoxContainer/VBoxContainer/CookbookUI
-@onready var recipe_name_label = $HBoxContainer/VBoxContainer/CookbookUI/RecipeNameLabel
-@onready var ingredients_container = $HBoxContainer/VBoxContainer/CookbookUI/IngredientsContainer
+@onready var run_timer_label = $HBoxContainer/GardenDataContainer/RunTimerLabel
+@onready var combo_window_label = $HBoxContainer/GardenDataContainer/FrenzyMeter/ComboWindowLabel
+@onready var combo_counter_label = $HBoxContainer/GardenDataContainer/FrenzyMeter/ComboCounterLabel
+@onready var cookbook_ui_container = $HBoxContainer/GardenDataContainer/CookbookUI
+@onready var recipe_name_label = $HBoxContainer/GardenDataContainer/CookbookUI/RecipeNameLabel
+@onready var ingredients_container = $HBoxContainer/GardenDataContainer/CookbookUI/IngredientsContainer
 @onready var garden_name_label = $HBoxContainer/GardenDataContainer/GardenStatus/GardenNameLabel
 @onready var garden_goal_label = $HBoxContainer/GardenDataContainer/GardenStatus/GardenGoalLabel
+@onready var gps_graph = $HBoxContainer/GardenDataContainer/GPSTracker/GraphLine
+@onready var gps_label = $HBoxContainer/GardenDataContainer/GPSTracker/GPS
+
+
+var gps_history: Array = []
+var previous_gps: float = 0.0
+var gps_trend: float = 0.0
+
+func _ready():
+	var mat = ShaderMaterial.new()
+	mat.shader = preload("res://gps_line.gdshader")
+	gps_graph.material = mat
+
+	
 
 # This is the master function that main.gd will call every frame.
 # It takes all the current game data in one single dictionary.
 func update_display(data: Dictionary):
 	# --- Update Frenzy Meter ---
+	
 	run_timer_label.text = "Run Time: " + data["run_time_string"]
 	
 	if data["combo_is_active"]:
 		combo_window_label.visible = true
 		combo_window_label.text = "Combo Window: %.1f" % data["combo_window_time"]
+
 	else:
+
 		combo_window_label.visible = false
 		
 	if data["combo_count"] > 1:
@@ -31,13 +48,50 @@ func update_display(data: Dictionary):
 		combo_counter_label.visible = false
 		
 	# --- Update Garden Status ---
-	garden_name_label.text = "%s (Garden %s/13)" % [data["garden_name"], data["garden_number"]]
+	garden_name_label.text = "%s (Garden %s)" % [data["garden_name"], data["garden_number"]]
 	var goal_text = "Goal: %s / %s" % [data["current_score"], data["garden_goal"]]
 	garden_goal_label.text = goal_text
 	
 	# --- Update Cookbook ---
 	# We now call our dedicated helper function to handle the complex recipe UI.
 	update_recipe_display(data["active_recipe"], data["recipe_progress"])
+	
+	# --- NEW: Update GPS Graph ---
+	var current_gps = data["current_gps"]
+	gps_label.text = "GPS: %s / sec" % current_gps
+	# --- THIS IS THE NEW LOGIC ---
+	# 1. Determine the immediate direction of change (up, down, or stable).
+	var direction = 0.0
+	var diff = current_gps - previous_gps
+	if diff > 0.01:
+		direction = 1.0
+	elif diff < -0.01:
+		direction = -1.0
+		
+	#print("direction: ", direction)
+	# 2. Smoothly move our trend value towards the new direction.
+	# The lerp() function is perfect for this. It creates a gradual blend.
+	gps_trend = lerp(gps_trend, direction, 0.05) # The 0.05 controls the speed of the color change
+
+	# 3. Pass the new, smoothed trend value to our shader.
+	gps_graph.material.set_shader_parameter("trend", gps_trend)
+	
+	# 4. Add the new GPS value to our history.
+	gps_history.append(current_gps)
+	if gps_history.size() > 100:
+		gps_history.pop_front()
+		
+	# 5. Redraw the graph with the "shaky" line
+	gps_graph.clear_points()
+	for i in range(gps_history.size()):
+		var gps_value = gps_history[i]
+		var y_pos = -gps_value * 5
+		var wobble = sin(i * 0.5 + Time.get_ticks_msec() * 0.01) * gps_value * 12.0
+		y_pos += wobble
+		gps_graph.add_point(Vector2(i * 3, y_pos))
+		
+	# 6. Remember the current GPS for the next frame's comparison
+	previous_gps = current_gps
 
 # --- This is the new, corrected helper function for the Cookbook ---
 func update_recipe_display(recipe: Dictionary, progress: int):
@@ -93,3 +147,7 @@ func update_recipe_display(recipe: Dictionary, progress: int):
 			icon.modulate = Color(0.3, 0.3, 0.3, 0.8) # Slightly transparent gray
 			
 		ingredients_container.add_child(icon)
+		
+		
+		
+	

@@ -6,8 +6,17 @@
 
 [node name="AbilitySlot" type="Panel"]
 custom_minimum_size = Vector2(64, 64)
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_n8tg8")
 
 [node name="Icon" type="TextureRect" parent="."]

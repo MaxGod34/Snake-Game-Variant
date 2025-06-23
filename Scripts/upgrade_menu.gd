@@ -248,7 +248,7 @@ func update_button_display(upgrade_key):
 		button_node.disabled = true
 	else:
 		var base_cost = rules["costs"][current_level]
-		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
+		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
 		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
 		var final_cost = max(1, base_cost + diff_mod + class_mod)
 		
@@ -281,7 +281,7 @@ func _on_upgrade_button_pressed(upgrade_key, button_node):
 		# --- THIS IS THE FIX ---
 		# We put the full cost calculation here as well to ensure it's correct.
 		var base_cost = rules["costs"][current_level]
-		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["sp_cost_modifier"]
+		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
 		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
 		var final_cost = max(1, base_cost + diff_mod + class_mod)
 		

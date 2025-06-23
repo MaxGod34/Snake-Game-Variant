@@ -256,7 +256,7 @@ var difficulty_data = {
 		"name": "Hatchling",
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
-		"sp_cost_modifier": 0,    # Upgrades cost the normal amount
+		"juice_cost_modifier": 0,    # Upgrades cost the normal amount
 		"starting_sp": 69,          # Start with 5 free skill points!
 		"start_slots": 10
 	},
@@ -264,7 +264,7 @@ var difficulty_data = {
 		"name": "Viper",
 		"speed_multiplier": 1.0,  # Normal speed
 		"goal_multiplier": 1.0,   # Normal garden goals
-		"sp_cost_modifier": 1,    # Upgrades cost +1 SP
+		"juice_cost_modifier": 1,    # Upgrades cost +1 SP
 		"starting_sp": 0,
 		"start_slots": 8
 	},
@@ -272,7 +272,7 @@ var difficulty_data = {
 		"name": "Basilisk",
 		"speed_multiplier": 0.8,  # Faster snake
 		"goal_multiplier": 1.25,  # Longer garden goals
-		"sp_cost_modifier": 2,    # Upgrades cost +2 SP
+		"juice_cost_modifier": 2,    # Upgrades cost +2 SP
 		"starting_sp": 0,
 		"start_slots": 2
 	}
