@@ -25,6 +25,7 @@ content_margin_bottom = 20.0
 [sub_resource type="Theme" id="Theme_rohuw"]
 
 [node name="GardenCompleteScreen" type="CanvasLayer"]
+visible = false
 script = ExtResource("1_8msff")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]

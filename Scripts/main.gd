@@ -34,6 +34,7 @@ var time_since_last_fruit: float = 0.0
 var head_scene = preload("res://Scenes/Snake/snake_head.tscn")
 var body_scene = preload("res://Scenes/Snake/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/Fruits/fruit.tscn")
+
 var jumping_bean_scene = preload("res://Scenes/Fruits/jumping_bean.tscn")
 var ghost_pepper_scene = preload("res://Scenes/Fruits/ghost_pepper.tscn")
 var iron_cherry_scene = preload("res://Scenes/Fruits/iron_cherry.tscn")
@@ -66,6 +67,7 @@ signal game_is_over(score)
 func _ready():
 	 # --- GAME SETUP ---
 	rebuild_world_layout()
+	GameManager.generate_full_spawn_queue()
 	
 	var difficulty = GameManager.chosen_difficulty
 	var p_class = GameManager.chosen_class
@@ -96,7 +98,7 @@ func _ready():
 		# Set the hotkey label text (1, 2, ..., 9, 0)
 		slot.get_node("HotkeyLabel").text = str((i + 1) % 10)
 	
-	
+	$UI/PulpsicleStand.main_game = self
 	
 	# --- CREATE HEAD ---
 	head = head_scene.instantiate()
@@ -244,8 +246,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_ability_slot_activated(slot_index: int):
 	# Check if there's actually an ability in this slot
-	if slot_index >= GameManager.equipped_abilities.size():
-		return # Slot is empty, do nothing
+	if slot_index >= GameManager.equipped_abilities.size(): return # Slot is empty, do nothing
 
 	var ability_key = GameManager.equipped_abilities[slot_index]
 	
@@ -255,9 +256,12 @@ func _on_ability_slot_activated(slot_index: int):
 	if ability_data and ability_data.current > 0:
 		# Check the "current" charge count
 		if ability_data.current > 0:
-			GameManager.abilities_used_this_garden += 1
-			# Subtract from the "current" charge count
-			ability_data.current -= 1
+			if ability_key == "Tenderizer":
+				ability_data.current = ability_data.current
+			else:
+				GameManager.abilities_used_this_garden += 1
+				# Subtract from the "current" charge count
+				ability_data.current -= 1
 		
 		
 		# Use a match statement to call the correct helper function
@@ -269,10 +273,12 @@ func _on_ability_slot_activated(slot_index: int):
 			"Banana Bounty": activate_banana_bounty()
 			"Sacrificial Molt": perform_sacrificial_molt()
 			"Mise en Place": perform_mise_en_place()
+			"Tenderizer": activate_tenderizer()
 			"Garden Weaver": perform_garden_weave()
 			"Autotomy": head.activate_autotomy()
 			"Pocket Garden": create_pocket_garden()
 			"Zenith": activate_zenith()
+			"Lasso Larry": perform_lasso_larry()
 		
 		
 		print("Ability used: ", ability_key)
@@ -509,6 +515,28 @@ func update_camera_quadrant():
 		current_camera_quadrant = new_quadrant
 		move_camera_to_quadrant(current_camera_quadrant)
 
+func handle_meta_upgrade_purchase(upgrade_key: String):
+	print("Handling meta upgrade purchase: ", upgrade_key)
+
+	# We use a match statement to apply the correct effect.
+	match upgrade_key:
+		"Synapse Slot":
+			GameManager.max_ability_slots += 1
+		"Serpent's Coffer":
+			GameManager.serpents_coffer_level += 1
+		"Geode Compass":
+			GameManager.geomancers_compass_level += 1
+		"Four Leaf Clover":
+			GameManager.four_leaf_clover_level += 1
+		"Chroma Scales":
+			GameManager.chroma_scales_level += 1
+		"Harvest Forecast":
+			GameManager.harvest_forecast_level += 1
+		"Lasso Larry":
+			# It calls the same powerful helper that our Juice shop uses!
+			_purchase_or_upgrade_ability("Lasso Larry")
+
+
 func update_boundary_visuals():
 	
 	if GameManager.fold_space_unlocked:
@@ -538,6 +566,27 @@ func update_hud():
 	data["xp_min"] = GameManager.score_at_level_start
 	data["juice"] = GameManager.juice
 	
+	# --- Gather Harvest Forecast Data ---
+	var forecast_level = GameManager.harvest_forecast_level
+	data["harvest_forecast_level"] = forecast_level
+	if forecast_level > 0:
+		# At level 4, we show the next 5 fruits of any type.
+		var num_to_show = 5 if forecast_level >= 4 else forecast_level
+		data["forecast_list"] = GameManager.full_spawn_queue.slice(0, num_to_show)
+		
+		# Calculate and add the current special fruit chance for the display
+		var base_special_chance = 0.10
+		if GameManager.exotic_seeds_level >= 5:
+			base_special_chance = 0.20
+			
+		# We need the snake's next position to check for Border Czar.
+		# We can get this from our existing next_fruit_position variable.
+		if GameManager.border_czar_unlocked and is_on_border(next_fruit_position):
+			base_special_chance += 0.40
+			
+		# Get the final chance, including the Four-Leaf Clover bonus.
+		data["special_fruit_chance"] = GameManager.get_modified_chance(base_special_chance)
+	
 	# Timers & Performance
 	var minutes = int(GameManager.run_time / 60)
 	var seconds = int(GameManager.run_time) % 60
@@ -556,6 +605,8 @@ func update_hud():
 	data["garden_number"] = GameManager.current_garden
 	data["current_score"] = snake_body_segments.size() + 1
 	data["garden_goal"] = GameManager.garden_data[GameManager.current_garden]["score_goal"]
+	
+	
 	
 	# --- NEW: Calculate GPS ---
 	var five_seconds_ago = GameManager.run_time - 5.0
@@ -581,7 +632,8 @@ func update_ability_hotbar():
 	# 1. First, calculate how many slots should be visible.
 	var unlocked_slots = GameManager.max_ability_slots
 	
-	# 2. Get the list of abilities the player currently has.
+	# --- THIS IS THE FIX ---
+	# 2. Get the UNIFIED list of all abilities from our smart helper function.
 	var equipped_abilities = GameManager.equipped_abilities
 	
 	# 3. Loop through all 10 slots in the hotbar.
@@ -596,10 +648,9 @@ func update_ability_hotbar():
 			if i < equipped_abilities.size():
 				# This slot is filled. Get the ability data and update the display.
 				var ability_key = equipped_abilities[i]
-				var ability_data = GameManager.ability_charges.get(ability_key)
-				if ability_data:
-					var current_charges = ability_data.get("current", 0)
-					slot.update_display(ability_key, current_charges)
+				# Get the current charges from our unified dictionary
+				var charge_data = GameManager.ability_charges.get(ability_key, {"current": 0})
+				slot.update_display(ability_key, charge_data.current)
 			else:
 				# This slot is unlocked but empty.
 				slot.update_display("", 0)
@@ -607,7 +658,6 @@ func update_ability_hotbar():
 			# This slot is still locked.
 			slot.visible = false
 
-	
 
 
 func update_fruit_prediction():
@@ -652,81 +702,44 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	
 
 func spawn_fruit():
-	# First, always find a safe position before we decide what to spawn there.
 	var safe_position = calculate_safe_spawn_position()
+	var fruit_key = ""
 	
-	# --- The New "Loot Table" ---
-	var fruit = null
+	# If the deck is empty, make a new one.
+	if GameManager.full_spawn_queue.is_empty():
+		GameManager.generate_full_spawn_queue()
 	
-	# --- STEP 1: Calculate Golden Fruit Chance ---
-	var base_golden_chance = 0.0
-	var extract_level = GameManager.golden_seed_extract_level
-	var golden_seed_level = GameManager.golden_seeds_level
-	if extract_level > 0:
-		# Get the base chance from our data array
-		base_golden_chance += GameManager.golden_seed_extract_data[extract_level]
-	if golden_seed_level> 0:
-		base_golden_chance += GameManager.golden_seeds_data[golden_seed_level]
-		
-	# Check for Border Czar synergy
-	if GameManager.border_czar_unlocked and is_on_border(safe_position):
-		base_golden_chance *= 2.0
+	# Draw the top card from the deck.
+	fruit_key = GameManager.full_spawn_queue.pop_front()
 	
-	# Check for Last Stand synergy
-	if GameManager.last_stand_unlocked and GameManager.extra_lives == 0:
-		base_golden_chance += 0.40 # Add a flat 40% bonus
-		
-	var final_golden_chance = GameManager.get_modified_chance(base_golden_chance)
-		
-	# --- STEP 2: Roll for a Golden Fruit ---
-	if randf() < min(1, final_golden_chance):
-		print("A Golden Apple has appeared! (Chance: %.1f%%)" % (final_golden_chance * 100.0))
-		fruit = preload("res://Scenes/Fruits/golden_fruit.tscn").instantiate()
-	
-	# --- STEP 3: If no Golden Fruit, Roll for an Exotic Fruit ---
-	else:
-		var exotic_level = GameManager.exotic_seeds_level
-		var base_exotic_chance = 0.10 # Base 10% chance
-		if exotic_level >= 5:
-			base_exotic_chance = 0.20 # Level 5 upgrade doubles the chance
+	# The Border Czar bonus now gives a chance to "re-draw" the card.
+	if GameManager.border_czar_unlocked and is_on_border(safe_position) and fruit_key == "Fruit":
+		if randf() < 0.5: # 50% chance to upgrade the draw
+			var unlocked_specials = GameManager.get_unlocked_special_fruits()
+			if not unlocked_specials.is_empty():
+				print("BORDER CZAR! Upgrading the fruit spawn...")
+				fruit_key = unlocked_specials.pick_random()
 			
-		var final_exotic_chance = GameManager.get_modified_chance(base_exotic_chance)
+	var fruit = instantiate_fruit_from_key(fruit_key)
 			
-		if exotic_level > 0 and randf() < final_exotic_chance:
-			# Success! Let's pick one of the exotic fruits we have unlocked.
-			var unlocked_fruits = []
-			for i in range(1, exotic_level + 1):
-				unlocked_fruits.append(GameManager.exotic_seeds_data[i])
-			
-			var chosen_fruit_key = unlocked_fruits.pick_random()
-			
-			# Use a match statement to create the correct scene
-			match chosen_fruit_key:
-				"jumping_bean":
-					fruit = jumping_bean_scene.instantiate()
-				"ghost_pepper":
-					fruit = ghost_pepper_scene.instantiate()
-				"iron_cherry":
-					fruit = iron_cherry_scene.instantiate()
-				"dragon_fruit":
-					fruit = dragon_fruit_scene.instantiate()
-		else:
-			# --- STEP 4: If all else fails, spawn a normal fruit ---
-			fruit = fruit_scene.instantiate()
-	
-	if fruit == null:
-		fruit = fruit_scene.instantiate()
-	
-	
 	# --- FINAL SETUP & SPAWNING ---
-	# Apply blueprint visuals if necessary
+	# (Your logic for applying blueprint visuals and adding the fruit is perfect here)
 	if GameManager.masters_blueprint_unlocked:
 		fruit.get_node("FillSprite").modulate = Color("AFEEEE")
 			
-	# Add the chosen fruit to the game.
 	fruit.add_to_group("fruits")
 	fruit.position = safe_position
 	call_deferred("add_child", fruit)
+
+func instantiate_fruit_from_key(key: String) -> Node2D:
+	match key:
+		"GoldenFruit": return preload("res://Scenes/Fruits/golden_fruit.tscn").instantiate()
+		"JumpingBean": return jumping_bean_scene.instantiate()
+		"GhostPepper": return ghost_pepper_scene.instantiate()
+		"IronCherry": return iron_cherry_scene.instantiate()
+		"DragonFruit": return dragon_fruit_scene.instantiate()	
+		_: return fruit_scene.instantiate()
+
 
 
 func destroy_obstacle(obstacle_node):
@@ -1026,6 +1039,7 @@ func level_up():
 		if ability_data.current < ability_data.total:
 			ability_data.current += 1
 
+
 func _on_upgrade_menu_resume_game_pressed():
 	# Block input for the transition out
 	$UI/InputBlocker.show()
@@ -1166,24 +1180,35 @@ func recharge_random_ability():
 		update_hud()
 
 
+func _purchase_or_upgrade_ability(ability_key: String):
+	# Check if we already own this ability.
+	if not ability_key in GameManager.ability_charges:
+		if GameManager.equipped_abilities.size() < GameManager.max_ability_slots:
+			GameManager.equipped_abilities.append(ability_key)
+			# Create the new entry with 1 charge.
+			GameManager.ability_charges[ability_key] = {"current": 1, "total": 1}
+	else:
+		# If we already own it, just add to both current and total charges.
+		GameManager.ability_charges[ability_key].current += 1
+		GameManager.ability_charges[ability_key].total += 1
+
+func activate_tenderizer():
+	# Tenderizer is a passive "on-next-hit" ability, so it doesn't do anything
+	# when you press the key. Its logic is handled entirely in the collision check.
+	# We could play a small sound effect here to confirm the hotkey press.
+	print("Tenderizer is ready!")
 
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	var active_abilities = [
 		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty", "Molt",\
-		"Meditative State", "Sacrificial Molt", "Mise en Place", "Zenith", "Autotomy"
+		"Meditative State", "Sacrificial Molt", "Mise en Place", "Zenith", "Autotomy",\
+		"Tenderizer"
 	]
 	print("Player chose upgrade: ", upgrade_name)
 	
 	if upgrade_name in active_abilities:
-		if not upgrade_name in GameManager.equipped_abilities:
-			if GameManager.equipped_abilities.size() < GameManager.max_ability_slots:
-				print("New ability equipped: ", upgrade_name)
-				GameManager.equipped_abilities.append(upgrade_name)
-				GameManager.ability_charges[upgrade_name] = {"current": 1, "total": 1}
-		else:
-			GameManager.ability_charges[upgrade_name]["total"] += 1
-			GameManager.ability_charges[upgrade_name]["current"] += 1
+		_purchase_or_upgrade_ability(upgrade_name)
 			
 	else:
 		#---------FRENZY------------#
@@ -1393,9 +1418,11 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				print("Sovereign Trail Upgraded 1 level!")
 		#--------SURVIVOR--------#
 		elif upgrade_name == "Mulligan Munchie":
-			if GameManager.extra_lives < 10:
+			if GameManager.extra_lives < 10 and not GameManager.extra_lives_are_capped:
 				GameManager.extra_lives += 1
 				print("Extra life added, thanks to ol' Mulligan!")
+			elif GameManager.extra_lives_are_capped:
+				print("Extra lives are capped! No can do!")
 		elif upgrade_name == "Phoenix Dawn": 
 			if not GameManager.phoenix_dawn_unlocked:
 				GameManager.phoenix_dawn_unlocked = true
@@ -2465,3 +2492,32 @@ func _on_iron_cherry_buff_timer_timeout():
 func _on_dragon_fruit_buff_timer_timeout():
 	GameManager.dragon_fruit_buff_active = false
 	print("Dragon Fruit buff has expired.")
+
+
+func perform_lasso_larry():
+	print("LASSO LARRY! YEEHAW!")
+	
+	var lasso_data = GameManager.ability_charges.get("Lasso Larry", {"total": 0})
+	var fruits_to_pull = lasso_data.total
+	var all_fruits = get_tree().get_nodes_in_group("fruits")
+	
+	# Sort all fruits by their distance to the snake's head
+	all_fruits.sort_custom(func(a, b): return a.global_position.distance_to(head.global_position) < b.global_position.distance_to(head.global_position))
+	
+	var pending_positions = []
+	
+	# Loop through the closest fruits and move them
+	for i in range(min(fruits_to_pull, all_fruits.size())):
+		var fruit = all_fruits[i]
+		
+		# --- THIS IS THE FIX ---
+		# We find a new safe spot, telling the function to avoid both the spots
+		# we've already chosen AND the snake's head itself.
+		var unsafe_spots = pending_positions + [head.global_position]
+		var safe_spot = calculate_safe_spawn_position(unsafe_spots)
+		
+		# Move the fruit and add its new spot to our list
+		fruit.position = safe_spot
+		pending_positions.append(safe_spot)
+			
+	play_screen_flash(Color.SANDY_BROWN)

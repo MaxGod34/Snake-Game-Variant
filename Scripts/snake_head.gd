@@ -106,6 +106,9 @@ func _unhandled_input(event: InputEvent):
 		current_direction = new_direction
 		can_change_direction = false
 		handle_juke_and_jive()
+		
+	if event.is_action_pressed("activate_lasso"):
+		main.perform_lasso_larry()
 
 
 # --- GAME LOGIC & MOVEMENT ---
@@ -183,8 +186,9 @@ func _on_head_area_area_entered(area):
 				"Stones Burden":
 					activate_stones_burden()
 		
-		elif GameManager.tenderizer_charges > 0:
-			GameManager.tenderizer_charges -= 1
+		var tenderizer_data = GameManager.ability_charges.get("Tenderizer")
+		if tenderizer_data and tenderizer_data.current > 0:
+			tenderizer_data.current -= 1
 			main.update_hud()
 			main.destroy_obstacle(area)
 		else:

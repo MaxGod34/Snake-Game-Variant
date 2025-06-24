@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://ck50xdb7swx85"]
+
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_037r5"]
+[ext_resource type="Script" uid="uid://dgopfvrj8jlb0" path="res://Scenes/UI/harvest_forecast_ui.gd" id="1_w54eu"]
+
+[node name="HarvestForecastUI" type="VBoxContainer"]
+offset_right = 324.0
+offset_bottom = 100.0
+script = ExtResource("1_w54eu")
+
+[node name="TitleLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.85098, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 6
+theme_override_fonts/font = ExtResource("1_037r5")
+theme_override_font_sizes/font_size = 28
+text = "Forecast"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IconContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="ChanceLabel" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0.85098, 0.94902, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 6
+theme_override_fonts/font = ExtResource("1_037r5")
+theme_override_font_sizes/font_size = 24
+text = "34% chance"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -13,6 +13,7 @@ extends PanelContainer
 @onready var garden_goal_label = $HBoxContainer/GardenDataContainer/GardenStatus/GardenGoalLabel
 @onready var gps_graph = $HBoxContainer/GardenDataContainer/GPSTracker/GraphLine
 @onready var gps_label = $HBoxContainer/GardenDataContainer/GPSTracker/GPS
+@onready var harvest_forecast_ui = $HBoxContainer/GardenDataContainer/HarvestForecastUI
 
 
 var gps_history: Array = []
@@ -56,25 +57,32 @@ func update_display(data: Dictionary):
 	# We now call our dedicated helper function to handle the complex recipe UI.
 	update_recipe_display(data["active_recipe"], data["recipe_progress"])
 	
+	
+	# --- NEW: Update Harvest Forecast ---
+	# We check if the forecast data exists, and if so, pass it to our child UI
+	if data.has("forecast_list") and GameManager.harvest_forecast_level > 0:
+		harvest_forecast_ui.visible = true
+		harvest_forecast_ui.update_forecast(
+			data["forecast_list"],
+			data["special_fruit_chance"],
+			data["harvest_forecast_level"]
+			)
+	else:
+		harvest_forecast_ui.visible = false
+	
+	
+	
 	# --- NEW: Update GPS Graph ---
 	var current_gps = data["current_gps"]
 	gps_label.text = "%s / sec <- GPS" % current_gps
 	# --- THIS IS THE NEW LOGIC ---
 	# 1. Determine the immediate direction of change (up, down, or stable).
-	var direction = 0.0
-	var diff = current_gps - previous_gps
-	if diff > 0.01:
-		direction = 1.0
-	elif diff < -0.01:
-		direction = -1.0
-		
-	#print("direction: ", direction)
-	# 2. Smoothly move our trend value towards the new direction.
-	# The lerp() function is perfect for this. It creates a gradual blend.
-	gps_trend = lerp(gps_trend, direction, 0.05) # The 0.05 controls the speed of the color change
-
-	# 3. Pass the new, smoothed trend value to our shader.
-	gps_graph.material.set_shader_parameter("trend", gps_trend)
+	var intensity = clamp(current_gps / 10.0, 0.0, 1.0) # Max intensity at 10 GPS
+	
+	# 2. Pass the intensity AND the player's chosen color to the shader.
+	# This is where the future customization will happen!
+	gps_graph.material.set_shader_parameter("intensity", intensity)
+	gps_graph.material.set_shader_parameter("base_color", Color.GREEN) # We can change this later
 	
 	# 4. Add the new GPS value to our history.
 	gps_history.append(current_gps)
@@ -86,7 +94,7 @@ func update_display(data: Dictionary):
 	for i in range(gps_history.size()):
 		var gps_value = gps_history[i]
 		var y_pos = -gps_value * 5
-		var wobble = sin(i * 0.5 + Time.get_ticks_msec() * 0.01) * gps_value * 12.0
+		var wobble = sin(i * 0.5 + Time.get_ticks_msec() * 0.01) * gps_value * 4.0 # OG: * 2
 		y_pos += wobble
 		gps_graph.add_point(Vector2(i * 3, y_pos))
 		

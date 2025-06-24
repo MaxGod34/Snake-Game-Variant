@@ -1,15 +1,10 @@
-// This shader will smoothly change the line's color
 shader_type canvas_item;
 
-uniform float trend = 0.0;
+uniform vec4 base_color : source_color = vec4(0.0, 1.0, 0.0, 1.0); // Default to Green
+uniform float intensity : hint_range(0.0, 1.0) = 1.0;
 
 void fragment() {
-    vec3 down = vec3(1.0, 0.2, 0.2); // red-ish
-    vec3 up = vec3(0.2, 1.0, 0.2);   // green-ish
-
-    // Map -1 to 1 into 0 to 1
-    float t = (trend + 1.0) * 0.5;
-
-    vec3 final_color = mix(down, up, t);
-    COLOR = vec4(final_color, 1.0);
+    // We mix between a dull gray and the vibrant base color
+    // based on the intensity (how high the GPS is).
+    COLOR = mix(vec4(0.5, 0.5, 0.5, 1.0), base_color, intensity);
 }

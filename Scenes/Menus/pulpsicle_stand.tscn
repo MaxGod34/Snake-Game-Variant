@@ -103,12 +103,13 @@ horizontal_alignment = 1
 
 [node name="HSeparator7" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 32
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
 [node name="SynapseRow" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 32
+alignment = 1
 
 [node name="Synapse_Title" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/SynapseRow"]
 layout_mode = 2
@@ -508,7 +509,7 @@ size_flags_vertical = 4
 
 [node name="HSeparator4" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 32
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
 [node name="RouletteContainer" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
@@ -533,7 +534,7 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="RotatingItemButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
-custom_minimum_size = Vector2(256, 96)
+custom_minimum_size = Vector2(288, 96)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
@@ -561,7 +562,7 @@ theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 32
 theme_override_fonts/font = ExtResource("3_4da1l")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
 text = "Item description:"
 horizontal_alignment = 1
@@ -569,13 +570,81 @@ vertical_alignment = 1
 
 [node name="HSeparator5" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 32
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
-[node name="ContinueButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer"]
-custom_minimum_size = Vector2(256, 104)
+[node name="HBoxContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="Pillar5" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Pillar5_Title" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Lasso Larry"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pillar5_Button" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5"]
+custom_minimum_size = Vector2(224, 96)
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_4da1l")
+theme_override_styles/disabled = ExtResource("5_7hsrk")
+theme_override_styles/hover_pressed = ExtResource("4_4da1l")
+theme_override_styles/hover = ExtResource("4_4da1l")
+theme_override_styles/pressed = ExtResource("4_4da1l")
+theme_override_styles/normal = ExtResource("6_7gmkh")
+text = "Lasso Ability
+(100mg)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="ContinueButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(320, 104)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
 theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
 theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
@@ -594,6 +663,74 @@ theme_override_styles/pressed = ExtResource("7_cy6vt")
 theme_override_styles/normal = ExtResource("8_b641q")
 text = "Continue
 "
+
+[node name="Pillar6" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Pillar6_Title" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
+text = "Harvest Forecast"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Pillar6_Button" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6"]
+custom_minimum_size = Vector2(224, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_hover_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_focus_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_colors/font_pressed_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_4da1l")
+theme_override_styles/disabled = ExtResource("5_7hsrk")
+theme_override_styles/hover_pressed = ExtResource("4_4da1l")
+theme_override_styles/hover = ExtResource("4_4da1l")
+theme_override_styles/pressed = ExtResource("4_4da1l")
+theme_override_styles/normal = ExtResource("6_7gmkh")
+text = "See the Future
+(100mg)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="HSeparator6" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2

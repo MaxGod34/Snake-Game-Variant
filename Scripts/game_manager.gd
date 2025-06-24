@@ -89,10 +89,17 @@ var geode_compass_data = [1.0, 0.9, 0.8, 0.7, 0.6] # % of rocks left
 var four_leaf_clover_level: int = 0
 var four_leaf_clover_data = [0.0, 0.02, 0.04, 0.07, 0.10] # + % on all luck
 var chroma_scales_level: int = 0
+var harvest_forecast_level: int = 0
+var full_spawn_queue: Array = []
+
 
 var ability_charges = {}
 var equipped_abilities: Array = []
 var max_ability_slots: int = 0
+
+#--------Rotating Item Stuff------#
+var extra_lives_are_capped: bool = false
+
 
 	#----Active Ability Flags----#
 var burrow_is_active = false
@@ -314,7 +321,7 @@ var class_data = {
 		"description": "Grows faster by default.\nFruit-based upgrades are cheaper.",
 		"start_length": 1,
 		"start_speed": 0.25,
-		"start_fruit_reward": 2, # Starts with a better reward
+		"start_fruit_reward": 5, # Starts with a better reward
 		"start_max_fruits": 1,
 		"start_lives": 0,
 		"speed_upgrade_mod": 0.95,
@@ -1013,7 +1020,8 @@ var meta_upgrade_data = {
 	"Geode Compass": {
 		"description": "Permanently removes a percentage of\nobstacles from all subsequent gardens.",
 		"costs": [15, 25, 40, 60],
-		"max_level": 4
+		"max_level": 4,
+		
 	},
 	"Four Leaf Clover": {
 		"description": "Permanently increases your 'luck,'\nboosting the chance of all random events.",
@@ -1024,6 +1032,18 @@ var meta_upgrade_data = {
 		"description": "Activate the cosmetic options\nyou've permanently unlocked in the Fang Fund.",
 		"costs": [10, 20, 30, 40, 50, 60],
 		"max_level": 6
+	},
+	"Lasso Larry": {
+		"display_name": "Lasso Larry",
+		"description": "Active Ability: Pulls nearby fruit directly to you.\nLvl 1: Pulls 1 fruit.\nLvl 2: Pulls 2 fruits.\nLvl 3: Pulls 3 fruits.",
+		"costs": [10, 20, 30],
+		"max_level": 3
+	},
+	"Harvest Forecast": {
+		"display_name": "Harvest Forecast",
+		"description": "Adds a UI element showing the next special fruits in the spawn queue.\nLvl 1: Shows 1 fruit.\nLvl 2: Shows 2 fruits.\nLvl 3: Shows 3 fruits.\nLvl 4: Shows the next 5 fruits",
+		"costs": [30, 30, 30, 30],
+		"max_level": 4
 	}
 }
 
@@ -1062,72 +1082,47 @@ var exotic_recipes = [
 
 var common_items = [
 	{
-		"id": "head_start",
-		"name": "Head Start",
-		"description": "Start the next Garden with +3 Juice.",
-		"cost": 15
-	},
-	{
-		"id": "emergency_rations",
-		"name": "Emergency Rations",
-		"description": "Start the next Garden with +1 Extra Life.",
-		"cost": 25
-	},
-	{
-		"id": "small_coffer_deposit",
-		"name": "Small Coffer Deposit",
-		"description": "Instantly gain +15 Pulp.",
-		"cost": 5 
+		"id": "juice_box",
+		"name": "Juice Box",
+		"description": "A refreshing treat! Instantly grants Juice equal to the current Garden number.",
+		"cost": 30
 	}
-]
+]	# ... (add more common items here later)
 
 var rare_items = [
 	{
-		"id": "deal_with_the_devil",
-		"name": "Deal with the Devil",
-		"description": "Gain +20 Juice NOW.\nFor the rest of the run,\nall Juice costs are permanently +1.",
-		"cost": 0
+		"id": "handicap",
+		"name": "Handicap",
+		"description": "A deal with the devil.\nInstantly unlock a new Ability Slot,\nbut your maximum Extra Lives is now permanently capped at 0.",
+		"cost": 0 
 	},
-	{
-		"id": "alchemists_flask",
-		"name": "Alchemist's Flask",
-		"description": "The next Golden Apple you eat\nwill grant a massive 5 Juice.",
-		"cost": 40
-	},
-	{
-		"id": "whetstone",
-		"name": "Whetstone",
-		"description": "Your next 'Acrobat' path upgrade costs 50% less.",
-		"cost": 20
-	},
-	{
-		"id": "ghost_trap", # "bad" item idea!
-		"name": "Ghost Trap",
-		"description": "What a shame.\nPermanently -1 to your base Fruit Reward.",
-		"cost": 5
-	}
+	# ... (add more rare items here later)
 ]
 
 var legendary_items = [
 	{
-		"id": "serpents_satchel",
-		"name": "The Serpent's Satchel",
-		"description": "Instantly unlocks one additional active ability slot.",
+		"id": "elephant_devoured",
+		"name": "Elephant Devoured",
+		"description": "A truly legendary meal.\nInstantly raises your 'Elephant Sized Portions'\nupgrade to its maximum level.",
 		"cost": 150
 	},
-	{
-		"id": "gluttons_throne",
-		"name": "Glutton's Throne",
-		"description": "For the next Garden ONLY, every single fruit\nthat spawns will be a Ripe Golden Apple.",
-		"cost": 100
-	},
-	{
-		"id": "perfected_specimen",
-		"name": "Perfected Specimen",
-		"description": "Choose one of your purchased Juice upgrades.\nIt is instantly raised to its maximum level for free.",
-		"cost": 200
-	}
+	# ... (add more legendary items here later)
 ]
+
+func apply_meta_upgrade(item_id: String):
+	match item_id:
+		"juice_box":
+			juice += current_garden
+		"handicap":
+			max_ability_slots += 1
+			# We'll need a new flag to enforce this cap
+			extra_lives_are_capped = true 
+		"elephant_devoured":
+			# Set the level directly to the max defined in its upgrade_data
+			es_portions_level = upgrade_data["Elephant Sized Portions"]["max_level"]
+
+
+
 
 
 
@@ -1141,7 +1136,75 @@ func get_modified_chance(base_chance: float) -> float:
 	final_chance += four_leaf_clover_data[four_leaf_clover_level]
 	
 	return clamp(final_chance, 0.0, 1.0)
+
+func generate_full_spawn_queue():
+	full_spawn_queue.clear()
+	var fruit_deck: Array = []
+
+	# 1. Calculate the base number of Golden Apples from your upgrades.
+	var base_golden_chance = get_total_golden_apple_chance()
+	var num_golden_fruits = roundi(100 * get_modified_chance(base_golden_chance))
+
+	# 2. Handle the "Last Stand" override by adding more to the deck.
+	if last_stand_unlocked and extra_lives == 0:
+		num_golden_fruits += 20 # A massive 20% flat bonus
+		print("LAST STAND! The deck is stacked with hope.")
+
+	# 3. Calculate the number of other special fruits.
+	var base_exotic_chance = 0.10
+	if exotic_seeds_level >= 5: base_exotic_chance = 0.20
+	var num_exotic_fruits = roundi(100 * get_modified_chance(base_exotic_chance))
+
+	var unlocked_exotics = get_unlocked_special_fruits()
+
+	# 4. Add all the special fruits to the deck.
+	for i in range(num_golden_fruits): fruit_deck.append("GoldenFruit")
+	if not unlocked_exotics.is_empty():
+		for i in range(num_exotic_fruits):
+			fruit_deck.append(unlocked_exotics.pick_random())
+
+	# 5. Fill the rest of the deck with normal fruit.
+	var num_normal_fruits = 100 - fruit_deck.size()
+	for i in range(num_normal_fruits):
+		fruit_deck.append("Fruit")
+
+	# 6. Shuffle the deck and assign it to our queue.
+	fruit_deck.shuffle()
+	full_spawn_queue = fruit_deck
+	print("New full spawn queue generated!")
+
+
+func get_unlocked_special_fruits() -> Array:
+	# This function dynamically builds a list of all unlocked special fruits.
+	var unlocked_specials = []
 	
+	if golden_seed_extract_level > 0 or golden_seeds_level > 0:
+		unlocked_specials.append("GoldenFruit")
+	if exotic_seeds_level >= 1:
+		unlocked_specials.append("JumpingBean")
+	if exotic_seeds_level >= 2:
+		unlocked_specials.append("GhostPepper")
+	if exotic_seeds_level >= 3:
+		unlocked_specials.append("IronCherry")
+	if exotic_seeds_level >= 4:
+		unlocked_specials.append("DragonFruit")
+		
+	return unlocked_specials
+
+func get_total_golden_apple_chance() -> float:
+	var total_chance = 0.0
+	# Add the chance from Golden Seed Extract
+	if golden_seed_extract_level > 0:
+		total_chance += golden_seed_extract_data[golden_seed_extract_level]
+	# Add the chance from the old Golden Seeds upgrade
+	if golden_seeds_level > 0:
+		total_chance += golden_seeds_data[golden_seeds_level]["chance"]
+
+	return total_chance
+
+
+
+
 	
 func start_game():
 	var p_class_data = class_data[chosen_class]
@@ -1165,6 +1228,7 @@ func start_game():
 	ability_charges.clear()
 	equipped_abilities.clear()
 
+
 	juice_spent_this_garden = 0
 	abilities_used_this_garden = 0
 	garden_start_time = 0.0 
@@ -1178,6 +1242,7 @@ func start_game():
 	geode_compass_level = 0
 	four_leaf_clover_level = 0
 	chroma_scales_level = 0
+	harvest_forecast_level = 0
 	
 	# --- Geomancer Path ---
 	fertile_ground_level = 0
