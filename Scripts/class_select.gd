@@ -3,27 +3,27 @@ extends CanvasLayer
 #------On button press--------#
 func _on_speedster_button_pressed() -> void:
 	GameManager.chosen_class = "speedster"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_warlock_button_pressed() -> void:
 	GameManager.chosen_class = "warlock"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_inchworm_button_pressed() -> void:
 	GameManager.chosen_class = "inchworm"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_phoenix_coil_button_pressed() -> void:
 	GameManager.chosen_class = "phoenix_coil"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_sidewinder_button_pressed() -> void:
 	GameManager.chosen_class = "sidewinder"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_zealot_button_pressed() -> void:
 	GameManager.chosen_class = "the_zealot"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_alchemist_button_pressed() -> void:
 	GameManager.chosen_class = "the_alchemist"
-	SceneTransition.transition_to("res://Scenes/difficulty_select.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/difficulty_select.tscn")
 func _on_back_button_pressed() -> void:
-	SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
 
 #----------____________----------------_____________--------------______________----------------#
 

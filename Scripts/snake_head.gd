@@ -5,7 +5,7 @@ signal ate_fruit(fruit)
 signal hit_self
 
 # --- Properties ---
-@export var head_color: Color = Color.LIME_GREEN
+var head_color: Color
 
 var normal_move_speed: float = 0.0
 
@@ -21,6 +21,7 @@ var juke_inputs: int = 0
 var juke_and_jive_is_active: bool = false
 
 # --- NODE REFERENCES ---
+@onready var fill_sprite = $FillSprite
 @onready var move_timer: Timer = $MoveTimer
 @onready var head_area: Area2D = $HeadArea
 @onready var juke_timer: Timer = $JukeTimer
@@ -38,11 +39,10 @@ var is_overdrive_active = false
 
 @onready var temp_speed_boost_timer: Timer = $TempSpeedBoostTimer
 
-# --- GODOT'S BUILT-IN FUNCTIONS ---
-
 func _ready():
+	head_color = GameManager.equipped_head_color
 	get_node("FillSprite").modulate = head_color
-	
+	move_timer.wait_time = move_speed
 	# Connect all timers to their respective functions
 	move_timer.timeout.connect(on_move_timer_timeout)
 	afterburner_timer.timeout.connect(_on_afterburner_timer_timeout)
@@ -55,9 +55,8 @@ func _ready():
 	stones_burden_timer.timeout.connect(_on_stones_burden_timer_timeout)
 	temp_speed_boost_timer.timeout.connect(_on_temp_speed_boost_timer_timeout)
 
-
 func _process(_delta):
-
+	reset_head_color()
 	# This ability only works if the player has unlocked it and has an active combo.
 	if GameManager.overdrive_level == 0 or GameManager.current_combo == 0:
 		# If the conditions aren't met, make sure Overdrive is turned off.
@@ -75,8 +74,8 @@ func _process(_delta):
 		# If they release the key and the boost is active, turn it off.
 		deactivate_overdrive()
 		
-		#---jug--------------------------------------
 	
+
 
 # new helper function to get the action name ("ui_up", etc.) from a Vector2
 func get_direction_action(direction: Vector2) -> String:
@@ -85,9 +84,6 @@ func get_direction_action(direction: Vector2) -> String:
 	if direction == Vector2.LEFT: return "left"
 	if direction == Vector2.RIGHT: return "right"
 	return ""
-
-
-
 
 func _unhandled_input(event: InputEvent):
 	if not can_change_direction:
@@ -111,110 +107,15 @@ func _unhandled_input(event: InputEvent):
 		can_change_direction = false
 		handle_juke_and_jive()
 
-	# --- Ability Activation Logic ---
-	if event.is_action_pressed("activate_bounty"):
-		if GameManager.banana_bounty_charges > 0 and not GameManager.is_bounty_active:
-			GameManager.abilities_used_this_garden += 1
-			main.activate_banana_bounty()
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.banana_bounty_charges += 1
-			main.update_hud()
-	
-	if event.is_action_pressed("activate_ability_burrow"):
-		if GameManager.burrow_level > 0 and GameManager.burrow_charges > 0 and not GameManager.burrow_is_active:
-			GameManager.burrow_is_active = true
-			GameManager.burrow_charges -= 1
-			GameManager.abilities_used_this_garden += 1
-			get_node("FillSprite").modulate = Color.WHITE
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.burrow_charges += 1
-			main.update_hud()
-			
-	if event.is_action_pressed("activate_phase_shift"):
-		if GameManager.phase_shift_level > 0 and GameManager.phase_shift_charges > 0 and not GameManager.is_phasing:
-			GameManager.is_phasing = true
-			GameManager.phase_shift_charges -= 1
-			GameManager.abilities_used_this_garden += 1
-			activate_phase_shift(2.0)
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.phase_shift_charges += 1
-			main.update_hud()
-			
-	if event.is_action_pressed("activate_meditation"):
-		if GameManager.meditative_state_level > 0 and GameManager.meditative_state_charges > 0:
-			GameManager.meditative_state_charges -= 1
-			GameManager.abilities_used_this_garden += 1
-			main.update_hud()
-			move_timer.stop()
-			var duration = GameManager.meditative_state_data[GameManager.meditative_state_level]
-			meditative_state_timer.wait_time = duration
-			meditative_state_timer.start()
-			get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.meditative_state_charges += 1
-			main.update_hud()
-	
-	if event.is_action_pressed("activate_autotomy"):
-	# Check if the ability is unlocked, hasn't been used this garden, and isn't already active
-		if GameManager.autotomy_unlocked and not GameManager.autotomy_used_this_garden and not GameManager.autotomy_is_active:
-			print("AUTOTOMY ACTIVATED! You have 2 seconds to sever your tail.")
-			GameManager.autotomy_is_active = true
-			GameManager.abilities_used_this_garden += 1
-			$AutotomyTimer.start(2.0) # Start the 2-second window
-			# Visual Feedback
-			get_node("FillSprite").modulate = Color.ORANGE_RED
-			
-			
-	if event.is_action_pressed("activate_pocket_garden"):
-		if GameManager.pocket_garden_charges > 0:
-			GameManager.abilities_used_this_garden += 1
-			main.create_pocket_garden()
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.pocket_garden_charges += 1
-			main.update_hud()
-			
-	if event.is_action_pressed("activate_molt"):
-		# Check all conditions before allowing the ability to fire
-		if GameManager.sacrificial_molt_unlocked and not GameManager.sacrificial_molt_used_this_run:
-			GameManager.abilities_used_this_garden += 1
-			main.perform_sacrificial_molt()
-			
-	if event.is_action_pressed("activate_blink"):
-		if GameManager.blink_charges > 0:
-			GameManager.abilities_used_this_garden += 1
-			main.perform_blink()
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.blink_charges += 1
-			main.update_hud()
-			
-	if event.is_action_pressed("activate_zenith"):
-		# Check if we have charges and the ability isn't already active
-		if GameManager.zenith_charges > 0 and not GameManager.is_zenith_active:
-			GameManager.abilities_used_this_garden += 1
-			main.activate_zenith()
-			if GameManager.chosen_class == "sidewinder" and randf() < GameManager.get_modified_chance(0.25):
-				GameManager.zenith_charges += 1
-			main.update_hud()
-			
-	if event.is_action_released("activate_mise_en_place"):
-		if GameManager.mise_en_place_unlocked and not GameManager.mise_en_place_used_this_run:
-			GameManager.abilities_used_this_garden += 1
-			main.perform_mise_en_place()
-			
 
 # --- GAME LOGIC & MOVEMENT ---
 func on_move_timer_timeout():
 	var next_position = global_position + (current_direction * tile_size)
 
-	
-	
 	# --- Collision Checks ---
-
-
 	if not GameManager.is_phasing and not juke_and_jive_is_active and main.is_position_occupied(next_position):
 		emit_signal("hit_self")
 		return
-	
 	
 	if main.is_position_out_of_bounds(next_position):
 		if GameManager.fold_space_unlocked:
@@ -238,7 +139,7 @@ func on_move_timer_timeout():
 		else:
 			emit_signal("hit_self")
 			return
-
+			
 	# If all checks pass, it's safe to move.
 	var previous_position = global_position
 	global_position = next_position
@@ -247,42 +148,30 @@ func on_move_timer_timeout():
 
 # --- SIGNAL HANDLERS ---
 func _on_head_area_area_entered(area):
-	
 	if main.is_game_over:
 		return
-	
 	if area is Fruit or area is GoldenFruit or area is JumpingBean or area is GhostPepper or area is IronCherry or area is DragonFruit:
 		emit_signal("ate_fruit", area)
 		return
-	
-	
-	
 	if area is SnakeBody:
 		# Check all invulnerability states
 		if not GameManager.is_phasing and not juke_and_jive_is_active:
-				
 			if GameManager.autotomy_is_active:
 				main.perform_autotomy(area)
 				GameManager.autotomy_is_active = false
 				GameManager.autotomy_used_this_garden = true
 				$AutotomyTimer.stop()
 				reset_head_color()
-
-			
 			else:
 				emit_signal("hit_self")
 				return
-	
 	if area.is_in_group("dividng_walls"):
 		emit_signal("hit_self")
 		return
-		
 	if area is Rock:
 		var chosen_path = GameManager.rockeater_type
-		
 		if chosen_path != "":
 			main.destroy_obstacle(area)
-			
 			match chosen_path:
 				"Rockmuncher":
 					print("ROCKMUNCHER! Gained +2 growth")
@@ -311,7 +200,6 @@ func activate_stones_burden():
 	# Start a timer to turn it off.
 	$StonesBurdenTimer.start(4.0)
 
-
 func activate_kinetic_feast():
 	print("KINETIC FEAST! Speed boost activated.")
 	# Temporarily make the move timer faster.
@@ -319,21 +207,28 @@ func activate_kinetic_feast():
 	# Start a timer to turn it off.
 	$KineticFeastTimer.start(3.0)
 
+func activate_meditative_state():
+	move_timer.stop()
+	var duration = GameManager.meditative_data[GameManager.meditative_state_level]
+	$MeditativeStateTimer.wait_time = duration
+	$MeditativeStateTimer.start()
+
+
+func activate_autotomy():
+	GameManager.autotomy_is_active = true
+	$AutotomyTimer.start(2.0)
+
+
 func activate_phase_shift(duration: float):
 	# This function can now be called from anywhere to start a phase shift.
-	
 	# Don't do anything if we are already phasing, to prevent bugs.
-	if GameManager.is_phasing:
-		return
-	
+	if GameManager.is_phasing: return
 	
 	print("PHASE SHIFTING for ", duration, " seconds!")
 	GameManager.is_phasing = true
-	$FillSprite.modulate = Color.DARK_MAGENTA
 	# We set the timer's duration directly here before starting it.
 	phase_timer.wait_time = duration
 	phase_timer.start()
-
 
 func activate_overdrive():
 	print("OVERDRIVE ENGAGED!")
@@ -344,7 +239,6 @@ func activate_overdrive():
 	# If we have level 2, turn on the cool particle effect!
 	if GameManager.overdrive_level >= 2:
 		overdrive_particles.emitting = true
-		
 func deactivate_overdrive():
 	print("Overdrive disengaged.")
 	is_overdrive_active = false
@@ -353,8 +247,6 @@ func deactivate_overdrive():
 	
 	# Always turn off the particles when the boost ends.
 	overdrive_particles.emitting = false
-
-
 
 #------AFTERBURNER-----#
 func check_for_afterburner():
@@ -385,9 +277,6 @@ func _on_afterburner_timer_timeout():
 	print("Afterburner finished.")
 	# Restore the snake's speed to what it was before the boost.
 	move_timer.wait_time = normal_move_speed
-
-
-
 # --- JUKE & JIVE ---
 func handle_juke_and_jive():
 	if not GameManager.juke_and_jive_unlocked or juke_and_jive_is_active:
@@ -415,36 +304,45 @@ func _on_juke_duration_timer_timeout():
 # --- OTHER ABILITY TIMEOUTS ---
 func _on_phase_timer_timeout():
 	GameManager.is_phasing = false
-	reset_head_color()
+
 
 func _on_meditative_state_timer_timeout():
 	move_timer.start()
-	reset_head_color()
+
 
 func _on_autotomy_timer_timeout():
 	GameManager.autotomy_is_active = false
-	reset_head_color()
 
 # helper function to safely reset the head color
 func reset_head_color():
 	
-	# Only reset if no other ability is currently giving a color
-	if not GameManager.is_phasing and not juke_and_jive_is_active and \
-	not GameManager.burrow_is_active and not GameManager.autotomy_is_active:
-		
-		get_node("FillSprite").modulate = head_color
-
+	if GameManager.masters_blueprint_unlocked:
+		fill_sprite.modulate = Color("AFEEEE") # The blueprint glow color
+		return
+	
+	
+	if GameManager.autotomy_is_active:
+		fill_sprite.modulate = Color.ORANGE_RED
+	elif juke_and_jive_is_active:
+		fill_sprite.modulate = Color.DEEP_SKY_BLUE
+	elif GameManager.is_phasing:
+		fill_sprite.modulate = Color.MEDIUM_VIOLET_RED
+	elif GameManager.burrow_is_active:
+		fill_sprite.modulate = Color.WHITE
+	elif GameManager.is_zenith_active:
+		fill_sprite.moduleate = Color.MAGENTA
+	else:
+		# If no other state is active, use the default color.
+		fill_sprite.modulate = head_color
 
 func _on_kinetic_feast_timer_timeout() -> void:
 	print("Kinetic Feast has ended")
 	main.apply_persistent_upgrades()
 
-
 func _on_stones_burden_timer_timeout() -> void:
 	GameManager.is_phasing = false
 	reset_head_color()
 	main.apply_persistent_upgrades()
-	
 	
 func activate_temporary_speed_boost(speed_multiplier: float, duration: float):
 	print("Recipe buff: SPEED BOOST for %s seconds!" % duration)
@@ -455,45 +353,7 @@ func activate_temporary_speed_boost(speed_multiplier: float, duration: float):
 	# Start the timer to turn the effect off
 	temp_speed_boost_timer.start(duration)
 
-# This runs when the timer is up
 func _on_temp_speed_boost_timer_timeout():
 	print("Speed boost has ended.")
 	# Restore the snake's speed to its normal, upgraded value
 	main.apply_persistent_upgrades()
-
-
-func recharge_random_ability():
-	print("CUSTOM CUISINE: Recharging a random ability!")
-	
-	# 1. Create a list of all abilities the player has unlocked.
-	var available_abilities = []
-	if GameManager.burrow_level > 0: available_abilities.append("burrow")
-	if GameManager.phase_shift_level > 0: available_abilities.append("phase_shift")
-	if GameManager.blink_level > 0: available_abilities.append("blink")
-	if GameManager.banana_bounty_level > 0: available_abilities.append("banana_bounty")
-	if GameManager.meditative_state_level > 0: available_abilities.append("Meditative State")
-	if GameManager.pocket_garden_level > 0: available_abilities.append("Pocket Garden")
-
-	
-	# 2. If they don't have any abilities, do nothing.
-	if available_abilities.is_empty():
-		return
-		
-	# 3. Pick a random ability from the list and grant one charge.
-	var chosen_ability = available_abilities.pick_random()
-	match chosen_ability:
-		"burrow":
-			GameManager.burrow_charges += 1
-		"phase_shift":
-			GameManager.phase_shift_charges += 1
-		"blink":
-			GameManager.blink_charges += 1
-		"banana_bounty":
-			GameManager.banana_bounty_charges += 1
-		"Meditative State":
-			GameManager.meditative_state_charges += 1
-		"Pocket Garden":
-			GameManager.pocket_garden_charges += 1
-	
-	# 4. Update the HUD to show the new charge count.
-	main.update_hud()

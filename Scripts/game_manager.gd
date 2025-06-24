@@ -82,7 +82,6 @@ var fruit_reward = 1
 var max_fruits_on_screen = 1
 
 # --- "PULP" META-UPGRADE LEVELS ---
-var synapse_slots_unlocked: int = 2 # Start with 2 slots by default
 var serpents_coffer_level: int = 0
 var serpents_coffer_data = [0.0, 0.05, 0.10, 0.15, 0.20]
 var geode_compass_level: int = 0
@@ -91,6 +90,9 @@ var four_leaf_clover_level: int = 0
 var four_leaf_clover_data = [0.0, 0.02, 0.04, 0.07, 0.10] # + % on all luck
 var chroma_scales_level: int = 0
 
+var ability_charges = {}
+var equipped_abilities: Array = []
+var max_ability_slots: int = 0
 
 	#----Active Ability Flags----#
 var burrow_is_active = false
@@ -106,8 +108,6 @@ var diet_slith_level = 0
 var fruit_foresight_unlocked = false
 var geological_survey_unlocked = false
 var sovereign_trail_level = 0
-var meditative_state_level = 0
-var meditative_state_charges = 0
 var meditative_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
 var garden_weaver_used_this_garden = false
@@ -130,14 +130,11 @@ var patient_gardener_data = [
 	{"time": 7.0, "multiplier": 2},  # Level 2
 	{"time": 5.0, "multiplier": 3}   # Level 3
 ]
-var banana_bounty_charges = 0
-var banana_bounty_level = 0
+
 var the_satchel_unlocked = false
 
 #----------ACROBAT PATH-----#
 var slither_sauce_level = 0 
-var tenderizer_level = 0
-var tenderizer_charges = 0
 var juke_and_jive_unlocked = false
 var afterburner_level = 0
 var afterburner_data = [
@@ -163,10 +160,6 @@ var edge_lord_data = [
 var zoning_ordinance_level = 0
 var border_czar_unlocked = false
 var surveyed_land_unlocked = false
-var burrow_level = 0
-var burrow_charges = 0
-var pocket_garden_level = 0
-var pocket_garden_charges = 0
 var pocket_garden_data = [
 	{}, # Level 0
 	{"cost": 10, "duration": 20.0}, # Level 1
@@ -193,10 +186,6 @@ var new_game_s_plus_active = false
 #-----------#illusionist------------#
 var ghost_tail_level = 0
 var ghost_tail_data = [0, 7, 10, 15, 20, 34] # Lvl 0, 1, 2, 3, 4, 5
-var phase_shift_level = 0
-var phase_shift_charges = 0
-var blink_level = 0
-var blink_charges = 0
 var three_card_monty_unlocked = false
 var fractured_self_unlocked = false
 var dazzle_pie_unlocked = false
@@ -209,8 +198,6 @@ var overdrive_level = 0
 var lingering_rush_level = 0
 var lingering_rush_data = [5.0, 5.5, 6.0, 6.5, 7.0, 7.5]
 var juggernaut_unlocked = false
-var zenith_unlocked = false
-var zenith_charges = 0
 # track the combo itself
 var current_combo = 0
 var combo_is_pure = true
@@ -257,7 +244,7 @@ var difficulty_data = {
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
 		"juice_cost_modifier": 0,    # Upgrades cost the normal amount
-		"starting_sp": 69,          # Start with 5 free skill points!
+		"starting_juice": 69,          # Start with 5 free skill points!
 		"start_slots": 10
 	},
 	"viper": {	#Medium
@@ -265,15 +252,15 @@ var difficulty_data = {
 		"speed_multiplier": 1.0,  # Normal speed
 		"goal_multiplier": 1.0,   # Normal garden goals
 		"juice_cost_modifier": 1,    # Upgrades cost +1 SP
-		"starting_sp": 0,
-		"start_slots": 8
+		"starting_juice": 10,
+		"start_slots": 6
 	},
 	"basilisk": {	#Hard
 		"name": "Basilisk",
 		"speed_multiplier": 0.8,  # Faster snake
 		"goal_multiplier": 1.25,  # Longer garden goals
 		"juice_cost_modifier": 2,    # Upgrades cost +2 SP
-		"starting_sp": 0,
+		"starting_juice": 0,
 		"start_slots": 2
 	}
 }
@@ -306,7 +293,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -349,7 +336,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -392,7 +379,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -435,7 +422,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -478,7 +465,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -523,7 +510,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -566,7 +553,7 @@ var class_data = {
 			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
 			# Glutton Modifiers
 			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "banana_bounty": 0, "the_satchel": 0,
+			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -995,7 +982,7 @@ var upgrade_data = {
 		"max_level": 3,
 		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
 	},
-	"banana_bounty": {
+	"Banana Bounty": {
 		"display_name": "Banana Bounty",
 		"description":  "Active Ability: Marks a random fruit.\nEating it grants growth equal\nto your max fruit count * your fruit reward.",
 		"costs": [5, 7],
@@ -1015,8 +1002,8 @@ var upgrade_data = {
 var meta_upgrade_data = {
 	"Synapse Slot": {
 		"description": "Unlocks one additional active ability slot.\nA crucial investment for any build.",
-		"costs": [10, 25, 50, 75, 100, 150, 200, 300], # Costs for slots 3 through 10
-		"max_level": 8 # 8 purchasable slots (2 start unlocked)
+		"costs": [10, 25, 50, 75, 100, 150, 200, 300, 500, 1000], # Costs for slots 3 through 10
+		"max_level": 10 
 	},
 	"Serpent's Coffer": {
 		"description": "Gain 'interest' on your unspent Pulp at the end of each Garden.",
@@ -1162,7 +1149,7 @@ func start_game():
 	# Reset all stats for a new run
 	player_level = 1
 	juice = 0
-	juice += diff_data["starting_sp"]	# add starting sp
+	juice += diff_data["starting_juice"]	# add starting sp
 	pulp = 0
 	score_needed_for_next_level = 5
 	score_at_level_start = 0
@@ -1174,6 +1161,9 @@ func start_game():
 	total_juice_this_run = juice
 	segments_to_restore = 0
 	
+	# --- NEW ABILITY SYSTEM RESET ---
+	ability_charges.clear()
+	equipped_abilities.clear()
 
 	juice_spent_this_garden = 0
 	abilities_used_this_garden = 0
@@ -1183,7 +1173,7 @@ func start_game():
 	max_fruits_on_screen = p_class_data["start_max_fruits"]
 
 	# --- "PULP" META-UPGRADE LEVELS ---
-	synapse_slots_unlocked = diff_data["start_slots"]
+	max_ability_slots = diff_data["start_slots"]
 	serpents_coffer_level = 0
 	geode_compass_level = 0
 	four_leaf_clover_level = 0
@@ -1204,8 +1194,6 @@ func start_game():
 	ghost_tail_level = 0
 	geological_survey_unlocked = false
 	sovereign_trail_level = 0
-	meditative_state_level = 0
-	meditative_state_charges = 0
 	garden_weaver_unlocked = false
 	garden_weaver_used_this_garden = false
 	#-------Reset Glutton Upgrades--------#
@@ -1213,14 +1201,10 @@ func start_game():
 	more_mice_level = 0
 	golden_seeds_level = 0
 	patient_gardener_level = 0
-	banana_bounty_level = 0
-	banana_bounty_charges = 0
 	is_bounty_active = false
 	the_satchel_unlocked = false
 	#------Reset Acrobat Upgrades--------#
 	slither_sauce_level = 0 
-	tenderizer_level = 0
-	tenderizer_charges = 0
 	juke_and_jive_unlocked = false
 	afterburner_level = 0
 	pop_rocks_unlocked = false
@@ -1233,10 +1217,6 @@ func start_game():
 	zoning_ordinance_level = 0
 	border_czar_unlocked = false
 	surveyed_land_unlocked = false
-	burrow_charges = 0
-	burrow_level = 0
-	pocket_garden_level = 0
-	pocket_garden_charges = 0
 	active_pocket_garden_rect = null
 	fold_space_unlocked = false
 	masters_blueprint_unlocked = false
@@ -1254,10 +1234,6 @@ func start_game():
 	new_game_s_plus_active = false
 	# Illusionist Path
 	ghost_tail_level = 0
-	phase_shift_level = 0
-	phase_shift_charges = 0
-	blink_level = 0
-	blink_charges = 0
 	three_card_monty_unlocked = false
 	fractured_self_unlocked = false
 	dazzle_pie_unlocked = false
@@ -1267,8 +1243,6 @@ func start_game():
 	overdrive_level = 0
 	lingering_rush_level = 0
 	juggernaut_unlocked = false
-	zenith_unlocked = false
-	zenith_charges = 0
 	is_zenith_active = false
 	current_combo = 0
 	combo_is_pure = true

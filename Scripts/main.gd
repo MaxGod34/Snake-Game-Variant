@@ -31,17 +31,18 @@ var time_since_last_fruit: float = 0.0
 
 
 
-var head_scene = preload("res://Scenes/snake_head.tscn")
-var body_scene = preload("res://Scenes/snake_body.tscn")
-var fruit_scene = preload("res://Scenes/fruit.tscn")
-var jumping_bean_scene = preload("res://Scenes/jumping_bean.tscn")
-var ghost_pepper_scene = preload("res://Scenes/ghost_pepper.tscn")
-var iron_cherry_scene = preload("res://Scenes/iron_cherry.tscn")
-var dragon_fruit_scene = preload("res://Scenes/dragon_fruit.tscn")
+var head_scene = preload("res://Scenes/Snake/snake_head.tscn")
+var body_scene = preload("res://Scenes/Snake/snake_body.tscn")
+var fruit_scene = preload("res://Scenes/Fruits/fruit.tscn")
+var jumping_bean_scene = preload("res://Scenes/Fruits/jumping_bean.tscn")
+var ghost_pepper_scene = preload("res://Scenes/Fruits/ghost_pepper.tscn")
+var iron_cherry_scene = preload("res://Scenes/Fruits/iron_cherry.tscn")
+var dragon_fruit_scene = preload("res://Scenes/Fruits/dragon_fruit.tscn")
 var rock_scene = preload("res://Scenes/rock.tscn")
-var pause_scene = preload("res://Scenes/pause_menu.tscn")
+var pause_scene = preload("res://Scenes/Menus/pause_menu.tscn")
 var trippy_grid_shader = preload("res://trippy_grid.gdshader")
-var exclamation_scene = preload("res://Scenes/exclamation.tscn")
+var exclamation_scene = preload("res://Scenes/Snake/exclamation.tscn")
+var ability_slot_scene = preload("res://Scenes/UI/ability_slot.tscn")
 
 
 @onready var combo_timer = $ComboTimer
@@ -88,7 +89,9 @@ func _ready():
 	#ability_hotbar.add_child(spacer)
 	# This loop will create our 10 ability slots dynamically.
 	for i in range(10):
-		var slot = preload("res://Scenes/ability_slot.tscn").instantiate()
+		var slot = ability_slot_scene.instantiate()
+		slot.slot_index = i
+		slot.activated.connect(_on_ability_slot_activated)
 		ability_hotbar.add_child(slot)
 		# Set the hotkey label text (1, 2, ..., 9, 0)
 		slot.get_node("HotkeyLabel").text = str((i + 1) % 10)
@@ -233,6 +236,51 @@ func _unhandled_input(event: InputEvent) -> void:
 		if GameManager.juice > 0 and not get_tree().paused and not is_game_over:
 			# Call new transition/show menu function
 			open_upgrade_menu_with_transition()
+	for i in range(10):
+		if event.is_action_pressed("activate_slot_" + str(i + 1)):
+			_on_ability_slot_activated(i)
+
+
+
+func _on_ability_slot_activated(slot_index: int):
+	# Check if there's actually an ability in this slot
+	if slot_index >= GameManager.equipped_abilities.size():
+		return # Slot is empty, do nothing
+
+	var ability_key = GameManager.equipped_abilities[slot_index]
+	
+	var ability_data = GameManager.ability_charges.get(ability_key)
+	
+	# Check if we have charges for this ability
+	if ability_data and ability_data.current > 0:
+		# Check the "current" charge count
+		if ability_data.current > 0:
+			GameManager.abilities_used_this_garden += 1
+			# Subtract from the "current" charge count
+			ability_data.current -= 1
+		
+		
+		# Use a match statement to call the correct helper function
+		match ability_key:
+			"Burrow": activate_burrow()
+			"Phase Shift": head.activate_phase_shift(2.0) # Standard 2s duration
+			"Blink": perform_blink()
+			"Meditative State": head.activate_meditative_state()
+			"Banana Bounty": activate_banana_bounty()
+			"Sacrificial Molt": perform_sacrificial_molt()
+			"Mise en Place": perform_mise_en_place()
+			"Garden Weaver": perform_garden_weave()
+			"Autotomy": head.activate_autotomy()
+			"Pocket Garden": create_pocket_garden()
+			"Zenith": activate_zenith()
+		
+		
+		print("Ability used: ", ability_key)
+		update_hud()
+
+
+
+
 
 func toggle_pause():
 	if get_tree().paused:
@@ -350,33 +398,33 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 	if garden_time < par_time_rules["time_limit"]:
 		var reward = par_time_rules["base_reward"]
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Par Time: +%s Pulp" % reward)
+		bonuses.bonus_list.append("Par Time: +%s mgs" % reward)
 		
 	if not GameManager.has_died_this_garden:
 		var reward = bonus_data["no_death"]["reward"]
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Flawless Bonus: +%s mgs Pulp" % reward)
+		bonuses.bonus_list.append("Flawless Bonus: +%s mgs" % reward)
 	
 	if GameManager.juice_spent_this_garden == 0:
 		var reward = bonus_data["ascetic"]["reward"]
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("No Upgrade Bonus: + %s mgs Pulp" % reward)
+		bonuses.bonus_list.append("No Upgrade Bonus: + %s mgs" % reward)
 		
 	if GameManager.abilities_used_this_garden == 0:
 		var reward = bonus_data["pacifist"]["reward"]
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("No Ability Bonus: + %s mgs Pulp" % reward)
+		bonuses.bonus_list.append("No Ability Bonus: + %s mgs" % reward)
 		
 	if GameManager.juice_spent_this_garden > 1:
 		var reward = bonus_data["engagement"]["reward"]
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Engagement Bonus + %s mgs Pulp" % reward)
+		bonuses.bonus_list.append("Engagement Bonus + %s mgs" % reward)
 	
 	# Now, handle JUICE bonuses, which don't add to the Pulp total.
 	if GameManager.chosen_class == "the_zealot" and not GameManager.has_died_this_garden:
 		var bonus_juice = GameManager.class_data[GameManager.chosen_class]["sp_on_perfect_garden"]
 		GameManager.juice += bonus_juice
-		bonuses.bonus_list.append("Zealot's Purity: +%s Juice!" % bonus_juice)
+		bonuses.bonus_list.append("Zealot's Purity: +%s oz of Juice!" % bonus_juice)
 		
 	if GameManager.geological_survey_unlocked:
 		# Get the number of rocks left on the screen.
@@ -411,7 +459,7 @@ func show_ghost_fruit():
 	
 	# Check if we have the upgrade
 	if GameManager.fruit_foresight_unlocked:
-		ghost_fruit_instance = preload("res://Scenes/ghost_fruit.tscn").instantiate()
+		ghost_fruit_instance = preload("res://Scenes/Fruits/ghost_fruit.tscn").instantiate()
 		# Find a safe spot for the GHOST and place it there.
 		ghost_fruit_instance.position = next_fruit_position
 		call_deferred("add_child", ghost_fruit_instance)
@@ -527,23 +575,38 @@ func update_hud():
 	# Now, we pass this big dictionary to our UI scenes.
 	player_banner.update_display(data) # Assumes you create this function in player_banner.gd
 	information_panel.update_display(data)
+	update_ability_hotbar()
+
+func update_ability_hotbar():
+	# 1. First, calculate how many slots should be visible.
+	var unlocked_slots = GameManager.max_ability_slots
 	
-func get_equipped_abilities() -> Array:
-	var equipped = []
-	# This function checks all abilities and adds them to a list if purchased.
-	if GameManager.burrow_level > 0: equipped.append({"Burrow": GameManager.burrow_charges})
-	if GameManager.phase_shift_level > 0: equipped.append({"Phase Shift": GameManager.phase_shift_charges})
-	if GameManager.mulligan_munchie_level > 0: equipped.append({"Mulligan Munchie": GameManager.extra_lives})
-	if GameManager.meditative_state_level > 0: equipped.append({"Meditative State": GameManager.meditative_state_charges})
-	if GameManager.garden_weaver_unlocked: equipped.append({"Garden Weaver": 0 if GameManager.garden_weaver_used_this_garden else 1})
-	if GameManager.banana_bounty_level > 0: equipped.append({"Banana Bounty": GameManager.banana_bounty_charges})
-	if GameManager.autotomy_unlocked: equipped.append({"Autotomy": 0 if GameManager.autotomy_used_this_garden else 1})
-	if GameManager.pocket_garden_level > 0: equipped.append({"Pocket Garden": GameManager.pocket_garden_charges})
-	if GameManager.sacrificial_molt_unlocked: equipped.append({"Sacrificial Molt": 0 if GameManager.sacrificial_molt_used_this_run else 0})
-	if GameManager.blink_level > 0: equipped.append({"Blink": GameManager.blink_charges})
-	if GameManager.zenith_unlocked: equipped.append({"Zenith": GameManager.zenith_charges})
-	if GameManager.mise_en_place_unlocked: equipped.append({"Mise en Place": 0 if GameManager.mise_en_place_used_this_run else 1})
-	return equipped
+	# 2. Get the list of abilities the player currently has.
+	var equipped_abilities = GameManager.equipped_abilities
+	
+	# 3. Loop through all 10 slots in the hotbar.
+	for i in range(10):
+		var slot = ability_hotbar.get_child(i)
+		
+		# 4. Show or hide the slot based on how many are unlocked.
+		if i < unlocked_slots:
+			slot.visible = true
+			
+			# Check if this slot should have an ability in it.
+			if i < equipped_abilities.size():
+				# This slot is filled. Get the ability data and update the display.
+				var ability_key = equipped_abilities[i]
+				var ability_data = GameManager.ability_charges.get(ability_key)
+				if ability_data:
+					var current_charges = ability_data.get("current", 0)
+					slot.update_display(ability_key, current_charges)
+			else:
+				# This slot is unlocked but empty.
+				slot.update_display("", 0)
+		else:
+			# This slot is still locked.
+			slot.visible = false
+
 	
 
 
@@ -553,7 +616,7 @@ func update_fruit_prediction():
 
 func _on_quit_to_menu_pressed():
 	get_tree().paused = false
-	SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+	SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
 
 func on_snake_head_moved(head_previous_position: Vector2):
 	if snake_body_segments.is_empty():
@@ -618,7 +681,7 @@ func spawn_fruit():
 	# --- STEP 2: Roll for a Golden Fruit ---
 	if randf() < min(1, final_golden_chance):
 		print("A Golden Apple has appeared! (Chance: %.1f%%)" % (final_golden_chance * 100.0))
-		fruit = preload("res://Scenes/golden_fruit.tscn").instantiate()
+		fruit = preload("res://Scenes/Fruits/golden_fruit.tscn").instantiate()
 	
 	# --- STEP 3: If no Golden Fruit, Roll for an Exotic Fruit ---
 	else:
@@ -956,21 +1019,12 @@ func level_up():
 		GameManager.score_needed_for_next_level += 10
 	else:
 		GameManager.score_needed_for_next_level += 5
-	#RECHARGE ABILITIES IF UNLOCKED
-	if GameManager.burrow_level > 0:
-		GameManager.burrow_charges = GameManager.burrow_level
-	if GameManager.phase_shift_level > 0:
-		GameManager.phase_shift_charges = GameManager.phase_shift_level
-	if GameManager.meditative_state_level > 0:
-		GameManager.meditative_state_charges = GameManager.meditative_state_level
-	if GameManager.banana_bounty_level > 0:
-		GameManager.banana_bounty_charges = GameManager.banana_bounty_level
-	if GameManager.tenderizer_level > 0:
-		GameManager.tenderizer_charges = GameManager.tenderizer_level
-	if GameManager.pocket_garden_level > 0:
-		GameManager.pocket_garden_charges = GameManager.pocket_garden_level
-	if GameManager.blink_level > 0:
-		GameManager.blink_charges = GameManager.blink_level
+	#-----RECHARGE ABILITIES---------
+	for ability_key in GameManager.ability_charges.keys():
+		var ability_data = GameManager.ability_charges[ability_key]
+		# Restore 1 charge, but don't go over the total purchased.
+		if ability_data.current < ability_data.total:
+			ability_data.current += 1
 
 func _on_upgrade_menu_resume_game_pressed():
 	# Block input for the transition out
@@ -984,6 +1038,8 @@ func _on_upgrade_menu_resume_game_pressed():
 	
 	# Now that it's gone, make it officially invisible
 	upgrade_menu.visible = false
+	
+	update_hud()
 	
 	var resume_game_from_shop_messages = \
 	["You chose...poorly!", "Why...what balls!\nYou didn't even pick a good upgrade!",
@@ -1002,6 +1058,7 @@ func _on_upgrade_menu_resume_game_pressed():
 	$UI/CountdownLabel.text = ""
 	
 	
+	
 	# --- UNCOVER SCREEN ANIMATION ---
 	var tile_map = $UI/ShopTransitionTileMap
 	var size = Vector2i(40, 30)
@@ -1015,6 +1072,8 @@ func _on_upgrade_menu_resume_game_pressed():
 	
 	$UI/InputBlocker.hide()
 	start_countdown()
+	
+	update_hud()
 
 func _start_end_of_garden_sequence():
 	# --- State 1: Game Paused & Bonuses Calculated ---
@@ -1050,7 +1109,7 @@ func _start_end_of_garden_sequence():
 	
 	# If it was the final garden, the run is over.
 	if is_final_garden:
-		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
 		return
 
 	# --- State 4: Transition to Pulp-sicle Stand ---
@@ -1084,344 +1143,281 @@ func _start_end_of_garden_sequence():
 
 
 
-
+func recharge_random_ability():
+	print("CUSTOM CUISINE: Attempting to recharge a random ability...")
+	
+	# 1. Get the list of all abilities the player currently has equipped.
+	var available_abilities = GameManager.equipped_abilities
+	
+	# 2. If they don't have any abilities, do nothing.
+	if available_abilities.is_empty():
+		return
+		
+	# 3. Pick a random ability from the list.
+	var chosen_ability = available_abilities.pick_random()
+	
+	# 4. Check if this ability actually uses charges.
+	if chosen_ability in GameManager.ability_charges:
+		# 5. If yes, grant one charge.
+		GameManager.ability_charges[chosen_ability] += 1
+		print("Recharged 1 charge of " + chosen_ability)
+		
+		# 6. Update the HUD to show the new charge count.
+		update_hud()
 
 
 
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
+	var active_abilities = [
+		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty", "Molt",\
+		"Meditative State", "Sacrificial Molt", "Mise en Place", "Zenith", "Autotomy"
+	]
 	print("Player chose upgrade: ", upgrade_name)
-	#---------FRENZY------------#
-	if upgrade_name == "Sugar Rush":
-		if not GameManager.sugar_rush_unlocked:
-			GameManager.sugar_rush_unlocked = true
 	
-	elif upgrade_name == "Chain Reaction":
-		if GameManager.chain_reaction_level < 3:
-			GameManager.chain_reaction_level += 1
-			
-	elif upgrade_name == "Overdrive":
-		if GameManager.overdrive_level < 2:
-			GameManager.overdrive_level += 1
-	
-	elif upgrade_name == "Lingering Rush":
-		if GameManager.lingering_rush_level < 5:
-			GameManager.lingering_rush_level += 1
-			
-	elif upgrade_name == "Juggernaut":
-		if not GameManager.juggernaut_unlocked:
-			GameManager.juggernaut_unlocked = true
-
-			
-	elif upgrade_name == "Zenith":
-		if not GameManager.zenith_unlocked:
-			GameManager.zenith_unlocked = true
-			GameManager.zenith_charges += 1
-			update_hud()
-	# --- GEOMANCER PATH ---
-	elif upgrade_name == "Fertile Ground":
-		if GameManager.fertile_ground_level < 3:
-			GameManager.fertile_ground_level += 1
-			spawn_fruit()
-			# The cost is adding more obstacles to the world!
-
-	elif upgrade_name == "Mineral Rich Soil":
-		if GameManager.mineral_rich_soil_level < 3:
-			GameManager.mineral_rich_soil_level += 1
-
-	elif upgrade_name == "Tectonic Shift":
-		if GameManager.tectonic_shift_level < 3:
-			GameManager.tectonic_shift_level += 1
-			apply_persistent_upgrades()
-
-	elif upgrade_name == "Heavy Foundation":
-		if GameManager.heavy_foundation_level < 3:
-			GameManager.heavy_foundation_level += 1
-			apply_persistent_upgrades()
-
-	# --- Rockeater Specialization ---
-	# check if a type has already been chosen.
-	elif upgrade_name in ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]:
-	# Check if a path has already been chosen. This is a safety check.
-		if GameManager.rockeater_type == "":
-			print("Geode path chosen: ", upgrade_name)
-			# Set the chosen path in our global manager
-			GameManager.rockeater_type = upgrade_name
-	
-	
-	elif upgrade_name == "Rockmuncher":
-		if GameManager.rockeater_type == "":
-			GameManager.rockeater_type = "Rockmuncher"
+	if upgrade_name in active_abilities:
+		if not upgrade_name in GameManager.equipped_abilities:
+			if GameManager.equipped_abilities.size() < GameManager.max_ability_slots:
+				print("New ability equipped: ", upgrade_name)
+				GameManager.equipped_abilities.append(upgrade_name)
+				GameManager.ability_charges[upgrade_name] = {"current": 1, "total": 1}
 		else:
-			print("You have already chosen a Rockeater path!")
+			GameManager.ability_charges[upgrade_name]["total"] += 1
+			GameManager.ability_charges[upgrade_name]["current"] += 1
 			
-	elif upgrade_name == "Geode Cracker":
-		if GameManager.rockeater_type == "":
-			GameManager.rockeater_type = "Geode Cracker"
-		else:
-			print("You have already chosen a Rockeater path!")
-			
-	elif upgrade_name == "Kinetic Feast":
-		if GameManager.rockeater_type == "":
-			GameManager.rockeater_type = "Kinetic Feast"
-		else:
-			print("You have already chosen a Rockeater path!")
-	
-	elif upgrade_name == "Stones Burden":
-		if GameManager.rockeater_type == "":
-			GameManager.rockeater_type = "Stones Burden"
-		else:
-			print("You have already chosen a Rockeater path!")
-			
-	elif upgrade_name == "Calculated Risk":
-		if not GameManager.calculated_risk_unlocked:
-			GameManager.calculated_risk_unlocked = true		
-			
-	#----CHEF PATH----#
-	elif upgrade_name == "Golden Seed Extract":
-		if GameManager.golden_seed_extract_level < 3:
-			GameManager.golden_seed_extract_level += 1
-
-	elif upgrade_name == "Exotic Seeds":
-		if GameManager.exotic_seeds_level < 5:
-			GameManager.exotic_seeds_level += 1
-			
-	elif upgrade_name == "The Cookbook":
-		if not GameManager.the_cookbook_unlocked:
-			GameManager.the_cookbook_unlocked = true
-			pick_new_recipe()
-			
-	elif upgrade_name == "Expanded Palate":
-		if not GameManager.expanded_palate_unlocked:
-			GameManager.expanded_palate_unlocked = true
-			pick_new_recipe()
-			
-	elif upgrade_name == "Golden Glaze":
-		if not GameManager.golden_glaze_unlocked:
-			GameManager.golden_glaze_unlocked = true
-			
-	elif upgrade_name == "Mise en Place":
-		if not GameManager.mise_en_place_unlocked:
-			GameManager.mise_en_place_unlocked = true
-			
-	elif upgrade_name == "Custom Cuisine":
-		if not GameManager.custom_cuisine_unlocked:
-			GameManager.custom_cuisine_unlocked = true
-	
-	
-	
-	#-------------Glutton----------------#
-		#---ESP---#
-	elif upgrade_name == "elephant_sized_portions":
-		GameManager.es_portions_level += 1
-		GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
-		print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
-		#---More Mice---#
-	elif upgrade_name == "more_mice":
-			if GameManager.more_mice_level < 6: # Your max level
-				GameManager.max_fruits_on_screen += 1
-				GameManager.more_mice_level += 1
-				
-				# Instead of just spawning one fruit, we now check how many are
-				# on screen vs. how many SHOULD be, and spawn the difference.
-				var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
-				var target_fruit_count = get_effective_max_fruits()
-				var fruits_to_spawn = target_fruit_count - current_fruit_count
-				
-				print("Player bought More Mice! Spawning %s new fruit." % fruits_to_spawn)
-
-				# This loop ensures that even if we spawn multiple fruits in the same frame,
-				# they won't spawn on top of each other.
-				var pending_positions = []
-				for i in range(fruits_to_spawn):
-					var new_pos = calculate_safe_spawn_position(pending_positions)
-					var fruit = fruit_scene.instantiate()
-					fruit.position = new_pos
-					fruit.add_to_group("fruits")
-					# Because we are in a UI callback, NOT a physics callback,
-					# it's safe to use add_child() directly here.
-					add_child(fruit) 
-					pending_positions.append(new_pos)
-				
-				# Update the ghost fruit prediction now that the board has changed.
-				update_fruit_prediction()
-		#---golden seeds----#
-	elif upgrade_name == "golden_seeds":
-		if GameManager.golden_seeds_level < 4:
-			GameManager.golden_seeds_level += 1
-		#-----patient gardener----#
-	elif upgrade_name == "patient_gardener":
-		if GameManager.patient_gardener_level < 3:
-			GameManager.patient_gardener_level += 1
-		#----banana bounty---#
-	elif upgrade_name == "banana_bounty":
-		if GameManager.banana_bounty_level < 2:
-			GameManager.banana_bounty_level += 1
-			GameManager.banana_bounty_charges += 1
-			print("Banana Bounty charge: +1! Now: ", GameManager.banana_bounty_level, " charge(s)")
-		#-----the satchel------#
-	elif upgrade_name == "the_satchel":
-		if not GameManager.the_satchel_unlocked:
-			GameManager.the_satchel_unlocked = true
-	#------------ACROBAT---------------#
-	elif upgrade_name == "Slither Sauce":
-		if GameManager.slither_sauce_level < 10:
-			GameManager.slither_sauce_level += 1
-			apply_persistent_upgrades()
-	elif upgrade_name == "Tenderizer":
-		if GameManager.tenderizer_level < 3:
-			GameManager.tenderizer_charges += 1
-			GameManager.tenderizer_level += 1
-	elif upgrade_name == "Juke N Jive":
-		if not GameManager.juke_and_jive_unlocked:
-			GameManager.juke_and_jive_unlocked = true
-	elif upgrade_name == "Afterburner":
-		if GameManager.afterburner_level < 3:
-			GameManager.afterburner_level += 1
-	elif upgrade_name == "Pop Rocks":
-		if not GameManager.pop_rocks_unlocked:
-			GameManager.pop_rocks_unlocked = true
-	elif upgrade_name == "Autotomy":
-		if not GameManager.autotomy_unlocked:
-			GameManager.autotomy_unlocked = true
-	#---------Architect---------
-	elif upgrade_name == "Edge Lord":
-		if GameManager.edge_lord_level < 5:
-			GameManager.edge_lord_level += 1
-			rebuild_world_layout()
-
-	elif upgrade_name == "Zoning Ordinance":
-		if GameManager.zoning_ordinance_level < 4:
-			GameManager.zoning_ordinance_level += 1
-
-	elif upgrade_name == "Border Czar":
-		if not GameManager.border_czar_unlocked:
-			GameManager.border_czar_unlocked = true
-
-	elif upgrade_name == "Surveyed Land":
-		if not GameManager.surveyed_land_unlocked:
-			GameManager.surveyed_land_unlocked = true
-			
-	elif upgrade_name == "Burrow":
-		GameManager.burrow_level += 1
-		GameManager.burrow_charges += 1
-		print("Burrow Charge + 1!")
-
-	elif upgrade_name == "Pocket Garden":
-		if GameManager.pocket_garden_level < 3:
-			GameManager.pocket_garden_level += 1
-			GameManager.pocket_garden_charges += 1
-	
-	elif upgrade_name == "Fold Space":
-		if not GameManager.fold_space_unlocked:
-			GameManager.fold_space_unlocked = true
-			update_boundary_visuals()
-			
-	elif upgrade_name == "Shatter Reality":
-		if not GameManager.shatter_reality_unlocked:
-			GameManager.shatter_reality_unlocked = true
-			print("current: grid size pending...")
-			rebuild_world_layout()
-			print("currnet: grid size (w x h): ", grid_width, " x ", grid_height)
-			
-	elif upgrade_name == "Master's Blueprint":
-		if not GameManager.masters_blueprint_unlocked:
-			GameManager.masters_blueprint_unlocked = true
-			apply_cosmetic_upgrades()
-	
-	#----------ILLUSIONIST---------#
-	elif upgrade_name == "Ghost Tail":
-		if GameManager.ghost_tail_level < 5:
-			GameManager.ghost_tail_level += 1
-			print("Ghost Tail Upgraded! New ghost length: ", GameManager.ghost_tail_data[GameManager.ghost_tail_level])
-	
-	elif upgrade_name == "Phase Shift":
-		if GameManager.phase_shift_level < 3:
-			GameManager.phase_shift_level += 1
-			GameManager.phase_shift_charges += 1
-			print("Phase Shift Charge + 1!")
-			
-	elif upgrade_name == "Blink":
-		if GameManager.blink_level < 3:
-			GameManager.blink_level += 1
-			GameManager.blink_charges += 1
-			print("Blink Charge + 1")
-			
-	elif upgrade_name == "3 Card Monty":
-		if not GameManager.three_card_monty_unlocked:
-			GameManager.three_card_monty_unlocked = true
-			print("3-Card Monty! Swindler's Discount! -1SP")
-
-	elif upgrade_name == "Fractured Self":
-		if not GameManager.fractured_self_unlocked:
-			GameManager.fractured_self_unlocked = true
-			
-	elif upgrade_name == "Dazzle Pie":
-		if not GameManager.dazzle_pie_unlocked and not GameManager.masters_blueprint_unlocked:
-			GameManager.dazzle_pie_unlocked = true
-			print("Dazzle Pie loading...yum")
-			apply_cosmetic_upgrades()
-
-	#-----------THE PLANNER--------#
-	elif upgrade_name == "diet_slith":
-		if GameManager.diet_slith_level < 5:
-			GameManager.diet_slith_level += 1
-			head.move_timer.wait_time *= 1.1 
-			print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
-	elif upgrade_name == "fruit_foresight":
-		if not GameManager.fruit_foresight_unlocked:
-			GameManager.fruit_foresight_unlocked = true
-			show_ghost_fruit()
-	
-	elif upgrade_name == "Geological Survey":
-		if not GameManager.geological_survey_unlocked:
-			GameManager.geological_survey_unlocked = true
-	
-	
-	elif upgrade_name == "sovereign_trail":
-		if GameManager.sovereign_trail_level < 2:
-			GameManager.sovereign_trail_level += 1
-			print("Sovereign Trail Upgraded 1 level!")
-	elif upgrade_name == "meditative_state":
-		if GameManager.meditative_state_level < 2:
-			GameManager.meditative_state_level += 1
-			GameManager.meditative_state_charges += 1
-			print("Meditative State Upgraded. New pause time: ", GameManager.meditative_data[GameManager.meditative_state_level])
-			print("Meditative State Upgraded. New pause charges: ", GameManager.meditative_state_charges)
-	elif upgrade_name == "garden_weaver":
-		if not GameManager.garden_weaver_unlocked:
-			GameManager.garden_weaver_unlocked = true
-	#--------SURVIVOR--------#
-	elif upgrade_name == "Mulligan Munchie":
-		if GameManager.extra_lives < 10:
-			GameManager.extra_lives += 1
-			print("Extra life added, thanks to ol' Mulligan!")
-	
-	elif upgrade_name == "Phoenix Dawn": 
-		if not GameManager.phoenix_dawn_unlocked:
-			GameManager.phoenix_dawn_unlocked = true
-	
-	elif upgrade_name == "Last Stand":
-		if not GameManager.last_stand_unlocked:
-			GameManager.last_stand_unlocked = true
-	elif upgrade_name == "Sacrificial Molt": 
-		if not GameManager.sacrificial_molt_unlocked:
-			GameManager.sacrificial_molt_unlocked = true
-	elif upgrade_name == "Death Defied": 
-		if not GameManager.death_defied_unlocked:
-			GameManager.death_defied_unlocked = true
-	elif upgrade_name == "Martyrdom": 
-		if not GameManager.martyrdom_unlocked:
-			GameManager.martyrdom_unlocked = true
-	elif upgrade_name == "New Game S+": 
-		if not GameManager.new_game_s_plus_active:
-			GameManager.new_game_s_plus_active = true
-			GameManager.current_garden = 1
-			SceneTransition.transition_to("res://Scenes/main.tscn")
+	else:
+		#---------FRENZY------------#
+		if upgrade_name == "Sugar Rush":
+			if not GameManager.sugar_rush_unlocked:
+				GameManager.sugar_rush_unlocked = true
+		elif upgrade_name == "Chain Reaction":
+			if GameManager.chain_reaction_level < 3:
+				GameManager.chain_reaction_level += 1
+		elif upgrade_name == "Overdrive":
+			if GameManager.overdrive_level < 2:
+				GameManager.overdrive_level += 1
+		elif upgrade_name == "Lingering Rush":
+			if GameManager.lingering_rush_level < 5:
+				GameManager.lingering_rush_level += 1
+		elif upgrade_name == "Juggernaut":
+			if not GameManager.juggernaut_unlocked:
+				GameManager.juggernaut_unlocked = true
+		# --- GEOMANCER PATH ---
+		elif upgrade_name == "Fertile Ground":
+			if GameManager.fertile_ground_level < 3:
+				GameManager.fertile_ground_level += 1
+				spawn_fruit()
+				# The cost is adding more obstacles to the world!
+		elif upgrade_name == "Mineral Rich Soil":
+			if GameManager.mineral_rich_soil_level < 3:
+				GameManager.mineral_rich_soil_level += 1
+		elif upgrade_name == "Tectonic Shift":
+			if GameManager.tectonic_shift_level < 3:
+				GameManager.tectonic_shift_level += 1
+				apply_persistent_upgrades()
+		elif upgrade_name == "Heavy Foundation":
+			if GameManager.heavy_foundation_level < 3:
+				GameManager.heavy_foundation_level += 1
+				apply_persistent_upgrades()
+		# --- Rockeater Specialization ---
+		# check if a type has already been chosen.
+		elif upgrade_name in ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]:
+		# Check if a path has already been chosen. This is a safety check.
+			if GameManager.rockeater_type == "":
+				print("Geode path chosen: ", upgrade_name)
+				# Set the chosen path in our global manager
+				GameManager.rockeater_type = upgrade_name
+		elif upgrade_name == "Rockmuncher":
+			if GameManager.rockeater_type == "":
+				GameManager.rockeater_type = "Rockmuncher"
+			else:
+				print("You have already chosen a Rockeater path!")
+		elif upgrade_name == "Geode Cracker":
+			if GameManager.rockeater_type == "":
+				GameManager.rockeater_type = "Geode Cracker"
+			else:
+				print("You have already chosen a Rockeater path!")
+		elif upgrade_name == "Kinetic Feast":
+			if GameManager.rockeater_type == "":
+				GameManager.rockeater_type = "Kinetic Feast"
+			else:
+				print("You have already chosen a Rockeater path!")
+		elif upgrade_name == "Stones Burden":
+			if GameManager.rockeater_type == "":
+				GameManager.rockeater_type = "Stones Burden"
+			else:
+				print("You have already chosen a Rockeater path!")
+		elif upgrade_name == "Calculated Risk":
+			if not GameManager.calculated_risk_unlocked:
+				GameManager.calculated_risk_unlocked = true		
+		#------------------CHEF PATH------------------#
+		elif upgrade_name == "Golden Seed Extract":
+			if GameManager.golden_seed_extract_level < 3:
+				GameManager.golden_seed_extract_level += 1
+		elif upgrade_name == "Exotic Seeds":
+			if GameManager.exotic_seeds_level < 5:
+				GameManager.exotic_seeds_level += 1
+		elif upgrade_name == "The Cookbook":
+			if not GameManager.the_cookbook_unlocked:
+				GameManager.the_cookbook_unlocked = true
+				pick_new_recipe()
+		elif upgrade_name == "Expanded Palate":
+			if not GameManager.expanded_palate_unlocked:
+				GameManager.expanded_palate_unlocked = true
+				pick_new_recipe()
+		elif upgrade_name == "Golden Glaze":
+			if not GameManager.golden_glaze_unlocked:
+				GameManager.golden_glaze_unlocked = true
+		elif upgrade_name == "Custom Cuisine":
+			if not GameManager.custom_cuisine_unlocked:
+				GameManager.custom_cuisine_unlocked = true
+		#----------------------------Glutton-------------------------#
+			#---ESP---#
+		elif upgrade_name == "elephant_sized_portions":
+			GameManager.es_portions_level += 1
+			GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
+			print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
+			#---More Mice---#
+		elif upgrade_name == "more_mice":
+				if GameManager.more_mice_level < 6: # Your max level
+					GameManager.max_fruits_on_screen += 1
+					GameManager.more_mice_level += 1
 					
-			
-	update_hud()
-	#_on_upgrade_menu_resume_game_pressed() #This is in case you want to get thrown in
+					# Instead of just spawning one fruit, we now check how many are
+					# on screen vs. how many SHOULD be, and spawn the difference.
+					var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
+					var target_fruit_count = get_effective_max_fruits()
+					var fruits_to_spawn = target_fruit_count - current_fruit_count
+					
+					print("Player bought More Mice! Spawning %s new fruit." % fruits_to_spawn)
+
+					# This loop ensures that even if we spawn multiple fruits in the same frame,
+					# they won't spawn on top of each other.
+					var pending_positions = []
+					for i in range(fruits_to_spawn):
+						var new_pos = calculate_safe_spawn_position(pending_positions)
+						var fruit = fruit_scene.instantiate()
+						fruit.position = new_pos
+						fruit.add_to_group("fruits")
+						# Because we are in a UI callback, NOT a physics callback,
+						# it's safe to use add_child() directly here.
+						add_child(fruit) 
+						pending_positions.append(new_pos)
+					
+					# Update the ghost fruit prediction now that the board has changed.
+					update_fruit_prediction()
+		elif upgrade_name == "golden_seeds":
+			if GameManager.golden_seeds_level < 4:
+				GameManager.golden_seeds_level += 1
+		elif upgrade_name == "patient_gardener":
+			if GameManager.patient_gardener_level < 3:
+				GameManager.patient_gardener_level += 1
+		elif upgrade_name == "the_satchel":
+			if not GameManager.the_satchel_unlocked:
+				GameManager.the_satchel_unlocked = true
+		#--------------------------ACROBAT---------------------------#
+		elif upgrade_name == "Slither Sauce":
+			if GameManager.slither_sauce_level < 10:
+				GameManager.slither_sauce_level += 1
+				apply_persistent_upgrades()
+		elif upgrade_name == "Juke N Jive":
+			if not GameManager.juke_and_jive_unlocked:
+				GameManager.juke_and_jive_unlocked = true
+		elif upgrade_name == "Afterburner":
+			if GameManager.afterburner_level < 3:
+				GameManager.afterburner_level += 1
+		elif upgrade_name == "Pop Rocks":
+			if not GameManager.pop_rocks_unlocked:
+				GameManager.pop_rocks_unlocked = true
+		#-------------------------------Architect--------------------------#
+		elif upgrade_name == "Edge Lord":
+			if GameManager.edge_lord_level < 5:
+				GameManager.edge_lord_level += 1
+				rebuild_world_layout()
+		elif upgrade_name == "Zoning Ordinance":
+			if GameManager.zoning_ordinance_level < 4:
+				GameManager.zoning_ordinance_level += 1
+		elif upgrade_name == "Border Czar":
+			if not GameManager.border_czar_unlocked:
+				GameManager.border_czar_unlocked = true
+		elif upgrade_name == "Surveyed Land":
+			if not GameManager.surveyed_land_unlocked:
+				GameManager.surveyed_land_unlocked = true
+		elif upgrade_name == "Fold Space":
+			if not GameManager.fold_space_unlocked:
+				GameManager.fold_space_unlocked = true
+				update_boundary_visuals()
+		elif upgrade_name == "Shatter Reality":
+			if not GameManager.shatter_reality_unlocked:
+				GameManager.shatter_reality_unlocked = true
+				print("current: grid size pending...")
+				rebuild_world_layout()
+				print("currnet: grid size (w x h): ", grid_width, " x ", grid_height)
+		elif upgrade_name == "Master's Blueprint":
+			if not GameManager.masters_blueprint_unlocked:
+				GameManager.masters_blueprint_unlocked = true
+				apply_cosmetic_upgrades()
+		#--------------------------ILLUSIONIST--------------------#
+		elif upgrade_name == "Ghost Tail":
+			if GameManager.ghost_tail_level < 5:
+				GameManager.ghost_tail_level += 1
+				print("Ghost Tail Upgraded! New ghost length: ", GameManager.ghost_tail_data[GameManager.ghost_tail_level])
+		elif upgrade_name == "3 Card Monty":
+			if not GameManager.three_card_monty_unlocked:
+				GameManager.three_card_monty_unlocked = true
+				print("3-Card Monty! Swindler's Discount! -1SP")
+		elif upgrade_name == "Fractured Self":
+			if not GameManager.fractured_self_unlocked:
+				GameManager.fractured_self_unlocked = true
+		elif upgrade_name == "Dazzle Pie":
+			if not GameManager.dazzle_pie_unlocked and not GameManager.masters_blueprint_unlocked:
+				GameManager.dazzle_pie_unlocked = true
+				print("Dazzle Pie loading...yum")
+				apply_cosmetic_upgrades()
+		#-----------------------THE PLANNER-----------------------#
+		elif upgrade_name == "diet_slith":
+			if GameManager.diet_slith_level < 5:
+				GameManager.diet_slith_level += 1
+				head.move_timer.wait_time *= 1.1 
+				print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
+		elif upgrade_name == "fruit_foresight":
+			if not GameManager.fruit_foresight_unlocked:
+				GameManager.fruit_foresight_unlocked = true
+				show_ghost_fruit()
+		elif upgrade_name == "Geological Survey":
+			if not GameManager.geological_survey_unlocked:
+				GameManager.geological_survey_unlocked = true
+		elif upgrade_name == "sovereign_trail":
+			if GameManager.sovereign_trail_level < 2:
+				GameManager.sovereign_trail_level += 1
+				print("Sovereign Trail Upgraded 1 level!")
+		#--------SURVIVOR--------#
+		elif upgrade_name == "Mulligan Munchie":
+			if GameManager.extra_lives < 10:
+				GameManager.extra_lives += 1
+				print("Extra life added, thanks to ol' Mulligan!")
+		elif upgrade_name == "Phoenix Dawn": 
+			if not GameManager.phoenix_dawn_unlocked:
+				GameManager.phoenix_dawn_unlocked = true
+		elif upgrade_name == "Last Stand":
+			if not GameManager.last_stand_unlocked:
+				GameManager.last_stand_unlocked = true
+		elif upgrade_name == "Death Defied": 
+			if not GameManager.death_defied_unlocked:
+				GameManager.death_defied_unlocked = true
+		elif upgrade_name == "Martyrdom": 
+			if not GameManager.martyrdom_unlocked:
+				GameManager.martyrdom_unlocked = true
+		elif upgrade_name == "New Game S+": 
+			if not GameManager.new_game_s_plus_active:
+				GameManager.new_game_s_plus_active = true
+				GameManager.current_garden = 1
+				SceneTransition.transition_to("res://Scenes/main.tscn")
+		#----------One last update HUD
+		update_ability_hotbar()
+		call_deferred("update_hud")
+		
+
 
 func _on_combo_timer_timeout():
 	print("Combo Dropped!")
@@ -1545,7 +1541,7 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 	if fruit is GoldenFruit:
 		rewards.juice_reward += GameManager.golden_seeds_data[GameManager.golden_seeds_level]["reward"]
 		if GameManager.custom_cuisine_unlocked:
-			head.recharge_random_ability() # We'll create this helper in snake_head
+			recharge_random_ability() 
 			
 	elif fruit is GhostPepper:
 		if GameManager.custom_cuisine_unlocked:
@@ -1726,9 +1722,6 @@ func apply_cosmetic_upgrades():
 		apply_chroma_scales_visuals() # This helper handles player-chosen colors
 
 func update_snake_visuals_from_chroma():
-	# This function updates the entire snake based on Chroma Scales level
-	if is_instance_valid(head):
-		head.get_node("FillSprite").modulate = GameManager.equipped_head_color
 
 	for i in range(snake_body_segments.size()):
 		var segment = snake_body_segments[i]
@@ -1740,7 +1733,7 @@ func update_snake_visuals_from_chroma():
 				segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_1
 		else:
 			# Default single color if pattern is not activated
-			segment.get_node("FillSprite").modulate = Color.PURPLE
+			segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_1
 
 
 func update_gps_graph():
@@ -2145,11 +2138,7 @@ func perform_garden_weave():
 func activate_zenith():
 	print("ZENITH ACTIVATED!")
 	
-	# 1. Spend the resources
-	GameManager.zenith_charges -= 1
-	
-	
-	# 2. Set the state
+	# 1. Set the state
 	GameManager.is_zenith_active = true
 	GameManager.current_combo = 10 # Instantly set combo to 10
 	
@@ -2161,24 +2150,18 @@ func activate_zenith():
 	
 	# 4. Give some awesome visual feedback
 	play_screen_flash(Color.MAGENTA)
-	head.get_node("FillSprite").modulate = Color.MAGENTA
 	
 	if snake_body_segments.size() + 1 >= GameManager.garden_data[GameManager.current_garden]["score_goal"]:
 		$ZenithTimer.stop()
 
 
-	
-	# Give some visual feedback
-	get_node("FillSprite").modulate = Color.MEDIUM_VIOLET_RED
-
 func activate_banana_bounty():
 	var all_fruits = get_tree().get_nodes_in_group("fruits")
-	if all_fruits.is_empty():
-		return
+	if all_fruits.is_empty(): return
 
 	print("BANANA BOUNTY ACTIVATED!")
 	GameManager.is_bounty_active = true
-	GameManager.banana_bounty_charges -= 1
+	
 	update_hud()
 
 	var target_fruit = all_fruits.pick_random()
@@ -2231,7 +2214,7 @@ func perform_mise_en_place():
 		
 		# Instantiate the correct new fruit scene
 		match new_fruit_key:
-			"golden_fruit": new_fruit_instance = preload("res://Scenes/golden_fruit.tscn").instantiate()
+			"golden_fruit": new_fruit_instance = preload("res://Scenes/Fruits/golden_fruit.tscn").instantiate()
 			"jumping_bean": new_fruit_instance = jumping_bean_scene.instantiate()
 			"ghost_pepper": new_fruit_instance = ghost_pepper_scene.instantiate()
 			"iron_cherry": new_fruit_instance = iron_cherry_scene.instantiate()
@@ -2278,7 +2261,6 @@ func create_pocket_garden():
 		print("Not enough segments!")
 		return
 
-	GameManager.pocket_garden_charges -= 1
 	update_hud()
 	for i in range(segment_cost):
 		snake_body_segments.pop_back().queue_free()
@@ -2354,52 +2336,36 @@ func perform_sacrificial_molt():
 	head_tween.tween_property(head, "modulate", head.head_color, 0.3).set_delay(0.2)
 	
 
+func activate_burrow():
+	# This toggles the burrow state on and off
+	GameManager.burrow_is_active = not GameManager.burrow_is_active
+	head.reset_head_color()
 
 func perform_blink():
-	print("BLINK ACTIVATED!")
-	
-	# 1. Calculate the path of the blink
 	var blink_path = []
-	for i in range(1, 4): # Check all 3 tiles in front
+	for i in range(1, 4):
 		var check_pos = head.global_position + (head.current_direction * (i * tile_size))
 		blink_path.append(check_pos)
 
-	# 2. Check if the entire path is safe
 	for pos in blink_path:
 		var grid_pos = Vector2i((pos - tile_offset) / tile_size)
-		# We check against walls, obstacles, and our own SOLID body parts
 		if is_position_out_of_bounds(pos) or is_position_on_dividing_wall(grid_pos) or is_position_occupied(pos):
 			print("Blink failed: Path is blocked.")
-			play_screen_flash(Color.CRIMSON)
+			# Give the charge back because the ability failed.
+			GameManager.ability_charges["Blink"] += 1
 			return
 
-	# 3. If it's safe, spend the charge and perform the teleport
-	GameManager.blink_charges -= 1
-	update_hud()
-	
-	# The final destination is the last point in our path
+	# If the path is clear, perform the teleport.
 	var destination = blink_path.back()
-	
-
-	# We now manually update the entire snake's position instantly.
-	
-	# First, store all the old positions of the head and body
 	var old_positions = [head.global_position]
 	for segment in snake_body_segments:
 		old_positions.append(segment.global_position)
-		
-	# Now, move the head to the new destination
-	head.global_position = destination
 	
-	# Finally, loop through the body and move each segment to the
-	# position of the segment that was in front of it.
+	head.global_position = destination
 	for i in range(snake_body_segments.size()):
 		snake_body_segments[i].global_position = old_positions[i]
-	
-	# Since we moved everything manually, we still need to update the visuals
+		
 	update_tail_visuals()
-	
-	# Add a cool visual effect
 	play_screen_flash(Color.WHITE)
 	
 		

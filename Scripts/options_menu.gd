@@ -15,7 +15,7 @@ func _on_back_button_pressed() -> void:
 	if is_sub_panel:
 		emit_signal("back_pressed")
 	else:
-		SceneTransition.transition_to("res://Scenes/main_menu.tscn")
+		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
 
 func _ready():
 	var current_mode = DisplayServer.window_get_mode()

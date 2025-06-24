@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://bna0kfyo2ui5s" path="res://Scripts/garden_complete_screen.gd" id="1_8msff"]
 [ext_resource type="Texture2D" uid="uid://c1wp4nsk3r4x4" path="res://Assets/Styles/texturebutton_hovered_placeholder.png" id="2_rohuw"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_206wq"]
-[ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/yellow_resume_button_hover.tres" id="4_51pe7"]
-[ext_resource type="StyleBox" uid="uid://bopt61ixlb04i" path="res://Assets/Styles/yellow_resume_block_disabled.tres" id="5_rmkf2"]
-[ext_resource type="StyleBox" uid="uid://3emtmxyay1dr" path="res://Assets/Styles/yellow_resume_block_pressed.tres" id="6_omxmp"]
-[ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/yellow_resume_block_normal.tres" id="7_dmel0"]
+[ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/block_buttons/yellow_resume_button_hover.tres" id="4_51pe7"]
+[ext_resource type="StyleBox" uid="uid://bopt61ixlb04i" path="res://Assets/Styles/block_buttons/yellow_resume_block_disabled.tres" id="5_rmkf2"]
+[ext_resource type="StyleBox" uid="uid://3emtmxyay1dr" path="res://Assets/Styles/block_buttons/yellow_resume_block_pressed.tres" id="6_omxmp"]
+[ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="7_dmel0"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_51pe7"]
 texture = ExtResource("2_rohuw")
@@ -25,7 +25,6 @@ content_margin_bottom = 20.0
 [sub_resource type="Theme" id="Theme_rohuw"]
 
 [node name="GardenCompleteScreen" type="CanvasLayer"]
-visible = false
 script = ExtResource("1_8msff")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -56,10 +55,6 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_51pe7")
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_51pe7")
-
-[node name="HSeparator3" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_51pe7")
 
@@ -119,8 +114,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ContinueButton" type="Button" parent="."]
-visible = false
-custom_minimum_size = Vector2(224, 96)
+custom_minimum_size = Vector2(256, 128)
 anchors_preset = -1
 anchor_left = 0.5
 anchor_top = 0.95

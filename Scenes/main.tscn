@@ -2,18 +2,18 @@
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
-[ext_resource type="PackedScene" uid="uid://dd5oeyqdq4rj3" path="res://Scenes/game_over_screen.tscn" id="2_bo1nx"]
-[ext_resource type="PackedScene" uid="uid://big1tpxvk7yl2" path="res://Scenes/pause_menu.tscn" id="3_8gbba"]
-[ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/upgrade_menu.tscn" id="3_jjvhh"]
-[ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/garden_complete_screen.tscn" id="4_kry3j"]
+[ext_resource type="PackedScene" uid="uid://dd5oeyqdq4rj3" path="res://Scenes/Menus/game_over_screen.tscn" id="2_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://big1tpxvk7yl2" path="res://Scenes/Menus/pause_menu.tscn" id="3_8gbba"]
+[ext_resource type="PackedScene" uid="uid://c4g22t44wwwae" path="res://Scenes/Menus/upgrade_menu.tscn" id="3_jjvhh"]
+[ext_resource type="PackedScene" uid="uid://d3rfwv84ov8cy" path="res://Scenes/Menus/garden_complete_screen.tscn" id="4_kry3j"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="6_ynf5e"]
 [ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/PNGs/ShopTransitionTileSet.png" id="7_344ge"]
-[ext_resource type="PackedScene" uid="uid://u2l27qdcge0g" path="res://Scenes/player_banner.tscn" id="10_6iyac"]
+[ext_resource type="PackedScene" uid="uid://u2l27qdcge0g" path="res://Scenes/UI/player_banner.tscn" id="10_6iyac"]
 [ext_resource type="Shader" uid="uid://cb162chj1y1rf" path="res://dazzle_effect.gdshader" id="10_d1ilt"]
 [ext_resource type="Texture2D" uid="uid://6o6bur1ea26j" path="res://Assets/PNGs/grid_tile.png" id="10_hptm8"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="11_fdnlq"]
-[ext_resource type="PackedScene" uid="uid://cy78aj0eaeuv2" path="res://Scenes/information_panel.tscn" id="12_jkdf5"]
-[ext_resource type="PackedScene" uid="uid://8jgmx7q20qg5" path="res://Scenes/pulpsicle_stand.tscn" id="13_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://cy78aj0eaeuv2" path="res://Scenes/UI/information_panel.tscn" id="12_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://8jgmx7q20qg5" path="res://Scenes/Menus/pulpsicle_stand.tscn" id="13_jkdf5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1ilt"]
 texture = ExtResource("10_hptm8")
@@ -56,7 +56,7 @@ shader_parameter/offset_strength = 0.005
 texture = ExtResource("11_fdnlq")
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
-modulate_color = Color(0.133333, 0.133333, 0.133333, 1)
+modulate_color = Color(0.703808, 0.703808, 0.703808, 1)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ynf5e"]
 texture = ExtResource("2_21xkr")
@@ -202,15 +202,13 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI"]
-layout_direction = 2
-anchors_preset = 7
-anchor_left = 0.5
+layout_direction = 3
+anchors_preset = 12
 anchor_top = 1.0
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -633.0
-offset_top = -492.0
-offset_right = 633.0
+offset_left = 4.0
+offset_top = -324.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -223,8 +221,9 @@ layout_mode = 2
 alignment = 2
 
 [node name="AbilityHotbar" type="HBoxContainer" parent="UI/MarginContainer/HBoxContainer/VBoxContainer"]
+layout_direction = 2
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 alignment = 1
 
 [node name="PlayerBanner" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("10_6iyac")]
@@ -233,13 +232,11 @@ layout_mode = 2
 [node name="VSeparator" type="Panel" parent="UI/MarginContainer/HBoxContainer"]
 custom_minimum_size = Vector2(32, 320)
 layout_mode = 2
-size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxTexture_wsu2k")
 
 [node name="InformationPanel" parent="UI/MarginContainer/HBoxContainer" instance=ExtResource("12_jkdf5")]
-custom_minimum_size = Vector2(272, 0)
+custom_minimum_size = Vector2(368, 0)
 layout_mode = 2
-size_flags_vertical = 8
 
 [node name="FloatingLabelContainer" type="MarginContainer" parent="UI"]
 anchors_preset = 15

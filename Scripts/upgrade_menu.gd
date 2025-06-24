@@ -97,6 +97,11 @@ func find_upgrade_button(upgrade_key: String):
 
 # This helper gets the correct current level for any given upgrade.
 func get_upgrade_level_from_key(upgrade_key):
+	
+	if upgrade_key in GameManager.ability_charges:
+		return GameManager.ability_charges[upgrade_key]["total"]
+	
+	
 	match upgrade_key:
 		#----Frenzy---#
 		"Sugar Rush": return 1 if GameManager.sugar_rush_unlocked else 0
@@ -104,36 +109,28 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Overdrive": return GameManager.overdrive_level
 		"Lingering Rush": return GameManager.lingering_rush_level
 		"Juggernaut": return 1 if GameManager.juggernaut_unlocked else 0
-		"Zenith": return 1 if GameManager.zenith_unlocked else 0
 		#----Chef---#
 		"Golden Seed Extract": return GameManager.golden_seed_extract_level
 		"Exotic Seeds": return GameManager.exotic_seeds_level
 		"The Cookbook": return 1 if GameManager.the_cookbook_unlocked else 0
 		"Expanded Palate": return 1 if GameManager.expanded_palate_unlocked else 0
 		"Golden Glaze": return 1 if GameManager.golden_glaze_unlocked else 0
-		"Mise en Place": return 1 if GameManager.mise_en_place_unlocked else 0
 		"Custom Cuisine": return 1 if GameManager.custom_cuisine_unlocked else 0
 		#---Planner---#
 		"diet_slith": return GameManager.diet_slith_level
 		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
 		"Geological Survey": return 1 if GameManager.geological_survey_unlocked else 0
 		"sovereign_trail": return GameManager.sovereign_trail_level
-		"meditative_state": return GameManager.meditative_state_level
-		"garden_weaver": return 1 if GameManager.garden_weaver_unlocked else 0
 		#-------Acrobat------#
 		"Slither Sauce": return GameManager.slither_sauce_level
-		"Tenderizer": return GameManager.tenderizer_level
 		"Juke N Jive": return 1 if GameManager.juke_and_jive_unlocked else 0
 		"Afterburner": return GameManager.afterburner_level
 		"Pop Rocks": return 1 if GameManager.pop_rocks_unlocked else 0
-		"Autotomy": return 1 if GameManager.autotomy_unlocked else 0
 		#----------ARCHITECT------#
 		"Edge Lord": return GameManager.edge_lord_level
 		"Zoning Ordinance": return GameManager.zoning_ordinance_level
 		"Border Czar": return 1 if GameManager.border_czar_unlocked else 0
 		"Surveyed Land": return 1 if GameManager.surveyed_land_unlocked else 0
-		"Burrow": return GameManager.burrow_level
-		"Pocket Garden": return GameManager.pocket_garden_level
 		"Fold Space": return 1 if GameManager.fold_space_unlocked else 0
 		"Shatter Reality": return 1 if GameManager.shatter_reality_unlocked else 0
 		"Master's Blueprint": return 1 if GameManager.masters_blueprint_unlocked else 0
@@ -142,20 +139,16 @@ func get_upgrade_level_from_key(upgrade_key):
 		"more_mice": return GameManager.more_mice_level
 		"golden_seeds": return GameManager.golden_seeds_level
 		"patient_gardener": return GameManager.patient_gardener_level
-		"banana_bounty": return GameManager.banana_bounty_level
 		"the_satchel": return 1 if GameManager.the_satchel_unlocked else 0
 		#-------SURVIVOR-------#
 		"Mulligan Munchie": return GameManager.extra_lives
 		"Phoenix Dawn": return 1 if GameManager.phoenix_dawn_unlocked else 0
 		"Last Stand": return 1 if GameManager.last_stand_unlocked else 0
-		"Sacrificial Molt": return 1 if GameManager.sacrificial_molt_unlocked else 0
 		"Death Defied": return 1 if GameManager.death_defied_unlocked else 0
 		"Martyrdom": return 1 if GameManager.martyrdom_unlocked else 0
 		"New Game S+": return 1 if GameManager.new_game_s_plus_active else 0
 		#-----ILLUSIONIST-----#
 		"Ghost Tail": return GameManager.ghost_tail_level
-		"Phase Shift": return GameManager.phase_shift_level
-		"Blink": return GameManager.blink_level
 		"3 Card Monty": return 1 if GameManager.three_card_monty_unlocked else 0
 		"Fractured Self": return 1 if GameManager.fractured_self_unlocked else 0
 		"Dazzle Pie": return 1 if GameManager.dazzle_pie_unlocked else 0

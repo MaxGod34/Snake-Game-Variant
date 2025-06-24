@@ -15,34 +15,53 @@ signal continue_to_next_garden
 @onready var rand_item_description = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemDescription
 @onready var continue_button = $AnimationContainer/MainContainer/VBoxContainer/ContinueButton
 @onready var animation_container = $AnimationContainer
+@onready var description_label = $AnimationContainer/MainContainer/DescriptionLabel
 
-# This will store the data for the randomly chosen item.
+# This dictionary will store a reference to every single pillar button.
+var pillar_buttons: Dictionary = {}
+
 var current_rotating_item: Dictionary = {}
 
 func _ready() -> void:
-	synapse_button.pressed.connect(_on_pillar_button_pressed.bind("Synapse Slot"))
-	chroma_scales_button.pressed.connect(_on_pillar_button_pressed.bind("Chroma Scales"))
-	serpents_coffer_button.pressed.connect(_on_pillar_button_pressed.bind("Serpent's Coffer"))
-	geode_compass_button.pressed.connect(_on_pillar_button_pressed.bind("Geode Compass"))
-	four_leaf_button.pressed.connect(_on_pillar_button_pressed.bind("Four Leaf Clover"))
-	rand_item_button.pressed.connect(_on_rotating_item_button_pressed)
+	_connect_all_signals()
 	
-	continue_button.pressed.connect(_on_continue_button_pressed)
+	# Also, build our dictionary of pillar buttons.
+	pillar_buttons = {
+		"Synapse Slot": synapse_button,
+		"Serpent's Coffer": serpents_coffer_button,
+		"Geode Compass": geode_compass_button,
+		"Four Leaf Clover": four_leaf_button,
+		"Chroma Scales": chroma_scales_button
+	}
 
+func _connect_all_signals():
+	# Loop through our button dictionary to connect everything cleanly.
+	for upgrade_key in pillar_buttons:
+		var button = pillar_buttons[upgrade_key]
+		if is_instance_valid(button):
+			button.pressed.connect(_on_pillar_button_pressed.bind(upgrade_key))
+			button.mouse_entered.connect(_on_pillar_mouse_entered.bind(upgrade_key))
+			button.mouse_exited.connect(_on_pillar_mouse_exited)
+			
+	# Connect the other buttons
+	continue_button.pressed.connect(_on_continue_button_pressed)
+	rand_item_button.pressed.connect(_on_rotating_item_button_pressed)
 
 
 # This is the master function that main.gd will call.
 func open_shop():
 	animation_container.visible = false
-	self.visible = true
+	
 	
 	update_all_displays()
+	self.visible = true
 	
 
 # This function refreshes every piece of information in the shop.
 func update_all_displays():
 	update_pulp_label()
-	update_permanent_upgrades()
+	for upgrade_key in pillar_buttons:
+		_update_pillar_button(upgrade_key)
 	pick_and_display_rotating_item()
 
 # --- UPDATE FUNCTIONS ---
@@ -50,45 +69,51 @@ func update_all_displays():
 func update_pulp_label():
 	current_pulp_label.text = "Pulp: %smg" % GameManager.pulp
 
-func update_permanent_upgrades():
-	# This function now calls our new helper for each of the pillar upgrades.
-	# It passes in the upgrade key and the node path to the button.
-	_update_pillar_button("Synapse Slot", "AnimationContainer/MainContainer/VBoxContainer/SynapseRow/Synapse_Button")
-	_update_pillar_button("Chroma Scales", "AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/Pillar1_Button")
-	_update_pillar_button("Serpent's Coffer", "AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/Pillar2_Button")
-	_update_pillar_button("Geode Compass", "AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/Pillar3_Button")
-	_update_pillar_button("Four Leaf Clover", "AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/Pillar4_Button")
-
 
 # This is our new, reusable helper function. It can update ANY pillar button.
-func _update_pillar_button(upgrade_key: String, button_path: String):
-	var button = get_node(button_path)
-	if not is_instance_valid(button):
-		return
+func _update_pillar_button(upgrade_key: String):
+	var button_node = pillar_buttons.get(upgrade_key)
+	if not is_instance_valid(button_node): return
 
 	var rules = GameManager.meta_upgrade_data[upgrade_key]
 	var current_level = 0
+	var cost_index = 0
 	
-	var start_slots = GameManager.difficulty_data[GameManager.chosen_difficulty]["start_slots"]
-	# We calculate the number of *purchased* levels.
-	var purchased_levels = GameManager.synapse_slots_unlocked - start_slots
-	
-	# Get the current level for the specific upgrade
+	# Get the current level for the specific upgrade.
 	match upgrade_key:
-		"Synapse Slot": current_level = purchased_levels
-		"Serpent's Coffer": current_level = GameManager.serpents_coffer_level
-		"Geode Compass": current_level = GameManager.geode_compass_level
-		"Four Leaf Clover": current_level = GameManager.four_leaf_clover_level
-		"Chroma Scales": current_level = GameManager.chroma_scales_level
+		"Synapse Slot":
+			current_level = GameManager.max_ability_slots
+			cost_index = GameManager.max_ability_slots
+		"Serpent's Coffer":
+			current_level = GameManager.serpents_coffer_level
+			cost_index = current_level
+		"Geode Compass":
+			current_level = GameManager.geode_compass_level
+			cost_index = current_level
+		"Four Leaf Clover":
+			current_level = GameManager.four_leaf_clover_level
+			cost_index = current_level
+		"Chroma Scales":
+			current_level = GameManager.chroma_scales_level
+			cost_index = current_level
 
-	# Now, update the button's text and state
+	# Update the button's text and state.
 	if current_level >= rules["max_level"]:
-		button.text = upgrade_key + "\n(MAX)"
-		button.disabled = true
+		button_node.text = upgrade_key + "\n(MAX)"
+		button_node.disabled = true
 	else:
-		var cost = rules["costs"][current_level]
-		button.text = upgrade_key + "\n(%s mg)" % cost
-		button.disabled = (GameManager.pulp < cost)
+		var cost = rules["costs"][cost_index]
+		button_node.text = upgrade_key + "\n(%s Pulp)" % cost
+		button_node.disabled = (GameManager.pulp < cost)
+		
+	# Update the Indicator Blocks.
+	var indicator_container = button_node.get_parent().get_node("IndicatorContainer")
+	for i in range(1, indicator_container.get_child_count() + 1):
+		var block = indicator_container.get_node("Block" + str(i))
+		if block:
+			block.visible = (i <= rules["max_level"])
+			if block.visible:
+				block.color = Color.GOLD if i <= current_level else Color.GRAY
 
 func pick_and_display_rotating_item():
 	# This is where the magic happens!
@@ -145,12 +170,10 @@ func _on_rotating_item_button_pressed():
 func _on_pillar_button_pressed(upgrade_key: String):
 	var rules = GameManager.meta_upgrade_data[upgrade_key]
 	
-	var start_slots = GameManager.difficulty_data[GameManager.chosen_difficulty]["start_slots"]
-	var purchased_levels = GameManager.synapse_slots_unlocked - start_slots
 	var current_level = 0
 	
 	match upgrade_key:
-		"Synapse Slot": current_level = purchased_levels
+		"Synapse Slot": current_level = GameManager.max_ability_slots
 		"Serpent's Coffer": current_level = GameManager.serpents_coffer_level
 		"Geode Compass": current_level = GameManager.geode_compass_level
 		"Four Leaf Clover": current_level = GameManager.four_leaf_clover_level
@@ -163,7 +186,7 @@ func _on_pillar_button_pressed(upgrade_key: String):
 			
 			# Apply the correct upgrade
 			match upgrade_key:
-				"Synapse Slot": GameManager.synapse_slots_unlocked += 1
+				"Synapse Slot": GameManager.max_ability_slots += 1
 				"Serpent's Coffer": GameManager.serpents_coffer_level += 1
 				"Geode Compass": GameManager.geode_compass_level += 1
 				"Four Leaf Clover": GameManager.four_leaf_clover_level += 1
@@ -199,3 +222,12 @@ func animate_out():
 	await tween.finished
 	# After it's off-screen, make the whole layer invisible again.
 	animation_container.visible = false
+
+
+func _on_pillar_mouse_entered(upgrade_key: String):
+	var rules = GameManager.meta_upgrade_data[upgrade_key]
+	description_label.text = rules["description"]
+	description_label.visible = true
+
+func _on_pillar_mouse_exited():
+	description_label.visible = false

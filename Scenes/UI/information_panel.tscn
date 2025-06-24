@@ -2,21 +2,21 @@
 
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_3qsp6"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_40xf2"]
-[ext_resource type="Script" uid="uid://b6hfbkpju0rb0" path="res://Scenes/information_panel.gd" id="2_dhsml"]
-[ext_resource type="PackedScene" uid="uid://tvxrdks8jhqx" path="res://Scenes/gps_tracker.tscn" id="4_dhsml"]
+[ext_resource type="Script" uid="uid://b6hfbkpju0rb0" path="res://Scripts/information_panel.gd" id="2_dhsml"]
+[ext_resource type="PackedScene" uid="uid://tvxrdks8jhqx" path="res://Scenes/UI/gps_tracker.tscn" id="4_dhsml"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_40xf2"]
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_n4ka4"]
 texture = ExtResource("1_3qsp6")
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
-modulate_color = Color(0, 0.415686, 0.47451, 1)
+modulate_color = Color(7.21961e-07, 0.282875, 0.3251, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_dhsml"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cvypg"]
 
 [node name="InformationPanel" type="PanelContainer"]
-custom_minimum_size = Vector2(0, 320)
+custom_minimum_size = Vector2(0, 336)
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -26,7 +26,7 @@ offset_left = -256.0
 offset_top = -190.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_styles/panel = SubResource("StyleBoxTexture_40xf2")
+theme_override_styles/panel = SubResource("StyleBoxTexture_n4ka4")
 script = ExtResource("2_dhsml")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
@@ -119,37 +119,40 @@ alignment = 1
 
 [node name="GardenNameLabel" type="Label" parent="HBoxContainer/GardenDataContainer/GardenStatus"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0, 1)
+theme_override_colors/font_color = Color(0.752941, 0.713726, 0.129412, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 6
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 8
 theme_override_fonts/font = ExtResource("2_40xf2")
 theme_override_font_sizes/font_size = 28
 text = "The Juice Box"
 
 [node name="GardenGoalLabel" type="Label" parent="HBoxContainer/GardenDataContainer/GardenStatus"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0, 1)
+theme_override_colors/font_color = Color(0.752941, 0.713726, 0.129412, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 6
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 8
 theme_override_fonts/font = ExtResource("2_40xf2")
 theme_override_font_sizes/font_size = 28
 text = "Garden Goal: 420"
 
 [node name="RunTimerLabel" type="Label" parent="HBoxContainer/GardenDataContainer"]
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(192, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_color = Color(0.752941, 0.713726, 0.129412, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 6
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 8
 theme_override_fonts/font = ExtResource("2_40xf2")
 theme_override_font_sizes/font_size = 28
 text = "Time: 42.6s"

@@ -1,14 +1,15 @@
-[gd_scene load_steps=13 format=3 uid="uid://8jgmx7q20qg5"]
+[gd_scene load_steps=15 format=3 uid="uid://8jgmx7q20qg5"]
 
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_7n2mm"]
-[ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scenes/pulpsicle_stand.gd" id="1_i1qs4"]
+[ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scripts/pulpsicle_stand.gd" id="1_i1qs4"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_4da1l"]
-[ext_resource type="StyleBox" uid="uid://cwkxotx0hirlx" path="res://Scenes/block_red_hovered.tres" id="4_4da1l"]
-[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_button_disabled.tres" id="5_7gmkh"]
-[ext_resource type="StyleBox" uid="uid://c4x5aco0jmudg" path="res://Scenes/block_button_red_disabled.tres" id="5_7hsrk"]
-[ext_resource type="StyleBox" uid="uid://d2bghixg6rqp0" path="res://Scenes/block_red_button_normal.tres" id="6_7gmkh"]
-[ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/yellow_resume_button_hover.tres" id="7_cy6vt"]
-[ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/yellow_resume_block_normal.tres" id="8_b641q"]
+[ext_resource type="StyleBox" uid="uid://cwkxotx0hirlx" path="res://Assets/Styles/block_buttons/block_red_hovered.tres" id="4_4da1l"]
+[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_buttons/block_button_disabled.tres" id="5_7gmkh"]
+[ext_resource type="StyleBox" uid="uid://c4x5aco0jmudg" path="res://Assets/Styles/block_buttons/block_button_red_disabled.tres" id="5_7hsrk"]
+[ext_resource type="StyleBox" uid="uid://d2bghixg6rqp0" path="res://Assets/Styles/block_buttons/block_red_button_normal.tres" id="6_7gmkh"]
+[ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/block_buttons/yellow_resume_button_hover.tres" id="7_cy6vt"]
+[ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="8_b641q"]
+[ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Assets/Styles/panels/panel_shadow_temp.tres" id="10_a4dgr"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xm1rl"]
 texture = ExtResource("1_7n2mm")
@@ -25,6 +26,8 @@ content_margin_right = 20.0
 content_margin_bottom = 4.0
 bg_color = Color(0.6, 1, 0.0470588, 1)
 draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ky7o8"]
 
 [node name="PulpsicleStand" type="CanvasLayer"]
 visible = false
@@ -105,7 +108,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
 [node name="SynapseRow" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 24
 
 [node name="Synapse_Title" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/SynapseRow"]
 layout_mode = 2
@@ -207,9 +210,10 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 
 [node name="HSeparator3" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
-theme_override_constants/separation = 16
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxFlat_ky7o8")
 
 [node name="PillarsContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 custom_minimum_size = Vector2(1080, 0)
@@ -218,6 +222,7 @@ theme_override_constants/separation = 6
 alignment = 1
 
 [node name="Pillar1" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer"]
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 theme_override_constants/separation = 16
 
@@ -255,6 +260,47 @@ theme_override_styles/pressed = ExtResource("4_4da1l")
 theme_override_styles/normal = ExtResource("6_7gmkh")
 text = "Unlock Visual Effect
 (25mg)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block5" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block6" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="Pillar2" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer"]
 layout_mode = 2
@@ -295,6 +341,35 @@ theme_override_styles/normal = ExtResource("6_7gmkh")
 text = "Interested?
 (100mg)"
 
+[node name="IndicatorContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
 [node name="Pillar3" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
@@ -334,6 +409,35 @@ theme_override_styles/normal = ExtResource("6_7gmkh")
 text = "Remove obstacles
 (50 mg)"
 
+[node name="IndicatorContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
 [node name="Pillar4" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
@@ -372,6 +476,35 @@ theme_override_styles/pressed = ExtResource("4_4da1l")
 theme_override_styles/normal = ExtResource("6_7gmkh")
 text = "Increase Luck
 (50 mg)"
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Block1" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block2" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block3" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Block4" type="ColorRect" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/IndicatorContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 
 [node name="HSeparator4" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
@@ -466,3 +599,17 @@ text = "Continue
 layout_mode = 2
 theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
+[node name="DescriptionLabel" type="Label" parent="AnimationContainer/MainContainer"]
+visible = false
+custom_minimum_size = Vector2(426, 320)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("10_a4dgr")
+text = "unlock 1 ability slot!"
+horizontal_alignment = 1
+vertical_alignment = 1

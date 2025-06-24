@@ -31,7 +31,7 @@ func _ready():
 func update_display(data: Dictionary):
 	# --- Update Frenzy Meter ---
 	
-	run_timer_label.text = "Run Time: " + data["run_time_string"]
+	run_timer_label.text = data["run_time_string"] + " <- Run Time"
 	
 	if data["combo_is_active"]:
 		combo_window_label.visible = true
@@ -49,7 +49,7 @@ func update_display(data: Dictionary):
 		
 	# --- Update Garden Status ---
 	garden_name_label.text = "%s (Garden %s)" % [data["garden_name"], data["garden_number"]]
-	var goal_text = "Goal: %s / %s" % [data["current_score"], data["garden_goal"]]
+	var goal_text = "%s / %s <- Goal" % [data["current_score"], data["garden_goal"]]
 	garden_goal_label.text = goal_text
 	
 	# --- Update Cookbook ---
@@ -58,7 +58,7 @@ func update_display(data: Dictionary):
 	
 	# --- NEW: Update GPS Graph ---
 	var current_gps = data["current_gps"]
-	gps_label.text = "GPS: %s / sec" % current_gps
+	gps_label.text = "%s / sec <- GPS" % current_gps
 	# --- THIS IS THE NEW LOGIC ---
 	# 1. Determine the immediate direction of change (up, down, or stable).
 	var direction = 0.0

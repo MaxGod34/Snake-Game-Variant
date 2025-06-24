@@ -1,12 +1,12 @@
 [gd_scene load_steps=13 format=3 uid="uid://c1b0eh8evirnx"]
 
-[ext_resource type="Script" uid="uid://beoi5cxhq4jhd" path="res://Scripts/main_menu.gd" id="1_1ehe0"]
-[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="2_1ehe0"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_opfnp"]
-[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_cp0ys"]
-[ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_button_hovered.tres" id="4_cp0ys"]
-[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_button_disabled.tres" id="5_yhxw7"]
-[ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_button_normal.tres" id="6_trj04"]
+[ext_resource type="Script" uid="uid://beoi5cxhq4jhd" path="res://Scripts/main_menu.gd" id="1_neey8"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_4fgt5"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_j4kqa"]
+[ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_buttons/block_button_hovered.tres" id="4_anmaw"]
+[ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_buttons/block_button_disabled.tres" id="5_ftsii"]
+[ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_buttons/block_button_normal.tres" id="6_lg1h6"]
+[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="7_80s4p"]
 
 [sub_resource type="Gradient" id="Gradient_cp0ys"]
 offsets = PackedFloat32Array(0, 0.6, 1)
@@ -56,7 +56,7 @@ corner_radius_bottom_right = 200
 corner_radius_bottom_left = 500
 
 [node name="MainMenu" type="CanvasLayer"]
-script = ExtResource("1_1ehe0")
+script = ExtResource("1_neey8")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -69,7 +69,7 @@ color = Color(0.152941, 0, 0.176471, 1)
 [node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
 z_index = 5
 amount = 30
-texture = ExtResource("2_opfnp")
+texture = ExtResource("2_4fgt5")
 lifetime = 0.33
 speed_scale = 0.33
 randomness = 0.33
@@ -105,7 +105,7 @@ z_index = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 42
-theme_override_fonts/font = ExtResource("3_cp0ys")
+theme_override_fonts/font = ExtResource("3_j4kqa")
 theme_override_font_sizes/font_size = 48
 theme_override_styles/normal = SubResource("StyleBoxFlat_yhxw7")
 text = "(  .  )   (  .  )
@@ -164,14 +164,14 @@ theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_focus_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 32
-theme_override_fonts/font = ExtResource("3_cp0ys")
+theme_override_fonts/font = ExtResource("3_j4kqa")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = ExtResource("4_cp0ys")
-theme_override_styles/disabled = ExtResource("5_yhxw7")
-theme_override_styles/hover_pressed = ExtResource("4_cp0ys")
-theme_override_styles/hover = ExtResource("4_cp0ys")
-theme_override_styles/pressed = ExtResource("4_cp0ys")
-theme_override_styles/normal = ExtResource("6_trj04")
+theme_override_styles/focus = ExtResource("4_anmaw")
+theme_override_styles/disabled = ExtResource("5_ftsii")
+theme_override_styles/hover_pressed = ExtResource("4_anmaw")
+theme_override_styles/hover = ExtResource("4_anmaw")
+theme_override_styles/pressed = ExtResource("4_anmaw")
+theme_override_styles/normal = ExtResource("6_lg1h6")
 text = "Play"
 
 [node name="FangFundButton" type="Button" parent="CenterContainer/VBoxContainer"]
@@ -184,14 +184,14 @@ theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_focus_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 32
-theme_override_fonts/font = ExtResource("3_cp0ys")
+theme_override_fonts/font = ExtResource("3_j4kqa")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = ExtResource("4_cp0ys")
-theme_override_styles/disabled = ExtResource("5_yhxw7")
-theme_override_styles/hover_pressed = ExtResource("4_cp0ys")
-theme_override_styles/hover = ExtResource("4_cp0ys")
-theme_override_styles/pressed = ExtResource("4_cp0ys")
-theme_override_styles/normal = ExtResource("6_trj04")
+theme_override_styles/focus = ExtResource("4_anmaw")
+theme_override_styles/disabled = ExtResource("5_ftsii")
+theme_override_styles/hover_pressed = ExtResource("4_anmaw")
+theme_override_styles/hover = ExtResource("4_anmaw")
+theme_override_styles/pressed = ExtResource("4_anmaw")
+theme_override_styles/normal = ExtResource("6_lg1h6")
 text = "Fang Fund"
 
 [node name="ThePitButton" type="Button" parent="CenterContainer/VBoxContainer"]
@@ -204,14 +204,14 @@ theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_focus_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 32
-theme_override_fonts/font = ExtResource("3_cp0ys")
+theme_override_fonts/font = ExtResource("3_j4kqa")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = ExtResource("4_cp0ys")
-theme_override_styles/disabled = ExtResource("5_yhxw7")
-theme_override_styles/hover_pressed = ExtResource("4_cp0ys")
-theme_override_styles/hover = ExtResource("4_cp0ys")
-theme_override_styles/pressed = ExtResource("4_cp0ys")
-theme_override_styles/normal = ExtResource("6_trj04")
+theme_override_styles/focus = ExtResource("4_anmaw")
+theme_override_styles/disabled = ExtResource("5_ftsii")
+theme_override_styles/hover_pressed = ExtResource("4_anmaw")
+theme_override_styles/hover = ExtResource("4_anmaw")
+theme_override_styles/pressed = ExtResource("4_anmaw")
+theme_override_styles/normal = ExtResource("6_lg1h6")
 text = "The Pit"
 
 [node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer"]
@@ -225,13 +225,13 @@ theme_override_colors/font_focus_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 32
 theme_override_constants/line_spacing = 64
-theme_override_fonts/font = ExtResource("3_cp0ys")
+theme_override_fonts/font = ExtResource("3_j4kqa")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = ExtResource("4_cp0ys")
-theme_override_styles/disabled = ExtResource("5_yhxw7")
-theme_override_styles/hover = ExtResource("4_cp0ys")
-theme_override_styles/pressed = ExtResource("4_cp0ys")
-theme_override_styles/normal = ExtResource("6_trj04")
+theme_override_styles/focus = ExtResource("4_anmaw")
+theme_override_styles/disabled = ExtResource("5_ftsii")
+theme_override_styles/hover = ExtResource("4_anmaw")
+theme_override_styles/pressed = ExtResource("4_anmaw")
+theme_override_styles/normal = ExtResource("6_lg1h6")
 text = "Options"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
@@ -245,13 +245,13 @@ theme_override_colors/font_focus_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_pressed_color = Color(0.843137, 1, 0, 1)
 theme_override_constants/outline_size = 32
 theme_override_constants/line_spacing = 64
-theme_override_fonts/font = ExtResource("3_cp0ys")
+theme_override_fonts/font = ExtResource("3_j4kqa")
 theme_override_font_sizes/font_size = 42
-theme_override_styles/focus = ExtResource("4_cp0ys")
-theme_override_styles/disabled = ExtResource("5_yhxw7")
-theme_override_styles/hover = ExtResource("4_cp0ys")
-theme_override_styles/pressed = ExtResource("4_cp0ys")
-theme_override_styles/normal = ExtResource("6_trj04")
+theme_override_styles/focus = ExtResource("4_anmaw")
+theme_override_styles/disabled = ExtResource("5_ftsii")
+theme_override_styles/hover = ExtResource("4_anmaw")
+theme_override_styles/pressed = ExtResource("4_anmaw")
+theme_override_styles/normal = ExtResource("6_lg1h6")
 text = "Quit"
 
 [node name="TextureRect" type="TextureRect" parent="."]
@@ -262,7 +262,7 @@ anchor_right = 0.95
 anchor_bottom = 0.9
 grow_horizontal = 0
 grow_vertical = 2
-texture = ExtResource("2_1ehe0")
+texture = ExtResource("7_80s4p")
 stretch_mode = 4
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]

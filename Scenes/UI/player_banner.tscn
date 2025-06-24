@@ -1,7 +1,7 @@
 [gd_scene load_steps=9 format=3 uid="uid://u2l27qdcge0g"]
 
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_fkyj3"]
-[ext_resource type="Script" uid="uid://colf33pfeqrbf" path="res://Scenes/player_banner.gd" id="2_s6con"]
+[ext_resource type="Script" uid="uid://colf33pfeqrbf" path="res://Scripts/player_banner.gd" id="2_s6con"]
 [ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="3_fkyj3"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="3_s6con"]
 
@@ -9,7 +9,7 @@
 texture = ExtResource("3_s6con")
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
-modulate_color = Color(0, 0.415686, 0.47451, 1)
+modulate_color = Color(7.21961e-07, 0.282875, 0.3251, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fkyj3"]
 
@@ -49,29 +49,31 @@ layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="HBox/StatsContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_fkyj3")
 
 [node name="ScoreRow" type="Control" parent="HBox/StatsContainer"]
 custom_minimum_size = Vector2(128, 64)
 layout_direction = 2
 layout_mode = 2
-size_flags_horizontal = 0
 size_flags_vertical = 4
 
 [node name="ScoreLabel" type="Label" parent="HBox/StatsContainer/ScoreRow"]
-custom_minimum_size = Vector2(160, 48)
+custom_minimum_size = Vector2(320, 48)
 layout_mode = 1
-offset_right = 160.0
-offset_bottom = 48.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 49.0
+grow_horizontal = 2
 theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 36
 text = "Score: 12"
 vertical_alignment = 1
 
@@ -91,23 +93,25 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "Skunk McGee"
 vertical_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="HBox/StatsContainer/HBoxContainer"]
-custom_minimum_size = Vector2(128, 35)
+custom_minimum_size = Vector2(176, 35)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.950706, 0.972166, 0.950434, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 28
 text = "Lvl 29"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -120,14 +124,20 @@ step = 0.067
 value = 87.033
 show_percentage = false
 
+[node name="HSeparator4" type="HSeparator" parent="HBox/StatsContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxEmpty_fkyj3")
+
 [node name="JuiceLabel" type="Label" parent="HBox/StatsContainer"]
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.605235, 0.737968, 0.606232, 1)
+theme_override_colors/font_color = Color(0.751078, 0.715461, 0.128516, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 16
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
 theme_override_font_sizes/font_size = 32
@@ -138,11 +148,12 @@ vertical_alignment = 1
 [node name="UpgradePromptLabel" type="Label" parent="HBox/StatsContainer"]
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.605235, 0.737968, 0.606232, 1)
+theme_override_colors/font_color = Color(0.751078, 0.715461, 0.128516, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 16
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
 theme_override_font_sizes/font_size = 32
@@ -152,7 +163,7 @@ vertical_alignment = 1
 
 [node name="HSeparator3" type="HSeparator" parent="HBox/StatsContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 8
 theme_override_styles/separator = SubResource("StyleBoxEmpty_fkyj3")
 
 [node name="VSeparator" type="VSeparator" parent="HBox"]

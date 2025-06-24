@@ -34,7 +34,7 @@ func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_f
 		continue_button.text = "Finish"
 	else:
 		title_label.text = "Garden Complete!"
-		continue_button.text = "Next Garden"
+		continue_button.text = "To the\nPulpsicle Stand!"
 	
 	stats_label.text = "You cleared %s!" % garden_name
 	stats_label.visible = true
@@ -126,14 +126,3 @@ func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_f
 # This function just sends the signal when the button is clicked.
 func _on_continue_button_pressed():
 	emit_signal("continue_pressed")
-
-func update_garden_complete():
-	if GameManager.current_garden < 13:
-		title_label.text = "Garden Complete!"
-		continue_button.text = "Next Garden"
-	else:
-		title_label.text = "YOU CHEATED WTH! GG"
-		continue_button.text = "Feast Rewards"
-		
-	stats_label.visible = true
-	stats_label.text = "You cleared %s!" % GameManager.garden_data[GameManager.current_garden]["name"]
