@@ -148,7 +148,7 @@ func pick_and_display_rotating_item():
 	elif roll < 0.30: # 25% chance for a Rare/Cursed item
 		loot_table = GameManager.rare_items
 	else: # 70% chance for a Common item
-		loot_table = GameManager.common_items
+		loot_table = GameManager.legendary_items #Replace back with commons
 		
 	# 2. Pick a random item from the chosen table.
 	current_rotating_item = loot_table.pick_random()
@@ -207,6 +207,7 @@ func _on_pillar_button_pressed(upgrade_key: String):
 		var cost = rules["costs"][current_level]
 		if GameManager.pulp >= cost:
 			GameManager.pulp -= cost
+			
 			if upgrade_key == "Lasso Larry":
 				main_game._purchase_or_upgrade_ability(upgrade_key)
 				update_all_displays()
@@ -217,6 +218,7 @@ func _on_pillar_button_pressed(upgrade_key: String):
 					"Geode Compass": GameManager.geode_compass_level += 1
 					"Four Leaf Clover": GameManager.four_leaf_clover_level += 1
 					"Harvest Forecast": GameManager.harvest_forecast_level += 1
+				print("Player chose PULP upgrade: ", upgrade_key, " lvl ", current_level)
 				update_all_displays()
 
 

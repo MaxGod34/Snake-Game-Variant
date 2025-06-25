@@ -8,26 +8,20 @@ var run_time: float = 0.0
 var has_died_this_garden = false
 var current_garden = 1
 var garden_data = {
-	# --- The Early Game (Learning the Ropes) ---
-	1: {"name": "The First Coil", "score_goal": 20, "obstacle_count": 0},
+	# --- The Early Game ---
+	1: {"name": "The First Coil", "score_goal": 15, "obstacle_count": 0},
 	2: {"name": "The Juice Box", "score_goal": 35, "obstacle_count": 3},
-	3: {"name": "The Danger Noodle Den", "score_goal": 55, "obstacle_count": 5},
+	3: {"name": "The Danger Noodle Den", "score_goal": 60, "obstacle_count": 5},
 	
-	# --- The Mid-Game (Testing Your Build) ---
-	4: {"name": "The Forked Tongue Bistro", "score_goal": 80, "obstacle_count": 8},
-	5: {"name": "Rhythm & Haste", "score_goal": 110, "obstacle_count": 10},
-	6: {"name": "The Architect's Grid", "score_goal": 150, "obstacle_count": 12},
-	7: {"name": "The Razor's Edge", "score_goal": 200, "obstacle_count": 15},
+	# --- The Mid-Game ---
+	4: {"name": "The Forked Tongue Bistro", "score_goal": 100, "obstacle_count": 8},
+	5: {"name": "Rhythm & Haste", "score_goal": 150, "obstacle_count": 12},
+	6: {"name": "The Architect's Grid", "score_goal": 222, "obstacle_count": 18},
 
-	# --- The Late Game (Mastering Your Path) ---
-	8: {"name": "The Glitch Garden", "score_goal": 260, "obstacle_count": 20},
-	9: {"name": "The Basilisk's Lair", "score_goal": 330, "obstacle_count": 25},
-	10: {"name": "The Kill Screen Quarry", "score_goal": 410, "obstacle_count": 30},
-	
-	# --- The Endgame (The Final Challenge) ---
-	11: {"name": "The Apex Arena", "score_goal": 500, "obstacle_count": 35},
-	12: {"name": "The Endless Labyrinth", "score_goal": 500, "obstacle_count": 40},
-	13: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 50}
+	# --- The Endgame ---
+	7: {"name": "The Basilisk's Lair", "score_goal": 333, "obstacle_count": 25},
+	8: {"name": "The Kill Screen Quarry", "score_goal": 420, "obstacle_count": 35},
+	9: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 50}
 }
 
 var garden_bonus_data = {
@@ -296,11 +290,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -339,11 +333,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": -1, "more_mice": -1, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": -1, "More Mice": -1, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -382,11 +376,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -425,11 +419,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -468,11 +462,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -513,11 +507,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -556,11 +550,11 @@ var class_data = {
 			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
-			"diet_slith": 0, "fruit_foresight": 0,"Geological Survey": 0, 
-			"sovereign_trail": 0, "meditative_state": 0, "garden_weaver": 0,
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
-			"elephant_sized_portions": 0, "more_mice": 0, "golden_seeds": 0,
-			"patient_gardener": 0, "Banana Bounty": 0, "the_satchel": 0,
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
 			# Acrobat Modifiers
 			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
@@ -920,88 +914,88 @@ var upgrade_data = {
 	
 	
 	#----------------------------------The Planner--------------------------------------------#
-	"diet_slith": {
+	"Diet Slith": {
 		"display_name": "Diet Slith",
 		"description": "Speed ain't your thing?\nCome take a walk on the Slith side with some Diet Slith!\nDecresae your speed by 10%",
 		"costs": [1, 1, 2, 2, 3], # 5 levels total
 		"max_level": 5
 	},
-	"fruit_foresight": {
+	"Fruit Foresight": {
 		"display_name": "Fruit Foresight",
 		"description": "Movin' so slow out there,\nit'd be nice to see where the next fruit is gonna go...\nLook no further! One time purchase!",
 		"costs": [3], # One-time purchase
 		"max_level": 1,
-		"prerequisite": {"upgrade": "diet_slith", "level": 2} # Requires Diet Slith Lvl 2
+		"prerequisite": {"upgrade": "Diet Slith", "level": 2} # Requires Diet Slith Lvl 2
 	},
 	#New geological survey... ooo lala
 	"Geological Survey": {
 	"display_name": "Geological Survey", "max_level": 1, "costs": [4],
 	"description": "Gain bonus SP at the end of each Garden\nbased on how many rocks are left on screen.",
-	"prerequisite": {"upgrade": "diet_slith", "level": 3}
+	"prerequisite": {"upgrade": "Diet Slith", "level": 3}
 	},
-	"sovereign_trail": {
+	"Sovereign Trail": {
 		"display_name": "Sovereign Trail",
 		"description": "Leave a trail for 10 segments behind you, wherever you go!\nLvl 1:Fruits can't spawn in your trail!\nLvl 2: Fruits wills spawn VERY close to your trail",
 		"costs": [2, 4], # Lvl 1: Repel, Lvl 2: Attract
 		"max_level": 2,
-		"prerequisite": {"upgrade": "diet_slith", "level": 2}
+		"prerequisite": {"upgrade": "Diet Slith", "level": 2}
 	},
-	"meditative_state": {
+	"Meditative State": {
 		"display_name": "Meditative State",
 		"costs": [5, 5, 10],
 		"description": "Pause! Need I say more?\nThis grants you the ability to pause your snake for 3 seconds!\nRequires Diet Slith lvl 5",
 		"max_level": 3,
-		"prerequisite": {"upgrade": "diet_slith", "level": 5}
+		"prerequisite": {"upgrade": "Diet Slith", "level": 5}
 	},
-	"garden_weaver": {
+	"Garden Weaver": {
 		"display_name": "Garden Weaver",
 		"description": "Don't like how far away all those fruits are, slowpoke?\nWith Garden Weaver, reroll the fruits MUCH closer with this ability!\nRequires Diet Slith Lvl 5",
 		"costs": [5],
 		"max_level": 1,
-		"prerequisite": {"upgrade": "diet_slith", "level": 5}
+		"prerequisite": {"upgrade": "Diet Slith", "level": 5}
 	},
 	#----------------------------------------------------------------------------------#
 	#-------------------------------------------the glutton----------------------------#
-	"elephant_sized_portions": {
+	"Elephant Sized Portions": {
 		"display_name": "Elephant Sized Portions",
 		"description": "Increases the number of segments you grow per fruit.\n+1 per level (depending on class)",
 		"costs": [1,1,2,2,3,3,4,4,5,5],
 		"max_level": 10
 	},
-	"more_mice": {
+	"More Mice": {
 		"display_name": "More Mice!",
 		"description": "Increases the maximum number of fruits on screen at once.\n+1 per level",
 		"costs": [2,2,3,3,4,4],
 		"max_level": 6,
-		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
+		"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
 	},
-	"golden_seeds": {
+	"Golden Seeds": {
 		"display_name": "Golden Seeds",
 		"description": "Unlocks a chance for Golden Apples to spawn,\ngranting SP. Each level increases the chance and reward.\nLvl 1: 5%\nLvl 2: 10\nLvl 3: 20\nLvl 4: 33%",
 		"costs": [3,3,4,4],
 		"max_level": 4,
-		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
+		"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
 	},
-	"patient_gardener": {
+	"Patient Gardener": {
 		"display_name": "Patient Gardener",
 		"description": "Fruits left on screen will ripen over time,\ngranting bonus growth.",
 		"costs": [3,3,4],
 		"max_level": 3,
-		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 3}
+		"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
 	},
 	"Banana Bounty": {
 		"display_name": "Banana Bounty",
 		"description":  "Active Ability: Marks a random fruit.\nEating it grants growth equal\nto your max fruit count * your fruit reward.",
 		"costs": [5, 7],
 		"max_level": 2,
-		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 5}
+		"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 5}
 	},
-	"the_satchel": {
+	"The Satchel": {
 		"display_name": "The Satchel",
 		"description": "Permanently unlocks another active ability slot.",
 		"costs": [8],
 		"max_level": 1,
-		"prerequisite": {"upgrade": "elephant_sized_portions", "level": 10, "and": "golden_seeds", "and_level": 4}
+		"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 10, "and": "Golden Seeds", "and_level": 4}
 	},
 }
 
@@ -1013,7 +1007,7 @@ var meta_upgrade_data = {
 		"max_level": 10 
 	},
 	"Serpent's Coffer": {
-		"description": "Gain 'interest' on your unspent Pulp at the end of each Garden.",
+		"description": "Gain 'interest' on your unspent\nPulp at the end of each Garden.",
 		"costs": [20, 35, 50, 75],
 		"max_level": 4
 	},
@@ -1059,7 +1053,7 @@ var basic_recipes = [
 	{
 		"name": "Golden Snack",
 		"sequence": [ {"type": "Fruit"}, {"type": "GoldenFruit"} ],
-		"buff": {"type": "sp_boost", "value": 1, "duration": 0}
+		"buff": {"type": "juice_boost", "value": 1, "duration": 0}
 	}
 ]
 var exotic_recipes = [
@@ -1084,7 +1078,7 @@ var common_items = [
 	{
 		"id": "juice_box",
 		"name": "Juice Box",
-		"description": "A refreshing treat! Instantly grants Juice equal to the current Garden number.",
+		"description": "A refreshing treat!\nInstantly grants Juice equal to the current Garden number.",
 		"cost": 30
 	}
 ]	# ... (add more common items here later)
@@ -1119,9 +1113,21 @@ func apply_meta_upgrade(item_id: String):
 			extra_lives_are_capped = true 
 		"elephant_devoured":
 			# Set the level directly to the max defined in its upgrade_data
-			es_portions_level = upgrade_data["Elephant Sized Portions"]["max_level"]
+			while es_portions_level < upgrade_data["Elephant Sized Portions"]["max_level"]:
+				apply_esp_level_up()
 
 
+func reset_for_new_garden():
+	# This function resets all stats that should be fresh for a new garden.
+	
+	# Reset the player's level back to 1.
+	player_level = 1
+	
+	# Reset the XP and goals back to their starting values.
+	score_at_level_start = 0
+	score_needed_for_next_level = 10 # Or your initial starting value
+	
+	# Crucially, we do NOT reset juice, pulp, or any purchased upgrades.
 
 
 
@@ -1196,11 +1202,18 @@ func get_total_golden_apple_chance() -> float:
 	# Add the chance from Golden Seed Extract
 	if golden_seed_extract_level > 0:
 		total_chance += golden_seed_extract_data[golden_seed_extract_level]
-	# Add the chance from the old Golden Seeds upgrade
+	# Add the chance from the old "Golden Seeds" upgrade
 	if golden_seeds_level > 0:
 		total_chance += golden_seeds_data[golden_seeds_level]["chance"]
 
 	return total_chance
+
+
+func apply_esp_level_up():
+	if es_portions_level < upgrade_data["Elephant Sized Portions"]["max_level"]:
+		es_portions_level += 1
+		fruit_reward += class_data[chosen_class]["reward_upgrade_mod"]
+		print("Elephant Sized Portions leveled up! New level: ", es_portions_level)
 
 
 
@@ -1325,5 +1338,6 @@ func start_game():
 	mise_en_place_used_this_run = false
 	mise_en_place_unlocked = false
 	
+	reset_for_new_garden()
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false

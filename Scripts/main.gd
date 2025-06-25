@@ -142,7 +142,7 @@ func _ready():
 	#------SPAWN FRUITS----#
 	for i in range(get_effective_max_fruits()):
 		update_fruit_prediction()
-		spawn_fruit()
+		spawn_fruit(next_fruit_position)
 	
 	update_fruit_prediction()
 	
@@ -594,6 +594,7 @@ func update_hud():
 	data["run_time_string"] = "%d:%02d.%d" % [minutes, seconds, tenths] if minutes > 0 else "%02d.%d" % [seconds, tenths]
 	
 	# Frenzy Stats
+	data["sugar_rush_unlocked"] = GameManager.sugar_rush_unlocked
 	data["combo_is_active"] = not $ComboTimer.is_stopped()
 	data["combo_window_time"] = $ComboTimer.time_left
 	data["combo_count"] = GameManager.current_combo
@@ -701,34 +702,29 @@ func on_snake_head_moved(head_previous_position: Vector2):
 		_start_end_of_garden_sequence()
 	
 
-func spawn_fruit():
-	var safe_position = calculate_safe_spawn_position()
+func spawn_fruit(spawn_position: Vector2):
 	var fruit_key = ""
 	
-	# If the deck is empty, make a new one.
+	# 1. First, we still check the queue to decide WHAT to spawn.
 	if GameManager.full_spawn_queue.is_empty():
 		GameManager.generate_full_spawn_queue()
-	
-	# Draw the top card from the deck.
 	fruit_key = GameManager.full_spawn_queue.pop_front()
 	
-	# The Border Czar bonus now gives a chance to "re-draw" the card.
-	if GameManager.border_czar_unlocked and is_on_border(safe_position) and fruit_key == "Fruit":
-		if randf() < 0.5: # 50% chance to upgrade the draw
-			var unlocked_specials = GameManager.get_unlocked_special_fruits()
-			if not unlocked_specials.is_empty():
-				print("BORDER CZAR! Upgrading the fruit spawn...")
-				fruit_key = unlocked_specials.pick_random()
+	# 2. We still check for Border Czar to potentially upgrade the type.
+	if GameManager.border_czar_unlocked and is_on_border(spawn_position) and fruit_key == "Fruit":
+		var unlocked_specials = GameManager.get_unlocked_special_fruits()
+		if not unlocked_specials.is_empty() and randf() < 0.5:
+			fruit_key = unlocked_specials.pick_random()
 			
+	# 3. Instantiate the correct fruit.
 	var fruit = instantiate_fruit_from_key(fruit_key)
-			
-	# --- FINAL SETUP & SPAWNING ---
-	# (Your logic for applying blueprint visuals and adding the fruit is perfect here)
+	
+	# 4. Apply visuals and place the fruit at the position it was given.
 	if GameManager.masters_blueprint_unlocked:
 		fruit.get_node("FillSprite").modulate = Color("AFEEEE")
 			
 	fruit.add_to_group("fruits")
-	fruit.position = safe_position
+	fruit.position = spawn_position
 	call_deferred("add_child", fruit)
 
 func instantiate_fruit_from_key(key: String) -> Node2D:
@@ -1025,19 +1021,14 @@ func level_up():
 			
 		GameManager.juice += juice_to_add
 		
-	#EXP/SCORE SCALE
+	#EXP/Juice SCALE
 	if GameManager.player_level >= 10:
 		GameManager.score_needed_for_next_level += 15
 	elif GameManager.player_level >= 5:
 		GameManager.score_needed_for_next_level += 10
 	else:
 		GameManager.score_needed_for_next_level += 5
-	#-----RECHARGE ABILITIES---------
-	for ability_key in GameManager.ability_charges.keys():
-		var ability_data = GameManager.ability_charges[ability_key]
-		# Restore 1 charge, but don't go over the total purchased.
-		if ability_data.current < ability_data.total:
-			ability_data.current += 1
+
 
 
 func _on_upgrade_menu_resume_game_pressed():
@@ -1103,7 +1094,7 @@ func _start_end_of_garden_sequence():
 	
 	var results_screen = $UI/GardenCompleteScreen
 	var garden_id = GameManager.current_garden
-	var is_final_garden = (garden_id == 13)
+	var is_final_garden = (garden_id == 9)
 	var is_final_win = (is_final_garden and score >= 666)
 	
 	results_screen.display_results(
@@ -1149,12 +1140,21 @@ func _start_end_of_garden_sequence():
 	GameManager.juice_spent_this_garden = 0
 	GameManager.abilities_used_this_garden = 0
 	GameManager.garden_start_time = GameManager.run_time
+	GameManager.reset_for_new_garden()
+	_recharge_all_abilities()
 	
 	# Finally, tell the main SceneTransition to go to the next level.
 	GameManager.current_garden += 1
 	SceneTransition.transition_to("res://Scenes/main.tscn", "random")
 
 
+func _recharge_all_abilities():
+	print("Recharging all abilities for the new garden!")
+	# Loop through every ability the player owns.
+	for ability_key in GameManager.ability_charges:
+		var ability_data = GameManager.ability_charges[ability_key]
+		# Set the current charges equal to the total purchased charges.
+		ability_data.current = ability_data.total
 
 
 func recharge_random_ability():
@@ -1215,6 +1215,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		if upgrade_name == "Sugar Rush":
 			if not GameManager.sugar_rush_unlocked:
 				GameManager.sugar_rush_unlocked = true
+				#information_panel.update_display(["sugar_rush_unlocked", true])
 		elif upgrade_name == "Chain Reaction":
 			if GameManager.chain_reaction_level < 3:
 				GameManager.chain_reaction_level += 1
@@ -1231,7 +1232,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Fertile Ground":
 			if GameManager.fertile_ground_level < 3:
 				GameManager.fertile_ground_level += 1
-				spawn_fruit()
+				spawn_fruit(next_fruit_position)
 				# The cost is adding more obstacles to the world!
 		elif upgrade_name == "Mineral Rich Soil":
 			if GameManager.mineral_rich_soil_level < 3:
@@ -1298,12 +1299,11 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.custom_cuisine_unlocked = true
 		#----------------------------Glutton-------------------------#
 			#---ESP---#
-		elif upgrade_name == "elephant_sized_portions":
-			GameManager.es_portions_level += 1
-			GameManager.fruit_reward += 1 * GameManager.class_data[GameManager.chosen_class]["reward_upgrade_mod"]
+		elif upgrade_name == "Elephant Sized Portions":
+			GameManager.apply_esp_level_up()
 			print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
 			#---More Mice---#
-		elif upgrade_name == "more_mice":
+		elif upgrade_name == "More Mice":
 				if GameManager.more_mice_level < 6: # Your max level
 					GameManager.max_fruits_on_screen += 1
 					GameManager.more_mice_level += 1
@@ -1323,21 +1323,17 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 						var new_pos = calculate_safe_spawn_position(pending_positions)
 						var fruit = fruit_scene.instantiate()
 						fruit.position = new_pos
-						fruit.add_to_group("fruits")
-						# Because we are in a UI callback, NOT a physics callback,
-						# it's safe to use add_child() directly here.
-						add_child(fruit) 
-						pending_positions.append(new_pos)
+						spawn_fruit(new_pos)
 					
 					# Update the ghost fruit prediction now that the board has changed.
 					update_fruit_prediction()
-		elif upgrade_name == "golden_seeds":
+		elif upgrade_name == "Golden Seeds":
 			if GameManager.golden_seeds_level < 4:
 				GameManager.golden_seeds_level += 1
-		elif upgrade_name == "patient_gardener":
+		elif upgrade_name == "Patient Gardener":
 			if GameManager.patient_gardener_level < 3:
 				GameManager.patient_gardener_level += 1
-		elif upgrade_name == "the_satchel":
+		elif upgrade_name == "The Satchel":
 			if not GameManager.the_satchel_unlocked:
 				GameManager.the_satchel_unlocked = true
 		#--------------------------ACROBAT---------------------------#
@@ -1400,19 +1396,19 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				print("Dazzle Pie loading...yum")
 				apply_cosmetic_upgrades()
 		#-----------------------THE PLANNER-----------------------#
-		elif upgrade_name == "diet_slith":
+		elif upgrade_name == "Diet Slith":
 			if GameManager.diet_slith_level < 5:
 				GameManager.diet_slith_level += 1
 				head.move_timer.wait_time *= 1.1 
 				print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
-		elif upgrade_name == "fruit_foresight":
+		elif upgrade_name == "Fruit Foresight":
 			if not GameManager.fruit_foresight_unlocked:
 				GameManager.fruit_foresight_unlocked = true
 				show_ghost_fruit()
 		elif upgrade_name == "Geological Survey":
 			if not GameManager.geological_survey_unlocked:
 				GameManager.geological_survey_unlocked = true
-		elif upgrade_name == "sovereign_trail":
+		elif upgrade_name == "Sovereign Trail":
 			if GameManager.sovereign_trail_level < 2:
 				GameManager.sovereign_trail_level += 1
 				print("Sovereign Trail Upgraded 1 level!")
@@ -1465,7 +1461,7 @@ func apply_recipe_buff(buff_data: Dictionary):
 		"speed_boost":
 			# This requires a new helper function in snake_head.gd
 			head.activate_temporary_speed_boost(buff_data["value"], buff_data["duration"])
-		"sp_boost":
+		"juice_boost":
 			GameManager.juice += buff_data["value"]
 			update_hud()
 		"full_recharge":
@@ -1583,7 +1579,7 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 			GameManager.iron_cherry_buff_active = true
 			$IronCherryBuffTimer.start(10.0) # 10-second duration
 			# Spawn a bunch of new fruit immediately
-			for i in range(5): spawn_fruit() 
+			for i in range(5): spawn_fruit(next_fruit_position) 
 		else:
 			GameManager.max_fruits_on_screen += 1
 		
@@ -1600,8 +1596,8 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 		growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
 		if fruit is GoldenFruit:
 			rewards.juice_reward += 1 # Bonus SP for a rare Ripe Golden Fruit
-			
-	rewards.segments_to_add = get_effective_fruit_reward() * growth_multiplier
+	# Reward calculation = Effective fruit reward * patient gardner * combo clamped at 1 cuz bugs at 0 lol
+	rewards.segments_to_add = get_effective_fruit_reward() * growth_multiplier * max(1, GameManager.current_combo)
 	return rewards
 	
 	
@@ -1613,12 +1609,12 @@ func cleanup_and_respawn_fruit(eaten_fruit, was_bounty: bool):
 			if is_instance_valid(f.active_tween): f.active_tween.kill()
 			f.queue_free()
 		for i in range(get_effective_max_fruits()):
-			spawn_fruit()
+			spawn_fruit(next_fruit_position)
 	else:
 		# Otherwise, just replace the one fruit that was eaten.
 		if is_instance_valid(eaten_fruit.active_tween): eaten_fruit.active_tween.kill()
 		eaten_fruit.queue_free()
-		spawn_fruit()
+		spawn_fruit(next_fruit_position)
 	
 	
 	
@@ -1994,7 +1990,7 @@ func use_extra_life():
 	if fruits_to_spawn > 0:
 		print("Death Defied grants %s extra fruit!" % fruits_to_spawn)
 		for i in range(fruits_to_spawn):
-			spawn_fruit()
+			spawn_fruit(next_fruit_position)
 	
 	
 	# 3. Give a moment of invincibility
@@ -2474,7 +2470,7 @@ func start_fruit_flood(duration: float):
 func _on_fruit_flood_tick_timer_timeout():
 	print("Fruit flood tick!")
 	# Spawn one extra fruit
-	spawn_fruit()
+	spawn_fruit(next_fruit_position)
 	update_fruit_prediction() # Update the ghost for the next spawn
 
 # This runs when the total duration is over

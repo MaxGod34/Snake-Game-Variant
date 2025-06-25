@@ -3,16 +3,17 @@
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_gfrfm"]
 
 [node name="GPSTracker" type="Control"]
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 3
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_vertical = 4
 
 [node name="GraphLine" type="Line2D" parent="."]
+position = Vector2(0, 24)
 points = PackedVector2Array(-158, 58)
 width = 16.0
 
@@ -39,4 +40,4 @@ theme_override_fonts/font = ExtResource("1_gfrfm")
 theme_override_font_sizes/font_size = 24
 text = "GPS"
 horizontal_alignment = 1
-vertical_alignment = 1
+vertical_alignment = 2

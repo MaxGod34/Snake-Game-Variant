@@ -1,10 +1,8 @@
-[gd_scene load_steps=26 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=23 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
-[ext_resource type="StyleBox" uid="uid://dckg2uoiur60b" path="res://Assets/Styles/button_disabled_template.tres" id="2_11363"]
 [ext_resource type="Texture2D" uid="uid://c1wp4nsk3r4x4" path="res://Assets/Styles/texturebutton_hovered_placeholder.png" id="2_vdgk6"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
-[ext_resource type="StyleBox" uid="uid://cgghkcom1apru" path="res://Assets/Styles/button_hover_template.tres" id="3_f5dmy"]
 [ext_resource type="StyleBox" uid="uid://bvvxp1nruai3g" path="res://Assets/Styles/tab_styles/tab_hovered.tres" id="3_mpwqm"]
 [ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="4_lpopj"]
 [ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Assets/Styles/panels/panel_bg.tres" id="5_m70ya"]
@@ -73,17 +71,6 @@ expand_margin_top = 20.0
 expand_margin_right = 20.0
 expand_margin_bottom = 20.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f5dmy"]
-content_margin_left = 20.0
-content_margin_top = 20.0
-content_margin_right = 20.0
-content_margin_bottom = 20.0
-bg_color = Color(0.6, 0.113725, 0.6, 0.168627)
-corner_radius_top_left = 20
-corner_radius_top_right = 20
-corner_radius_bottom_right = 20
-corner_radius_bottom_left = 20
-
 [node name="UpgradeMenu" type="CanvasLayer"]
 visible = false
 script = ExtResource("1_ltp0x")
@@ -126,10 +113,10 @@ theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_d1lbs")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
-current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(0, 720)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -2875,10 +2862,10 @@ theme_override_constants/outline_size = 14
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 20
 theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("2_11363")
-theme_override_styles/hover_pressed = SubResource("StyleBoxFlat_f5dmy")
-theme_override_styles/hover = ExtResource("3_f5dmy")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_f5dmy")
+theme_override_styles/disabled = ExtResource("12_s2rwv")
+theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
+theme_override_styles/hover = ExtResource("8_fm0cu")
+theme_override_styles/pressed = ExtResource("8_fm0cu")
 theme_override_styles/normal = ExtResource("11_s2rwv")
 text = "Elephant-Sized Portions
 (1 SP)"

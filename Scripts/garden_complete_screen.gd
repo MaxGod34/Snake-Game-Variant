@@ -101,7 +101,7 @@ func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_f
 	
 
 	# Animate the final totals popping in.
-	total_pulp_label.text = "Total This Garden: +%s mgs of Pulp" % pulp_this_garden
+	total_pulp_label.text = "Total This Garden: +%s mg of Pulp" % pulp_this_garden
 	var tween1 = create_tween()
 	tween1.tween_property(total_pulp_label, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 
@@ -110,7 +110,7 @@ func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_f
 	grand_total_label.modulate.a = 0.0
 	grand_total_label.visible = true
 	grand_total_label.scale = Vector2.ZERO
-	grand_total_label.text = "New Grand Total: %s mgs of Pulp" % GameManager.pulp
+	grand_total_label.text = "New Grand Total: %s mg of Pulp" % GameManager.pulp
 	var tween2 = create_tween()
 	tween2.tween_property(grand_total_label, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_ELASTIC).set_ease(Tween.EASE_OUT)
 	tween2.parallel().tween_property(grand_total_label, "modulate:a", 1.0, 0.1)

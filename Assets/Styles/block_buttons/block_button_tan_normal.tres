@@ -1,0 +1,9 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://dy6a4vjc2lcam"]
+
+[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_ltdfe"]
+
+[resource]
+texture = ExtResource("1_ltdfe")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(0.890196, 0.780392, 0.65098, 1)

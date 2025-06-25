@@ -5,7 +5,7 @@ extends PanelContainer
 @onready var level_label = $HBox/StatsContainer/HBoxContainer/LevelLabel
 @onready var xp_bar = $HBox/StatsContainer/XPProgressBar
 @onready var score_label = $HBox/StatsContainer/ScoreRow/ScoreLabel
-@onready var juice_label = $HBox/StatsContainer/JuiceLabel
+@onready var juice_label = $HBox/StatsContainer/ScoreRow/JuiceLabel
 @onready var upgrade_prompt_label = $HBox/StatsContainer/UpgradePromptLabel
 
 var current_displayed_score = 0

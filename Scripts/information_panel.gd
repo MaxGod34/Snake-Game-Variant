@@ -6,7 +6,10 @@ extends PanelContainer
 @onready var run_timer_label = $HBoxContainer/GardenDataContainer/RunTimerLabel
 @onready var combo_window_label = $HBoxContainer/GardenDataContainer/FrenzyMeter/ComboWindowLabel
 @onready var combo_counter_label = $HBoxContainer/GardenDataContainer/FrenzyMeter/ComboCounterLabel
+@onready var frenzy_meter_container = $HBoxContainer/GardenDataContainer/FrenzyMeter
+@onready var frenzy_hsep =$HBoxContainer/GardenDataContainer/CookbookUI/HSeparatorFrenzy 
 @onready var cookbook_ui_container = $HBoxContainer/GardenDataContainer/CookbookUI
+@onready var cookbook_hsep = $HBoxContainer/GardenDataContainer/HSeparatorCookbook
 @onready var recipe_name_label = $HBoxContainer/GardenDataContainer/CookbookUI/RecipeNameLabel
 @onready var ingredients_container = $HBoxContainer/GardenDataContainer/CookbookUI/IngredientsContainer
 @onready var garden_name_label = $HBoxContainer/GardenDataContainer/GardenStatus/GardenNameLabel
@@ -14,6 +17,7 @@ extends PanelContainer
 @onready var gps_graph = $HBoxContainer/GardenDataContainer/GPSTracker/GraphLine
 @onready var gps_label = $HBoxContainer/GardenDataContainer/GPSTracker/GPS
 @onready var harvest_forecast_ui = $HBoxContainer/GardenDataContainer/HarvestForecastUI
+@onready var forecast_hsep = $HBoxContainer/GardenDataContainer/HSeparatorHarvest
 
 
 var gps_history: Array = []
@@ -34,19 +38,24 @@ func update_display(data: Dictionary):
 	
 	run_timer_label.text = data["run_time_string"] + " <- Run Time"
 	
-	if data["combo_is_active"]:
-		combo_window_label.visible = true
-		combo_window_label.text = "Combo Window: %.1f" % data["combo_window_time"]
-
-	else:
-
-		combo_window_label.visible = false
+	if data["sugar_rush_unlocked"]:
+		frenzy_meter_container.visible = true
+		frenzy_hsep.visible = true
 		
-	if data["combo_count"] > 1:
-		combo_counter_label.visible = true
-		combo_counter_label.text = "x%s COMBO!" % data["combo_count"]
+		if data["combo_is_active"]:
+			combo_window_label.visible = true
+			combo_window_label.text = "Combo Window: %.1f" % data["combo_window_time"]
+		else:
+			combo_window_label.visible = false
+		
+		if data["combo_count"] > 1:
+			combo_counter_label.visible = true
+			combo_counter_label.text = "x%s COMBO!" % data["combo_count"]
+		else:
+			combo_counter_label.visible = false
 	else:
-		combo_counter_label.visible = false
+		frenzy_meter_container.visible = false
+		frenzy_hsep.visible = false
 		
 	# --- Update Garden Status ---
 	garden_name_label.text = "%s (Garden %s)" % [data["garden_name"], data["garden_number"]]
@@ -61,6 +70,7 @@ func update_display(data: Dictionary):
 	# --- NEW: Update Harvest Forecast ---
 	# We check if the forecast data exists, and if so, pass it to our child UI
 	if data.has("forecast_list") and GameManager.harvest_forecast_level > 0:
+		forecast_hsep.visible = true
 		harvest_forecast_ui.visible = true
 		harvest_forecast_ui.update_forecast(
 			data["forecast_list"],
@@ -68,6 +78,7 @@ func update_display(data: Dictionary):
 			data["harvest_forecast_level"]
 			)
 	else:
+		forecast_hsep.visible = false
 		harvest_forecast_ui.visible = false
 	
 	
@@ -105,11 +116,13 @@ func update_display(data: Dictionary):
 func update_recipe_display(recipe: Dictionary, progress: int):
 	# First, check if the player has the cookbook unlocked.
 	if not GameManager.the_cookbook_unlocked:
+		cookbook_hsep.visible = false
 		cookbook_ui_container.visible = false
 		return # If not, hide the whole section and stop.
 	
 	# If they do have it, make sure the section is visible.
 	cookbook_ui_container.visible = true
+	cookbook_hsep.visible = true
 	
 	# Clear out any old ingredient icons from the previous frame.
 	for child in ingredients_container.get_children():

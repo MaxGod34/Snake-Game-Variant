@@ -117,10 +117,10 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Golden Glaze": return 1 if GameManager.golden_glaze_unlocked else 0
 		"Custom Cuisine": return 1 if GameManager.custom_cuisine_unlocked else 0
 		#---Planner---#
-		"diet_slith": return GameManager.diet_slith_level
-		"fruit_foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
+		"Diet Slith": return GameManager.diet_slith_level
+		"Fruit Foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
 		"Geological Survey": return 1 if GameManager.geological_survey_unlocked else 0
-		"sovereign_trail": return GameManager.sovereign_trail_level
+		"Sovereign Trail": return GameManager.sovereign_trail_level
 		#-------Acrobat------#
 		"Slither Sauce": return GameManager.slither_sauce_level
 		"Juke N Jive": return 1 if GameManager.juke_and_jive_unlocked else 0
@@ -135,11 +135,11 @@ func get_upgrade_level_from_key(upgrade_key):
 		"Shatter Reality": return 1 if GameManager.shatter_reality_unlocked else 0
 		"Master's Blueprint": return 1 if GameManager.masters_blueprint_unlocked else 0
 		#------Glutton------#
-		"elephant_sized_portions": return GameManager.es_portions_level
-		"more_mice": return GameManager.more_mice_level
-		"golden_seeds": return GameManager.golden_seeds_level
-		"patient_gardener": return GameManager.patient_gardener_level
-		"the_satchel": return 1 if GameManager.the_satchel_unlocked else 0
+		"Elephant Sized Portions": return GameManager.es_portions_level
+		"More Mice": return GameManager.more_mice_level
+		"Golden Seeds": return GameManager.golden_seeds_level
+		"Patient Gardener": return GameManager.patient_gardener_level
+		"The Satchel": return 1 if GameManager.the_satchel_unlocked else 0
 		#-------SURVIVOR-------#
 		"Mulligan Munchie": return GameManager.extra_lives
 		"Phoenix Dawn": return 1 if GameManager.phoenix_dawn_unlocked else 0
