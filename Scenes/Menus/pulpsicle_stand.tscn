@@ -1,11 +1,14 @@
-[gd_scene load_steps=15 format=3 uid="uid://8jgmx7q20qg5"]
+[gd_scene load_steps=18 format=3 uid="uid://8jgmx7q20qg5"]
 
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_7n2mm"]
 [ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scripts/pulpsicle_stand.gd" id="1_i1qs4"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_4da1l"]
+[ext_resource type="StyleBox" uid="uid://cwkxotx0hirlx" path="res://Assets/Styles/block_buttons/block_red_hovered.tres" id="4_4da1l"]
 [ext_resource type="StyleBox" uid="uid://bd8yljyhxyye0" path="res://Assets/Styles/block_buttons/block_button_tan_hovered.tres" id="4_a4dgr"]
 [ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_buttons/block_button_disabled.tres" id="5_7gmkh"]
+[ext_resource type="StyleBox" uid="uid://c4x5aco0jmudg" path="res://Assets/Styles/block_buttons/block_button_red_disabled.tres" id="5_7hsrk"]
 [ext_resource type="StyleBox" uid="uid://yj1ht78yjgxo" path="res://Assets/Styles/block_buttons/block_button_tan_disabled.tres" id="5_ky7o8"]
+[ext_resource type="StyleBox" uid="uid://d2bghixg6rqp0" path="res://Assets/Styles/block_buttons/block_red_button_normal.tres" id="6_7gmkh"]
 [ext_resource type="StyleBox" uid="uid://dy6a4vjc2lcam" path="res://Assets/Styles/block_buttons/block_button_tan_normal.tres" id="6_p3c4b"]
 [ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/block_buttons/yellow_resume_button_hover.tres" id="7_cy6vt"]
 [ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="8_b641q"]
@@ -56,7 +59,6 @@ grow_vertical = 2
 color = Color(0.890196, 0.780392, 0.65098, 1)
 
 [node name="AnimationContainer" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -531,6 +533,32 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
 text = "Item description:"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="SkipGardenButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
+visible = false
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(1.39579e-06, 0.453443, 0.594383, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_hover_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.225337, 0.789171, 1, 1)
+theme_override_colors/font_focus_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/line_spacing = 6
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_4da1l")
+theme_override_styles/disabled = ExtResource("5_7hsrk")
+theme_override_styles/hover_pressed = ExtResource("4_4da1l")
+theme_override_styles/hover = ExtResource("4_4da1l")
+theme_override_styles/pressed = ExtResource("4_4da1l")
+theme_override_styles/normal = ExtResource("6_7gmkh")
+text = "Fast
+Track
+Skip"
 
 [node name="HSeparator5" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2

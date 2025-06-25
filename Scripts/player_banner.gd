@@ -6,7 +6,8 @@ extends PanelContainer
 @onready var xp_bar = $HBox/StatsContainer/XPProgressBar
 @onready var score_label = $HBox/StatsContainer/ScoreRow/ScoreLabel
 @onready var juice_label = $HBox/StatsContainer/ScoreRow/JuiceLabel
-@onready var upgrade_prompt_label = $HBox/StatsContainer/UpgradePromptLabel
+@onready var upgrade_prompt_label = $HBox/StatsContainer/HBoxContainer2/UpgradePromptLabel
+@onready var pulp_label = $HBox/StatsContainer/HBoxContainer2/PulpLabel
 
 var current_displayed_score = 0
 var floating_text_container: Node
@@ -17,6 +18,7 @@ func update_display(data: Dictionary):
 	player_name_label.text = data["player_name"]
 	level_label.text = "Level: " + str(data["level"])
 	juice_label.text = "Juice: %smL" % data["juice"]
+	pulp_label.text = "Pulp: %smg" % data["pulp"]
 	upgrade_prompt_label.visible = (data["juice"] > 0)
 	
 	# Update the XP Bar's properties

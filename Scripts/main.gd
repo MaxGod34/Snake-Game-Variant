@@ -136,6 +136,8 @@ func _ready():
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 	SceneTransition.transition_finished.connect(_on_transition_finished)
 	$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.floating_text_container = $UI/FloatingTextContainer
+	$UI/PulpsicleStand.skip_garden_pressed.connect(_on_skip_garden_pressed)
+	$UI/PulpsicleStand.continue_to_next_garden.connect(_on_pulpsicle_stand_continue_pressed)
 	# --- FINAL SETUP ---#
 	#-----SET OBSTACLSE-----#
 	setup_initial_obstacles()
@@ -279,6 +281,7 @@ func _on_ability_slot_activated(slot_index: int):
 			"Pocket Garden": create_pocket_garden()
 			"Zenith": activate_zenith()
 			"Lasso Larry": perform_lasso_larry()
+			"Juice Press": perform_juice_press()
 		
 		
 		print("Ability used: ", ability_key)
@@ -385,50 +388,54 @@ func open_upgrade_menu_with_transition():
 func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 	var bonuses = {"bonus_list": [], "total_pulp": 0}
 	var bonus_data = GameManager.garden_bonus_data
-	# Base Score Bonus
-	bonuses.total_pulp += p_score
-	bonuses.bonus_list.append("Score: +%s Pulp" % p_score)
 	
+	var pulp_multiplier = GameManager.principal_pulp_data[GameManager.principal_pulp_level]
+	var final_score_pulp = floori(p_score * pulp_multiplier)
+	# Base Score Bonus
+	bonuses.total_pulp += final_score_pulp
+	bonuses.bonus_list.append("Base Score: +%smg" % final_score_pulp)
+	
+	var bonus_multiplier = GameManager.golden_handshake_data[GameManager.golden_handshake_level]
 	# Serpent's Coffer Interest
 	var coffer_level = GameManager.serpents_coffer_level
 	if coffer_level > 0:
 		var interest_rate = GameManager.serpents_coffer_data[coffer_level]
 		var interest_earned = floori(GameManager.pulp * interest_rate)
 		if interest_earned > 0:
-			bonuses.total_pulp += interest_earned
-			bonuses.bonus_list.append("Serpent's Coffer: +%s Pulp" % interest_earned)
+			bonuses.total_pulp += floori(interest_earned * bonus_multiplier)
+			bonuses.bonus_list.append("Serpent's Coffer: +%smg" % interest_earned)
 			
 	# Par Time Bonus
 	var garden_time = GameManager.run_time - GameManager.garden_start_time
 	var par_time_rules = GameManager.garden_bonus_data["par_time"]
 	if garden_time < par_time_rules["time_limit"]:
-		var reward = par_time_rules["base_reward"]
+		var reward = floori(par_time_rules["base_reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Par Time: +%s mgs" % reward)
+		bonuses.bonus_list.append("Par Time: +%smg" % reward)
 		
 	if not GameManager.has_died_this_garden:
-		var reward = bonus_data["no_death"]["reward"]
+		var reward = floori(bonus_data["no_death"]["reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Flawless Bonus: +%s mgs" % reward)
+		bonuses.bonus_list.append("Flawless Bonus: +%smg" % reward)
 	
 	if GameManager.juice_spent_this_garden == 0:
-		var reward = bonus_data["ascetic"]["reward"]
+		var reward = floori(bonus_data["ascetic"]["reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("No Upgrade Bonus: + %s mgs" % reward)
+		bonuses.bonus_list.append("No Upgrade Bonus: + %smg" % reward)
 		
 	if GameManager.abilities_used_this_garden == 0:
-		var reward = bonus_data["pacifist"]["reward"]
+		var reward = floori(bonus_data["pacifist"]["reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("No Ability Bonus: + %s mgs" % reward)
+		bonuses.bonus_list.append("No Ability Bonus: + %smg" % reward)
 		
 	if GameManager.juice_spent_this_garden > 1:
-		var reward = bonus_data["engagement"]["reward"]
-		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Engagement Bonus + %s mgs" % reward)
+		var reward = floori(bonus_data["engagement"]["reward"] * bonus_multiplier)
+		bonuses.total_pulp += reward * GameManager.juice_spent_this_garden
+		bonuses.bonus_list.append("Engagement Bonus + %smg" % reward)
 	
 	# Now, handle JUICE bonuses, which don't add to the Pulp total.
 	if GameManager.chosen_class == "the_zealot" and not GameManager.has_died_this_garden:
-		var bonus_juice = GameManager.class_data[GameManager.chosen_class]["sp_on_perfect_garden"]
+		var bonus_juice = GameManager.class_data[GameManager.chosen_class]["juice_on_perfect_garden"]
 		GameManager.juice += bonus_juice
 		bonuses.bonus_list.append("Zealot's Purity: +%s oz of Juice!" % bonus_juice)
 		
@@ -443,6 +450,7 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 		if GameManager.calculated_risk_unlocked:
 			bonus_per_rock *= 2.0 # Double the reward!
 			print("CALCULATED RISK! Geological Survey bonus is doubled!")
+			
 
 		# Calculate the final SP reward, rounding down to the nearest whole number.
 		var bonus_juice = floori(remaining_rocks * bonus_per_rock)
@@ -450,6 +458,7 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 		if bonus_juice > 0:
 			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_juice, remaining_rocks])
 			GameManager.juice += floori(bonus_juice)
+			bonuses.bonus_list.append("Geological Survey Bonus +% Juice for leaving %s rocks!" % [bonus_juice, remaining_rocks])
 			
 	return bonuses
 
@@ -565,7 +574,7 @@ func update_hud():
 	data["xp_max"] = GameManager.score_needed_for_next_level
 	data["xp_min"] = GameManager.score_at_level_start
 	data["juice"] = GameManager.juice
-	
+	data["pulp"] = GameManager.pulp
 	# --- Gather Harvest Forecast Data ---
 	var forecast_level = GameManager.harvest_forecast_level
 	data["harvest_forecast_level"] = forecast_level
@@ -703,17 +712,30 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	
 
 func spawn_fruit(spawn_position: Vector2):
-	var fruit_key = ""
+	var fruit_key = "" # This will be the final decision
 	
-	# 1. First, we still check the queue to decide WHAT to spawn.
-	if GameManager.full_spawn_queue.is_empty():
-		GameManager.generate_full_spawn_queue()
-	fruit_key = GameManager.full_spawn_queue.pop_front()
+	# --- The New "Priority" Spawning System ---
 	
-	# 2. We still check for Border Czar to potentially upgrade the type.
+	# PRIORITY 1: Check for "Last Stand" override.
+	if GameManager.last_stand_unlocked and GameManager.extra_lives == 0 and randf() < 0.4:
+		print("LAST STAND! A glimmer of hope appears...")
+		fruit_key = "GoldenFruit"
+	else:
+		# PRIORITY 2: If no override, draw the next fruit from our pre-generated queue.
+		if GameManager.full_spawn_queue.is_empty():
+			GameManager.generate_full_spawn_queue()
+		
+		# Safety check in case the queue is still empty.
+		if GameManager.full_spawn_queue.is_empty():
+			fruit_key = "Fruit"
+		else:
+			fruit_key = GameManager.full_spawn_queue.pop_front()
+
+	# PRIORITY 3: Check for Border Czar synergy to potentially upgrade the draw.
 	if GameManager.border_czar_unlocked and is_on_border(spawn_position) and fruit_key == "Fruit":
 		var unlocked_specials = GameManager.get_unlocked_special_fruits()
 		if not unlocked_specials.is_empty() and randf() < 0.5:
+			print("BORDER CZAR! Upgrading the fruit spawn...")
 			fruit_key = unlocked_specials.pick_random()
 			
 	# 3. Instantiate the correct fruit.
@@ -967,7 +989,7 @@ func _update_snake_after_teleport(new_position: Vector2):
 
 func update_upgrade_prompt():
 	# Show the prompt only if the player has SP to spend.
-	var prompt = $UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.get_node("HBox/StatsContainer/UpgradePromptLabel")
+	var prompt = $UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.get_node("HBox/StatsContainer/HBoxContainer2/UpgradePromptLabel")
 	var has_juice = GameManager.juice > 0
 	prompt.visible = has_juice
 
@@ -1013,7 +1035,9 @@ func level_up():
 		elif GameManager.player_level >= 5: juice_to_add = 2
 		else: juice_to_add = 1
 		
-
+		#-----Liquid Assets (Path A Ledger)----
+		juice_to_add += GameManager.liquid_assets_level
+		
 		# If prestige mode is active, double the reward!
 		if GameManager.new_game_s_plus_active:
 			juice_to_add *= 2
@@ -1111,16 +1135,18 @@ func _start_end_of_garden_sequence():
 	# --- State 3: Wait for Player Input ---
 	# The game now pauses here indefinitely until the player clicks "Continue".
 	await results_screen.continue_pressed
-	
-	# If it was the final garden, the run is over.
-	if is_final_garden:
+	_transition_to_shop()
+
+func _transition_to_shop():
+	var garden_id = GameManager.current_garden
+	if garden_id == 9:
 		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
 		return
-
+	
 	# --- State 4: Transition to Pulp-sicle Stand ---
 	await SceneTransition.play_cover_animation("drip")
+	$UI/GardenCompleteScreen.visible = false
 	
-	results_screen.visible = false
 	var shop_screen = $UI/PulpsicleStand
 	shop_screen.open_shop() # This just updates displays and makes it visible
 	
@@ -1128,10 +1154,8 @@ func _start_end_of_garden_sequence():
 	
 	await shop_screen.animate_in() # Play the shop's slide-in animation
 
-	# --- State 5: Wait for Player to Finish Shopping ---
-	await shop_screen.continue_to_next_garden
-	
-	# --- State 6: Final Transition to Next Garden ---
+func _go_to_next_garden():
+	var shop_screen = $UI/PulpsicleStand
 	await shop_screen.animate_out() # Animate the shop sliding away
 	await SceneTransition.play_cover_animation("random")
 	
@@ -1140,12 +1164,20 @@ func _start_end_of_garden_sequence():
 	GameManager.juice_spent_this_garden = 0
 	GameManager.abilities_used_this_garden = 0
 	GameManager.garden_start_time = GameManager.run_time
+	GameManager.juice_press_used_this_garden = false
 	GameManager.reset_for_new_garden()
 	_recharge_all_abilities()
 	
 	# Finally, tell the main SceneTransition to go to the next level.
 	GameManager.current_garden += 1
 	SceneTransition.transition_to("res://Scenes/main.tscn", "random")
+
+func _on_garden_complete_continue_pressed():
+	# This is called by the results screen button.
+	# Note: It no longer needs to be async.
+	pass # The master sequence is already waiting for the signal.
+func _on_pulpsicle_stand_continue_pressed():
+	_go_to_next_garden()
 
 
 func _recharge_all_abilities():
@@ -1228,6 +1260,41 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Juggernaut":
 			if not GameManager.juggernaut_unlocked:
 				GameManager.juggernaut_unlocked = true
+		#----The Ledger Path----
+		elif upgrade_name == "Liquid Assets":
+			if GameManager.chosen_ledger_path == "" and GameManager.liquid_assets_level < 5:
+				GameManager.chosen_ledger_path = "Liquid Assets"
+				GameManager.liquid_assets_level += 1
+			elif GameManager.liquid_assets_level < 5:
+				GameManager.liquid_assets_level += 1
+		elif upgrade_name == "Fast Track":
+			if not GameManager.fast_track_unlocked:
+				GameManager.fast_track_unlocked = true
+		elif upgrade_name == "Gluttons Greed":
+			if not GameManager.gluttons_greed_unlocked:
+				var bonus = get_effective_max_fruits()
+				GameManager.fruit_reward += bonus
+				GameManager.gluttons_greed_unlocked = true
+				print("GLUTTON'S GREED Fruit Reward permanently increased by %s!" % bonus)
+		elif upgrade_name == "Market Crash":
+			if GameManager.market_crash_level < 3:
+				GameManager.market_crash_level += 1
+		elif upgrade_name == "Principal Pulp":
+			if GameManager.chosen_ledger_path == "" and GameManager.principal_pulp_level < 3:
+				GameManager.chosen_ledger_path = "Principal Pulp"
+				GameManager.principal_pulp_level += 1
+			elif GameManager.principal_pulp_level < 3:
+				GameManager.principal_pulp_level += 1
+		elif upgrade_name == "Golden Handshake":
+			if GameManager.golden_handshake_level < 3:
+				GameManager.golden_handshake_level += 1
+		elif upgrade_name == "Juice Press":
+			_purchase_or_upgrade_ability("Juice Press")
+		elif upgrade_name == "Liquidation":
+			if not GameManager.liquidation_used:
+				GameManager.liquidation_used = true
+				GameManager.juice *= 2
+				# Need to add a cool effect
 		# --- GEOMANCER PATH ---
 		elif upgrade_name == "Fertile Ground":
 			if GameManager.fertile_ground_level < 3:
@@ -1321,9 +1388,8 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 					var pending_positions = []
 					for i in range(fruits_to_spawn):
 						var new_pos = calculate_safe_spawn_position(pending_positions)
-						var fruit = fruit_scene.instantiate()
-						fruit.position = new_pos
 						spawn_fruit(new_pos)
+						pending_positions.append(new_pos)
 					
 					# Update the ghost fruit prediction now that the board has changed.
 					update_fruit_prediction()
@@ -2319,6 +2385,29 @@ func _on_pocket_garden_timer_timeout():
 	for child in $PocketGardenContainer.get_children():
 		child.queue_free()
 
+func perform_juice_press():
+	# This ability is once per garden. Let's check if it's been used.
+	if GameManager.juice_press_used_this_garden:
+		print("Juice Press already used this garden!")
+		# Give the charge back since it failed
+		GameManager.ability_charges["Juice Press"].current += 1
+		return
+
+	print("JUICE PRESS! Converting all Pulp to Juice.")
+	GameManager.juice_press_used_this_garden = true
+
+	# Calculate the conversion at a 5:1 ratio
+	var juice_gained = floori(GameManager.pulp / 5.0)
+	GameManager.juice += juice_gained
+
+	# Reset Pulp to 0
+	GameManager.pulp = 0
+
+	play_screen_flash(Color.ORANGE)
+
+
+
+
 func perform_sacrificial_molt():
 	var current_body_length = snake_body_segments.size()
 	
@@ -2517,3 +2606,16 @@ func perform_lasso_larry():
 		pending_positions.append(safe_spot)
 			
 	play_screen_flash(Color.SANDY_BROWN)
+
+func _on_skip_garden_pressed():
+	print("FAST-TRACK ACTIVATED!")
+
+	# 1. Grant the bonus Juice
+	GameManager.juice += 5
+	GameManager.current_garden += 1 # Extra Fast Track increment
+
+	# 2. Animate the shop sliding out
+	await $UI/PulpsicleStand.animate_out()
+
+	# 3. Call our existing function to transition to the next garden
+	_go_to_next_garden()

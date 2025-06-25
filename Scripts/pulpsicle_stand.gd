@@ -2,6 +2,7 @@ extends CanvasLayer
 
 # This signal tells main.gd that the player is ready to move on.
 signal continue_to_next_garden
+signal skip_garden_pressed
 
 # --- NODE REFERENCES ---
 # Get references to all the UI elements we need to update.
@@ -18,6 +19,7 @@ signal continue_to_next_garden
 @onready var continue_button = $AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/ContinueButton
 @onready var animation_container = $AnimationContainer
 @onready var description_label = $AnimationContainer/MainContainer/DescriptionLabel
+@onready var skip_garden_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
 
 # This dictionary will store a reference to every single pillar button.
 var pillar_buttons: Dictionary = {}
@@ -55,6 +57,7 @@ func _connect_all_signals():
 	# Connect the other buttons
 	continue_button.pressed.connect(_on_continue_button_pressed)
 	rand_item_button.pressed.connect(_on_rotating_item_button_pressed)
+	skip_garden_button.pressed.connect(_on_skip_garden_button_pressed)
 
 
 # This is the master function that main.gd will call.
@@ -72,6 +75,12 @@ func update_all_displays():
 	for upgrade_key in pillar_buttons:
 		_update_pillar_button(upgrade_key)
 	update_rotating_item_display()
+	# --- NEW: Show/Hide the Skip Button ---
+	var skip_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
+	if GameManager.fast_track_unlocked and GameManager.current_garden < 8:
+		skip_button.visible = true
+	else:
+		skip_button.visible = false
 
 # --- UPDATE FUNCTIONS ---
 
@@ -258,3 +267,8 @@ func _on_pillar_mouse_entered(upgrade_key: String):
 
 func _on_pillar_mouse_exited():
 	description_label.visible = false
+
+func _on_skip_garden_button_pressed():
+	# When this button is pressed, it just sends out the signal.
+	# main.gd will be listening and will handle the actual logic.
+	emit_signal("skip_garden_pressed")

@@ -234,6 +234,23 @@ var custom_cuisine_unlocked = false
 var mise_en_place_used_this_run = false
 var mise_en_place_unlocked = false
 
+
+# --- The Ledger Path ---
+var chosen_ledger_path = ""
+# Path A (Juice Focus)
+var liquid_assets_level = 0
+var fast_track_unlocked = false
+var gluttons_greed_unlocked = false
+var market_crash_level = 0
+# Path B (Pulp Focus)
+var principal_pulp_level = 0
+var principal_pulp_data = [1.0, 1.5, 2.0, 3.0] # Lvl 0, 1, 2, 3
+var golden_handshake_level = 0
+var golden_handshake_data = [1.0, 1.25, 1.5, 2.0]
+var juice_press_used_this_garden: bool = false
+# Juice Press is an active ability, so it will be handled by our hotbar system
+var liquidation_used = false
+
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -279,6 +296,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -322,6 +342,9 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -365,6 +388,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -408,6 +434,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -451,6 +480,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -496,6 +528,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -539,6 +574,9 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
 			#-----GEODE/GEOMANCER Modifiers-----#
 			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
 			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
@@ -574,6 +612,54 @@ var class_data = {
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+	# --- THE LEDGER PATH ---
+
+	# --- Tier 1 (The Choice) ---
+	"Liquid Assets": {
+		"display_name": "Liquid Assets", "max_level": 5, "costs": [2, 2, 3, 3, 4],
+		"description": "The path of the Day Trader. Each level grants +1 Juice every time you level up.",
+		"exclusive_with": "Principal Pulp" # This new key locks the other option
+	},
+	"Principal Pulp": {
+		"display_name": "Principal Pulp", "max_level": 3, "costs": [2, 3, 4],
+		"description": "The path of the Hedge Fund Manager. Multiplies the base Pulp reward from your score at the end of each Garden.",
+		"exclusive_with": "Liquid Assets"
+	},
+
+	# --- Path A (Juice Focus) Upgrades ---
+	"Fast Track": {
+		"display_name": "Fast-Track", "max_level": 1, "costs": [3],
+		"description": "Unlocks a 'Skip Garden' button in the Pulp-sicle Stand, letting you trade potential Pulp for +5 immediate Juice.",
+		"prerequisite": {"upgrade": "Liquid Assets", "level": 1}
+	},
+	"Gluttons Greed": {
+		"display_name": "Glutton's Greed", "max_level": 1, "costs": [6],
+		"description": "Your Fruit Reward is permanently increased by your current Max Fruits on Screen.",
+		"prerequisite": {"upgrade": "Fast Track", "level": 1}
+	},
+	"Market Crash": {
+		"display_name": "Market Crash", "max_level": 3, "costs": [8, 8, 8],
+		"description": "Permanently reduces the Juice cost of all other upgrades.\nLvl 1: -1 Juice Cost\nLvl 2: -2 Juice Cost",
+		"prerequisite": {"upgrade": "Gluttons Greed", "level": 1}
+	},
+
+	# --- Path B (Pulp Focus) Upgrades ---
+	"Golden Handshake": {
+		"display_name": "Golden Handshake", "max_level": 3, "costs": [3, 4, 5],
+		"description": "Multiplies all BONUS Pulp rewards (Flawless, Par Time, etc.) at the end of each Garden.",
+		"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
+	},
+	"Juice Press": {
+		"display_name": "Juice Press", "max_level": 1, "costs": [5],
+		"description": "Active Ability (Once per Garden): Convert all your current Pulp into Juice at a 5:1 ratio.",
+		"prerequisite": {"upgrade": "Golden Handshake", "level": 1}
+	},
+	"Liquidation": {
+		"display_name": "Liquidation", "max_level": 1, "costs": [1],
+		"description": "A one-time purchase. Instantly doubles your current held Juice.",
+		"prerequisite": {"upgrade": "Juice Press", "level": 1}
+	},
+	
 		# --- CHEF PATH ---
 	"Golden Seed Extract": {
 		"display_name": "Golden Seed Extract",
@@ -1144,37 +1230,27 @@ func get_modified_chance(base_chance: float) -> float:
 	return clamp(final_chance, 0.0, 1.0)
 
 func generate_full_spawn_queue():
+	# This function now just creates a shuffled deck based on base probabilities.
+	# It does NOT handle situational bonuses like Last Stand.
 	full_spawn_queue.clear()
 	var fruit_deck: Array = []
-
-	# 1. Calculate the base number of Golden Apples from your upgrades.
-	var base_golden_chance = get_total_golden_apple_chance()
-	var num_golden_fruits = roundi(100 * get_modified_chance(base_golden_chance))
-
-	# 2. Handle the "Last Stand" override by adding more to the deck.
-	if last_stand_unlocked and extra_lives == 0:
-		num_golden_fruits += 20 # A massive 20% flat bonus
-		print("LAST STAND! The deck is stacked with hope.")
-
-	# 3. Calculate the number of other special fruits.
-	var base_exotic_chance = 0.10
-	if exotic_seeds_level >= 5: base_exotic_chance = 0.20
-	var num_exotic_fruits = roundi(100 * get_modified_chance(base_exotic_chance))
-
-	var unlocked_exotics = get_unlocked_special_fruits()
-
-	# 4. Add all the special fruits to the deck.
-	for i in range(num_golden_fruits): fruit_deck.append("GoldenFruit")
-	if not unlocked_exotics.is_empty():
-		for i in range(num_exotic_fruits):
-			fruit_deck.append(unlocked_exotics.pick_random())
-
-	# 5. Fill the rest of the deck with normal fruit.
-	var num_normal_fruits = 100 - fruit_deck.size()
-	for i in range(num_normal_fruits):
-		fruit_deck.append("Fruit")
-
-	# 6. Shuffle the deck and assign it to our queue.
+	
+	# 1. Get the final chance, including the Four-Leaf Clover bonus.
+	var final_special_chance = get_modified_chance(get_base_special_fruit_chance())
+	var num_special_fruits = roundi(100 * final_special_chance)
+	
+	# 2. Get the list of unlocked special fruits.
+	var unlocked_specials = get_unlocked_special_fruits()
+	
+	# 3. Build and shuffle the deck.
+	if unlocked_specials.is_empty():
+		for i in range(100): fruit_deck.append("Fruit")
+	else:
+		for i in range(num_special_fruits):
+			fruit_deck.append(unlocked_specials.pick_random())
+		for i in range(100 - num_special_fruits):
+			fruit_deck.append("Fruit")
+			
 	fruit_deck.shuffle()
 	full_spawn_queue = fruit_deck
 	print("New full spawn queue generated!")
@@ -1197,15 +1273,21 @@ func get_unlocked_special_fruits() -> Array:
 		
 	return unlocked_specials
 
-func get_total_golden_apple_chance() -> float:
+func get_base_special_fruit_chance() -> float:
+	# This function now calculates the BASE chance for ANY special fruit.
+	# We will add Golden Apple chance and Exotic Seeds chance together.
 	var total_chance = 0.0
-	# Add the chance from Golden Seed Extract
+	
+	# Add chance from Golden Seed Extract
 	if golden_seed_extract_level > 0:
 		total_chance += golden_seed_extract_data[golden_seed_extract_level]
-	# Add the chance from the old "Golden Seeds" upgrade
-	if golden_seeds_level > 0:
-		total_chance += golden_seeds_data[golden_seeds_level]["chance"]
-
+		
+	# Add base chance from Exotic Seeds
+	if exotic_seeds_level > 0:
+		total_chance += 0.10 # Base 10%
+		if exotic_seeds_level >= 5:
+			total_chance += 0.10 # The Lvl 5 bonus adds another 10%
+			
 	return total_chance
 
 
@@ -1337,6 +1419,20 @@ func start_game():
 	dragon_fruit_buff_active = false
 	mise_en_place_used_this_run = false
 	mise_en_place_unlocked = false
+	
+	# --- The Ledger Path ---
+	chosen_ledger_path = ""
+	# Path A (Juice Focus)
+	liquid_assets_level = 0
+	fast_track_unlocked = false
+	gluttons_greed_unlocked = false
+	market_crash_level = 0
+	# Path B (Pulp Focus)
+	principal_pulp_level = 0
+	golden_handshake_level = 0
+	juice_press_used_this_garden = false
+	# Juice Press is an active ability, so it will be handled by our hotbar system
+	liquidation_used = false
 	
 	reset_for_new_garden()
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")

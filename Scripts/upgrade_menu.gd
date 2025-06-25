@@ -103,6 +103,15 @@ func get_upgrade_level_from_key(upgrade_key):
 	
 	
 	match upgrade_key:
+		#---The Ledger---#
+		"Liquid Assets": return GameManager.liquid_assets_level
+		"Principal Pulp": return GameManager.principal_pulp_level
+		"Fast Track": return 1 if GameManager.fast_track_unlocked else 0
+		"Gluttons Greed": return 1 if GameManager.gluttons_greed_unlocked else 0
+		"Market Crash": return GameManager.market_crash_level
+		"Golden Handshake": return GameManager.golden_handshake_level
+		"Juice Press": return 1 if "Juice Press" in GameManager.ability_charges else 0
+		"Liquidation": return 1 if GameManager.liquidation_used else 0
 		#----Frenzy---#
 		"Sugar Rush": return 1 if GameManager.sugar_rush_unlocked else 0
 		"Chain Reaction": return GameManager.chain_reaction_level
@@ -215,6 +224,8 @@ func update_button_display(upgrade_key):
 	
 	if rules.has("exclusive_with"):
 		var exclusive_key = rules["exclusive_with"]
+		if GameManager.chosen_ledger_path == exclusive_key:
+			prereqs_met = false
 		if get_upgrade_level_from_key(exclusive_key) > 0:
 			prereqs_met = false
 	
@@ -248,6 +259,9 @@ func update_button_display(upgrade_key):
 		if GameManager.three_card_monty_unlocked:
 			if upgrade_key != "3 Card Monty":
 				final_cost -= 1 if GameManager.three_card_monty_unlocked else 0
+		if GameManager.market_crash_level > 0:
+			final_cost -= GameManager.market_crash_level
+		
 		
 		final_cost = max(1, final_cost)
 		
