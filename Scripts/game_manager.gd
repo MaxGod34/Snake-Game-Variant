@@ -251,6 +251,27 @@ var juice_press_used_this_garden: bool = false
 # Juice Press is an active ability, so it will be handled by our hotbar system
 var liquidation_used = false
 
+#------------Gambler Path--------------
+var coin_flip_curious_unlocked = false
+var passive_income_unlocked = false
+var correct_bets_this_run = 0
+var block_market_portfolio: Dictionary = {} # Format: {"stock_name": shares_owned}
+var block_market_prices: Dictionary = {
+	"Orange Block": {"price": 10, "currency": "Juice"},
+	"Apple Block":  {"price": 10, "currency": "Juice"},
+	"Light Block":  {"price": 25, "currency": "Pulp"},
+	"Extra Block":  {"price": 25, "currency": "Pulp"}
+}
+# --- Idle Path ---
+var snake_clicker_level = 0
+var snake_clicker_data = [0.0, 0.1, 0.25, 0.5, 1.0, 2.0, 3.0, 5.0, 7.5, 10.0, 25.0]
+var get_rich_quick_unlocked = false
+var custom_aftertaste_unlocked = false
+var arcane_flow_unlocked = false
+var pulp_reactor_unlocked = false
+var unstable_metabolism_unlocked = false
+# track the total passive GPS
+var passive_gps = 0.0
 #^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^#
 #|||||||||||||||||||||||||||||||||||||#
 #_____________________________________#
@@ -296,6 +317,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -342,6 +368,11 @@ var class_data = {
 		"reward_upgrade_mod": 2, # Very good
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -388,6 +419,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -434,6 +470,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -480,6 +521,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -528,6 +574,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 5, # The big bonus!
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -574,6 +625,11 @@ var class_data = {
 		"reward_upgrade_mod": 1,
 		"sp_on_perfect_garden": 0,
 		"cost_modifiers": {
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
 			#------The Ledger Modifiers------#
 			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
 			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
@@ -612,6 +668,51 @@ var class_data = {
 
 # Dictionary for upgrades costs and rules
 var upgrade_data = {
+	# --- IDLE PATH ---
+	"Snake Clicker": {
+		"display_name": "Snake Clicker",
+		"description": "The foundation of passive growth.\nEach level grants a flat bonus to your Growth Per Second (GPS).\nLvl 1: 0.1 GPS\n2: 0.25 GPS\n3: 0.5 GPS\n4: 1.0 GPS\n5: 2.0 GPS\n6: 3.0 GPS\n7: 5.0 GPS\n8: 7.5 GPS\n9: 10.0 GPS\n10: 25.0 GPS",
+		"costs": [
+			2, 2, 2, 2, 2,
+			2, 2, 2, 2, 30
+		],
+		"max_level": 10
+	},
+	"Get Rich Quick": {
+		"display_name": "Get Rich Quick",
+		"description": "An investment in speed.\nGain +0.1 GPS for every point of Juice spent in the Acrobat skill tree.",
+		"costs": [4],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+	},
+	"Custom Aftertaste": {
+		"display_name": "Custom Aftertaste",
+		"description": "An investment in flavor. Gain +0.1 GPS for every point of Juice spent in the Chef skill tree.",
+		"costs": [4],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+	},
+	"Arcane Flow": {
+		"display_name": "Arcane Flow",
+		"description": "An investment in deception. Gain +0.1 GPS for every point of Juice spent in the Illusionist skill tree.",
+		"costs": [4],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+	},
+	"Pulp Reactor": {
+		"display_name": "Pulp Reactor",
+		"description": "A powerful economic synergy. Your GPS is permanently increased by +1 for every 100 Pulp you are currently holding.",
+		"costs": [8],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Snake Clicker", "level": 3}
+	},
+	"Unstable Metabolism": {
+		"display_name": "Unstable Metabolism",
+		"description": "The ultimate power spike. Permanently doubles your total GPS for the rest of the run.",
+		"costs": [10],
+		"max_level": 1,
+		"prerequisite": {"upgrade": "Snake Clicker", "level": 3}
+	},
 	# --- THE LEDGER PATH ---
 
 	# --- Tier 1 (The Choice) ---
@@ -1083,6 +1184,19 @@ var upgrade_data = {
 		"max_level": 1,
 		"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 10, "and": "Golden Seeds", "and_level": 4}
 	},
+	#----Gambleer----#
+	"Coin Flip Curious": {
+		"display_name": "CoinFlip Curious",
+		"description": "From now on...\nEvery fruit eaten now has a 50/50 effect\nEffect 1: Double Growth\nEffect 2: NO GROWTH\nGamble Responsibly...",
+		"costs": [10],
+		"max_level": 1
+	},
+	"Passive Income": {
+		"display_name": "Passive Income",
+		"description": "From now on...\nEvery bet won results in a +1 to your fruit reward\nYou heard me...get on with it!",
+		"costs": [13],
+		"max_level": 1
+	}
 }
 
 
@@ -1299,6 +1413,66 @@ func apply_esp_level_up():
 
 
 
+func update_block_market():
+	print("Updating the Block Market!")
+	
+	# This loop goes through each stock and changes its price.
+	for stock_name in block_market_prices.keys():
+		var stock_data = block_market_prices[stock_name]
+		var current_price = stock_data.price
+		
+		# Calculate the volatility (how much the price can change).
+		var base_volatility = 0.50 # Base 50% swing
+		var volatility = base_volatility + (four_leaf_clover_level * 0.10)
+		
+		# Get a random change percentage.
+		var change_percent = randf_range(-volatility, volatility)
+		
+		# Calculate the new price and make sure it doesn't go below 1.
+		var new_price = max(1, roundi(current_price * (1 + change_percent)))
+		
+		block_market_prices[stock_name].price = new_price
+		print("%s new price: %s" % [stock_name, new_price])
+
+
+func get_total_juice_spent_in_path(path_upgrades: Array) -> int:
+	var total_spent = 0
+	
+	# Loop through every upgrade key in the path we're checking.
+	for upgrade_key in path_upgrades:
+		var rules = upgrade_data.get(upgrade_key)
+		if not rules: continue
+
+		var current_level = 0
+		
+		# --- THIS IS THE FIX ---
+		# We now correctly check for each property type.
+		
+		# Is it a multi-level active ability?
+		if upgrade_key in ability_charges:
+			current_level = ability_charges[upgrade_key].total
+		else:
+			# If not, it must be a passive upgrade.
+			# We build the snake_case variable name for both _level and _unlocked versions.
+			var level_var_name = upgrade_key.to_snake_case().replace("'", "") + "_level"
+			var unlocked_var_name = upgrade_key.to_snake_case().replace("'", "") + "_unlocked"
+
+			# Check if the _level variable exists on this script.
+			if level_var_name in self:
+				current_level = get(level_var_name)
+			# Else, check if the _unlocked variable exists.
+			elif unlocked_var_name in self:
+				if get(unlocked_var_name) == true:
+					current_level = 1
+
+		# Now that we have the correct level, add up the costs.
+		if current_level > 0:
+			for i in range(current_level):
+				if i < rules.costs.size():
+					total_spent += rules.costs[i]
+			
+	return total_spent
+
 
 	
 func start_game():
@@ -1318,6 +1492,7 @@ func start_game():
 	total_juice_this_run = 0
 	total_juice_this_run = juice
 	segments_to_restore = 0
+	passive_gps = 0.0
 	
 	# --- NEW ABILITY SYSTEM RESET ---
 	ability_charges.clear()
@@ -1419,6 +1594,13 @@ func start_game():
 	dragon_fruit_buff_active = false
 	mise_en_place_used_this_run = false
 	mise_en_place_unlocked = false
+	# --- Idle Path ---
+	snake_clicker_level = 0
+	get_rich_quick_unlocked = false
+	custom_aftertaste_unlocked = false
+	arcane_flow_unlocked = false
+	pulp_reactor_unlocked = false
+	unstable_metabolism_unlocked = false
 	
 	# --- The Ledger Path ---
 	chosen_ledger_path = ""
@@ -1433,7 +1615,12 @@ func start_game():
 	juice_press_used_this_garden = false
 	# Juice Press is an active ability, so it will be handled by our hotbar system
 	liquidation_used = false
-	
+	#-------Gambler Path--------
+	coin_flip_curious_unlocked = false
+	passive_income_unlocked = false
+	correct_bets_this_run = 0
+	block_market_portfolio = {}
+	block_market_prices = {"Orange Block": {"price": 10, "currency": "Juice"}, "Apple Block":  {"price": 10, "currency": "Juice"}, "Light Block":  {"price": 25, "currency": "Pulp"}, "Extra Block":  {"price": 25, "currency": "Pulp"}}	
 	reset_for_new_garden()
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false

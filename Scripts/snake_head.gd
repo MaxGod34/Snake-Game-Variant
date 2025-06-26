@@ -74,6 +74,15 @@ func _process(_delta):
 		# If they release the key and the boost is active, turn it off.
 		deactivate_overdrive()
 		
+	# --- NEW: Unstable Metabolism Glitch Effect ---
+	if GameManager.unstable_metabolism_unlocked:
+		# Add a small, random "jitter" to the head's position every frame.
+		# This makes it look like it's vibrating with unstable energy.
+		var jitter_amount = 2.0
+		self.position.x += randf_range(-jitter_amount, jitter_amount)
+		self.position.y += randf_range(-jitter_amount, jitter_amount)
+		
+	reset_head_color()
 	
 
 

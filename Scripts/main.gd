@@ -21,6 +21,8 @@ var trail_pieces: Array = []
 
 var growth_history: Array = []
 
+var growth_progress: float = 0.0
+
 var spawned_obstacles: Array = []
 var next_fruit_position: Vector2
 var ghost_fruit_instance = null
@@ -171,6 +173,24 @@ func _process(delta):
 	# 1. The snake's movement timer is NOT stopped (i.e., we are actively playing).
 	# 2. The upgrade menu is currently visible on screen.
 	if not head.move_timer.is_stopped():
+		
+		# --- NEW PASSIVE GROWTH ---
+		# 1. First, calculate our current total GPS from all sources.
+		_calculate_passive_gps()
+		
+		# 2. Add this frame's worth of growth to our progress tracker.
+		growth_progress += GameManager.passive_gps * delta
+		
+		# 3. If we've accumulated at least one full segment of growth...
+		if growth_progress >= 1.0:
+			# Grow the snake by one segment.
+			grow_snake(1)
+			# Subtract 1 from the progress, leaving the remainder for the next frame.
+			growth_progress -= 1.0
+			#NOW we check for garden completion
+			check_for_garden_completion()
+		
+		
 		# If either of those is true, the clock runs.
 		GameManager.run_time += delta
 		time_since_last_fruit += delta # Also increment our new timer
@@ -380,7 +400,23 @@ func open_upgrade_menu_with_transition():
 	# Unblock input so the player can use the menu
 	$UI/InputBlocker.hide()
 
+func check_for_garden_completion():
+	# If a garden is already complete, we don't need to check again.
+	if garden_complete_is_pending:
+		return
 
+	var current_score = snake_body_segments.size() + 1
+	var current_garden_id = GameManager.current_garden
+	var current_goal = GameManager.garden_data[current_garden_id]["score_goal"]
+	
+	if current_score >= current_goal:
+		print("Garden ", current_garden_id, " complete! Pending screen.")
+		garden_complete_is_pending = true
+		
+		# Play our cool "!" animation
+		var exclamation = exclamation_scene.instantiate()
+		exclamation.global_position = head.global_position
+		add_child(exclamation)
 
 
 
@@ -658,9 +694,13 @@ func update_ability_hotbar():
 			if i < equipped_abilities.size():
 				# This slot is filled. Get the ability data and update the display.
 				var ability_key = equipped_abilities[i]
+				var charge_count = 0
 				# Get the current charges from our unified dictionary
-				var charge_data = GameManager.ability_charges.get(ability_key, {"current": 0})
-				slot.update_display(ability_key, charge_data.current)
+				if ability_key in GameManager.ability_charges:
+					charge_count = GameManager.ability_charges[ability_key].current
+				elif ability_key in GameManager.block_market_portfolio:
+					charge_count = GameManager.block_market_portfolio[ability_key]
+				slot.update_display(ability_key, charge_count)
 			else:
 				# This slot is unlocked but empty.
 				slot.update_display("", 0)
@@ -1003,6 +1043,7 @@ func update_progression():
 		# Award level and skill point(s)
 		level_up()
 		# Set a flag to know we should show the menu at a "later" time
+	check_for_garden_completion()
 
 
 	
@@ -1107,6 +1148,9 @@ func _on_upgrade_menu_resume_game_pressed():
 func _start_end_of_garden_sequence():
 	# --- State 1: Game Paused & Bonuses Calculated ---
 	head.move_timer.stop()
+	
+	$ComboTimer.stop()
+	
 	garden_complete_is_pending = false
 	
 	var score = snake_body_segments.size() + 1
@@ -1167,6 +1211,7 @@ func _go_to_next_garden():
 	GameManager.juice_press_used_this_garden = false
 	GameManager.reset_for_new_garden()
 	_recharge_all_abilities()
+	GameManager.update_block_market()
 	
 	# Finally, tell the main SceneTransition to go to the next level.
 	GameManager.current_garden += 1
@@ -1260,6 +1305,32 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Juggernaut":
 			if not GameManager.juggernaut_unlocked:
 				GameManager.juggernaut_unlocked = true
+		#------Idel Path-----#
+		elif upgrade_name == "Snake Clicker":
+			if GameManager.snake_clicker_level < 10:
+				GameManager.snake_clicker_level += 1
+		elif upgrade_name == "Get Rich Quick":
+			if not GameManager.get_rich_quick_unlocked:
+				GameManager.get_rich_quick_unlocked = true
+		elif upgrade_name == "Custom Aftertaste":
+			if not GameManager.get_rich_quick_unlocked:
+				GameManager.get_rich_quick_unlocked = true
+		elif upgrade_name == "Arcane Flow":
+			if not GameManager.arcane_flow_unlocked:
+				GameManager.arcane_flow_unlocked = true
+		elif upgrade_name == "Pulp Reactor":
+			if not GameManager.pulp_reactor_unlocked:
+				GameManager.pulp_reactor_unlocked = true
+		elif upgrade_name == "Unstable Metabolism":
+			if not GameManager.unstable_metabolism_unlocked:
+				GameManager.unstable_metabolism_unlocked = true
+		#------SnakeEyes Path----#
+		elif upgrade_name == "Coin Flip Curious":
+			if not GameManager.coin_flip_curious_unlocked:
+				GameManager.coin_flip_curious_unlocked = true
+		elif upgrade_name == "Passive Income":
+			if not GameManager.passive_income_unlocked:
+				GameManager.passive_income_unlocked = true
 		#----The Ledger Path----
 		elif upgrade_name == "Liquid Assets":
 			if GameManager.chosen_ledger_path == "" and GameManager.liquid_assets_level < 5:
@@ -1662,6 +1733,20 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 		growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
 		if fruit is GoldenFruit:
 			rewards.juice_reward += 1 # Bonus SP for a rare Ripe Golden Fruit
+			
+	#--------Coin Flip Curious--------#
+	if GameManager.coin_flip_curious_unlocked:
+		print("Coin Flip Curious active! Risking it all...")
+		# Roll a 50/50 die.
+		if randf() < 0.5:
+			# On a win, double the growth multiplier!
+			growth_multiplier *= 2.0
+			print("WIN! Growth is doubled!")
+		else:
+			# On a loss, the multiplier becomes 0. No growth.
+			growth_multiplier = 0.0
+			print("LOSE! No growth this time.")
+			
 	# Reward calculation = Effective fruit reward * patient gardner * combo clamped at 1 cuz bugs at 0 lol
 	rewards.segments_to_add = get_effective_fruit_reward() * growth_multiplier * max(1, GameManager.current_combo)
 	return rewards
@@ -2115,15 +2200,15 @@ func start_countdown() -> void:
 	countdown.visible = true
 	# START THE COUNTDOWN
 	countdown.text = "3"
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	countdown.text = "2"
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	countdown.text = "1"
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	# GIVE THE GAME SOME PERSONALITY AND RANDOMNESS
 	var go_messages = ["SNAKE OFF!", "GET GROWING", "FEED THE BEAST!", "MUNCHA MUNCHA", "FEEL THE BURN", "I CAN'T HEAR YOU", "0, -1, jk"]
 	countdown.text = go_messages.pick_random()
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(0.5).timeout
 	# HIDE THE LABEL AND START THE GAME!
 	countdown.visible = false
 	if is_instance_valid(head) and head.move_timer:
@@ -2619,3 +2704,46 @@ func _on_skip_garden_pressed():
 
 	# 3. Call our existing function to transition to the next garden
 	_go_to_next_garden()
+
+
+func _calculate_passive_gps():
+	# Start with the base value from Snake Clicker
+	var total_gps = GameManager.snake_clicker_data[GameManager.snake_clicker_level]
+	
+	# Get Rich Quick (Acrobat)
+	if GameManager.get_rich_quick_unlocked:
+		var acrobat_upgrades = ["Slither Sauce", "Tenderizer", "Juke N Jive", "Afterburner", "Pop Rocks", "Autotomy"]
+		var juice_spent = GameManager.get_total_juice_spent_in_path(acrobat_upgrades)
+		total_gps += juice_spent * 0.1
+		
+	# Custom Aftertaste (Chef)
+	if GameManager.custom_aftertaste_unlocked:
+		var chef_upgrades = ["Golden Seed Extract", "Exotic Seeds", "The Cookbook", "Expanded Palate", "Golden Glaze", "Custom Cuisine", "Mise en Place"]
+		var juice_spent = GameManager.get_total_juice_spent_in_path(chef_upgrades)
+		total_gps += juice_spent * 0.1
+		
+	# Arcane Flow (Illusionist)
+	if GameManager.arcane_flow_unlocked:
+		var illusionist_upgrades = ["Ghost Tail", "Phase Shift", "Blink", "3 Card Monty", "Fractured Self", "Dazzle Pie"]
+		var juice_spent = GameManager.get_total_juice_spent_in_path(illusionist_upgrades)
+		total_gps += juice_spent * 0.1
+	
+	# --- NEW: Pulp Reactor Logic ---
+	# Add the bonus from our Pulp reserves.
+	if GameManager.pulp_reactor_unlocked:
+		# We gain +1 GPS for every 100 Pulp we have.
+		var pulp_bonus = floor(GameManager.pulp / 100.0)
+		total_gps += pulp_bonus
+		if pulp_bonus > 0:
+			print("Pulp Bonus: ", pulp_bonus)
+	
+	
+	# --- NEW: Unstable Metabolism Logic ---
+	# Finally, check if we should double the total.
+	#    This is applied last to make it as powerful as possible.
+	if GameManager.unstable_metabolism_unlocked:
+		total_gps *= 2.0
+	
+	
+	# Store the final, calculated value in our global manager.
+	GameManager.passive_gps = total_gps
