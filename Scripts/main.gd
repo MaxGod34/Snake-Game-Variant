@@ -134,7 +134,6 @@ func _ready():
 	$PauseMenu.resume_game.connect(toggle_pause)
 	$UI/GameOverScreen.restart_pressed.connect(_on_restart_pressed)
 	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
-	$UI/UpgradeMenu.upgrade_selected.connect(_on_upgrade_menu_upgrade_selected)
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 	SceneTransition.transition_finished.connect(_on_transition_finished)
 	$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.floating_text_container = $UI/FloatingTextContainer
@@ -1288,25 +1287,9 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		_purchase_or_upgrade_ability(upgrade_name)
 			
 	else:
-		#---------FRENZY------------#
-		if upgrade_name == "Sugar Rush":
-			if not GameManager.sugar_rush_unlocked:
-				GameManager.sugar_rush_unlocked = true
-				#information_panel.update_display(["sugar_rush_unlocked", true])
-		elif upgrade_name == "Chain Reaction":
-			if GameManager.chain_reaction_level < 3:
-				GameManager.chain_reaction_level += 1
-		elif upgrade_name == "Overdrive":
-			if GameManager.overdrive_level < 2:
-				GameManager.overdrive_level += 1
-		elif upgrade_name == "Lingering Rush":
-			if GameManager.lingering_rush_level < 5:
-				GameManager.lingering_rush_level += 1
-		elif upgrade_name == "Juggernaut":
-			if not GameManager.juggernaut_unlocked:
-				GameManager.juggernaut_unlocked = true
-		#------Idel Path-----#
-		elif upgrade_name == "Snake Clicker":
+
+#------Idle Path-----#
+		if upgrade_name == "Snake Clicker":
 			if GameManager.snake_clicker_level < 10:
 				GameManager.snake_clicker_level += 1
 		elif upgrade_name == "Get Rich Quick":
@@ -1324,13 +1307,23 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Unstable Metabolism":
 			if not GameManager.unstable_metabolism_unlocked:
 				GameManager.unstable_metabolism_unlocked = true
-		#------SnakeEyes Path----#
-		elif upgrade_name == "Coin Flip Curious":
-			if not GameManager.coin_flip_curious_unlocked:
-				GameManager.coin_flip_curious_unlocked = true
-		elif upgrade_name == "Passive Income":
-			if not GameManager.passive_income_unlocked:
-				GameManager.passive_income_unlocked = true
+#---------THE PLANNER-------#
+		elif upgrade_name == "Diet Slith":
+			if GameManager.diet_slith_level < 5:
+				GameManager.diet_slith_level += 1
+				head.move_timer.wait_time *= 1.1 
+				print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
+		elif upgrade_name == "Fruit Foresight":
+			if not GameManager.fruit_foresight_unlocked:
+				GameManager.fruit_foresight_unlocked = true
+				show_ghost_fruit()
+		elif upgrade_name == "Geological Survey":
+			if not GameManager.geological_survey_unlocked:
+				GameManager.geological_survey_unlocked = true
+		elif upgrade_name == "Sovereign Trail":
+			if GameManager.sovereign_trail_level < 2:
+				GameManager.sovereign_trail_level += 1
+				print("Sovereign Trail Upgraded 1 level!")
 		#----The Ledger Path----
 		elif upgrade_name == "Liquid Assets":
 			if GameManager.chosen_ledger_path == "" and GameManager.liquid_assets_level < 5:
@@ -1366,7 +1359,66 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.liquidation_used = true
 				GameManager.juice *= 2
 				# Need to add a cool effect
-		# --- GEOMANCER PATH ---
+#----------------------------Glutton-------------------------#
+			#---ESP---#
+		elif upgrade_name == "Elephant Sized Portions":
+			GameManager.apply_esp_level_up()
+			print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
+			#---More Mice---#
+		elif upgrade_name == "More Mice":
+				if GameManager.more_mice_level < 6: # Your max level
+					GameManager.max_fruits_on_screen += 1
+					GameManager.more_mice_level += 1
+					
+					# Instead of just spawning one fruit, we now check how many are
+					# on screen vs. how many SHOULD be, and spawn the difference.
+					var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
+					var target_fruit_count = get_effective_max_fruits()
+					var fruits_to_spawn = target_fruit_count - current_fruit_count
+					
+					print("Player bought More Mice! Spawning %s new fruit." % fruits_to_spawn)
+
+					# This loop ensures that even if we spawn multiple fruits in the same frame,
+					# they won't spawn on top of each other.
+					var pending_positions = []
+					for i in range(fruits_to_spawn):
+						var new_pos = calculate_safe_spawn_position(pending_positions)
+						spawn_fruit(new_pos)
+						pending_positions.append(new_pos)
+					
+					# Update the ghost fruit prediction now that the board has changed.
+					update_fruit_prediction()
+		elif upgrade_name == "Golden Seeds":
+			if GameManager.golden_seeds_level < 4:
+				GameManager.golden_seeds_level += 1
+		elif upgrade_name == "Patient Gardener":
+			if GameManager.patient_gardener_level < 3:
+				GameManager.patient_gardener_level += 1
+		elif upgrade_name == "The Satchel":
+			if not GameManager.the_satchel_unlocked:
+				GameManager.the_satchel_unlocked = true
+#------------------CHEF PATH------------------#
+		elif upgrade_name == "Golden Seed Extract":
+			if GameManager.golden_seed_extract_level < 3:
+				GameManager.golden_seed_extract_level += 1
+		elif upgrade_name == "Exotic Seeds":
+			if GameManager.exotic_seeds_level < 5:
+				GameManager.exotic_seeds_level += 1
+		elif upgrade_name == "The Cookbook":
+			if not GameManager.the_cookbook_unlocked:
+				GameManager.the_cookbook_unlocked = true
+				pick_new_recipe()
+		elif upgrade_name == "Expanded Palate":
+			if not GameManager.expanded_palate_unlocked:
+				GameManager.expanded_palate_unlocked = true
+				pick_new_recipe()
+		elif upgrade_name == "Golden Glaze":
+			if not GameManager.golden_glaze_unlocked:
+				GameManager.golden_glaze_unlocked = true
+		elif upgrade_name == "Custom Cuisine":
+			if not GameManager.custom_cuisine_unlocked:
+				GameManager.custom_cuisine_unlocked = true
+# --- GEOMANCER PATH ---
 		elif upgrade_name == "Fertile Ground":
 			if GameManager.fertile_ground_level < 3:
 				GameManager.fertile_ground_level += 1
@@ -1414,66 +1466,8 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Calculated Risk":
 			if not GameManager.calculated_risk_unlocked:
 				GameManager.calculated_risk_unlocked = true		
-		#------------------CHEF PATH------------------#
-		elif upgrade_name == "Golden Seed Extract":
-			if GameManager.golden_seed_extract_level < 3:
-				GameManager.golden_seed_extract_level += 1
-		elif upgrade_name == "Exotic Seeds":
-			if GameManager.exotic_seeds_level < 5:
-				GameManager.exotic_seeds_level += 1
-		elif upgrade_name == "The Cookbook":
-			if not GameManager.the_cookbook_unlocked:
-				GameManager.the_cookbook_unlocked = true
-				pick_new_recipe()
-		elif upgrade_name == "Expanded Palate":
-			if not GameManager.expanded_palate_unlocked:
-				GameManager.expanded_palate_unlocked = true
-				pick_new_recipe()
-		elif upgrade_name == "Golden Glaze":
-			if not GameManager.golden_glaze_unlocked:
-				GameManager.golden_glaze_unlocked = true
-		elif upgrade_name == "Custom Cuisine":
-			if not GameManager.custom_cuisine_unlocked:
-				GameManager.custom_cuisine_unlocked = true
-		#----------------------------Glutton-------------------------#
-			#---ESP---#
-		elif upgrade_name == "Elephant Sized Portions":
-			GameManager.apply_esp_level_up()
-			print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
-			#---More Mice---#
-		elif upgrade_name == "More Mice":
-				if GameManager.more_mice_level < 6: # Your max level
-					GameManager.max_fruits_on_screen += 1
-					GameManager.more_mice_level += 1
-					
-					# Instead of just spawning one fruit, we now check how many are
-					# on screen vs. how many SHOULD be, and spawn the difference.
-					var current_fruit_count = get_tree().get_nodes_in_group("fruits").size()
-					var target_fruit_count = get_effective_max_fruits()
-					var fruits_to_spawn = target_fruit_count - current_fruit_count
-					
-					print("Player bought More Mice! Spawning %s new fruit." % fruits_to_spawn)
 
-					# This loop ensures that even if we spawn multiple fruits in the same frame,
-					# they won't spawn on top of each other.
-					var pending_positions = []
-					for i in range(fruits_to_spawn):
-						var new_pos = calculate_safe_spawn_position(pending_positions)
-						spawn_fruit(new_pos)
-						pending_positions.append(new_pos)
-					
-					# Update the ghost fruit prediction now that the board has changed.
-					update_fruit_prediction()
-		elif upgrade_name == "Golden Seeds":
-			if GameManager.golden_seeds_level < 4:
-				GameManager.golden_seeds_level += 1
-		elif upgrade_name == "Patient Gardener":
-			if GameManager.patient_gardener_level < 3:
-				GameManager.patient_gardener_level += 1
-		elif upgrade_name == "The Satchel":
-			if not GameManager.the_satchel_unlocked:
-				GameManager.the_satchel_unlocked = true
-		#--------------------------ACROBAT---------------------------#
+#---------ACROBAT----------#
 		elif upgrade_name == "Slither Sauce":
 			if GameManager.slither_sauce_level < 10:
 				GameManager.slither_sauce_level += 1
@@ -1487,7 +1481,48 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Pop Rocks":
 			if not GameManager.pop_rocks_unlocked:
 				GameManager.pop_rocks_unlocked = true
-		#-------------------------------Architect--------------------------#
+#---------FRENZY------------#
+		elif upgrade_name == "Sugar Rush":
+			if not GameManager.sugar_rush_unlocked:
+				GameManager.sugar_rush_unlocked = true
+				#information_panel.update_display(["sugar_rush_unlocked", true])
+		elif upgrade_name == "Chain Reaction":
+			if GameManager.chain_reaction_level < 3:
+				GameManager.chain_reaction_level += 1
+		elif upgrade_name == "Overdrive":
+			if GameManager.overdrive_level < 2:
+				GameManager.overdrive_level += 1
+		elif upgrade_name == "Lingering Rush":
+			if GameManager.lingering_rush_level < 5:
+				GameManager.lingering_rush_level += 1
+		elif upgrade_name == "Juggernaut":
+			if not GameManager.juggernaut_unlocked:
+				GameManager.juggernaut_unlocked = true
+#--------SURVIVOR--------#
+		elif upgrade_name == "Mulligan Munchie":
+			if GameManager.extra_lives < 10 and not GameManager.extra_lives_are_capped:
+				GameManager.extra_lives += 1
+				print("Extra life added, thanks to ol' Mulligan!")
+			elif GameManager.extra_lives_are_capped:
+				print("Extra lives are capped! No can do!")
+		elif upgrade_name == "Phoenix Dawn": 
+			if not GameManager.phoenix_dawn_unlocked:
+				GameManager.phoenix_dawn_unlocked = true
+		elif upgrade_name == "Last Stand":
+			if not GameManager.last_stand_unlocked:
+				GameManager.last_stand_unlocked = true
+		elif upgrade_name == "Death Defied": 
+			if not GameManager.death_defied_unlocked:
+				GameManager.death_defied_unlocked = true
+		elif upgrade_name == "Martyrdom": 
+			if not GameManager.martyrdom_unlocked:
+				GameManager.martyrdom_unlocked = true
+		elif upgrade_name == "New Game S Plus": 
+			if not GameManager.new_game_s_plus_active:
+				GameManager.new_game_s_plus_active = true
+				GameManager.current_garden = 1
+				SceneTransition.transition_to("res://Scenes/main.tscn")
+#-------------------------------Architect--------------------------#
 		elif upgrade_name == "Edge Lord":
 			if GameManager.edge_lord_level < 5:
 				GameManager.edge_lord_level += 1
@@ -1511,7 +1546,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				print("current: grid size pending...")
 				rebuild_world_layout()
 				print("currnet: grid size (w x h): ", grid_width, " x ", grid_height)
-		elif upgrade_name == "Master's Blueprint":
+		elif upgrade_name == "Masters Blueprint":
 			if not GameManager.masters_blueprint_unlocked:
 				GameManager.masters_blueprint_unlocked = true
 				apply_cosmetic_upgrades()
@@ -1532,51 +1567,16 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.dazzle_pie_unlocked = true
 				print("Dazzle Pie loading...yum")
 				apply_cosmetic_upgrades()
-		#-----------------------THE PLANNER-----------------------#
-		elif upgrade_name == "Diet Slith":
-			if GameManager.diet_slith_level < 5:
-				GameManager.diet_slith_level += 1
-				head.move_timer.wait_time *= 1.1 
-				print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
-		elif upgrade_name == "Fruit Foresight":
-			if not GameManager.fruit_foresight_unlocked:
-				GameManager.fruit_foresight_unlocked = true
-				show_ghost_fruit()
-		elif upgrade_name == "Geological Survey":
-			if not GameManager.geological_survey_unlocked:
-				GameManager.geological_survey_unlocked = true
-		elif upgrade_name == "Sovereign Trail":
-			if GameManager.sovereign_trail_level < 2:
-				GameManager.sovereign_trail_level += 1
-				print("Sovereign Trail Upgraded 1 level!")
-		#--------SURVIVOR--------#
-		elif upgrade_name == "Mulligan Munchie":
-			if GameManager.extra_lives < 10 and not GameManager.extra_lives_are_capped:
-				GameManager.extra_lives += 1
-				print("Extra life added, thanks to ol' Mulligan!")
-			elif GameManager.extra_lives_are_capped:
-				print("Extra lives are capped! No can do!")
-		elif upgrade_name == "Phoenix Dawn": 
-			if not GameManager.phoenix_dawn_unlocked:
-				GameManager.phoenix_dawn_unlocked = true
-		elif upgrade_name == "Last Stand":
-			if not GameManager.last_stand_unlocked:
-				GameManager.last_stand_unlocked = true
-		elif upgrade_name == "Death Defied": 
-			if not GameManager.death_defied_unlocked:
-				GameManager.death_defied_unlocked = true
-		elif upgrade_name == "Martyrdom": 
-			if not GameManager.martyrdom_unlocked:
-				GameManager.martyrdom_unlocked = true
-		elif upgrade_name == "New Game S+": 
-			if not GameManager.new_game_s_plus_active:
-				GameManager.new_game_s_plus_active = true
-				GameManager.current_garden = 1
-				SceneTransition.transition_to("res://Scenes/main.tscn")
+		#------SnakeEyes Path----#
+		elif upgrade_name == "Coin Flip Curious":
+			if not GameManager.coin_flip_curious_unlocked:
+				GameManager.coin_flip_curious_unlocked = true
+		elif upgrade_name == "Passive Income":
+			if not GameManager.passive_income_unlocked:
+				GameManager.passive_income_unlocked = true
 		#----------One last update HUD
 		update_ability_hotbar()
 		call_deferred("update_hud")
-		
 
 
 func _on_combo_timer_timeout():
@@ -2747,3 +2747,105 @@ func _calculate_passive_gps():
 	
 	# Store the final, calculated value in our global manager.
 	GameManager.passive_gps = total_gps
+
+func get_upgrade_rules(upgrade_key: String) -> Dictionary:
+	for path_key in GameManager.upgrade_data:
+		if upgrade_key in GameManager.upgrade_data[path_key]:
+			return GameManager.upgrade_data[path_key][upgrade_key]
+	return {}
+
+func check_prerequisites(upgrade_key: String) -> bool:
+	var rules = get_upgrade_rules(upgrade_key)
+	if not rules.has("prerequisite"): return true
+	if rules.is_empty(): return false # Double check this line
+
+	var prereq_data = rules["prerequisite"]
+	if get_upgrade_level_from_key(prereq_data["upgrade"]) < prereq_data["level"]:
+		return false
+		
+	if prereq_data.has("and") and get_upgrade_level_from_key(prereq_data["and"]) < prereq_data["and_level"]:
+		return false
+		
+	return true
+
+func calculate_upgrade_cost(upgrade_key: String) -> int:
+	var rules = get_upgrade_rules(upgrade_key)
+	var current_level = get_upgrade_level_from_key(upgrade_key)
+	
+	if current_level >= rules.max_level: return 999 # A high number for "unaffordable"
+	
+	var base_cost = rules.costs[current_level]
+	var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
+	var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
+	var final_cost = base_cost + diff_mod + class_mod
+	
+	# Apply cost reduction upgrades
+	if GameManager.three_card_monty_unlocked and upgrade_key != "3 Card Monty":
+		final_cost -= 1
+	if GameManager.market_crash_level > 0 and upgrade_key != "Market Crash":
+		final_cost -= GameManager.market_crash_level
+		
+	return max(1, final_cost)
+
+
+
+func get_upgrade_level_from_key(upgrade_key: String) -> int:
+	if upgrade_key in GameManager.ability_charges:
+		return GameManager.ability_charges[upgrade_key].total
+	
+	var var_name_level = upgrade_key.to_snake_case().replace(" ", "") + "_level"
+	if var_name_level in GameManager:
+		return GameManager.get(var_name_level)
+		
+	var var_name_unlocked = upgrade_key.to_snake_case().replace(" ", "") + "_unlocked"
+	if var_name_unlocked in GameManager:
+		return 1 if GameManager.get(var_name_unlocked) else 0
+
+	return 0
+
+func handle_upgrade_purchase(upgrade_key: String):
+	# 1. Get all the necessary information using our other helpers.
+	var rules = get_upgrade_rules(upgrade_key)
+	var current_level = get_upgrade_level_from_key(upgrade_key)
+	
+	# 2. Check if the upgrade is already maxed out.
+	if current_level >= rules.max_level:
+		print("Cannot purchase, already at max level.")
+		return
+		
+	# 3. Calculate the final cost.
+	var cost = calculate_upgrade_cost(upgrade_key) # Assuming this helper exists and is correct
+	
+	# 4. Check if the player can afford it.
+	if GameManager.juice >= cost and not current_level >= rules.max_level:
+		print("Purchase successful: ", upgrade_key)
+		# The purchase is valid! Subtract the cost.
+		GameManager.juice -= cost
+		GameManager.juice_spent_this_garden += cost
+		
+		# Tell the game to apply the upgrade's effect.
+		_on_upgrade_menu_upgrade_selected(upgrade_key) # This function now ONLY applies the effect
+		
+		# After the purchase, refresh the entire upgrade menu UI.
+		# It's important to do this AFTER the effect has been applied.
+		$UI/UpgradeMenu.update_all_displays()
+	else:
+		#--T0-DO-- Add a rejection notification
+		#--			Add a delay on the animation and rejection with a wanh
+		print("Cannot afford upgrade: ", upgrade_key)
+
+func handle_node_mouse_entered(upgrade_key: String):
+	var rules = get_upgrade_rules(upgrade_key)
+	var cost = calculate_upgrade_cost(upgrade_key)
+	
+	# We get a reference to the description panel and call its show function.
+	var description_panel = $UI/UpgradeMenu.find_child("DescriptionPanel")
+	
+	if is_instance_valid(description_panel):
+		description_panel.show_info(rules.display_name, rules.description, cost)
+
+# This function handles hiding the description panel.
+func handle_node_mouse_exited():
+	var description_panel = $UI/UpgradeMenu.find_child("DescriptionPanel")
+	if is_instance_valid(description_panel):
+		description_panel.hide()

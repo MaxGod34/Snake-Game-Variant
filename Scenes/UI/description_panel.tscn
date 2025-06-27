@@ -1,0 +1,109 @@
+[gd_scene load_steps=6 format=3 uid="uid://bdqnq8u7m75ue"]
+
+[ext_resource type="Script" uid="uid://dt65jjmqd6rtw" path="res://Scripts/description_panel.gd" id="1_daodf"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_qmwms"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_daodf"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 3
+border_width_top = 4
+border_width_right = 3
+border_width_bottom = 4
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+corner_detail = 12
+shadow_color = Color(0, 0, 0, 0.819608)
+shadow_size = 16
+shadow_offset = Vector2(-5, 2)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kk4sh"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vywvx"]
+
+[node name="DescriptionPanel" type="PanelContainer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -166.0
+offset_right = 160.0
+offset_bottom = 166.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_daodf")
+script = ExtResource("1_daodf")
+
+[node name="MarginC" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBox" type="VBoxContainer" parent="MarginC"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="UpgradeNameLabel" type="Label" parent="MarginC/VBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 0.86423, 0.841203, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("1_qmwms")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxEmpty_kk4sh")
+text = "Elephant-Sized Portions"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="MarginC/VBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_vywvx")
+
+[node name="DescriptionLabel" type="Label" parent="MarginC/VBox"]
+custom_minimum_size = Vector2(384, 160)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 0.86423, 0.841203, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("1_qmwms")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxEmpty_kk4sh")
+text = "Buy 12 upgrades if you feel like it!
+Lvl 1: this thing Lvl 2: that thing
+Lvl 3: another thing 
+Lvl 4: and another thing
+Lvl 5: ooo another thing
+Lvl 6: more Lvl 7: more Lvl 8: more
+Lvl 9: more Lvl 10: more"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator2" type="HSeparator" parent="MarginC/VBox"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_vywvx")
+
+[node name="CostLabel" type="Label" parent="MarginC/VBox"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 0.86423, 0.841203, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("1_qmwms")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxEmpty_kk4sh")
+text = "12 mL Juice"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -1,46 +1,53 @@
 extends CanvasLayer
 
 # These signals are how this menu communicates with the main game.
-signal upgrade_selected(upgrade_name)
+
 signal resume_game_pressed
 
 # --- NODE REFERENCES ---
 # We get direct references to important nodes when the scene is ready.
 # This is faster and safer than using long paths like $.../.../... every time.
 @onready var top_tabs = $CenterContainer/PanelContainer/VBoxContainer/TopTabs
-@onready var bottom_tabs = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs
 @onready var stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox
 @onready var side_stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer
 @onready var description_label = $DescriptionText
-@onready var juice_label = $BottomRowHbox/BottomJuiceLabel
-@onready var pulp_label = $BottomRowHbox/BottomPulpLabel
-@onready var resume_button = $BottomRowHbox/ResumeButton
+@onready var description_panel = $DescriptionPanel
+@onready var juice_label = $BottomPanel/BottomRowHBox/BottomJuiceLabel
+@onready var pulp_label = $BottomPanel/BottomRowHBox/BottomPulpLabel
+@onready var resume_button = $BottomPanel/BottomRowHBox/ResumeButton
 #---Snake Eyes UI-------
-@onready var snake_coin_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/SnakeCoinSlider
-@onready var snake_coin_heads_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallHeadsButton
-@onready var snake_coin_tails_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallTailsButton
-@onready var snake_coin_head_tail_label_on_coin = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl/HeadTailLabel
+@onready var snake_coin_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/SnakeCoinSlider
+@onready var snake_coin_heads_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallHeadsButton
+@onready var snake_coin_tails_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallTailsButton
+@onready var snake_coin_head_tail_label_on_coin = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl/HeadTailLabel
 
-@onready var dice_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/HouseSpecialSlider
-@onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/RollDiceButton
-@onready var dice_guess_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/GuessLabel
+@onready var dice_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/HouseSpecialSlider
+@onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/RollDiceButton
+@onready var dice_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/GuessLabel
 
-@onready var hoard_count_slider = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/HoardCountSlider
-@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/StartHoardCountButton
-@onready var hoard_count_guess_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/GuessLabel
+@onready var hoard_count_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/HoardCountSlider
+@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/StartHoardCountButton
+@onready var hoard_count_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/GuessLabel
 #----Block Market References---
-@onready var orange_block_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/OrangeBlockLabel
-@onready var buy_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/BuyShareOrangeButton
-@onready var sell_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/SellShareOrangeButton
-@onready var apple_block_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/AppleBlockLabel
-@onready var buy_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/BuyShareAppleButton
-@onready var sell_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/SellShareAppleButton
-@onready var light_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/LightPulpLabel
-@onready var buy_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/BuyLightPulpShareButton
-@onready var sell_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/SellShareLightButton
-@onready var extra_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/ExtraPulpLabel
-@onready var buy_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/BuyExtraPulpShareButton
-@onready var sell_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/SellSharePulpButton
+@onready var orange_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/OrangeBlockLabel
+@onready var buy_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/BuyShareOrangeButton
+@onready var sell_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/SellShareOrangeButton
+@onready var apple_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/AppleBlockLabel
+@onready var buy_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/BuyShareAppleButton
+@onready var sell_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/SellShareAppleButton
+@onready var light_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/LightPulpLabel
+@onready var buy_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/BuyLightPulpShareButton
+@onready var sell_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/SellShareLightButton
+@onready var extra_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/ExtraPulpLabel
+@onready var buy_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/BuyExtraPulpShareButton
+@onready var sell_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/SellSharePulpButton
+
+@onready var description_delay_timer = $DescriptionDelayTimer
+var hovered_upgrade_key: String = ""
+
+
+var tab_controllers: Dictionary = {}
+
 # We also need a variable to store the player's current dice guess
 var current_dice_guess: int = 1
 var die_faces: Array = [
@@ -56,23 +63,33 @@ var current_hoard_guess: int = 1
 
 # This dictionary will store a reference to every single upgrade button.
 # We will build this dictionary once in _ready() to make updating them easier later.
-var upgrade_buttons: Dictionary = {}
+var all_upgrade_nodes: Dictionary = {}
 
 # A "gatekeeper" flag to prevent infinite loops when switching tabs.
 var is_switching_tabs: bool = false
 var main_game 
 
 func _ready():
-	# When the menu is ready, connect all signals one time.
-	connect_all_signals()
+	# When the menu first loads, we find and connect everything once.
+	main_game = get_tree().current_scene
+	_build_node_dictionary()
+	_connect_all_signals()
+
+func _build_node_dictionary():
+	# This powerful loop finds every single UpgradeNode in the scene, no matter which tab it's in.
+	for path_key in GameManager.upgrade_data:
+		for upgrade_key in GameManager.upgrade_data[path_key]:
+			var node_name = upgrade_key.replace(" ", "").to_pascal_case() + "Node"
+			var node = find_child(node_name, true, false)
+			if is_instance_valid(node):
+				all_upgrade_nodes[upgrade_key] = node
+			else:
+				print_debug("Warning: Could not find upgrade node named: ", node_name)
+
 
 # This is our master function for setting up all connections.
-func connect_all_signals():
-	# --- Connect Tab Switching ---
-	top_tabs.tab_selected.connect(_on_top_tabs_tab_selected)
-	bottom_tabs.tab_selected.connect(_on_bottom_tabs_tab_selected)
-	
-	# --- Connect Resume Button ---
+func _connect_all_signals():
+	top_tabs.tab_selected.connect(_on_tab_selected)
 	resume_button.pressed.connect(_on_resume_button_pressed)
 	
 	snake_coin_wager_slider.value_changed.connect(_on_snake_coin_slider_changed)
@@ -94,54 +111,65 @@ func connect_all_signals():
 
 
 	# --- Connect Dice Stepper Buttons ---
-	$CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/LeftArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(-1))
-	$CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RightArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(1))
+	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/LeftArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(-1))
+	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RightArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(1))
 	# --- Connect Hoard Count Arrow Buttons
-	$CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/LeftArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(-1))
-	$CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/RightArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(1))
+	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/LeftArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(-1))
+	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/RightArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(1))
+	
+	description_delay_timer.timeout.connect(_on_description_delay_timer_timeout)
+	
+	for upgrade_key in all_upgrade_nodes:
+		var node = all_upgrade_nodes[upgrade_key]
+		node.pressed.connect(_on_any_node_pressed.bind(upgrade_key)) # ← must connect this!
+		node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
+		node.mouse_exited.connect(_on_any_node_mouse_exited)
 
-	# --- Connect All Upgrade Buttons ---
-	# This loop is very powerful. It goes through every upgrade defined in your GameManager.
-	for upgrade_key in GameManager.upgrade_data.keys():
-		# We find the button using our helper function.
-		var button = find_upgrade_button(upgrade_key)
-		if is_instance_valid(button):
-			# Store the button in our dictionary for later use.
-			upgrade_buttons[upgrade_key] = button
-			# Connect all three signals (click, mouse enter, mouse exit).
-			button.pressed.connect(_on_upgrade_button_pressed.bind(upgrade_key, button))
-			button.mouse_entered.connect(_on_any_upgrade_mouse_entered.bind(upgrade_key))
-			button.mouse_exited.connect(_on_any_upgrade_mouse_exited)
 
 # --- MASTER UI UPDATE FUNCTION ---
 
 # This function is called from main.gd right before the menu appears.
 func set_initial_state_and_update():
-	# First, reset the tabs to their default state.
-	is_switching_tabs = true
-	top_tabs.current_tab = 0 # Default to "Stats"
-	bottom_tabs.current_tab = -1
-	is_switching_tabs = false
-	
-	# Now, update all the information on the screen.
+	top_tabs.current_tab = 0 # Default to the first tab
 	update_all_displays()
 
 # This function refreshes every piece of information in the menu.
 func update_all_displays():
 	update_stats_tab()
 	update_juice_and_pulp_label()
-	# This powerful loop updates every single upgrade button automatically.
-	for upgrade_key in GameManager.upgrade_data.keys():
-		update_button_display(upgrade_key)
+	for upgrade_key in all_upgrade_nodes:
+		var node = all_upgrade_nodes[upgrade_key]
+		var rules = main_game.get_upgrade_rules(upgrade_key)
+		
+		if rules.is_empty(): continue
+		
+		var current_level = main_game.get_upgrade_level_from_key(upgrade_key)
+		var prereqs_met = main_game.check_prerequisites(upgrade_key)
+		var theme_color = get_theme_color_for_path(rules.get("path", "The Core"))
+		
+		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_color)
+	
+	# We still have a separate helper for the Snake Eyes tab because it's so unique.
 	update_snake_eyes_tab()
 	
+func get_theme_color_for_path(path_key: String) -> Color:
+	# This helper returns a unique color for each skill tree theme.
+	match path_key:
+		"The Core": return Color("4a90e2") # Blue
+		"The Harvest": return Color("7ed321") # Green
+		"The Redline": return Color("d0021b") # Red
+		"The Ssscale": return Color("bd10e0") # Purple
+	return Color.WHITE
 	
-	var ng_plus_button = find_upgrade_button("New Game S+")
-	if is_instance_valid(ng_plus_button):
-		var can_prestige = (GameManager.current_garden == 5 and GameManager.times_died_this_run == 0)
-		ng_plus_button.get_parent().visible = can_prestige
-		if can_prestige:
-			update_button_display("New Game S+")
+	#var ng_plus_button = find_upgrade_button("New Game S+")
+	#if is_instance_valid(ng_plus_button):
+		#var can_prestige = (GameManager.current_garden == 5 and GameManager.times_died_this_run == 0)
+		#ng_plus_button.get_parent().visible = can_prestige
+		#if can_prestige:
+			#update_button_display("New Game S+")
+
+
+
 
 # --- HELPER FUNCTIONS  ---
 
@@ -158,93 +186,31 @@ func find_upgrade_button(upgrade_key: String):
 	return button
 
 # This helper gets the correct current level for any given upgrade.
-func get_upgrade_level_from_key(upgrade_key):
-	
-	if upgrade_key in GameManager.ability_charges:
-		return GameManager.ability_charges[upgrade_key]["total"]
-	
-	
-	match upgrade_key:
-		#-----Idle Path-----#
-		"Snake Clicker": return GameManager.snake_clicker_level
-		"Get Rich Quick": return 1 if GameManager.get_rich_quick_unlocked else 0
-		"Custom Aftertaste": return 1 if GameManager.custom_aftertaste_unlocked else 0
-		"Arcane Flow": return 1 if GameManager.arcane_flow_unlocked else 0
-		"Pulp Reactor": return 1 if GameManager.pulp_reactor_unlocked else 0
-		"Unstable Metabolism": return 1 if GameManager.unstable_metabolism_unlocked else 0
-		#----SnakeEyes-----#
-		"Coin Flip Curious": return 1 if GameManager.coin_flip_curious_unlocked else 0
-		"Passive Income": return 1 if GameManager.passive_income_unlocked else 0
-		#---The Ledger---#
-		"Liquid Assets": return GameManager.liquid_assets_level
-		"Principal Pulp": return GameManager.principal_pulp_level
-		"Fast Track": return 1 if GameManager.fast_track_unlocked else 0
-		"Gluttons Greed": return 1 if GameManager.gluttons_greed_unlocked else 0
-		"Market Crash": return GameManager.market_crash_level
-		"Golden Handshake": return GameManager.golden_handshake_level
-		"Juice Press": return 1 if "Juice Press" in GameManager.ability_charges else 0
-		"Liquidation": return 1 if GameManager.liquidation_used else 0
-		#----Frenzy---#
-		"Sugar Rush": return 1 if GameManager.sugar_rush_unlocked else 0
-		"Chain Reaction": return GameManager.chain_reaction_level
-		"Overdrive": return GameManager.overdrive_level
-		"Lingering Rush": return GameManager.lingering_rush_level
-		"Juggernaut": return 1 if GameManager.juggernaut_unlocked else 0
-		#----Chef---#
-		"Golden Seed Extract": return GameManager.golden_seed_extract_level
-		"Exotic Seeds": return GameManager.exotic_seeds_level
-		"The Cookbook": return 1 if GameManager.the_cookbook_unlocked else 0
-		"Expanded Palate": return 1 if GameManager.expanded_palate_unlocked else 0
-		"Golden Glaze": return 1 if GameManager.golden_glaze_unlocked else 0
-		"Custom Cuisine": return 1 if GameManager.custom_cuisine_unlocked else 0
-		#---Planner---#
-		"Diet Slith": return GameManager.diet_slith_level
-		"Fruit Foresight": return 1 if GameManager.fruit_foresight_unlocked else 0
-		"Geological Survey": return 1 if GameManager.geological_survey_unlocked else 0
-		"Sovereign Trail": return GameManager.sovereign_trail_level
-		#-------Acrobat------#
-		"Slither Sauce": return GameManager.slither_sauce_level
-		"Juke N Jive": return 1 if GameManager.juke_and_jive_unlocked else 0
-		"Afterburner": return GameManager.afterburner_level
-		"Pop Rocks": return 1 if GameManager.pop_rocks_unlocked else 0
-		#----------ARCHITECT------#
-		"Edge Lord": return GameManager.edge_lord_level
-		"Zoning Ordinance": return GameManager.zoning_ordinance_level
-		"Border Czar": return 1 if GameManager.border_czar_unlocked else 0
-		"Surveyed Land": return 1 if GameManager.surveyed_land_unlocked else 0
-		"Fold Space": return 1 if GameManager.fold_space_unlocked else 0
-		"Shatter Reality": return 1 if GameManager.shatter_reality_unlocked else 0
-		"Master's Blueprint": return 1 if GameManager.masters_blueprint_unlocked else 0
-		#------Glutton------#
-		"Elephant Sized Portions": return GameManager.es_portions_level
-		"More Mice": return GameManager.more_mice_level
-		"Golden Seeds": return GameManager.golden_seeds_level
-		"Patient Gardener": return GameManager.patient_gardener_level
-		"The Satchel": return 1 if GameManager.the_satchel_unlocked else 0
-		#-------SURVIVOR-------#
-		"Mulligan Munchie": return GameManager.extra_lives
-		"Phoenix Dawn": return 1 if GameManager.phoenix_dawn_unlocked else 0
-		"Last Stand": return 1 if GameManager.last_stand_unlocked else 0
-		"Death Defied": return 1 if GameManager.death_defied_unlocked else 0
-		"Martyrdom": return 1 if GameManager.martyrdom_unlocked else 0
-		"New Game S+": return 1 if GameManager.new_game_s_plus_active else 0
-		#-----ILLUSIONIST-----#
-		"Ghost Tail": return GameManager.ghost_tail_level
-		"3 Card Monty": return 1 if GameManager.three_card_monty_unlocked else 0
-		"Fractured Self": return 1 if GameManager.fractured_self_unlocked else 0
-		"Dazzle Pie": return 1 if GameManager.dazzle_pie_unlocked else 0
-		# --- Geomancer Path ---
-		"Fertile Ground": return GameManager.fertile_ground_level
-		"Mineral Rich Soil": return GameManager.mineral_rich_soil_level
-		"Tectonic Shift": return GameManager.tectonic_shift_level
-		"Heavy Foundation": return GameManager.heavy_foundation_level
-		# For Rockeater upgrades, we check if it's the chosen type
-		"Rockmuncher": return 1 if GameManager.rockeater_type == "Rockmuncher" else 0
-		"Geode Cracker": return 1 if GameManager.rockeater_type == "Geode Cracker" else 0
-		"Kinetic Feast": return 1 if GameManager.rockeater_type == "Kinetic Feast" else 0
-		"Stones Burden": return 1 if GameManager.rockeater_type == "Stones Burden" else 0
-		"Calculated Risk": return 1 if GameManager.calculated_risk_unlocked else 0
-	return 0
+
+func _on_any_node_pressed(upgrade_key: String):
+	main_game.handle_upgrade_purchase(upgrade_key)
+
+func _on_any_node_mouse_entered(upgrade_key: String):
+	# Instead of showing the panel, we store the key and start the timer.
+	hovered_upgrade_key = upgrade_key
+	description_delay_timer.start()
+
+func _on_any_node_mouse_exited():
+	# If the mouse leaves, we stop the timer and hide the panel.
+	description_delay_timer.stop()
+	description_panel.visible = false
+	hovered_upgrade_key = ""
+
+func _on_description_delay_timer_timeout():
+	# If the timer finishes, we check if we are still hovering over a valid key.
+	if hovered_upgrade_key != "":
+		var rules = main_game.get_upgrade_rules(hovered_upgrade_key)
+		var cost = main_game.calculate_upgrade_cost(hovered_upgrade_key)
+		# Now, we show the panel.
+		description_panel.show_info(rules.display_name, rules.description, cost)
+# func get_theme_color_for_path():
+	#pass
+
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 
@@ -292,116 +258,14 @@ func update_snake_eyes_tab():
 	update_juice_and_pulp_label()
 	update_block_market_display()
 
-
-
 func update_juice_and_pulp_label():
 	juice_label.text = "Juice: " + str(GameManager.juice) + " mL"
 	pulp_label.text = "Pulp: " + str(GameManager.pulp) + "mg"
 
-# This is our powerful, generic function for updating any button.
-func update_button_display(upgrade_key):
-	var button_node = upgrade_buttons.get(upgrade_key)
-	if not is_instance_valid(button_node): return
-
-	var rules = GameManager.upgrade_data[upgrade_key]
-	var current_level = get_upgrade_level_from_key(upgrade_key)
-	
-	# Prerequisite Check
-	var prereqs_met = true
-	if rules.has("prerequisite"):
-		var prereq_key = rules["prerequisite"]["upgrade"]
-		var req_level = rules["prerequisite"]["level"]
-		if get_upgrade_level_from_key(prereq_key) < req_level:
-			prereqs_met = false
-		if rules["prerequisite"].has("and"):
-			var prereq_key_2 = rules["prerequisite"]["and"]
-			var req_level_2 = rules["prerequisite"]["and_level"]
-			if get_upgrade_level_from_key(prereq_key_2) < req_level_2:
-				prereqs_met = false
-	
-	if rules.has("exclusive_with"):
-		var exclusive_key = rules["exclusive_with"]
-		if GameManager.chosen_ledger_path == exclusive_key:
-			prereqs_met = false
-		if get_upgrade_level_from_key(exclusive_key) > 0:
-			prereqs_met = false
-	
-	button_node.disabled = not prereqs_met
-	if not prereqs_met: return
-
-
-	var rockeater_keys = ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]
-	# Check if the upgrade we are updating is one of the Rockeaters
-	if upgrade_key in rockeater_keys:
-		# Now, check if a choice has already been made
-		if GameManager.rockeater_type != "" and GameManager.rockeater_type != upgrade_key:
-			# If a choice was made and it wasn't THIS one, disable this button.
-			button_node.disabled = true
-			# Optional: Change the text to show it's locked.
-			button_node.text = "Path Chosen"
-			# We can return here to stop any further updates on this locked button.
-			return
-
-
-	# Cost and Text Update
-	if current_level >= rules["max_level"]:
-		button_node.text = rules["display_name"] + " (MAX)"
-		button_node.disabled = true
-	else:
-		var base_cost = rules["costs"][current_level]
-		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
-		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
-		var final_cost = max(1, base_cost + diff_mod + class_mod)
-		
-		if GameManager.three_card_monty_unlocked:
-			if upgrade_key != "3 Card Monty":
-				final_cost -= 1 if GameManager.three_card_monty_unlocked else 0
-		if GameManager.market_crash_level > 0:
-			final_cost -= GameManager.market_crash_level
-		
-		
-		final_cost = max(1, final_cost)
-		
-		
-		button_node.text = rules["display_name"] + "\n(" + str(final_cost) + " mL)"
-		button_node.disabled = false
-	
-	# Indicator Block Update
-	var indicator_container = button_node.get_parent().get_node("IndicatorContainer")
-	for i in range(1, indicator_container.get_child_count() + 1):
-		var block = indicator_container.get_node("Block" + str(i))
-		block.visible = (i <= rules["max_level"])
-		if block.visible:
-			block.color = Color.GOLD if i <= current_level else Color.DARK_CYAN
-			
 
 # --- SIGNAL HANDLER FUNCTIONS ---
 
-func _on_upgrade_button_pressed(upgrade_key, button_node):
-	var current_level = get_upgrade_level_from_key(upgrade_key)
-	var rules = GameManager.upgrade_data[upgrade_key]
-	
-	if current_level < rules["max_level"]:
-		# --- THIS IS THE FIX ---
-		# We put the full cost calculation here as well to ensure it's correct.
-		var base_cost = rules["costs"][current_level]
-		var diff_mod = GameManager.difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
-		var class_mod = GameManager.class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
-		var final_cost = max(1, base_cost + diff_mod + class_mod)
-		
-		if GameManager.three_card_monty_unlocked:
-			if upgrade_key != "3 Card Monty":
-				final_cost -= 1 if GameManager.three_card_monty_unlocked else 0
-			
-		final_cost = max(1, final_cost)
-		
-		
-		if GameManager.juice >= final_cost:
-			GameManager.juice -= final_cost
-			GameManager.juice_spent_this_garden += final_cost
-			emit_signal("upgrade_selected", upgrade_key)
-			button_node.release_focus()
-			update_all_displays()
+
 
 func _on_zone_button_pressed(quadrant_index):
 	# We only allow changing the zone if we have enough levels.
@@ -409,7 +273,6 @@ func _on_zone_button_pressed(quadrant_index):
 		GameManager.zoned_quadrant = quadrant_index
 		print("Safe zone set to quadrant: ", quadrant_index)
 		# You could add visual feedback here to show which zone is selected
-
 
 func _on_snake_coin_slider_changed(value: float):
 	# This now updates BOTH buttons with the wager amount.
@@ -421,8 +284,6 @@ func _on_dice_slider_changed(value: float):
 	var wager = floori(value)
 	dice_roll_button.text = "Roll for Glory!!\n(%s Juice)" % wager
 	
-
-
 
 func _on_dice_arrow_pressed(direction: int):
 	# Add the direction (-1 or 1) to our guess
@@ -438,29 +299,12 @@ func _on_dice_arrow_pressed(direction: int):
 	# Update the label
 	dice_guess_label.text = str(current_dice_guess)
 
-
 func _on_resume_button_pressed():
 	emit_signal("resume_game_pressed")
 
-func _on_any_upgrade_mouse_entered(upgrade_key):
-	description_label.text = GameManager.upgrade_data[upgrade_key]["description"]
-	description_label.visible = true
-
-func _on_any_upgrade_mouse_exited():
-	description_label.visible = false
-
-func _on_top_tabs_tab_selected(_tab_index):
-	if is_switching_tabs: return
-	is_switching_tabs = true
-	if is_instance_valid(bottom_tabs): bottom_tabs.current_tab = -1
-	is_switching_tabs = false
-
-func _on_bottom_tabs_tab_selected(_tab_index):
-	if is_switching_tabs: return
-	is_switching_tabs = true
-	if is_instance_valid(top_tabs): top_tabs.current_tab = -1
-	is_switching_tabs = false
-
+func _on_tab_selected(_tab_index):
+	# When we switch tabs, we just need to update all the displays again.
+	update_all_displays()
 
 func _on_snake_coin_flip_pressed(player_choice: String):
 	var wager = floori(snake_coin_wager_slider.value)
@@ -490,7 +334,7 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	else: snake_coin_head_tail_label_on_coin.text = "ERROR!"
 	
 	# 4. Play the coin flip animation.
-	var coin = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl
+	var coin = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl
 	
 	coin.visible = true
 	var tween = create_tween()
@@ -531,8 +375,6 @@ func set_gambling_ui_disabled(is_disabled: bool):
 	snake_coin_tails_button.disabled = is_disabled
 	dice_roll_button.disabled = is_disabled
 
-
-
 func _on_roll_dice_button_pressed():
 	var wager = floori(dice_wager_slider.value)
 	
@@ -552,7 +394,7 @@ func _on_roll_dice_button_pressed():
 	update_juice_and_pulp_label()
 	
 	# 4. Play the dice roll animation.
-	var die_sprite = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/PanelContainer/DieSprite
+	var die_sprite = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/DieSprite
 	die_sprite.visible = true
 	# A quick "tumbling" effect
 	for i in range(10):
@@ -616,7 +458,7 @@ func _on_start_hoard_count_pressed():
 	main_game.update_hud() # Assumes you have this connection
 	update_juice_and_pulp_label()
 	# 3. Play the animation (we'll need a new sprite for this)
-	var basket_sprite = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/PanelContainer/BasketSprite
+	var basket_sprite = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/BasketSprite
 	basket_sprite.visible = true
 	for i in range(6):
 		
@@ -651,9 +493,8 @@ func _on_start_hoard_count_pressed():
 	main_game.update_hud()
 	set_gambling_ui_disabled(false)
 
-
 func play_result_animation(is_win: bool, custom_message: String = ""):
-	var result_label = $CenterContainer/PanelContainer/VBoxContainer/BottomTabs/SnakeEyes/MainContent/PanelContainer/ResultControl/ResultLabel
+	var result_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/ResultControl/ResultLabel
 	
 	# 1. Set the text and color based on the outcome.
 	if is_win:

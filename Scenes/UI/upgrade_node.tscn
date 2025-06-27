@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkrhbgusv7j3h"]
+
+[ext_resource type="Script" uid="uid://bk4c83ax0mlol" path="res://Scripts/upgrade_node.gd" id="1_j0ere"]
+[ext_resource type="Texture2D" uid="uid://ivpl0wo1b6ne" path="res://Assets/PNGs/golden_fruit_icon.png" id="1_q8xxe"]
+
+[node name="UpgradeNode" type="Button"]
+custom_minimum_size = Vector2(80, 80)
+offset_right = 8.0
+offset_bottom = 8.0
+icon = ExtResource("1_q8xxe")
+flat = true
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("1_j0ere")
+
+[node name="IndicatorContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+alignment = 1
