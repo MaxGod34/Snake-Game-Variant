@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=51 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
@@ -7,29 +7,36 @@
 [ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Assets/Styles/panels/panel_bg.tres" id="5_m70ya"]
 [ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Assets/Styles/panels/panel_shadow_temp.tres" id="7_60tjm"]
 [ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_buttons/block_button_hovered.tres" id="8_fm0cu"]
+[ext_resource type="Texture2D" uid="uid://dalylrv3nmm1u" path="res://Assets/PNGs/UpgradeIcons/get_rich_quick_icon.png" id="9_0x031"]
+[ext_resource type="Texture2D" uid="uid://dih0xry8qm6qp" path="res://Assets/PNGs/UpgradeIcons/CustomAfterTasteIcon.png" id="10_s71hj"]
+[ext_resource type="Texture2D" uid="uid://dsnih0ojtn154" path="res://Assets/PNGs/UpgradeIcons/ArcaneFlowIcon.png" id="11_0nbp8"]
 [ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_buttons/block_button_normal.tres" id="11_s2rwv"]
+[ext_resource type="Texture2D" uid="uid://8ps3c01nt8ia" path="res://Assets/PNGs/UpgradeIcons/PulpReactorIcon.png" id="12_fhovb"]
 [ext_resource type="PackedScene" uid="uid://dkrhbgusv7j3h" path="res://Scenes/UI/upgrade_node.tscn" id="12_hesgk"]
 [ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_buttons/block_button_disabled.tres" id="12_s2rwv"]
+[ext_resource type="Texture2D" uid="uid://bf48top7ajdft" path="res://Assets/PNGs/UpgradeIcons/UnstableMetabolismIcon.png" id="13_d8bjv"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="13_ojj7b"]
 [ext_resource type="Texture2D" uid="uid://dr5egvpedn6ap" path="res://Assets/PNGs/GambleSprites/snake_poker_chip_heads - Copy.png" id="13_xuba0"]
+[ext_resource type="Texture2D" uid="uid://qtr742tbof35" path="res://Assets/PNGs/UpgradeIcons/DietSlithIcon.png" id="14_8yb1c"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="14_o5sko"]
 [ext_resource type="Texture2D" uid="uid://4wfxlb580sqs" path="res://Assets/PNGs/GambleSprites/snake_poker_chip_tails.png" id="14_og3kt"]
+[ext_resource type="Texture2D" uid="uid://c0oh7q2d5pxl0" path="res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png" id="15_1kxdu"]
 [ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/snake_poker_chip_white.png" id="15_xbikd"]
+[ext_resource type="Texture2D" uid="uid://0fvl3yt5opeq" path="res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png" id="16_3fdgn"]
 [ext_resource type="Texture2D" uid="uid://c7whfatb4n6in" path="res://Assets/PNGs/Dice/snake_dice_128_dice_1.png" id="16_645ey"]
 [ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/block_buttons/yellow_resume_button_hover.tres" id="16_vdgk6"]
+[ext_resource type="Texture2D" uid="uid://dnwwp7najdwbx" path="res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png" id="17_8yb1c"]
 [ext_resource type="StyleBox" uid="uid://bopt61ixlb04i" path="res://Assets/Styles/block_buttons/yellow_resume_block_disabled.tres" id="17_dd5dw"]
 [ext_resource type="Texture2D" uid="uid://b5sluy8aohhcf" path="res://Assets/PNGs/GambleSprites/basket.png" id="17_lwbsw"]
 [ext_resource type="StyleBox" uid="uid://3emtmxyay1dr" path="res://Assets/Styles/block_buttons/yellow_resume_block_pressed.tres" id="18_0hpf0"]
+[ext_resource type="Texture2D" uid="uid://lcu3c05qkgs2" path="res://Assets/PNGs/UpgradeIcons/Meditate.png" id="18_1kxdu"]
 [ext_resource type="Texture2D" uid="uid://stsg3w0n6ybt" path="res://Assets/PNGs/GambleSprites/PlusOne.png" id="18_p1goc"]
 [ext_resource type="Texture2D" uid="uid://0esr1nroxwci" path="res://Assets/PNGs/GambleSprites/MinusOne.png" id="19_0x031"]
 [ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="19_02rna"]
 [ext_resource type="PackedScene" uid="uid://bdqnq8u7m75ue" path="res://Scenes/UI/description_panel.tscn" id="21_lwbsw"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_dd5dw"]
-texture = ExtResource("14_o5sko")
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
-modulate_color = Color(0.843137, 0.709804, 0.588235, 0.282353)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6dxpo"]
+bg_color = Color(0.133333, 0.133333, 0.133333, 1)
 
 [sub_resource type="Theme" id="Theme_d1lbs"]
 
@@ -59,6 +66,8 @@ expand_margin_top = 20.0
 expand_margin_right = 20.0
 expand_margin_bottom = 20.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1goc"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xuba0"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_og3kt"]
@@ -84,17 +93,39 @@ shadow_color = Color(0.211765, 0.211765, 0.211765, 0.827451)
 shadow_size = 16
 shadow_offset = Vector2(-2, 12)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_645ey"]
-bg_color = Color(0, 0.105882, 0.145098, 0.541176)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kr3ym"]
+bg_color = Color(0.192157, 0, 0.176471, 1)
 
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_lwbsw"]
-texture = ExtResource("14_o5sko")
-axis_stretch_horizontal = 2
-axis_stretch_vertical = 2
-modulate_color = Color(0.372549, 0.372549, 0.372549, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fhovb"]
+bg_color = Color(0.192157, 0, 0.176471, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_d8bjv"]
+content_margin_left = 40.0
+content_margin_top = 20.0
+content_margin_right = 40.0
+content_margin_bottom = 20.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_bottom = 8
+border_color = Color(0, 0.0567322, 6.01634e-09, 1)
+border_blend = true
+expand_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8yb1c"]
+content_margin_left = 40.0
+content_margin_top = 20.0
+content_margin_right = 40.0
+content_margin_bottom = 20.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_bottom = 24
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 200
+corner_radius_top_right = 200
+corner_radius_bottom_right = 200
+corner_radius_bottom_left = 200
+expand_margin_bottom = 4.0
 
 [node name="UpgradeMenu" type="CanvasLayer"]
-visible = false
 script = ExtResource("1_ltp0x")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -103,7 +134,7 @@ anchors_preset = -1
 anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
-anchor_bottom = 0.9
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -112,7 +143,7 @@ size_flags_vertical = 3
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
 custom_minimum_size = Vector2(1088, 576)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_dd5dw")
+theme_override_styles/panel = SubResource("StyleBoxFlat_6dxpo")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
@@ -135,12 +166,12 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 4
+current_tab = 1
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
-custom_minimum_size = Vector2(1150, 640)
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 0
@@ -355,8 +386,7 @@ theme_override_font_sizes/font_size = 24
 text = "# of obstacles next Garden:"
 
 [node name="The Core" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
-custom_minimum_size = Vector2(1150, 640)
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 1
@@ -368,13 +398,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 96
-alignment = 1
+theme_override_constants/separation = 32
+
+[node name="VSeparator" type="VSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_p1goc")
 
 [node name="IdleVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain"]
 layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 1
+theme_override_constants/separation = 48
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox"]
 layout_mode = 2
@@ -396,31 +428,37 @@ layout_mode = 2
 
 [node name="Tier2Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="GetRichQuickNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("9_0x031")
 
 [node name="CustomAftertasteNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("10_s71hj")
 
 [node name="ArcaneFlowNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("11_0nbp8")
 
 [node name="Tier3Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="PulpReactorNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("12_fhovb")
 
 [node name="UnstableMetabolismNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/IdleVBox/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("13_d8bjv")
 
 [node name="PlannerVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain"]
 layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 1
+theme_override_constants/separation = 48
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox"]
 layout_mode = 2
@@ -439,26 +477,33 @@ alignment = 1
 
 [node name="DietSlithNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/TopRow" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("14_8yb1c")
 
 [node name="Tier2Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="FruitForesightNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("15_1kxdu")
 
 [node name="GeologicalSurveyNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("16_3fdgn")
 
 [node name="SovereignTrailNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("17_8yb1c")
 
 [node name="Tier3Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="MeditativeStateNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("18_1kxdu")
 
 [node name="GardenWeaverNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
@@ -486,7 +531,7 @@ alignment = 1
 
 [node name="LedgerPathAVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 8
 
 [node name="LiquidAssetsNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathAVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
@@ -506,7 +551,7 @@ layout_mode = 2
 
 [node name="LedgerPathBVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 8
 
 [node name="PrincipalPulpNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathBVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
@@ -530,7 +575,7 @@ default_color = Color(0.556863, 1, 0, 1)
 
 [node name="The Harvest" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
-custom_minimum_size = Vector2(1150, 640)
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 2
@@ -542,12 +587,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 48
 alignment = 1
 
 [node name="GluttonVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain"]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox"]
@@ -563,17 +608,19 @@ horizontal_alignment = 1
 
 [node name="TopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="ElephantSizedPortionsNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox/TopRow" instance=ExtResource("12_hesgk")]
 layout_mode = 2
 
+[node name="MoreMiceNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox/TopRow" instance=ExtResource("12_hesgk")]
+layout_mode = 2
+
 [node name="Tier2Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
-
-[node name="MoreMiceNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox/Tier2Row" instance=ExtResource("12_hesgk")]
-layout_mode = 2
 
 [node name="GoldenSeedsNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox/Tier2Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
@@ -583,6 +630,7 @@ layout_mode = 2
 
 [node name="Tier3Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="BananaBountyNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GluttonVBox/Tier3Row" instance=ExtResource("12_hesgk")]
@@ -593,7 +641,7 @@ layout_mode = 2
 
 [node name="ChefVbox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain"]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox"]
@@ -609,6 +657,7 @@ horizontal_alignment = 1
 
 [node name="TopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox"]
 layout_mode = 2
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="GoldenSeedExtractNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox/TopRow" instance=ExtResource("12_hesgk")]
@@ -619,6 +668,7 @@ layout_mode = 2
 
 [node name="Tier2Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="TheCookbookNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox/Tier2Row" instance=ExtResource("12_hesgk")]
@@ -632,6 +682,7 @@ layout_mode = 2
 
 [node name="Tier3Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox"]
 layout_mode = 2
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="CustomCuisineNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/ChefVbox/Tier3Row" instance=ExtResource("12_hesgk")]
@@ -642,7 +693,7 @@ layout_mode = 2
 
 [node name="GeodeContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GeodeContainer"]
@@ -663,7 +714,7 @@ alignment = 1
 
 [node name="GeodeTier1Col" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GeodeContainer/GeodeHBox"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="FertileGroundNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GeodeContainer/GeodeHBox/GeodeTier1Col" instance=ExtResource("12_hesgk")]
 layout_mode = 2
@@ -679,7 +730,7 @@ layout_mode = 2
 
 [node name="GedodeTier2Col" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GeodeContainer/GeodeHBox"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 
 [node name="RockmuncherNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain/GeodeContainer/GeodeHBox/GedodeTier2Col" instance=ExtResource("12_hesgk")]
 layout_mode = 2
@@ -707,7 +758,7 @@ default_color = Color(0.556863, 1, 0, 1)
 
 [node name="The Redliner" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
-custom_minimum_size = Vector2(1150, 640)
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 3
@@ -719,13 +770,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="AcrobatVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain"]
 layout_mode = 2
-theme_override_constants/separation = 64
-alignment = 1
+theme_override_constants/separation = 48
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/AcrobatVBox"]
 layout_mode = 2
@@ -747,6 +797,7 @@ layout_mode = 2
 
 [node name="Tier2Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/AcrobatVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="TenderizerNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/AcrobatVBox/Tier2Row" instance=ExtResource("12_hesgk")]
@@ -760,6 +811,7 @@ layout_mode = 2
 
 [node name="Tier3Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/AcrobatVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="PopRocksNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/AcrobatVBox/Tier3Row" instance=ExtResource("12_hesgk")]
@@ -770,8 +822,7 @@ layout_mode = 2
 
 [node name="FrenzyVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain"]
 layout_mode = 2
-theme_override_constants/separation = 64
-alignment = 1
+theme_override_constants/separation = 48
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/FrenzyVBox"]
 layout_mode = 2
@@ -781,8 +832,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
 layout_mode = 2
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 24
-text = "oooo baby a TRIPLE
-awh yeahhh"
+text = "oooo baby a TRIPLE"
 horizontal_alignment = 1
 
 [node name="TopRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/FrenzyVBox"]
@@ -794,6 +844,7 @@ layout_mode = 2
 
 [node name="Tier2Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/FrenzyVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="ChainReactionNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/FrenzyVBox/Tier2Row" instance=ExtResource("12_hesgk")]
@@ -807,6 +858,7 @@ layout_mode = 2
 
 [node name="Tier3Row" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/FrenzyVBox"]
 layout_mode = 2
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="JuggernautNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/FrenzyVBox/Tier3Row" instance=ExtResource("12_hesgk")]
@@ -817,8 +869,7 @@ layout_mode = 2
 
 [node name="SurvivorVbox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain"]
 layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 1
+theme_override_constants/separation = 48
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox"]
 layout_mode = 2
@@ -833,7 +884,7 @@ horizontal_alignment = 1
 
 [node name="LedgerPathContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox"]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 48
 alignment = 1
 
 [node name="LedgerPathAVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox/LedgerPathContainer"]
@@ -879,7 +930,8 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="The Ssscale" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-custom_minimum_size = Vector2(1150, 640)
+visible = false
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 4
@@ -948,8 +1000,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
 
 [node name="ArchitectContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain"]
 layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 1
+theme_override_constants/separation = 80
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer"]
 layout_mode = 2
@@ -964,8 +1015,8 @@ horizontal_alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer"]
 layout_mode = 2
-theme_override_constants/h_separation = 32
-theme_override_constants/v_separation = 32
+theme_override_constants/h_separation = 48
+theme_override_constants/v_separation = 48
 columns = 3
 
 [node name="ZoningOrdinanceNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
@@ -1001,7 +1052,7 @@ default_color = Color(0.556863, 1, 0, 1)
 
 [node name="SnakeEyes" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
-custom_minimum_size = Vector2(1150, 640)
+custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 5
@@ -1042,7 +1093,8 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_lwbsw")
 [node name="LeftColumn" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent"]
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 1
+theme_override_constants/separation = 24
+alignment = 2
 
 [node name="SnakeCoinContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn"]
 layout_mode = 2
@@ -1065,7 +1117,7 @@ text_direction = 1
 
 [node name="WagerInputRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="CallHeadsButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow"]
@@ -1388,18 +1440,19 @@ horizontal_alignment = 1
 layout_mode = 2
 
 [node name="CoinSprite" type="Sprite2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl"]
-position = Vector2(164, 256)
+visible = false
+position = Vector2(204, 256)
 scale = Vector2(2, 2)
 texture = ExtResource("15_xbikd")
 
 [node name="DieSprite" type="Sprite2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer"]
 visible = false
-position = Vector2(174, 256)
+position = Vector2(204, 256)
 texture = ExtResource("16_645ey")
 
 [node name="BasketSprite" type="Sprite2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer"]
 visible = false
-position = Vector2(174, 256)
+position = Vector2(204, 256)
 scale = Vector2(2, 2)
 texture = ExtResource("17_lwbsw")
 
@@ -1432,6 +1485,7 @@ text_direction = 1
 
 [node name="OrangeBlockRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="BuyShareOrangeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow"]
 custom_minimum_size = Vector2(80, 80)
@@ -1500,6 +1554,7 @@ text_direction = 1
 
 [node name="AppleBlockRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="BuyShareAppleButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
 custom_minimum_size = Vector2(80, 80)
@@ -1568,6 +1623,7 @@ text_direction = 1
 
 [node name="LightPulpRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="BuyLightPulpShareButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow"]
 custom_minimum_size = Vector2(80, 80)
@@ -1636,6 +1692,7 @@ text_direction = 1
 
 [node name="ExtraPulpRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="BuyExtraPulpShareButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow"]
 custom_minimum_size = Vector2(80, 80)
@@ -1714,20 +1771,21 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="BottomPanel" type="PanelContainer" parent="."]
-custom_minimum_size = Vector2(0, 132)
+custom_minimum_size = Vector2(0, 84)
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -128.0
+offset_top = -64.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_645ey")
+theme_override_styles/panel = SubResource("StyleBoxFlat_kr3ym")
 
 [node name="BottomRowHBox" type="HBoxContainer" parent="BottomPanel"]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/separation = 128
 alignment = 1
 
@@ -1743,7 +1801,6 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxTexture_lwbsw")
 text = "Pulp: 2000mg"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1782,7 +1839,6 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxTexture_lwbsw")
 text = "Juice: 3000mL"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -1822,3 +1878,47 @@ offset_bottom = 236.0
 [node name="DescriptionDelayTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
+
+[node name="TickerPanel" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 180.0
+grow_horizontal = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_fhovb")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TickerPanel"]
+layout_mode = 2
+
+[node name="TopTickerLabel" type="Label" parent="TickerPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_d8bjv")
+text = "Block Market"
+horizontal_alignment = 1
+vertical_alignment = 1
+text_direction = 1
+
+[node name="TopTickerLabelB" type="Label" parent="TickerPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.811765, 0.768627, 0.290196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_8yb1c")
+text = "Block Market"
+horizontal_alignment = 1
+vertical_alignment = 2
+text_direction = 1

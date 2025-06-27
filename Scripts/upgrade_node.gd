@@ -13,11 +13,33 @@ func _ready():
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
+func get_node_icon_for_upgrade(icon_upgrade_key: String):
+	match icon_upgrade_key:
+#--------------------------The Core----------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\//////////////////////////////////
+	#---------Idle-------------
+		"Snake Clicker": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png")
+		"Get Rich Quick": self.icon = preload("res://Assets/PNGs/UpgradeIcons/get_rich_quick_icon.png")
+		"Custom Aftertaste": self.icon = preload("res://Assets/PNGs/UpgradeIcons/CustomAfterTasteIcon.png")
+		"Arcane Flow": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ArcaneFlowIcon.png")
+		"Pulp Reactor": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PulpReactorIcon.png")
+		"Unstable Metabolism": self.icon = preload("res://Assets/PNGs/UpgradeIcons/UnstableMetabolismIcon.png")
+	#-----------Planner-----------
+		"Diet Slith": self.icon = preload("res://Assets/PNGs/UpgradeIcons/DietSlithIcon.png")
+		"Fruit Foresight": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png")
+		"Geological Survey": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png")
+		"Sovereign Trail": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png")
+		"Meditate": self.icon = preload("res://Assets/PNGs/UpgradeIcons/Meditate.png")
+		"Garden Weaver": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png")
+#--------------------------Remainer---------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////////////
+		_: self.icon = preload("res://Assets/PNGs/golden_fruit_icon.png")
+
+
 # This is the master function that the tab controller will call.
 func update_display(p_upgrade_key: String, current_level: int, max_level: int, is_unlocked: bool, main_theme_color: Color, accent_theme_color: Color):
 	self.upgrade_key = p_upgrade_key
 	
 	# Set the button's icon texture.
+	get_node_icon_for_upgrade(p_upgrade_key)
 	# self.icon = preload(...)
 
 	# We now create a unique StyleBox for each of the button's states.

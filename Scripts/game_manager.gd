@@ -111,7 +111,7 @@ var diet_slith_level = 0
 var fruit_foresight_unlocked = false
 var geological_survey_unlocked = false
 var sovereign_trail_level = 0
-var meditative_data = [0.0, 2.0, 3.0, 5.0]
+var meditate_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
 var garden_weaver_used_this_garden = false
 
@@ -345,7 +345,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -396,7 +396,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": -1, "More Mice": -1, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -447,7 +447,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -498,7 +498,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -549,7 +549,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -602,7 +602,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -653,7 +653,7 @@ var class_data = {
 			"Fractured Self": 0, "Dazzle Pie": 0,
 			# Planner Path Modifiers
 			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
-			"Sovereign Trail": 0, "Meditative State": 0, "Garden Weaver": 0,
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
 			# Glutton Modifiers
 			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
@@ -746,8 +746,8 @@ var upgrade_data = {
 				"max_level": 2,
 				"prerequisite": {"upgrade": "Diet Slith", "level": 2}
 			},
-			"Meditative State": {
-				"display_name": "Meditative State",
+			"Meditate": {
+				"display_name": "Meditate",
 				"costs": [5, 5, 10],
 				"description": "Pause! Need I say more?\nThis grants you the ability to pause your snake for 3 seconds!\nRequires Diet Slith lvl 5",
 				"max_level": 3,

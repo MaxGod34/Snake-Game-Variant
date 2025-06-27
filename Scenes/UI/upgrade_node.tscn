@@ -1,13 +1,13 @@
 [gd_scene load_steps=3 format=3 uid="uid://dkrhbgusv7j3h"]
 
+[ext_resource type="Texture2D" uid="uid://cmn63rffvkib4" path="res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png" id="1_42kbl"]
 [ext_resource type="Script" uid="uid://bk4c83ax0mlol" path="res://Scripts/upgrade_node.gd" id="1_j0ere"]
-[ext_resource type="Texture2D" uid="uid://ivpl0wo1b6ne" path="res://Assets/PNGs/golden_fruit_icon.png" id="1_q8xxe"]
 
 [node name="UpgradeNode" type="Button"]
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(128, 128)
 offset_right = 8.0
 offset_bottom = 8.0
-icon = ExtResource("1_q8xxe")
+icon = ExtResource("1_42kbl")
 icon_alignment = 1
 expand_icon = true
 script = ExtResource("1_j0ere")

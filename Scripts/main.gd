@@ -290,7 +290,7 @@ func _on_ability_slot_activated(slot_index: int):
 			"Burrow": activate_burrow()
 			"Phase Shift": head.activate_phase_shift(2.0) # Standard 2s duration
 			"Blink": perform_blink()
-			"Meditative State": head.activate_meditative_state()
+			"Meditate": head.activate_meditate()
 			"Banana Bounty": activate_banana_bounty()
 			"Sacrificial Molt": perform_sacrificial_molt()
 			"Mise en Place": perform_mise_en_place()
@@ -1278,7 +1278,7 @@ func activate_tenderizer():
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	var active_abilities = [
 		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty", "Molt",\
-		"Meditative State", "Sacrificial Molt", "Mise en Place", "Zenith", "Autotomy",\
+		"Meditate", "Sacrificial Molt", "Mise en Place", "Zenith", "Autotomy",\
 		"Tenderizer"
 	]
 	print("Player chose upgrade: ", upgrade_name)
@@ -1296,8 +1296,8 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			if not GameManager.get_rich_quick_unlocked:
 				GameManager.get_rich_quick_unlocked = true
 		elif upgrade_name == "Custom Aftertaste":
-			if not GameManager.get_rich_quick_unlocked:
-				GameManager.get_rich_quick_unlocked = true
+			if not GameManager.custom_aftertaste_unlocked:
+				GameManager.custom_aftertaste_unlocked = true
 		elif upgrade_name == "Arcane Flow":
 			if not GameManager.arcane_flow_unlocked:
 				GameManager.arcane_flow_unlocked = true
@@ -1608,8 +1608,8 @@ func apply_recipe_buff(buff_data: Dictionary):
 				GameManager.burrow_charges = GameManager.burrow_level
 			if GameManager.phase_shift_level > 0:
 				GameManager.phase_shift_charges = GameManager.phase_shift_level
-			if GameManager.meditative_state_level > 0:
-				GameManager.meditative_state_charges = GameManager.meditative_state_level
+			if GameManager.meditate_level > 0:
+				GameManager.meditate_charges = GameManager.meditate_level
 			if GameManager.banana_bounty_level > 0:
 				GameManager.banana_bounty_charges = GameManager.banana_bounty_level
 			if GameManager.tenderizer_level > 0:

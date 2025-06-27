@@ -36,7 +36,7 @@ wait_time = 0.224
 wait_time = 2.0
 one_shot = true
 
-[node name="MeditativeStateTimer" type="Timer" parent="."]
+[node name="MeditateTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="JukeDurationTimer" type="Timer" parent="."]

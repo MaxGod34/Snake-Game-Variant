@@ -27,7 +27,7 @@ var juke_and_jive_is_active: bool = false
 @onready var juke_timer: Timer = $JukeTimer
 @onready var juke_duration_timer: Timer = $JukeDurationTimer
 @onready var phase_timer: Timer = $PhaseTimer
-@onready var meditative_state_timer: Timer = $MeditativeStateTimer
+@onready var meditate_timer: Timer = $MeditateTimer
 @onready var afterburner_timer: Timer = $AfterburnerTimer
 @onready var autotomy_timer: Timer = $AutotomyTimer 
 #------Overdrive--------
@@ -49,7 +49,7 @@ func _ready():
 	juke_timer.timeout.connect(_on_juke_timer_timeout)
 	juke_duration_timer.timeout.connect(_on_juke_duration_timer_timeout)
 	phase_timer.timeout.connect(_on_phase_timer_timeout)
-	meditative_state_timer.timeout.connect(_on_meditative_state_timer_timeout)
+	meditate_timer.timeout.connect(_on_meditate_timer_timeout)
 	autotomy_timer.timeout.connect(_on_autotomy_timer_timeout)
 	kinetic_feast_timer.timeout.connect(_on_kinetic_feast_timer_timeout)
 	stones_burden_timer.timeout.connect(_on_stones_burden_timer_timeout)
@@ -220,11 +220,11 @@ func activate_kinetic_feast():
 	# Start a timer to turn it off.
 	$KineticFeastTimer.start(3.0)
 
-func activate_meditative_state():
+func activate_meditate():
 	move_timer.stop()
-	var duration = GameManager.meditative_data[GameManager.meditative_state_level]
-	$MeditativeStateTimer.wait_time = duration
-	$MeditativeStateTimer.start()
+	var duration = GameManager.meditate_data[GameManager.meditate_level]
+	$MeditateTimer.wait_time = duration
+	$MeditateTimer.start()
 
 
 func activate_autotomy():
@@ -319,7 +319,7 @@ func _on_phase_timer_timeout():
 	GameManager.is_phasing = false
 
 
-func _on_meditative_state_timer_timeout():
+func _on_meditate_timer_timeout():
 	move_timer.start()
 
 
