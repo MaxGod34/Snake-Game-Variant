@@ -30,8 +30,30 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		"Sovereign Trail": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png")
 		"Meditate": self.icon = preload("res://Assets/PNGs/UpgradeIcons/Meditate.png")
 		"Garden Weaver": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png")
-#--------------------------Remainer---------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\///////////////////
-		_: self.icon = preload("res://Assets/PNGs/golden_fruit_icon.png")
+	#-----------Ledger------------
+		#----Path A
+		"Liquid Assets": self.icon = preload("res://Assets/PNGs/UpgradeIcons/LiquidAssetsIcon.png")
+		"Fast Track": self.icon = preload("res://Assets/PNGs/UpgradeIcons/WormholeIcon.png")
+		"Gluttons Greed": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GluttonsGreedIcon.png")
+		"Market Crash": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MarketCrashIcon.png")
+		#----Path B
+		"Principal Pulp": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png")
+		"Golden Handshake": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GoldenHandshakeIcon.png")
+		"Juice Press": self.icon = preload("res://Assets/PNGs/UpgradeIcons/JuicePressIcon.png")
+		"Liquidation": self.icon = preload("res://Assets/PNGs/UpgradeIcons/LiquidationIcon.png")
+#-------------------------The Harvest-----------------------------\\\\\\\\\\\\\\\\\\\\\////////////////////////////
+	#------------Glutton-------------
+	#------------Chef----------------
+	#-----------Geomancer------------
+#------------------------The Redliner------------------------------\\\\\\\\\\\\\\\\\\\\////////////////////////////
+	#-----------Acrobat--------------
+	#-----------Frenzy---------------
+	#-----------Survivor-------------
+#-----------------------The Ssscale---------------------------------\\\\\\\\\\\\\\\\\\\/////////////////////////////
+	#----------Illusionist/Magician------------
+	#----------Architect------------
+#----------------------Snake Eyes------------------------------------\\\\\\\\\\\\\\\\\\/////////////////////////////
+
 
 
 # This is the master function that the tab controller will call.

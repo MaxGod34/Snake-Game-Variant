@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=60 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
@@ -33,7 +33,16 @@
 [ext_resource type="Texture2D" uid="uid://stsg3w0n6ybt" path="res://Assets/PNGs/GambleSprites/PlusOne.png" id="18_p1goc"]
 [ext_resource type="Texture2D" uid="uid://0esr1nroxwci" path="res://Assets/PNGs/GambleSprites/MinusOne.png" id="19_0x031"]
 [ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="19_02rna"]
+[ext_resource type="Texture2D" uid="uid://ietmw6cqcgjl" path="res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png" id="19_3fdgn"]
+[ext_resource type="Texture2D" uid="uid://bpkn1wr8ua5m8" path="res://Assets/PNGs/UpgradeIcons/LiquidAssetsIcon.png" id="20_f675g"]
 [ext_resource type="PackedScene" uid="uid://bdqnq8u7m75ue" path="res://Scenes/UI/description_panel.tscn" id="21_lwbsw"]
+[ext_resource type="Texture2D" uid="uid://bjj8mfy8tlflw" path="res://Assets/PNGs/UpgradeIcons/WormholeIcon.png" id="21_u52jj"]
+[ext_resource type="Texture2D" uid="uid://dgukh558gm1fi" path="res://Assets/PNGs/UpgradeIcons/GluttonsGreedIcon.png" id="22_dm4i6"]
+[ext_resource type="Texture2D" uid="uid://c10igihv1lt4f" path="res://Assets/PNGs/UpgradeIcons/MarketCrashIcon.png" id="23_dm4i6"]
+[ext_resource type="Texture2D" uid="uid://bjp5g6vkq5ohd" path="res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png" id="24_o7au4"]
+[ext_resource type="Texture2D" uid="uid://dhvsn3ntcdvpf" path="res://Assets/PNGs/UpgradeIcons/GoldenHandshakeIcon.png" id="25_a6n01"]
+[ext_resource type="Texture2D" uid="uid://cml7nulp4xgoy" path="res://Assets/PNGs/UpgradeIcons/JuicePressIcon.png" id="26_jj11i"]
+[ext_resource type="Texture2D" uid="uid://cnb54lf3p1qfq" path="res://Assets/PNGs/UpgradeIcons/LiquidationIcon.png" id="27_kbnfh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6dxpo"]
 bg_color = Color(0.133333, 0.133333, 0.133333, 1)
@@ -501,12 +510,13 @@ layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="MeditativeStateNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier3Row" instance=ExtResource("12_hesgk")]
+[node name="MeditateNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
 icon = ExtResource("18_1kxdu")
 
 [node name="GardenWeaverNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/PlannerVBox/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("19_3fdgn")
 
 [node name="LedgerContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain"]
 layout_mode = 2
@@ -535,6 +545,7 @@ theme_override_constants/separation = 8
 
 [node name="LiquidAssetsNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathAVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("20_f675g")
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathAVBox"]
 layout_mode = 2
@@ -542,12 +553,15 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
 
 [node name="FastTrackNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathAVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("21_u52jj")
 
 [node name="GluttonsGreedNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathAVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("22_dm4i6")
 
 [node name="MarketCrashNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathAVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("23_dm4i6")
 
 [node name="LedgerPathBVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer"]
 layout_mode = 2
@@ -555,6 +569,7 @@ theme_override_constants/separation = 8
 
 [node name="PrincipalPulpNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathBVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("24_o7au4")
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathBVBox"]
 layout_mode = 2
@@ -562,12 +577,15 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
 
 [node name="GoldenHandshakeNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathBVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("25_a6n01")
 
 [node name="JuicePressNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathBVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("26_jj11i")
 
 [node name="LiquidationNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer/LedgerPathContainer/LedgerPathBVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("27_kbnfh")
 
 [node name="ConnectionLines" type="Line2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core"]
 width = 3.0
