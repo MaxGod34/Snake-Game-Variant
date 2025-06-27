@@ -26,19 +26,29 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 	# -- The "Normal" Style (when the button is active and clickable) --
 	var style_normal = StyleBoxFlat.new()
 	style_normal.bg_color = Color(0, 0, 0, 0.4)
-	style_normal.border_width_top = 4
-	style_normal.border_width_bottom = 4
-	style_normal.border_width_left = 4
-	style_normal.border_width_right = 4
+	style_normal.border_width_top = 16
+	style_normal.border_width_bottom = 16
+	style_normal.border_width_left = 16
+	style_normal.border_width_right = 16
 	style_normal.border_color = theme_color
 	
 	# -- The "Disabled" Style --
 	var style_disabled = style_normal.duplicate() # Start with the same settings
 	style_disabled.border_color = Color(0.3, 0.3, 0.3, 0.5) # A dull gray for the border
-
+	#----Hovered
+	var style_hovered = style_normal.duplicate()
+	style_hovered.border_color = Color(theme_color.r, theme_color.g, theme_color.b, max(theme_color.a - 0.3, 0.0))
+	#----Pressed
+	var style_pressed = style_normal.duplicate()
+	var pressed_color = theme_color.lightened(0.3)
+	pressed_color.a = min(theme_color.a + 0.2, 1.0)
+	style_pressed.border_color = pressed_color
 	# Now, apply these new styles to the button's theme.
 	self.add_theme_stylebox_override("normal", style_normal)
 	self.add_theme_stylebox_override("disabled", style_disabled)
+	self.add_theme_stylebox_override("hover", style_hovered)
+	self.add_theme_stylebox_override("focus", style_hovered)
+	self.add_theme_stylebox_override("pressed", style_pressed)
 	
 	# --- Update Level Indicators ---
 	var indicator_container = $IndicatorContainer

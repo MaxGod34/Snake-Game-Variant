@@ -16,17 +16,16 @@ signal resume_game_pressed
 @onready var pulp_label = $BottomPanel/BottomRowHBox/BottomPulpLabel
 @onready var resume_button = $BottomPanel/BottomRowHBox/ResumeButton
 #---Snake Eyes UI-------
-@onready var snake_coin_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/SnakeCoinSlider
+@onready var snake_coin_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow2/SnakeCoinSlider
 @onready var snake_coin_heads_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallHeadsButton
 @onready var snake_coin_tails_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallTailsButton
-@onready var snake_coin_head_tail_label_on_coin = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl/HeadTailLabel
 
 @onready var dice_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/HouseSpecialSlider
-@onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/RollDiceButton
+@onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RollDiceButton
 @onready var dice_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/GuessLabel
 
 @onready var hoard_count_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/HoardCountSlider
-@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/StartHoardCountButton
+@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/StartHoardCountButton
 @onready var hoard_count_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/GuessLabel
 #----Block Market References---
 @onready var orange_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/OrangeBlockLabel
@@ -74,6 +73,16 @@ func _ready():
 	main_game = get_tree().current_scene
 	_build_node_dictionary()
 	_connect_all_signals()
+	var buy_icon = preload("res://Assets/PNGs/GambleSprites/PlusOne.png")
+	var sell_icon = preload("res://Assets/PNGs/GambleSprites/MinusOne.png")
+	buy_orange_block_button.icon = buy_icon
+	sell_orange_block_button.icon = sell_icon
+	buy_apple_block_button.icon = buy_icon
+	sell_apple_block_button.icon = sell_icon
+	buy_light_block_button.icon = buy_icon
+	sell_light_block_button.icon = sell_icon
+	buy_extra_block_button.icon = buy_icon
+	sell_extra_block_button.icon = sell_icon
 
 func _build_node_dictionary():
 	# This powerful loop finds every single UpgradeNode in the scene, no matter which tab it's in.
@@ -137,17 +146,18 @@ func set_initial_state_and_update():
 func update_all_displays():
 	update_stats_tab()
 	update_juice_and_pulp_label()
-	for upgrade_key in all_upgrade_nodes:
-		var node = all_upgrade_nodes[upgrade_key]
-		var rules = main_game.get_upgrade_rules(upgrade_key)
-		
-		if rules.is_empty(): continue
-		
-		var current_level = main_game.get_upgrade_level_from_key(upgrade_key)
-		var prereqs_met = main_game.check_prerequisites(upgrade_key)
-		var theme_color = get_theme_color_for_path(rules.get("path", "The Core"))
-		
-		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_color)
+	for path_key in GameManager.upgrade_data:
+		for upgrade_key in GameManager.upgrade_data[path_key]:
+			var node = all_upgrade_nodes[upgrade_key]
+			var rules = main_game.get_upgrade_rules(upgrade_key)
+			
+			if rules.is_empty(): continue
+			
+			var current_level = main_game.get_upgrade_level_from_key(upgrade_key)
+			var prereqs_met = main_game.check_prerequisites(upgrade_key)
+			var theme_color = get_theme_color_for_path(path_key)
+			
+			node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_color)
 	
 	# We still have a separate helper for the Snake Eyes tab because it's so unique.
 	update_snake_eyes_tab()
@@ -329,17 +339,28 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	var outcome = "Heads" if randf() < 0.5 else "Tails"
 	print("The result is... ", outcome)
 	 #-----Set the text of the label on the coin
-	if outcome == "Heads": snake_coin_head_tail_label_on_coin.text = "H"
-	elif outcome == "Tails": snake_coin_head_tail_label_on_coin.text = "T"
-	else: snake_coin_head_tail_label_on_coin.text = "ERROR!"
+	
+
 	
 	# 4. Play the coin flip animation.
 	var coin = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl
-	
+	var coin_sprite = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl/CoinSprite
+	var head_texture = preload("res://Assets/PNGs/GambleSprites/snake_poker_chip_heads - Copy.png")
+	var tails_texture = preload("res://Assets/PNGs/GambleSprites/snake_poker_chip_tails.png")
 	coin.visible = true
+	for i in range(10):
+		var loop_bank = [head_texture, tails_texture]
+		var rand_choice = loop_bank.pick_random()
+		coin_sprite.texture = rand_choice
+		await get_tree().create_timer(0.02).timeout
+		
+	if outcome == "Heads": coin_sprite.texture = head_texture
+	elif outcome == "Tails": coin_sprite.texture = tails_texture
 	var tween = create_tween()
 	tween.tween_property(coin, "scale", Vector2(1.5, 0.1), 0.2)
 	tween.tween_property(coin, "scale", Vector2(1.0, 1.0), 0.2)
+	
+	
 	await tween.finished
 	
 	# 5. Determine the outcome.
