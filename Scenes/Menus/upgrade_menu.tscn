@@ -135,10 +135,11 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 0
+current_tab = 4
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1150, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -464,7 +465,7 @@ layout_mode = 2
 
 [node name="LedgerContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Core/CoreMain/LedgerContainer"]
@@ -541,7 +542,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 96
+theme_override_constants/separation = 64
 alignment = 1
 
 [node name="GluttonVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Harvest/HarvestMain"]
@@ -718,7 +719,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 96
+theme_override_constants/separation = 64
 alignment = 1
 
 [node name="AcrobatVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain"]
@@ -878,7 +879,6 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="The Ssscale" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1150, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")

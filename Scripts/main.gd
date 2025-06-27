@@ -2750,8 +2750,13 @@ func _calculate_passive_gps():
 
 func get_upgrade_rules(upgrade_key: String) -> Dictionary:
 	for path_key in GameManager.upgrade_data:
-		if upgrade_key in GameManager.upgrade_data[path_key]:
-			return GameManager.upgrade_data[path_key][upgrade_key]
+		for sub_path_key in GameManager.upgrade_data[path_key]:
+			var sub_path_data = GameManager.upgrade_data[path_key][sub_path_key]
+			if sub_path_data.has(upgrade_key):
+				var rules = sub_path_data[upgrade_key]
+				rules["path"] = path_key
+				rules["sub_path"] = sub_path_key
+				return rules
 	return {}
 
 func check_prerequisites(upgrade_key: String) -> bool:
@@ -2833,19 +2838,3 @@ func handle_upgrade_purchase(upgrade_key: String):
 		#--T0-DO-- Add a rejection notification
 		#--			Add a delay on the animation and rejection with a wanh
 		print("Cannot afford upgrade: ", upgrade_key)
-
-func handle_node_mouse_entered(upgrade_key: String):
-	var rules = get_upgrade_rules(upgrade_key)
-	var cost = calculate_upgrade_cost(upgrade_key)
-	
-	# We get a reference to the description panel and call its show function.
-	var description_panel = $UI/UpgradeMenu.find_child("DescriptionPanel")
-	
-	if is_instance_valid(description_panel):
-		description_panel.show_info(rules.display_name, rules.description, cost)
-
-# This function handles hiding the description panel.
-func handle_node_mouse_exited():
-	var description_panel = $UI/UpgradeMenu.find_child("DescriptionPanel")
-	if is_instance_valid(description_panel):
-		description_panel.hide()

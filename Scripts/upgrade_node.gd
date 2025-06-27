@@ -14,34 +14,38 @@ func _ready():
 	mouse_exited.connect(_on_mouse_exited)
 
 # This is the master function that the tab controller will call.
-func update_display(p_upgrade_key: String, current_level: int, max_level: int, is_unlocked: bool, theme_color: Color):
+func update_display(p_upgrade_key: String, current_level: int, max_level: int, is_unlocked: bool, main_theme_color: Color, accent_theme_color: Color):
 	self.upgrade_key = p_upgrade_key
 	
 	# Set the button's icon texture.
 	# self.icon = preload(...)
 
-	# --- THIS IS THE FIX ---
 	# We now create a unique StyleBox for each of the button's states.
 
 	# -- The "Normal" Style (when the button is active and clickable) --
 	var style_normal = StyleBoxFlat.new()
 	style_normal.bg_color = Color(0, 0, 0, 0.4)
-	style_normal.border_width_top = 16
-	style_normal.border_width_bottom = 16
-	style_normal.border_width_left = 16
-	style_normal.border_width_right = 16
-	style_normal.border_color = theme_color
+	style_normal.border_width_top = 8
+	style_normal.border_width_bottom = 8
+	style_normal.border_width_left = 8
+	style_normal.border_width_right = 8
+	
+	if current_level >= max_level:
+		style_normal.border_color = main_theme_color # A solid gold/accent border when maxed
+	else:
+		style_normal.border_color = accent_theme_color # The default border color
+	
 	
 	# -- The "Disabled" Style --
 	var style_disabled = style_normal.duplicate() # Start with the same settings
 	style_disabled.border_color = Color(0.3, 0.3, 0.3, 0.5) # A dull gray for the border
 	#----Hovered
 	var style_hovered = style_normal.duplicate()
-	style_hovered.border_color = Color(theme_color.r, theme_color.g, theme_color.b, max(theme_color.a - 0.3, 0.0))
+	style_hovered.border_color = Color(main_theme_color.r, main_theme_color.g, main_theme_color.b, max(main_theme_color.a - 0.3, 0.0))
 	#----Pressed
 	var style_pressed = style_normal.duplicate()
-	var pressed_color = theme_color.lightened(0.3)
-	pressed_color.a = min(theme_color.a + 0.2, 1.0)
+	var pressed_color = main_theme_color.lightened(0.3)
+	pressed_color.a = min(main_theme_color.a + 0.2, 1.0)
 	style_pressed.border_color = pressed_color
 	# Now, apply these new styles to the button's theme.
 	self.add_theme_stylebox_override("normal", style_normal)
@@ -59,7 +63,7 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 		var block = ColorRect.new()
 		block.custom_minimum_size = Vector2(12, 12)
 		# We now use the theme color for the "empty" blocks.
-		block.color = Color.GOLD if i <= current_level else theme_color.darkened(0.5)
+		block.color = Color.GOLD if i <= current_level else accent_theme_color.darkened(0.5)
 		block.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		block.anchor_left = 0.0
 		block.anchor_top = 1.0

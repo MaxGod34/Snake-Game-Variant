@@ -4,6 +4,7 @@ extends CanvasLayer
 
 signal resume_game_pressed
 
+
 # --- NODE REFERENCES ---
 # We get direct references to important nodes when the scene is ready.
 # This is faster and safer than using long paths like $.../.../... every time.
@@ -86,20 +87,33 @@ func _ready():
 
 func _build_node_dictionary():
 	# This powerful loop finds every single UpgradeNode in the scene, no matter which tab it's in.
+	all_upgrade_nodes.clear() # Clear it out for safety
 	for path_key in GameManager.upgrade_data:
-		for upgrade_key in GameManager.upgrade_data[path_key]:
-			var node_name = upgrade_key.replace(" ", "").to_pascal_case() + "Node"
-			var node = find_child(node_name, true, false)
-			if is_instance_valid(node):
-				all_upgrade_nodes[upgrade_key] = node
-			else:
-				print_debug("Warning: Could not find upgrade node named: ", node_name)
+		# We need to handle the nested structure of our new data
+		for sub_path_key in GameManager.upgrade_data[path_key]:
+			for upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
+				var node_name = upgrade_key.replace(" ", "").replace("'", "").to_pascal_case() + "Node"
+				var node = find_child(node_name, true, false)
+				if is_instance_valid(node):
+					all_upgrade_nodes[upgrade_key] = node
+				else:
+					print_debug("Warning: Could not find upgrade node named: ", node_name)
 
 
 # This is our master function for setting up all connections.
 func _connect_all_signals():
+	# Connect signals for tabs and the main resume button.
 	top_tabs.tab_selected.connect(_on_tab_selected)
 	resume_button.pressed.connect(_on_resume_button_pressed)
+	description_delay_timer.timeout.connect(_on_description_delay_timer_timeout)
+	
+	# Now, connect the signals from every single UpgradeNode we found.
+	for upgrade_key in all_upgrade_nodes:
+		var node = all_upgrade_nodes[upgrade_key]
+		# We connect the button's own 'pressed' signal, not a custom one.
+		node.pressed.connect(_on_any_node_pressed.bind(upgrade_key))
+		node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
+		node.mouse_exited.connect(_on_any_node_mouse_exited)
 	
 	snake_coin_wager_slider.value_changed.connect(_on_snake_coin_slider_changed)
 	snake_coin_heads_button.pressed.connect(_on_snake_coin_flip_pressed.bind("Heads"))
@@ -117,25 +131,13 @@ func _connect_all_signals():
 	sell_light_block_button.pressed.connect(_on_sell_stock_pressed.bind("Light Block"))
 	sell_orange_block_button.pressed.connect(_on_sell_stock_pressed.bind("Orange Block"))
 
-
-
 	# --- Connect Dice Stepper Buttons ---
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/LeftArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(-1))
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RightArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(1))
 	# --- Connect Hoard Count Arrow Buttons
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/LeftArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(-1))
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/RightArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(1))
-	
-	description_delay_timer.timeout.connect(_on_description_delay_timer_timeout)
-	
-	for upgrade_key in all_upgrade_nodes:
-		var node = all_upgrade_nodes[upgrade_key]
-		node.pressed.connect(_on_any_node_pressed.bind(upgrade_key)) # ← must connect this!
-		node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
-		node.mouse_exited.connect(_on_any_node_mouse_exited)
 
-
-# --- MASTER UI UPDATE FUNCTION ---
 
 # This function is called from main.gd right before the menu appears.
 func set_initial_state_and_update():
@@ -144,32 +146,48 @@ func set_initial_state_and_update():
 
 # This function refreshes every piece of information in the menu.
 func update_all_displays():
-	update_stats_tab()
 	update_juice_and_pulp_label()
-	for path_key in GameManager.upgrade_data:
-		for upgrade_key in GameManager.upgrade_data[path_key]:
-			var node = all_upgrade_nodes[upgrade_key]
-			var rules = main_game.get_upgrade_rules(upgrade_key)
-			
-			if rules.is_empty(): continue
-			
-			var current_level = main_game.get_upgrade_level_from_key(upgrade_key)
-			var prereqs_met = main_game.check_prerequisites(upgrade_key)
-			var theme_color = get_theme_color_for_path(path_key)
-			
-			node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_color)
+	
+	# This one loop now updates every single upgrade node in the game.
+	for upgrade_key in all_upgrade_nodes:
+		var node = all_upgrade_nodes[upgrade_key]
+		var rules = main_game.get_upgrade_rules(upgrade_key)
+		
+		if rules.is_empty(): continue
+		
+		var current_level = main_game.get_upgrade_level_from_key(upgrade_key)
+		var prereqs_met = main_game.check_prerequisites(upgrade_key)
+		var theme_colors = get_theme_colors(rules)
+		
+		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent)
 	
 	# We still have a separate helper for the Snake Eyes tab because it's so unique.
-	update_snake_eyes_tab()
+	if top_tabs.get_tab_title(top_tabs.current_tab) == "Snake Eyes":
+		update_snake_eyes_tab()
 	
-func get_theme_color_for_path(path_key: String) -> Color:
+func get_theme_colors(rules: Dictionary) -> Dictionary:
+	var colors = {"main": Color.WHITE, "accent": Color.GRAY}
 	# This helper returns a unique color for each skill tree theme.
-	match path_key:
-		"The Core": return Color("4a90e2") # Blue
-		"The Harvest": return Color("7ed321") # Green
-		"The Redline": return Color("d0021b") # Red
-		"The Ssscale": return Color("bd10e0") # Purple
-	return Color.WHITE
+	match rules.get("path", ""):
+		"The Core": colors.main = Color("42AEE0")
+		"The Harvest": colors.main = Color("7ED321")
+		"The Redline": colors.main = Color("D0021B")
+		"The Ssscale": colors.main = Color("BD10E2")
+		
+	match rules.get("sub_path", ""):
+		"Idle": colors.accent = Color("69D2A3")
+		"Planner": colors.accent = Color("E5E5E5")
+		"Ledger": colors.accent = Color("F5A623")
+		"Glutton": colors.accent = Color("F37A23")
+		"Chef": colors.accent = Color("F8E71C")
+		"Geode": colors.accent = Color("8B572A")
+		"Acrobat": colors.accent = Color("F8E71C")
+		"Frenzy": colors.accent = Color("FF00FF")
+		"Survivor": colors.accent = Color("8E8E93")
+		"Illusionist": colors.accent = Color("50E3C2")
+		"Architect": colors.accent = Color("4A90E2")
+		
+	return colors
 	
 	#var ng_plus_button = find_upgrade_button("New Game S+")
 	#if is_instance_valid(ng_plus_button):
@@ -218,9 +236,6 @@ func _on_description_delay_timer_timeout():
 		var cost = main_game.calculate_upgrade_cost(hovered_upgrade_key)
 		# Now, we show the panel.
 		description_panel.show_info(rules.display_name, rules.description, cost)
-# func get_theme_color_for_path():
-	#pass
-
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 
