@@ -28,7 +28,7 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		"Fruit Foresight": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png")
 		"Geological Survey": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png")
 		"Sovereign Trail": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png")
-		"Meditate": self.icon = preload("res://Assets/PNGs/UpgradeIcons/Meditate.png")
+		"Meditate": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MeditateIcon.png")
 		"Garden Weaver": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png")
 	#-----------Ledger------------
 		#----Path A
@@ -43,15 +43,63 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		"Liquidation": self.icon = preload("res://Assets/PNGs/UpgradeIcons/LiquidationIcon.png")
 #-------------------------The Harvest-----------------------------\\\\\\\\\\\\\\\\\\\\\////////////////////////////
 	#------------Glutton-------------
+		"Elephant Sized Portions": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png")
+		"More Mice": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MoreMiceIcon.png")
+		"Golden Seeds": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GoldenSeedsIcon.png")
+		"Patient Gadener": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PatientGardenerIcon.png")
+		"Banana Bounty": self.icon = preload("res://Assets/PNGs/UpgradeIcons/BananaBountyIcon.png")
+		"The Satchel": self.icon = preload("res://Assets/PNGs/UpgradeIcons/TheSatchelIcon.png")
 	#------------Chef----------------
+		"Golden Seed Extract": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GoldenSeedExtractIcon.png")
+		"Exotic Seeds": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ExoticSeedsIcon.png")
+		"The Cookbook": self.icon = preload("res://Assets/PNGs/UpgradeIcons/TheCookbookIcon.png")
+		"Expanded Palate": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ExpandedPalateIcon.png")
+		"Golden Glaze": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GoldenGlazeIcon.png")
+		"Custom Cuisine": self.icon = preload("res://Assets/PNGs/UpgradeIcons/CustomCuisineIcon.png")
+		"Mise en Place": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MiseenPlaceIcon.png")
 	#-----------Geomancer------------
+		"Fertile Ground": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FertileGroundIcon.png")
+		"Rockmuncher": self.icon = preload("res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png")
+		"Material Rich Soil": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MaterialRichSoilIcon.png")
+		"Geode Cracker": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GeodeCrackerIcon.png")
+		"Tectonic Shift": self.icon = preload("res://Assets/PNGs/UpgradeIcons/TectonicShiftIcon.png")
+		"Kinetic Feast": self.icon = preload("res://Assets/PNGs/UpgradeIcons/KineticFeastIcon.png")
+		"Heavy Foundation": self.icon = preload("res://Assets/PNGs/UpgradeIcons/HeavyFoundationIcon.png")
+		"Stones Burden": self.icon = preload("res://Assets/PNGs/UpgradeIcons/StonesBurdenIcon.png")
+		"Calculated Risk": self.icon = preload("res://Assets/PNGs/UpgradeIcons/CalculatedRiskIcon.png")
 #------------------------The Redliner------------------------------\\\\\\\\\\\\\\\\\\\\////////////////////////////
 	#-----------Acrobat--------------
+		"Slither Sauce": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SlitherSauceIcon.png")
+		"Tenderizer": self.icon = preload("res://Assets/PNGs/UpgradeIcons/TenderizerIcon.png")
+		"Juke N Jive": self.icon = preload("res://Assets/PNGs/UpgradeIcons/JukeNJiveIcon.png")
+		"Afterburner": self.icon = preload("res://Assets/PNGs/UpgradeIcons/AfterburnerIcon.png")
+		"Pop Rocks": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PopRocksIcon.png")
+		"Autotomy": self.icon = preload("res://Assets/PNGs/UpgradeIcons/AutotomyIcon.png")
 	#-----------Frenzy---------------
+		"Sugar Rush": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SugarRushIcon.png")
+		"Chain Reaction": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ChainReactionIcon.png")
+		"Overdrive": self.icon = preload("res://Assets/PNGs/UpgradeIcons/OverdriveIcon.png")
+		"Lingering Rush": self.icon = preload("res://Assets/PNGs/UpgradeIcons/LingeringRushIcon.png")
+		"Juggernaut": self.icon = preload("res://Assets/PNGs/UpgradeIcons/JuggernautIcon.png")
+		"Zenith": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ZenithIcon.png")
 	#-----------Survivor-------------
+		"Mulligan Munchie": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png")
+		"Last Stand": self.icon = preload("res://Assets/PNGs/UpgradeIcons/LastStandIcon.png")
+		"Phoenix Dawn": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PhoenixDawnIcon.png")
+		"Sacrificial Molt": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png")
+		"Death Defied": self.icon = preload("res://Assets/PNGs/UpgradeIcons/DeathDefiedIcon.png")
+		"Martyrdom": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MartyrdomIcon.png")
+		"New Game S Plus": self.icon = preload("res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png")
 #-----------------------The Ssscale---------------------------------\\\\\\\\\\\\\\\\\\\/////////////////////////////
 	#----------Illusionist/Magician------------
+		"Ghost Tail": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GhostTailIcon.png")
+		"Phase Shift": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PhaseShiftIcon.png")
+		"Blink": self.icon = preload("res://Assets/PNGs/UpgradeIcons/BlinkIcon.png")
+		"3 Card Monty": self.icon = preload("res://Assets/PNGs/UpgradeIcons/3CardMontyIcon.png")
+		"Fractured Self": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png")
+		"Dazzle Pie": self.icon = preload("res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png")
 	#----------Architect------------
+	
 #----------------------Snake Eyes------------------------------------\\\\\\\\\\\\\\\\\\/////////////////////////////
 
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lcu3c05qkgs2"
-path="res://.godot/imported/Meditate.png-b9cb0c9ea4f2078c2dfa117c071e4f9e.ctex"
+uid="uid://bfpsk0vw60lk4"
+path="res://.godot/imported/TectonicShiftIcon.png-b48c2f3b155776cd7f2977740d3fe067.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/PNGs/UpgradeIcons/Meditate.png"
-dest_files=["res://.godot/imported/Meditate.png-b9cb0c9ea4f2078c2dfa117c071e4f9e.ctex"]
+source_file="res://Assets/PNGs/UpgradeIcons/TectonicShiftIcon.png"
+dest_files=["res://.godot/imported/TectonicShiftIcon.png-b48c2f3b155776cd7f2977740d3fe067.ctex"]
 
 [params]
 
