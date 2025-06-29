@@ -261,6 +261,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if GameManager.juice > 0 and not get_tree().paused and not is_game_over:
 			# Call new transition/show menu function
 			open_upgrade_menu_with_transition()
+			$UI/UpgradeMenu.start_tickers()
 	for i in range(10):
 		if event.is_action_pressed("activate_slot_" + str(i + 1)):
 			_on_ability_slot_activated(i)
@@ -767,6 +768,7 @@ func on_snake_head_moved(head_previous_position: Vector2):
 	if upgrade_menu_is_pending:
 		upgrade_menu_is_pending = false # Reset the flag
 		open_upgrade_menu_with_transition() # Show the menu
+		#$UI/UpgradeMenu.start_tickers()
 	elif garden_complete_is_pending:
 		# If there's no upgrade pending, check if a garden is complete.
 		garden_complete_is_pending = false # Reset the flag

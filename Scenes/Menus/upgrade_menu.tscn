@@ -172,7 +172,6 @@ content_margin_top = 20.0
 content_margin_right = 40.0
 content_margin_bottom = 20.0
 bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_bottom = 8
 border_color = Color(0, 0.0567322, 6.01634e-09, 1)
 border_blend = true
 expand_margin_bottom = 3.0
@@ -183,13 +182,8 @@ content_margin_top = 20.0
 content_margin_right = 40.0
 content_margin_bottom = 20.0
 bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_bottom = 24
 border_color = Color(0, 0, 0, 1)
 border_blend = true
-corner_radius_top_left = 200
-corner_radius_top_right = 200
-corner_radius_bottom_right = 200
-corner_radius_bottom_left = 200
 expand_margin_bottom = 4.0
 
 [node name="UpgradeMenu" type="CanvasLayer"]
@@ -1571,6 +1565,7 @@ You win 300 mg of Pulp!"
 horizontal_alignment = 1
 
 [node name="CoinContainerControl" type="Control" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer"]
+visible = false
 layout_mode = 2
 
 [node name="CoinSprite" type="Sprite2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl"]
@@ -2011,18 +2006,23 @@ wait_time = 0.2
 one_shot = true
 
 [node name="TickerPanel" type="PanelContainer" parent="."]
-anchors_preset = 10
-anchor_right = 1.0
+offset_right = 1280.0
 offset_bottom = 180.0
-grow_horizontal = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_fhovb")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TickerPanel"]
+[node name="TickerContainer" type="MarginContainer" parent="TickerPanel"]
+clip_contents = true
 layout_mode = 2
 
-[node name="TopTickerLabel" type="Label" parent="TickerPanel/VBoxContainer"]
+[node name="HeadlineStage" type="Control" parent="TickerPanel/TickerContainer"]
 layout_mode = 2
+
+[node name="TopTickerLabelA" type="Label" parent="TickerPanel/TickerContainer/HeadlineStage"]
+layout_mode = 1
+offset_right = 276.0
+offset_bottom = 73.0
+size_flags_vertical = 0
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -2033,13 +2033,40 @@ theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_d8bjv")
 text = "Block Market"
-horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
 
-[node name="TopTickerLabelB" type="Label" parent="TickerPanel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 96)
+[node name="TopTickerLabelB" type="Label" parent="TickerPanel/TickerContainer/HeadlineStage"]
+layout_mode = 1
+offset_right = 276.0
+offset_bottom = 73.0
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_d8bjv")
+text = "Block Market"
+vertical_alignment = 1
+text_direction = 1
+
+[node name="StatsStage" type="Control" parent="TickerPanel/TickerContainer"]
 layout_mode = 2
+
+[node name="BottomTickerLabelA" type="Label" parent="TickerPanel/TickerContainer/StatsStage"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -96.0
+offset_right = 276.0
+grow_vertical = 0
+size_flags_vertical = 8
 theme_override_colors/font_color = Color(0.811765, 0.768627, 0.290196, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -2050,11 +2077,34 @@ theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_8yb1c")
 text = "Block Market"
-horizontal_alignment = 1
-vertical_alignment = 2
+vertical_alignment = 1
+text_direction = 1
+
+[node name="BottomTickerLabelB" type="Label" parent="TickerPanel/TickerContainer/StatsStage"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -96.0
+offset_right = 276.0
+grow_vertical = 0
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.811765, 0.768627, 0.290196, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 5
+theme_override_constants/shadow_offset_y = 5
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_8yb1c")
+text = "Block Market"
+vertical_alignment = 1
 text_direction = 1
 
 [node name="DescriptionPanel" parent="." instance=ExtResource("21_lwbsw")]
+visible = false
 anchors_preset = 6
 anchor_left = 1.0
 anchor_right = 1.0

@@ -42,6 +42,12 @@ signal resume_game_pressed
 @onready var buy_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/BuyExtraPulpShareButton
 @onready var sell_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/SellSharePulpButton
 
+@onready var headline_label_a = $TickerPanel/TickerContainer/HeadlineStage/TopTickerLabelA
+@onready var headline_label_b = $TickerPanel/TickerContainer/HeadlineStage/TopTickerLabelB
+@onready var stats_label_a = $TickerPanel/TickerContainer/StatsStage/BottomTickerLabelA
+@onready var stats_label_b = $TickerPanel/TickerContainer/StatsStage/BottomTickerLabelB
+
+
 @onready var description_delay_timer = $DescriptionDelayTimer
 var hovered_upgrade_key: String = ""
 
@@ -60,6 +66,26 @@ var die_faces: Array = [
 ]
 
 var current_hoard_guess: int = 1
+
+
+var headlines = [
+	"BREAKING: Local snake discovers 'left' turn, revolutionizes movement.",
+	"The Pulp-sicle Stand reports record profits for the third garden in a row.",
+	"OP-ED: Are 'Extra Lives' making our snakes soft?",
+	"Weather forecast: Partly cloudy with a 30% chance of Ghost Peppers.",
+	"Anarchists claim responsibility for latest rock slide in Garden 6.",
+	"The Snake Cup was claimed last night by the Cincinatti Slith marking back-to-back SnakeBall championships.",
+	"Block Market futures slip on shaky jobs report.",
+	"Oil at an all time low, AI scams are better than Snake Oil; new study shows.",
+	"Garden 7 under construction still, do not, I repeat, do NOT go in there!",
+	"Loading Round 2...",
+	"Gimme, Gimme, Gimme a man after Slithnight, why'd somebody let me go and type for so long.",
+	"Loading Round 1...",
+	"Glutton breaks newest patch with latest ECON updates. BUY ORANGE STOCK NOW!"
+]
+
+var player_stats_for_ticker = []
+
 
 # This dictionary will store a reference to every single upgrade button.
 # We will build this dictionary once in _ready() to make updating them easier later.
@@ -166,9 +192,7 @@ func update_all_displays():
 		
 		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
 	
-	# We still have a separate helper for the Snake Eyes tab because it's so unique.
-	if top_tabs.get_tab_title(top_tabs.current_tab) == "Snake Eyes":
-		update_snake_eyes_tab()
+	update_snake_eyes_tab()
 	
 func get_theme_colors(rules: Dictionary) -> Dictionary:
 	var colors = {"main": Color.WHITE, "accent": Color.GRAY}
@@ -689,3 +713,73 @@ func _on_sell_stock_pressed(stock_key: String):
 	update_all_displays()
 	main_game.update_hud()
 	update_juice_and_pulp_label()
+
+
+func _setup_ticker(label_a: Label, label_b: Label, text_pool: Array):
+	# This helper function prepares a ticker for its very first scroll.
+	label_a.text = _get_new_ticker_text(text_pool)
+	label_b.text = _get_new_ticker_text(text_pool)
+	
+	label_a.position.x = 0
+	label_b.position.x = label_a.get_minimum_size().x
+
+
+func start_tickers():
+	# We get a reference to the labels here.
+	
+	# Now, kick off the animation loop for each ticker.
+	_setup_ticker(headline_label_a, headline_label_b, headlines)
+	_setup_ticker(stats_label_a, stats_label_b, [])
+
+	
+	
+func _process(delta):
+	# We only scroll if the upgrade menu is visible.
+	if not self.visible:
+		return
+		
+	_scroll_ticker(headline_label_a, headline_label_b, headlines, 50.0, delta) # Slower
+	_scroll_ticker(stats_label_a, stats_label_b,[], 80.0, delta) # Faster
+
+func _scroll_ticker(label_a: Label, label_b: Label, text_pool: Array, speed: float, delta: float):
+	# Move both labels to the left every frame.
+	label_a.position.x -= speed * delta
+	label_b.position.x -= speed * delta
+	
+	# --- THIS IS THE FIX ---
+	# This is the "leapfrog" logic.
+	# If a label has moved completely off-screen to the left...
+	if label_a.position.x < -label_a.get_minimum_size().x:
+		# ...we give it new text...
+		label_a.text = _get_new_ticker_text(text_pool)
+		# ...and teleport it to the end of the other label.
+		label_a.position.x = label_b.position.x + label_b.get_minimum_size().x
+		
+	if label_b.position.x < -label_b.get_minimum_size().x:
+		label_b.text = _get_new_ticker_text(text_pool)
+		label_b.position.x = label_a.position.x + label_a.get_minimum_size().x
+		
+func _get_new_ticker_text(text_pool: Array) -> String:
+	if text_pool.is_empty(): # This is our stats ticker
+		var stats = [
+			"JUICE: %s mL" % GameManager.juice,
+			"PULP: %s mg" % GameManager.pulp,
+			"LENGTH: %s" % (main_game.snake_body_segments.size() + 1),
+			"LEVEL: %s" % GameManager.player_level,
+			"EXTRA LIVES: %s" % GameManager.extra_lives,
+			"COMBO: x%s" % GameManager.current_combo,
+			"CURRENT GARDEN: %s / 9" % GameManager.current_garden,
+			"GARDEN NAME: %s" % GameManager.garden_data[GameManager.current_garden]["name"],
+			"FRUIT REWARD: %s" % main_game.get_effective_fruit_reward(),
+			"MAX FRUITS: %s" % GameManager.max_fruits_on_screen,
+			"ABILITY SLOTS STILL LOCKED: %s" % [(10 - GameManager.max_ability_slots)],
+			"NUMBER OF OBSTACLES NEXT GARDEN: %s" % [(GameManager.garden_data[max(9, GameManager.current_garden + 1)])["obstacle_count"]],
+			"ORANGE BLOCK: %s mL/share" % GameManager.block_market_prices["Orange Block"]["price"],
+			"APPLE BLOCK: %s mL/share" % GameManager.block_market_prices["Apple Block"]["price"],
+			"LIGHT BLOCK: %s mg/share" % GameManager.block_market_prices["Light Block"]["price"],
+			"EXTRA BLOCK: %s mg/share" % GameManager.block_market_prices["Extra Block"]["price"]
+		]
+		stats.shuffle()
+		return "  •••  ".join(stats)
+	else: # This is our headline ticker
+		return text_pool.pick_random()
