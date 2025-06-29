@@ -99,8 +99,18 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		"Fractured Self": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png")
 		"Dazzle Pie": self.icon = preload("res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png")
 	#----------Architect------------
-	
+		"Edge Lord": self.icon = preload("res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png")
+		"Zoning Ordinance": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ZoningOrdinanceIcon.png")
+		"Border Czar": self.icon = preload("res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png")
+		"Surveyed Land": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SurveyedLandIcon.png")
+		"Burrow": self.icon = preload("res://Assets/PNGs/UpgradeIcons/BurrowIcon.png")
+		"Pocket Garden": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png")
+		"Fold Space": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png")
+		"Shatter Reality": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png")
+		"Masters Blueprint": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png")
 #----------------------Snake Eyes------------------------------------\\\\\\\\\\\\\\\\\\/////////////////////////////
+		"Coin Flip Curious": self.icon = preload("res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png")
+		"Passive Income": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png")
 
 
 

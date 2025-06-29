@@ -1,4 +1,4 @@
-[gd_scene load_steps=106 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=118 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
@@ -89,6 +89,18 @@
 [ext_resource type="Texture2D" uid="uid://cd0ecm4ku8a7i" path="res://Assets/PNGs/UpgradeIcons/BlinkIcon.png" id="71_y3pwa"]
 [ext_resource type="Texture2D" uid="uid://0wxbfj6hkb6c" path="res://Assets/PNGs/UpgradeIcons/3CardMontyIcon.png" id="72_i7e00"]
 [ext_resource type="Texture2D" uid="uid://c6wq26y8pg268" path="res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png" id="73_myfcn"]
+[ext_resource type="Texture2D" uid="uid://pg1340v7aknm" path="res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png" id="74_y3pwa"]
+[ext_resource type="Texture2D" uid="uid://83ag8anpnnwd" path="res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png" id="75_i7e00"]
+[ext_resource type="Texture2D" uid="uid://cyftsapj57gcy" path="res://Assets/PNGs/UpgradeIcons/ZoningOrdinanceIcon.png" id="75_vxegg"]
+[ext_resource type="Texture2D" uid="uid://e2l8j4grsls7" path="res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png" id="76_uxp3x"]
+[ext_resource type="Texture2D" uid="uid://2mj4ye45e8ga" path="res://Assets/PNGs/UpgradeIcons/SurveyedLandIcon.png" id="77_6or4j"]
+[ext_resource type="Texture2D" uid="uid://r4xd40p83pn" path="res://Assets/PNGs/UpgradeIcons/BurrowIcon.png" id="78_8ybj1"]
+[ext_resource type="Texture2D" uid="uid://c52jsyl2lykjb" path="res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png" id="80_v6u0p"]
+[ext_resource type="Texture2D" uid="uid://bp6646o0h2u53" path="res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png" id="81_8ybj1"]
+[ext_resource type="Texture2D" uid="uid://dttaheokqcher" path="res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png" id="82_v6u0p"]
+[ext_resource type="Texture2D" uid="uid://bdd53eb7ltv4q" path="res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png" id="82_ymci1"]
+[ext_resource type="Texture2D" uid="uid://b4bt0q6fc4lii" path="res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png" id="95_6plnu"]
+[ext_resource type="Texture2D" uid="uid://kq5s56v31o0r" path="res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png" id="96_l1y2w"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6dxpo"]
 bg_color = Color(0.133333, 0.133333, 0.133333, 1)
@@ -221,7 +233,7 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 4
+current_tab = 5
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
@@ -1042,6 +1054,7 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="The Ssscale" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1059,12 +1072,8 @@ alignment = 1
 
 [node name="IllusionistContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain"]
 layout_mode = 2
-theme_override_constants/separation = 64
+theme_override_constants/separation = 48
 alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/IllusionistContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
 
 [node name="IllusionistTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/IllusionistContainer"]
 layout_mode = 2
@@ -1110,14 +1119,12 @@ icon = ExtResource("73_myfcn")
 
 [node name="DazzlePieNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/IllusionistContainer/Tier3Row" instance=ExtResource("12_hesgk")]
 layout_mode = 2
-
-[node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/IllusionistContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
+icon = ExtResource("74_y3pwa")
 
 [node name="ArchitectContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain"]
 layout_mode = 2
-theme_override_constants/separation = 80
+theme_override_constants/separation = 32
+alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer"]
 layout_mode = 2
@@ -1125,8 +1132,9 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_og3kt")
 
 [node name="ArchitectLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.290196, 0.564706, 0.886275, 1)
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 32
 text = "I AM an Architect"
 horizontal_alignment = 1
 
@@ -1138,37 +1146,45 @@ columns = 3
 
 [node name="ZoningOrdinanceNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("75_vxegg")
 
 [node name="BorderCzarNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("76_uxp3x")
 
 [node name="SurveyedLandNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("77_6or4j")
 
 [node name="BurrowNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("78_8ybj1")
 
 [node name="EdgeLordNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("75_i7e00")
 
 [node name="PocketGardenNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("80_v6u0p")
 
 [node name="FoldSpaceNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("81_8ybj1")
 
 [node name="MastersBlueprintNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("82_ymci1")
 
 [node name="ShatterRealityNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale/HarvestMain/ArchitectContainer/GridContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("82_v6u0p")
 
 [node name="ConnectionLines" type="Line2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Ssscale"]
 width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="SnakeEyes" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1178,16 +1194,16 @@ metadata/_tab_index = 5
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 0.05
+offset_bottom = 83.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = " I'll take your bet"
 horizontal_alignment = 1
@@ -1218,14 +1234,14 @@ layout_mode = 2
 
 [node name="SnakeCoinLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "SnakeCoin"
 horizontal_alignment = 1
@@ -1305,14 +1321,14 @@ layout_mode = 2
 
 [node name="HouseSpecialLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "House Special"
 horizontal_alignment = 1
@@ -1414,14 +1430,14 @@ theme_override_constants/separation = 8
 
 [node name="HoardCountLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Hoard Count"
 horizontal_alignment = 1
@@ -1654,14 +1670,14 @@ expand_icon = true
 
 [node name="OrangeBlockLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.921569, 0.592157, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Orange Block
 7 mL/share"
@@ -1723,14 +1739,14 @@ expand_icon = true
 
 [node name="AppleBlockLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 0.407693, 0.334735, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Apple Block
 7 mL/share"
@@ -1792,14 +1808,14 @@ expand_icon = true
 
 [node name="LightPulpLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.670588, 0.945098, 0.611765, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Light Pulp Inc.
 7 mg/share"
@@ -1861,14 +1877,14 @@ expand_icon = true
 
 [node name="ExtraPulpLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 16
+theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Extra Pulp Co.
 7 mg/share"
@@ -1883,9 +1899,11 @@ alignment = 1
 
 [node name="CoinFlipCuriousNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/PassiveUpgradeContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("95_6plnu")
 
 [node name="PassiveIncomeNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/PassiveUpgradeContainer" instance=ExtResource("12_hesgk")]
 layout_mode = 2
+icon = ExtResource("96_l1y2w")
 
 [node name="BottomPanel" type="PanelContainer" parent="."]
 custom_minimum_size = Vector2(0, 84)
