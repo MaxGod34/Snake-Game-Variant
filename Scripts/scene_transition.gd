@@ -126,6 +126,11 @@ func spiral_positions(width: int, height: int) -> Array:
 
 	return positions
 
+
+
+
+
+
 func cover_screen_spiral():
 	transition_speed = 0.001
 	var size = Vector2i(get_viewport().size / 32)

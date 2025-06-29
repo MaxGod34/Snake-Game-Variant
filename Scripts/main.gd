@@ -140,6 +140,8 @@ func _ready():
 	$UI/PulpsicleStand.skip_garden_pressed.connect(_on_skip_garden_pressed)
 	$UI/PulpsicleStand.continue_to_next_garden.connect(_on_pulpsicle_stand_continue_pressed)
 	# --- FINAL SETUP ---#
+	$UI/UpgradeMenu.initialize(self)
+
 	#-----SET OBSTACLSE-----#
 	setup_initial_obstacles()
 	#------SPAWN FRUITS----#
@@ -301,6 +303,7 @@ func _on_ability_slot_activated(slot_index: int):
 			"Zenith": activate_zenith()
 			"Lasso Larry": perform_lasso_larry()
 			"Juice Press": perform_juice_press()
+			"Mulligan Munchie": ability_data.current += 1
 		
 		
 		print("Ability used: ", ability_key)
@@ -566,7 +569,7 @@ func handle_meta_upgrade_purchase(upgrade_key: String):
 	match upgrade_key:
 		"Synapse Slot":
 			GameManager.max_ability_slots += 1
-		"Serpent's Coffer":
+		"Serpents Coffer":
 			GameManager.serpents_coffer_level += 1
 		"Geode Compass":
 			GameManager.geomancers_compass_level += 1
@@ -673,33 +676,53 @@ func update_hud():
 	information_panel.update_display(data)
 	update_ability_hotbar()
 
+func get_equipped_abilities() -> Array:
+	var equipped = []
+	
+	# 1. Add all the standard active abilities purchased with Juice.
+	for ability_key in GameManager.equipped_abilities:
+		var charge_data = GameManager.ability_charges.get(ability_key, {"current": 0})
+		equipped.append({ability_key: charge_data.current})
+		
+		
+	# --- THIS IS THE NEW LOGIC ---
+	# 3. Now, check if the player has any Extra Lives.
+	if GameManager.extra_lives > 0:
+		# If yes, add "Mulligan Munchie" to the list.
+		# Its "charge count" is simply the number of lives.
+		equipped.append({"Mulligan Munchie": GameManager.extra_lives})
+		
+	# ... We could add other dynamic abilities here in the future!
+	
+	return equipped
+
+
+
 func update_ability_hotbar():
-	# 1. First, calculate how many slots should be visible.
+	# 1. Get the unified list of all equipped abilities from our smart helper.
+	var equipped_abilities_with_charges = get_equipped_abilities()
 	var unlocked_slots = GameManager.max_ability_slots
-	
-	# --- THIS IS THE FIX ---
-	# 2. Get the UNIFIED list of all abilities from our smart helper function.
-	var equipped_abilities = GameManager.equipped_abilities
-	
-	# 3. Loop through all 10 slots in the hotbar.
+
+	# 2. Loop through all 10 slots in the hotbar.
 	for i in range(10):
 		var slot = ability_hotbar.get_child(i)
 		
-		# 4. Show or hide the slot based on how many are unlocked.
+		# 3. Show or hide the slot based on how many are unlocked.
 		if i < unlocked_slots:
 			slot.visible = true
 			
-			# Check if this slot should have an ability in it.
-			if i < equipped_abilities.size():
-				# This slot is filled. Get the ability data and update the display.
-				var ability_key = equipped_abilities[i]
-				var charge_count = 0
-				# Get the current charges from our unified dictionary
-				if ability_key in GameManager.ability_charges:
-					charge_count = GameManager.ability_charges[ability_key].current
-				elif ability_key in GameManager.block_market_portfolio:
-					charge_count = GameManager.block_market_portfolio[ability_key]
-				slot.update_display(ability_key, charge_count)
+			# 4. Check if this slot should have an ability in it.
+			if i < equipped_abilities_with_charges.size():
+				# --- THIS IS THE FIX ---
+				# This slot is filled. First, get the dictionary for this slot.
+				var ability_data = equipped_abilities_with_charges[i]
+				
+				# Now, "unpack" the key and value from the dictionary.
+				var ability_key = ability_data.keys()[0]
+				var charges = ability_data.values()[0]
+				
+				# Finally, pass the correct, simple data to the slot's display function.
+				slot.update_display(ability_key, charges)
 			else:
 				# This slot is unlocked but empty.
 				slot.update_display("", 0)
@@ -1237,7 +1260,7 @@ func recharge_random_ability():
 	print("CUSTOM CUISINE: Attempting to recharge a random ability...")
 	
 	# 1. Get the list of all abilities the player currently has equipped.
-	var available_abilities = GameManager.equipped_abilities
+	var available_abilities = get_equipped_abilities()
 	
 	# 2. If they don't have any abilities, do nothing.
 	if available_abilities.is_empty():
@@ -1267,6 +1290,7 @@ func _purchase_or_upgrade_ability(ability_key: String):
 		# If we already own it, just add to both current and total charges.
 		GameManager.ability_charges[ability_key].current += 1
 		GameManager.ability_charges[ability_key].total += 1
+	print("Current extra lives", GameManager.extra_lives)
 
 func activate_tenderizer():
 	# Tenderizer is a passive "on-next-hit" ability, so it doesn't do anything
@@ -1285,6 +1309,21 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	
 	if upgrade_name in active_abilities:
 		_purchase_or_upgrade_ability(upgrade_name)
+		
+		
+	elif upgrade_name == "Mulligan Munchie":
+		# We handle this one directly.
+		# First, check if the player has an available ability slot.
+		if GameManager.equipped_abilities.size() < GameManager.max_ability_slots and not GameManager.extra_lives_are_capped:
+			print("Mulligan Munchie purchased! +1 Extra Life.")
+			# It directly increments the extra_lives variable.
+			GameManager.extra_lives += 1
+		else:
+			print("Purchase failed: Not enough ability slots!")
+			# We need to refund the Juice since the purchase failed.
+			var cost = calculate_upgrade_cost("Mulligan Munchie")
+			GameManager.juice += cost	
+	
 			
 	else:
 
@@ -1499,12 +1538,6 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			if not GameManager.juggernaut_unlocked:
 				GameManager.juggernaut_unlocked = true
 #--------SURVIVOR--------#
-		elif upgrade_name == "Mulligan Munchie":
-			if GameManager.extra_lives < 10 and not GameManager.extra_lives_are_capped:
-				GameManager.extra_lives += 1
-				print("Extra life added, thanks to ol' Mulligan!")
-			elif GameManager.extra_lives_are_capped:
-				print("Extra lives are capped! No can do!")
 		elif upgrade_name == "Phoenix Dawn": 
 			if not GameManager.phoenix_dawn_unlocked:
 				GameManager.phoenix_dawn_unlocked = true
@@ -1800,74 +1833,82 @@ func check_cookbook_progress(eaten_fruit):
 
 
 func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> Vector2:
-	var potential_position: Vector2
-	var is_safe_position = false
-	var trail_level = GameManager.sovereign_trail_level
+	# --- Step 1: Build a set of ALL occupied grid coordinates ---
+	# This is the new, robust part. We build this once at the start.
+	var occupied_coords = {}
+	
+	# Add the snake's head
+	var head_grid_pos = Vector2i((head.global_position - tile_offset) / tile_size)
+	occupied_coords[head_grid_pos] = true
 
-	var attempt_counter = 0
+	# Add all snake body segments
+	for segment in snake_body_segments:
+		var seg_grid_pos = Vector2i((segment.global_position - tile_offset) / tile_size)
+		occupied_coords[seg_grid_pos] = true
 
-	while not is_safe_position:
-		attempt_counter += 1
-		if attempt_counter > 5000:
-			print_debug("ERROR: Could not find a safe spawn position. Grid is full.")
-			return Vector2(-100, -100) #spawn off screen
-		var random_grid_pos: Vector2i
+	# Add all obstacles
+	for obstacle in spawned_obstacles:
+		var obs_grid_pos = Vector2i((obstacle.position - tile_offset) / tile_size)
+		occupied_coords[obs_grid_pos] = true
+
+	# Add all existing fruits
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		var fruit_grid_pos = Vector2i((fruit.position - tile_offset) / tile_size)
+		occupied_coords[fruit_grid_pos] = true
+
+	# Add any other pending unsafe positions (from More Mice!, etc.)
+	for pos in additional_unsafe_positions:
+		var unsafe_grid_pos = Vector2i((pos - tile_offset) / tile_size)
+		occupied_coords[unsafe_grid_pos] = true
 		
-		# --- POCKET GARDEN CHECK --- #
-		if GameManager.active_pocket_garden_rect != null and randf() < 0.9: # 90% chance
-			# If yes, force the spawn to be inside it
+	# --- Step 2: Find a random, empty grid coordinate ---
+	var safe_grid_pos = Vector2i.ZERO
+	var is_safe = false
+	var attempts = 0
+	
+	while not is_safe:
+		# This is a safety break to prevent an infinite loop if the board is full.
+		attempts += 1
+		if attempts > 2000: 
+			print_debug("ERROR: Could not find safe spawn position! The garden may be full.")
+			return Vector2(-100, -100) # Return an off-screen position as a fallback
+			
+		# --- existing logic for picking a candidate position ---
+		# It correctly handles Pocket Garden and Sovereign Trail.
+		var candidate_grid_pos: Vector2i
+		if GameManager.active_pocket_garden_rect != null and randf() < 0.9:
 			var pg_rect = GameManager.active_pocket_garden_rect
 			var x_pos = randi_range(pg_rect.position.x, pg_rect.end.x)
 			var y_pos = randi_range(pg_rect.position.y, pg_rect.end.y)
-			random_grid_pos = Vector2i(Vector2(x_pos, y_pos) / tile_size)
-		
-		
-		# --- Logic to pick a random spot (including trail bonus) ---
-		elif trail_level == 2 and not trail_pieces.is_empty() and randf() < 0.7:
+			candidate_grid_pos = Vector2i(Vector2(x_pos, y_pos) / tile_size)
+		elif GameManager.sovereign_trail_level == 2 and not trail_pieces.is_empty() and randf() < 0.7:
 			var random_trail_piece = trail_pieces.pick_random()
 			var trail_grid_pos = Vector2i((random_trail_piece.node.position + tile_offset) / tile_size)
 			var offset = Vector2i(randi_range(-2, 2), randi_range(-2, 2))
 			var calculated_grid_pos = trail_grid_pos + offset
-			random_grid_pos.x = clamp(calculated_grid_pos.x, 0, grid_width - 1)
-			random_grid_pos.y = clamp(calculated_grid_pos.y, 0, grid_height - 1)
+			candidate_grid_pos.x = clamp(calculated_grid_pos.x, 0, grid_width - 1)
+			candidate_grid_pos.y = clamp(calculated_grid_pos.y, 0, grid_height - 1)
 		else:
-			random_grid_pos = Vector2i(randi() % grid_width, randi() % grid_height)
-
-		potential_position = (Vector2(random_grid_pos) * tile_size) + tile_offset
-
-		# --- Full Safety Check ---
-		var is_on_snake = is_any_body_part_at(potential_position) or positions_are_equal(potential_position, head.global_position)
+			candidate_grid_pos = Vector2i(randi() % grid_width, randi() % grid_height)
 		
-		var is_on_obstacle = false
-		for obstacle in spawned_obstacles:
-			if positions_are_equal(potential_position, obstacle.position):
-				is_on_obstacle = true
-				break
-		
-		var is_on_another_fruit = false
-		for fruit in get_tree().get_nodes_in_group("fruits"):
-			if positions_are_equal(potential_position, fruit.position):
-				is_on_another_fruit = true
-				break
-		
-		var is_on_trail = false
-		if trail_level == 1:
-			for piece in trail_pieces:
-				if positions_are_equal(potential_position, piece.node.position + tile_offset):
-					is_on_trail = true
-					break
-		
-		var is_on_pending_spot = false
-		for pos in additional_unsafe_positions:
-			if positions_are_equal(potential_position, pos):
-				is_on_pending_spot = true
-				break
-		
-		# A spot is safe only if ALL checks are false.
-		if not is_on_snake and not is_on_obstacle and not is_on_another_fruit and not is_on_trail and not is_on_pending_spot:
-			is_safe_position = true
+		# Instead of the old, buggy safety check, we now use our new HashSet.
+		if not occupied_coords.has(candidate_grid_pos):
+			# We also need to check the trail repulsion logic for Sovereign Trail Lvl 1
+			var is_on_trail = false
+			if GameManager.sovereign_trail_level == 1:
+				for piece in trail_pieces:
+					var piece_grid_pos = Vector2i((piece.node.position + tile_offset) / tile_size)
+					if piece_grid_pos == candidate_grid_pos:
+						is_on_trail = true
+						break
 			
-	return potential_position
+			if not is_on_trail:
+				# If it's not in the set AND it's not on a repellent trail, it's safe!
+				safe_grid_pos = candidate_grid_pos
+				is_safe = true
+			
+	# --- Step 3: Convert the safe grid coordinate back to a world position ---
+	return (Vector2(safe_grid_pos) * tile_size) + tile_offset
 
 func draw_grid(grid_color: Color):
 	var grid_tilemap = $BlueprintGridTileMap # We can reuse this TileMap node
@@ -2070,7 +2111,8 @@ func _start_game_over_sequence():
 	await SceneTransition.uncover_screen("spiral")
 
 func game_over():
-	if GameManager.extra_lives > 0:
+	var munchie_data = GameManager.ability_charges.get("Mulligan Munchie")
+	if munchie_data and munchie_data.current > 0:
 		use_extra_life()
 		GameManager.has_died_this_garden = true
 		return
@@ -2114,7 +2156,7 @@ func use_extra_life():
 	await SceneTransition.cover_screen("diagonal")
 
 	# 2. While the screen is black, safely reset everything
-	GameManager.extra_lives -= 1
+	GameManager.ability_charges["Mulligan Munchie"].current -= 1
 	update_hud()
 	
 	while snake_body_segments.size() > 0:
@@ -2751,9 +2793,8 @@ func _calculate_passive_gps():
 func get_upgrade_rules(upgrade_key: String) -> Dictionary:
 	for path_key in GameManager.upgrade_data:
 		for sub_path_key in GameManager.upgrade_data[path_key]:
-			var sub_path_data = GameManager.upgrade_data[path_key][sub_path_key]
-			if sub_path_data.has(upgrade_key):
-				var rules = sub_path_data[upgrade_key]
+			if upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
+				var rules = GameManager.upgrade_data[path_key][sub_path_key][upgrade_key]
 				rules["path"] = path_key
 				rules["sub_path"] = sub_path_key
 				return rules
@@ -2795,6 +2836,12 @@ func calculate_upgrade_cost(upgrade_key: String) -> int:
 
 
 func get_upgrade_level_from_key(upgrade_key: String) -> int:
+	if upgrade_key == "Elephant Sized Portions":
+		return GameManager.es_portions_level
+	
+	if upgrade_key == "Mulligan Munchie":
+		return GameManager.extra_lives
+	
 	if upgrade_key in GameManager.ability_charges:
 		return GameManager.ability_charges[upgrade_key].total
 	

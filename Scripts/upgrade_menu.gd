@@ -69,9 +69,9 @@ var all_upgrade_nodes: Dictionary = {}
 var is_switching_tabs: bool = false
 var main_game 
 
-func _ready():
+func initialize(p_main_game):
 	# When the menu first loads, we find and connect everything once.
-	main_game = get_tree().current_scene
+	self.main_game = p_main_game
 	_build_node_dictionary()
 	_connect_all_signals()
 	var buy_icon = preload("res://Assets/PNGs/GambleSprites/PlusOne.png")
@@ -85,18 +85,23 @@ func _ready():
 	buy_extra_block_button.icon = buy_icon
 	sell_extra_block_button.icon = sell_icon
 
+
+
+
 func _build_node_dictionary():
-	# This powerful loop finds every single UpgradeNode in the scene, no matter which tab it's in.
 	all_upgrade_nodes.clear() # Clear it out for safety
+	# We loop through our master data source in GameManager.
 	for path_key in GameManager.upgrade_data:
-		# We need to handle the nested structure of our new data
+		# We need to handle the nested structure of our new data.
 		for sub_path_key in GameManager.upgrade_data[path_key]:
 			for upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
+				# We build the node name from the key (e.g., "Liquid Assets" -> "LiquidAssetsNode")
 				var node_name = upgrade_key.replace(" ", "").replace("'", "").to_pascal_case() + "Node"
 				var node = find_child(node_name, true, false)
 				if is_instance_valid(node):
 					all_upgrade_nodes[upgrade_key] = node
 				else:
+					# This warning is very helpful for debugging any naming mismatches!
 					print_debug("Warning: Could not find upgrade node named: ", node_name)
 
 
@@ -159,7 +164,7 @@ func update_all_displays():
 		var prereqs_met = main_game.check_prerequisites(upgrade_key)
 		var theme_colors = get_theme_colors(rules)
 		
-		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent)
+		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
 	
 	# We still have a separate helper for the Snake Eyes tab because it's so unique.
 	if top_tabs.get_tab_title(top_tabs.current_tab) == "Snake Eyes":
@@ -173,6 +178,7 @@ func get_theme_colors(rules: Dictionary) -> Dictionary:
 		"The Harvest": colors.main = Color("7ED321")
 		"The Redline": colors.main = Color("D0021B")
 		"The Ssscale": colors.main = Color("BD10E2")
+		"Snake Eyes": colors.main = Color("fdf5e6")
 		
 	match rules.get("sub_path", ""):
 		"Idle": colors.accent = Color("69D2A3")
@@ -186,6 +192,7 @@ func get_theme_colors(rules: Dictionary) -> Dictionary:
 		"Survivor": colors.accent = Color("8E8E93")
 		"Illusionist": colors.accent = Color("50E3C2")
 		"Architect": colors.accent = Color("4A90E2")
+		"Passives": colors.accent = Color("ffffff")
 		
 	return colors
 	
@@ -230,12 +237,45 @@ func _on_any_node_mouse_exited():
 	hovered_upgrade_key = ""
 
 func _on_description_delay_timer_timeout():
-	# If the timer finishes, we check if we are still hovering over a valid key.
-	if hovered_upgrade_key != "":
-		var rules = main_game.get_upgrade_rules(hovered_upgrade_key)
-		var cost = main_game.calculate_upgrade_cost(hovered_upgrade_key)
-		# Now, we show the panel.
-		description_panel.show_info(rules.display_name, rules.description, cost)
+	# This function runs ONLY if the mouse has hovered for 0.2 seconds.
+	
+	# 1. Safety check: If we aren't hovering anything, do nothing.
+	if hovered_upgrade_key == "":
+		return
+
+	# 2. Get the rules and cost for the hovered upgrade using our helpers.
+	var rules = main_game.get_upgrade_rules(hovered_upgrade_key)
+	# Another safety check in case the key was somehow invalid.
+	if rules.is_empty():
+		return
+		
+	var cost = main_game.calculate_upgrade_cost(hovered_upgrade_key)
+	# We get the display name directly from the rules dictionary.
+	var display_name = rules.get("display_name", hovered_upgrade_key)
+	var description = rules.get("description", "No description available.")
+	
+	# --- THIS IS THE NEW POSITIONING LOGIC ---
+	
+	# 3. Get the size of the screen (the viewport) and the mouse position.
+	var viewport_size = get_viewport().get_visible_rect().size
+	var mouse_position = get_viewport().get_mouse_position()
+	# 4. Create a new Vector2 to hold the panel's final position.
+	var panel_size = description_panel.size
+	var vertical_center = mouse_position.y - panel_size.y / 2
+
+	if mouse_position.x < viewport_size.x / 2.0:
+		# Simulate Center Right (panel appears to the right of cursor)
+		description_panel.position = mouse_position + Vector2(60, 0)
+		description_panel.position.y = vertical_center
+	else:
+		# Simulate Center Left (panel appears to the left of cursor)
+		description_panel.position = mouse_position - Vector2(panel_size.x + 60, 0)
+		description_panel.position.y = vertical_center
+	#CLAMP
+	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
+
+	# 8. show it with all the correct info.
+	description_panel.show_info(hovered_upgrade_key, display_name, description, cost)
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 

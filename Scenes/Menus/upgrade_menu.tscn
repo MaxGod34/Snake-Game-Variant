@@ -193,6 +193,7 @@ corner_radius_bottom_left = 200
 expand_margin_bottom = 4.0
 
 [node name="UpgradeMenu" type="CanvasLayer"]
+visible = false
 script = ExtResource("1_ltp0x")
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
@@ -1573,7 +1574,6 @@ horizontal_alignment = 1
 layout_mode = 2
 
 [node name="CoinSprite" type="Sprite2D" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl"]
-visible = false
 position = Vector2(204, 256)
 scale = Vector2(2, 2)
 texture = ExtResource("15_xbikd")
@@ -1621,7 +1621,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="BuyShareOrangeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1645,7 +1645,7 @@ icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellShareOrangeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1677,10 +1677,11 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
-text = "Orange Block
-7 mL/share"
+text = "Extra Pulp Co.
+7 mg/share
+owned: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
@@ -1690,7 +1691,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="BuyShareAppleButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1714,7 +1715,7 @@ icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellShareAppleButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1746,10 +1747,11 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
-text = "Apple Block
-7 mL/share"
+text = "Extra Pulp Co.
+7 mg/share
+owned: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
@@ -1759,7 +1761,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="BuyLightPulpShareButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1783,7 +1785,7 @@ icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellShareLightButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1815,10 +1817,11 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
-text = "Light Pulp Inc.
-7 mg/share"
+text = "Extra Pulp Co.
+7 mg/share
+owned: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
@@ -1828,7 +1831,7 @@ layout_mode = 2
 theme_override_constants/separation = 16
 
 [node name="BuyExtraPulpShareButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1852,7 +1855,7 @@ icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellSharePulpButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow"]
-custom_minimum_size = Vector2(80, 80)
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_vertical = 5
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
@@ -1884,10 +1887,11 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Extra Pulp Co.
-7 mg/share"
+7 mg/share
+owned: 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
@@ -2002,14 +2006,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 justification_flags = 35
 
-[node name="DescriptionPanel" parent="." instance=ExtResource("21_lwbsw")]
-visible = false
-modulate = Color(1, 1, 1, 0.905882)
-offset_left = -214.5
-offset_top = -236.0
-offset_right = 214.5
-offset_bottom = 236.0
-
 [node name="DescriptionDelayTimer" type="Timer" parent="."]
 wait_time = 0.2
 one_shot = true
@@ -2057,3 +2053,14 @@ text = "Block Market"
 horizontal_alignment = 1
 vertical_alignment = 2
 text_direction = 1
+
+[node name="DescriptionPanel" parent="." instance=ExtResource("21_lwbsw")]
+anchors_preset = 6
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -408.0
+offset_top = -380.5
+offset_right = 0.0
+offset_bottom = 380.5
+grow_horizontal = 0
+size_flags_vertical = 4

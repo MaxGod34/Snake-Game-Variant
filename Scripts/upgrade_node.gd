@@ -1,17 +1,14 @@
 extends Button
 
 # This signal tells the parent tab when this node is clicked or hovered.
-signal node_pressed(upgrade_key)
-signal node_mouse_entered(upgrade_key)
-signal node_mouse_exited(upgrade_key)
+#signal node_pressed(upgrade_key)
+#signal node_mouse_entered(upgrade_key)
+#signal node_mouse_exited(upgrade_key)
 
 var upgrade_key: String = ""
 
 func _ready():
-	# Connect our own internal signals.
-	pressed.connect(_on_pressed)
-	mouse_entered.connect(_on_mouse_entered)
-	mouse_exited.connect(_on_mouse_exited)
+	pass
 
 func get_node_icon_for_upgrade(icon_upgrade_key: String):
 	match icon_upgrade_key:
@@ -46,7 +43,7 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		"Elephant Sized Portions": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png")
 		"More Mice": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MoreMiceIcon.png")
 		"Golden Seeds": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GoldenSeedsIcon.png")
-		"Patient Gadener": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PatientGardenerIcon.png")
+		"Patient Gardener": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PatientGardenerIcon.png")
 		"Banana Bounty": self.icon = preload("res://Assets/PNGs/UpgradeIcons/BananaBountyIcon.png")
 		"The Satchel": self.icon = preload("res://Assets/PNGs/UpgradeIcons/TheSatchelIcon.png")
 	#------------Chef----------------
@@ -60,7 +57,7 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 	#-----------Geomancer------------
 		"Fertile Ground": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FertileGroundIcon.png")
 		"Rockmuncher": self.icon = preload("res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png")
-		"Material Rich Soil": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MaterialRichSoilIcon.png")
+		"Mineral Rich Soil": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MaterialRichSoilIcon.png")
 		"Geode Cracker": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GeodeCrackerIcon.png")
 		"Tectonic Shift": self.icon = preload("res://Assets/PNGs/UpgradeIcons/TectonicShiftIcon.png")
 		"Kinetic Feast": self.icon = preload("res://Assets/PNGs/UpgradeIcons/KineticFeastIcon.png")
@@ -111,11 +108,28 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 #----------------------Snake Eyes------------------------------------\\\\\\\\\\\\\\\\\\/////////////////////////////
 		"Coin Flip Curious": self.icon = preload("res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png")
 		"Passive Income": self.icon = preload("res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png")
-
+#-------------------------------Pulpsicle Stand---------------------#\\\\\\\\\\\\\\\\\\//////////////////////////////
+		"Synapse Slot": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SynapseSlotIcon.png")
+		"Chroma Scales": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png")
+		"Serpents Coffer": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SerpentsCofferIcon.png")
+		"Geode Compass": self.icon = preload("res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png")
+		"Four Leaf Clover": self.icon = preload("res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png") 
+		"Lasso Larry": self.icon = preload("res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png")
+		"Harvest Forecast": self.icon = preload("res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png") 
+#-------------------------------Rotating Items IDs---------------------#\\\\\\\\\\\\\\\\\\//////////////////////////////
+	#------------Commons---------
+		"juice_box": self.icon = preload("res://Assets/PNGs/RotatingItemIcons/juice_box_icon.png")
+	#------------Rares-----------
+		"handicap": self.icon = preload("res://Assets/PNGs/RotatingItemIcons/handicap_icon.png")
+	#----------Legendary---------
+		"elephant_devoured": self.icon = preload("res://Assets/PNGs/RotatingItemIcons/elephant_devoured_icon.png")
+		#--------DEFAULT-------
+		_:
+			self.icon = null
 
 
 # This is the master function that the tab controller will call.
-func update_display(p_upgrade_key: String, current_level: int, max_level: int, is_unlocked: bool, main_theme_color: Color, accent_theme_color: Color):
+func update_display(p_upgrade_key: String, current_level: int, max_level: int, is_unlocked: bool, theme_color: Color, accent_color: Color, theme_name: String = "Default"):
 	self.upgrade_key = p_upgrade_key
 	
 	# Set the button's icon texture.
@@ -132,10 +146,25 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 	style_normal.border_width_left = 8
 	style_normal.border_width_right = 8
 	
-	if current_level >= max_level:
-		style_normal.border_color = main_theme_color # A solid gold/accent border when maxed
+	
+	if theme_name == "Frosty":
+		# Create the cool "frosty" look for the Pulp-sicle Stand.
+		style_normal.bg_color = Color(0.9, 0.9, 1.0, 0.1) # A faint, icy blue
+		style_normal.border_color = theme_color # The rarity color (Gray, Blue, or Gold)
+		style_normal.corner_radius_top_left = 16
+		style_normal.corner_radius_top_right = 16
+		style_normal.corner_radius_bottom_left = 16
+		style_normal.corner_radius_bottom_right = 16
+		style_normal.bg_color = Color(0, 0, 0, 0.4)
+		style_normal.border_width_top = 16
+		style_normal.border_width_bottom = 16
+		style_normal.border_width_left = 16
+		style_normal.border_width_right = 16
 	else:
-		style_normal.border_color = accent_theme_color # The default border color
+		if current_level >= max_level:
+			style_normal.border_color = theme_color # A solid gold/accent border when maxed
+		else:
+			style_normal.border_color = accent_color # The default border color
 	
 	
 	# -- The "Disabled" Style --
@@ -143,11 +172,11 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 	style_disabled.border_color = Color(0.3, 0.3, 0.3, 0.5) # A dull gray for the border
 	#----Hovered
 	var style_hovered = style_normal.duplicate()
-	style_hovered.border_color = Color(main_theme_color.r, main_theme_color.g, main_theme_color.b, max(main_theme_color.a - 0.3, 0.0))
+	style_hovered.border_color = Color(theme_color.r, theme_color.g, theme_color.b, max(theme_color.a - 0.3, 0.0))
 	#----Pressed
 	var style_pressed = style_normal.duplicate()
-	var pressed_color = main_theme_color.lightened(0.3)
-	pressed_color.a = min(main_theme_color.a + 0.2, 1.0)
+	var pressed_color = theme_color.lightened(0.3)
+	pressed_color.a = min(theme_color.a + 0.2, 1.0)
 	style_pressed.border_color = pressed_color
 	# Now, apply these new styles to the button's theme.
 	self.add_theme_stylebox_override("normal", style_normal)
@@ -165,7 +194,7 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 		var block = ColorRect.new()
 		block.custom_minimum_size = Vector2(12, 12)
 		# We now use the theme color for the "empty" blocks.
-		block.color = Color.GOLD if i <= current_level else accent_theme_color.darkened(0.5)
+		block.color = Color.GOLD if i <= current_level else accent_color.darkened(0.5)
 		block.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		block.anchor_left = 0.0
 		block.anchor_top = 1.0
@@ -180,13 +209,3 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 	else:
 		modulate = Color.WHITE
 		disabled = (current_level >= max_level)
-
-# --- Signal Forwarders ---
-func _on_pressed():
-	emit_signal("node_pressed", upgrade_key)
-
-func _on_mouse_entered():
-	emit_signal("node_mouse_entered", upgrade_key)
-
-func _on_mouse_exited():
-	emit_signal("node_mouse_exited")

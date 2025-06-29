@@ -6,23 +6,24 @@ signal skip_garden_pressed
 
 # --- NODE REFERENCES ---
 # Get references to all the UI elements we need to update.
-@onready var current_pulp_label = $AnimationContainer/MainContainer/VBoxContainer/CurrentPulpLabel
-@onready var synapse_button = $AnimationContainer/MainContainer/VBoxContainer/SynapseRow/Synapse_Button
-@onready var chroma_scales_button = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/Pillar1_Button
-@onready var serpents_coffer_button = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/Pillar2_Button
-@onready var geode_compass_button = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/Pillar3_Button
-@onready var four_leaf_button = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/Pillar4_Button
-@onready var rand_item_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemButton
-@onready var rand_item_description = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemDescription
-@onready var lasso_button = $AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5/Pillar5_Button
-@onready var harvest_forecast_button = $AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6/Pillar6_Button
-@onready var continue_button = $AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/ContinueButton
+@onready var current_pulp_label = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/CurrentPulpLabel
+@onready var current_juice_label = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/CurrentJuiceLabel
+@onready var synapse_node = $AnimationContainer/MainContainer/VBoxContainer/SynapseRow/SynapseSlotNode
+@onready var chroma_scales_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/ChromaScalesNode
+@onready var serpents_coffer_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/SerpentsCofferNode
+@onready var geode_compass_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/GeodeCompassNode
+@onready var four_leaf_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/FourLeafCloverNode
+@onready var rotating_item_node = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemNode
+@onready var lasso_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/LassoLarryNode
+@onready var harvest_forecast_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/HarvestForecastNode
+@onready var continue_button = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/ContinueButton
 @onready var animation_container = $AnimationContainer
-@onready var description_label = $AnimationContainer/MainContainer/DescriptionLabel
 @onready var skip_garden_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
-
+@onready var description_panel = $AnimationContainer/DescriptionPanel
+@onready var description_delay_timer = $DescriptionDelayTimer
 # This dictionary will store a reference to every single pillar button.
-var pillar_buttons: Dictionary = {}
+var pillar_nodes: Dictionary = {}
+var hovered_item_key: String = ""
 
 var current_rotating_item: Dictionary = {}
 var rotating_item_purchased_this_visit: bool = false
@@ -31,39 +32,57 @@ var main_game: Node2D
 
 
 func _ready() -> void:
+	main_game = get_tree().current_scene
+	_build_node_dictionary()
 	_connect_all_signals()
-	
+
+
+func _build_node_dictionary():
+	# We build a dictionary of our pillar nodes for easy access.
+	# FIX: The keys now perfectly match the keys in GameManager.meta_upgrade_data.
+	pillar_nodes = {
+		"Synapse Slot": synapse_node,
+		"Serpents Coffer": serpents_coffer_node,
+		"Geode Compass": geode_compass_node,
+		"Four Leaf Clover": four_leaf_node,
+		"Chroma Scales": chroma_scales_node,
+		"Lasso Larry": lasso_node,
+		"Harvest Forecast": harvest_forecast_node
+	}
+
 	
 
 func _connect_all_signals():
-	# Also, build our dictionary of pillar buttons.
-	pillar_buttons = {
-		"Synapse Slot": $AnimationContainer/MainContainer/VBoxContainer/SynapseRow/Synapse_Button,
-		"Serpent's Coffer": $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar2/Pillar2_Button,
-		"Geode Compass": $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar3/Pillar3_Button,
-		"Four Leaf Clover": $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar4/Pillar4_Button,
-		"Chroma Scales": $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/Pillar1/Pillar1_Button,
-		"Lasso Larry": $AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar5/Pillar5_Button,
-		"Harvest Forecast": $AnimationContainer/MainContainer/VBoxContainer/HBoxContainer/Pillar6/Pillar6_Button
-	}
-	# Loop through our button dictionary to connect everything cleanly.
-	for upgrade_key in pillar_buttons:
-		var button = pillar_buttons[upgrade_key]
-		if is_instance_valid(button):
-			button.pressed.connect(_on_pillar_button_pressed.bind(upgrade_key))
-			button.mouse_entered.connect(_on_pillar_mouse_entered.bind(upgrade_key))
-			button.mouse_exited.connect(_on_pillar_mouse_exited)
+	# Loop through our dictionary to connect all the pillar nodes.
+	for upgrade_key in pillar_nodes:
+		var node = pillar_nodes[upgrade_key]
+		if is_instance_valid(node):
+			# --- THIS IS THE FIX ---
+			# We now connect to the button's built-in "pressed" signal,
+			# not our old custom one. We use .bind() to tell the handler
+			# which upgrade was clicked. This will correctly send only ONE argument.
+			node.pressed.connect(_on_pillar_node_pressed.bind(upgrade_key))
+			
+			# We do the same for the hover effects.
+			node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
+			node.mouse_exited.connect(_on_any_node_mouse_exited.bind(upgrade_key))
+			
+	rotating_item_node.pressed.connect(_on_rotating_item_pressed)
+	rotating_item_node.mouse_entered.connect(_on_any_node_mouse_entered.bind("rotating_item"))
+	rotating_item_node.mouse_exited.connect(_on_any_node_mouse_exited.bind("rotating_item"))
+	description_delay_timer.timeout.connect(_on_description_delay_timer_timeout)
+			
 			
 	# Connect the other buttons
 	continue_button.pressed.connect(_on_continue_button_pressed)
-	rand_item_button.pressed.connect(_on_rotating_item_button_pressed)
+
 	skip_garden_button.pressed.connect(_on_skip_garden_button_pressed)
 
 
 # This is the master function that main.gd will call.
 func open_shop():
 	rotating_item_purchased_this_visit = false
-	pick_and_display_rotating_item()
+	pick_new_rotating_item()
 	animation_container.visible = false
 	update_all_displays()
 	self.visible = true
@@ -72,58 +91,36 @@ func open_shop():
 # This function refreshes every piece of information in the shop.
 func update_all_displays():
 	update_pulp_label()
-	for upgrade_key in pillar_buttons:
-		_update_pillar_button(upgrade_key)
+	for upgrade_key in pillar_nodes:
+		_update_pillar_node(upgrade_key)
 	update_rotating_item_display()
 	# --- NEW: Show/Hide the Skip Button ---
 	var skip_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
-	if GameManager.fast_track_unlocked and GameManager.current_garden < 8:
-		skip_button.visible = true
-	else:
-		skip_button.visible = false
+	skip_button.visible = (GameManager.fast_track_unlocked and GameManager.current_garden < 8)
 
 # --- UPDATE FUNCTIONS ---
 
 func update_pulp_label():
 	current_pulp_label.text = "Pulp: %smg" % GameManager.pulp
+	current_juice_label.text = "Juice: %smL" % GameManager.juice
 
 
 # This is our new, reusable helper function. It can update ANY pillar button.
-func _update_pillar_button(upgrade_key: String):
-	var button_node = pillar_buttons.get(upgrade_key)
-	if not is_instance_valid(button_node): return
+func _update_pillar_node(upgrade_key: String):
+	var node = pillar_nodes.get(upgrade_key)
+	if not is_instance_valid(node): return
 
 	var rules = GameManager.meta_upgrade_data[upgrade_key]
-	# FIX: We now get the level from our single, authoritative helper function.
 	var current_level = get_meta_upgrade_level(upgrade_key)
 	
-	if current_level >= rules["max_level"]:
-		button_node.text = upgrade_key + "\n(MAX)"
-		button_node.disabled = true
-	else:
-		var cost_index = current_level
-		# Special case for Synapse Slot cost index
-		if upgrade_key == "Synapse Slot":
-			cost_index = GameManager.max_ability_slots
-
-		var cost = rules["costs"][cost_index]
-		button_node.text = upgrade_key + "\n(%s Pulp)" % cost
-		button_node.disabled = (GameManager.pulp < cost)
-		
-	# Update the Indicator Blocks.
-	var indicator_container = button_node.get_parent().get_node("IndicatorContainer")
-	for i in range(1, indicator_container.get_child_count() + 1):
-		var block = indicator_container.get_node("Block" + str(i))
-		if block:
-			block.visible = (i <= rules["max_level"])
-			if block.visible:
-				block.color = Color.GOLD if i <= current_level else Color.GRAY
+	# Pass all the data to the node's own update function.
+	node.update_display(upgrade_key, current_level, rules.max_level, true, Color("a3d5ff"), Color.GOLD, "Frosty")
 
 func get_meta_upgrade_level(upgrade_key: String) -> int:
 	match upgrade_key:
 		"Synapse Slot":
 			return GameManager.max_ability_slots
-		"Serpent's Coffer":
+		"Serpents Coffer":
 			return GameManager.serpents_coffer_level
 		"Geode Compass":
 			return GameManager.geode_compass_level
@@ -145,7 +142,7 @@ func get_meta_upgrade_level(upgrade_key: String) -> int:
 
 
 
-func pick_and_display_rotating_item():
+func pick_new_rotating_item():
 	# This is where the magic happens!
 	
 	# 1. First, build the loot table based on rarity.
@@ -164,23 +161,43 @@ func pick_and_display_rotating_item():
 	update_rotating_item_display()
 
 
+func _on_rotating_item_mouse_entered():
+	if not rotating_item_purchased_this_visit and not current_rotating_item.is_empty():
+		# We call the same show_info function, but pass it the data from our rotating item.
+		description_panel.show_info(
+			current_rotating_item.name,
+			current_rotating_item.description,
+			current_rotating_item.cost
+		)
+
+
+
+
 func update_rotating_item_display():
 	# This is our new, dedicated update function for the rotating item.
-	var button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemButton
-	var description = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemDescription
-	
+	var node = rotating_item_node	
 	# If an item has been purchased this visit, lock the button.
 	if rotating_item_purchased_this_visit:
-		button.text = "Purchased!"
-		button.disabled = true
-		description.text = "Enjoy!"
+		node.disabled = true
+		node.modulate = Color.GRAY
+		# Since we're not calling update_display, let's clear the text
+		node.text = "Purchased!"
 		return
-
-	# Otherwise, display the current item's info.
-	if not current_rotating_item.is_empty():
-		button.text = "%s (%smg)" % [current_rotating_item["name"], current_rotating_item["cost"]]
-		description.text = current_rotating_item["description"]
-		button.disabled = (GameManager.pulp < current_rotating_item["cost"])
+	if current_rotating_item.is_empty():
+		return
+		
+	var rules = current_rotating_item
+	
+	# --- THIS IS THE NEW RARITY LOGIC ---
+	var rarity_color = Color.GRAY # Default to Common
+	if rules.rarity == "Rare":
+		rarity_color = Color.DODGER_BLUE
+	elif rules.rarity == "Legendary":
+		rarity_color = Color.GOLD
+		
+	# We now pass the correct rarity color to the node.
+	node.update_display(rules.id, 0, 1, true, rarity_color, rarity_color, "Frosty")
+	node.disabled = (GameManager.pulp < rules.cost)
 
 # --- SIGNAL HANDLERS ---
 
@@ -188,7 +205,7 @@ func _on_continue_button_pressed():
 	# Hide the shop and tell the main game to proceed.
 	emit_signal("continue_to_next_garden")
 
-func _on_rotating_item_button_pressed():
+func _on_rotating_item_pressed():
 	if rotating_item_purchased_this_visit: return
 	if GameManager.pulp >= current_rotating_item["cost"]:
 		# Subtract the cost
@@ -206,29 +223,24 @@ func _on_rotating_item_button_pressed():
 		$AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemButton.disabled = true
 
 
-func _on_pillar_button_pressed(upgrade_key: String):
-	var rules = GameManager.meta_upgrade_data[upgrade_key]
+func _on_pillar_node_pressed(upgrade_key: String):
+	# It gets all the info it needs from the helper function.
 	var current_level = get_meta_upgrade_level(upgrade_key)
-	
-	
+	var rules = GameManager.meta_upgrade_data[upgrade_key]
 
 	if current_level < rules["max_level"]:
-		var cost = rules["costs"][current_level]
+		var cost_index = current_level
+		if upgrade_key == "Synapse Slot":
+			cost_index = GameManager.max_ability_slots
+
+		var cost = rules["costs"][cost_index]
 		if GameManager.pulp >= cost:
 			GameManager.pulp -= cost
-			
-			if upgrade_key == "Lasso Larry":
-				main_game._purchase_or_upgrade_ability(upgrade_key)
-				update_all_displays()
-			else:
-				match upgrade_key:
-					"Synapse Slot": GameManager.max_ability_slots += 1
-					"Serpent's Coffer": GameManager.serpents_coffer_level += 1
-					"Geode Compass": GameManager.geode_compass_level += 1
-					"Four Leaf Clover": GameManager.four_leaf_clover_level += 1
-					"Harvest Forecast": GameManager.harvest_forecast_level += 1
-				print("Player chose PULP upgrade: ", upgrade_key, " lvl ", current_level)
-				update_all_displays()
+			main_game.handle_meta_upgrade_purchase(upgrade_key)
+			update_all_displays()
+
+
+
 
 
 # This function will animate the shop sliding IN from the bottom of the screen.
@@ -260,15 +272,53 @@ func animate_out():
 	animation_container.visible = false
 
 
-func _on_pillar_mouse_entered(upgrade_key: String):
-	var rules = GameManager.meta_upgrade_data[upgrade_key]
-	description_label.text = rules["description"]
-	description_label.visible = true
+func _on_any_node_mouse_entered(upgrade_key: String):
+	hovered_item_key = upgrade_key
+	description_delay_timer.start()
 
-func _on_pillar_mouse_exited():
-	description_label.visible = false
+func _on_any_node_mouse_exited(upgrade_key: String):
+	# We only act if the mouse is exiting the currently hovered item.
+	if hovered_item_key == upgrade_key:
+		description_delay_timer.stop()
+		description_panel.visible = false
+		hovered_item_key = ""
 
 func _on_skip_garden_button_pressed():
 	# When this button is pressed, it just sends out the signal.
 	# main.gd will be listening and will handle the actual logic.
 	emit_signal("skip_garden_pressed")
+
+
+func _on_description_delay_timer_timeout():
+	if hovered_item_key == "": return # Safety check
+
+	var rules: Dictionary
+	var cost: int
+	var display_name: String
+	
+	# --- THIS IS THE FIX ---
+	# We now handle the two different item types separately.
+	
+	if hovered_item_key == "rotating_item":
+		# It's the rotating item. Get its data from current_rotating_item.
+		rules = current_rotating_item
+		if rules.is_empty(): return
+		
+		display_name = rules.get("name", "Unknown Item")
+		cost = rules.get("cost", 0)
+	else:
+		# It's a pillar upgrade. Get its data from meta_upgrade_data.
+		rules = GameManager.meta_upgrade_data.get(hovered_item_key)
+		if rules.is_empty(): return
+		
+		# For pillars, the key IS the display name.
+		display_name = hovered_item_key
+		
+		var current_level = get_meta_upgrade_level(hovered_item_key)
+		if current_level < rules.costs.size():
+			cost = rules.costs[current_level]
+		else:
+			cost = 999 # Maxed out
+			
+	# Now that we have the correct data, we can safely show the info.
+	description_panel.show_info(hovered_item_key, display_name, rules.description, cost)

@@ -15,7 +15,22 @@ func _ready():
 
 
 
-
+func get_icon_for_ability(ability_key: String) -> Texture2D:
+	match ability_key:
+		"Autotomy": return preload("res://Assets/PNGs/UpgradeIcons/AutotomyIcon.png")
+		"Banana Bounty": return preload("res://Assets/PNGs/UpgradeIcons/BananaBountyIcon.png")
+		"Blink": return preload("res://Assets/PNGs/UpgradeIcons/BlinkIcon.png")
+		"Burrow": return preload("res://Assets/PNGs/UpgradeIcons/BurrowIcon.png")
+		"Garden Weaver": return preload("res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png")
+		"Meditate": return preload("res://Assets/PNGs/UpgradeIcons/MeditateIcon.png")
+		"Mise en Place": return preload("res://Assets/PNGs/UpgradeIcons/MiseenPlaceIcon.png")
+		"Mulligan Munchie": return preload("res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png")
+		"Phase Shift": return preload("res://Assets/PNGs/UpgradeIcons/PhaseShiftIcon.png")
+		"Pocket Garden": return preload("res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png")
+		"Sacrificial Molt": return preload("res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png")
+		"Tenderizer": return preload("res://Assets/PNGs/UpgradeIcons/TenderizerIcon.png")
+		"Zenith": return preload("res://Assets/PNGs/UpgradeIcons/ZenithIcon.png")
+		_: return preload("res://Assets/PNGs/snake_fill.png")
 
 # This is the master function that main.gd will call.
 # It takes the ability's data and updates the slot's appearance.
@@ -34,7 +49,13 @@ func update_display(ability_key: String, charges: int):
 	
 	# This is where we would set the icon's texture based on the ability key.
 	# need to create icons for each ability!
-	# icon.texture = preload("res://path/to/" + ability_key + "_icon.png")
+	icon.texture = get_icon_for_ability(ability_key)
+	if charges <= 0:
+		icon.modulate = Color(0.5, 0.5, 0.5, 0.7)
+		charge_count_label.modulate = Color(0.5, 0.5, 0.5, 0.7)
+	else:
+		icon.modulate = Color.WHITE
+		charge_count_label.modulate = Color.WHITE
 	
 	charge_count_label.text = str(charges)
 
