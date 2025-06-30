@@ -21,7 +21,13 @@ var garden_data = {
 	# --- The Endgame ---
 	7: {"name": "The Basilisk's Lair", "score_goal": 333, "obstacle_count": 25},
 	8: {"name": "The Kill Screen Quarry", "score_goal": 420, "obstacle_count": 35},
-	9: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 50}
+	9: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 50},
+	# --- The END ---
+	10: {"name": "Revelations", "score_goal": 777, "obstacle_count": 66},
+	11: {"name": "The End", "socre_goal": 1000, "obstacle_count": 150},
+	12: {"name": "Genesis", "score_goal": 1200, "obstacle_count": 100},
+	# --- Endless ---
+	13: {"name": "Victory Lap", "score_goal": 99999, "obstacle_count": 0}
 }
 
 var garden_bonus_data = {
@@ -94,7 +100,7 @@ var max_ability_slots: int = 0
 
 #--------Rotating Item Stuff------#
 var extra_lives_are_capped: bool = false
-
+var legendary_items_seen_this_run: Array = []
 
 	#----Active Ability Flags----#
 var burrow_is_active = false
@@ -124,16 +130,30 @@ var gluttons_greed_unlocked = false
 var market_crash_level = 0
 # Path B (Pulp Focus)
 var principal_pulp_level = 0
-var principal_pulp_data = [1.0, 1.5, 2.0, 3.0] # Lvl 0, 1, 2, 3
+var principal_pulp_data = [
+	1.0, 1.1, 1.25, 1.5, 1.75, # 0-4
+	2.0, 2.5, 3.0, 3.5, 4.2, # 5-9
+	5.0, 6.0, 7.0, 8.0, 9.0, # 10-14
+	10.0, 12.0, 14.0, 16.0, 18.0, #15-19
+	100.0
+	] # Lvl 0, 1, 2, 3
 var golden_handshake_level = 0
-var golden_handshake_data = [1.0, 1.25, 1.5, 2.0]
+var golden_handshake_data = [1.0,
+	1.25, 1.5, 2.0, 2.5, 4.0,
+	6.0, 8.0, 10.0, 12.5, 25.0
+	]
 var juice_press_used_this_garden: bool = false
 # Juice Press is an active ability, so it will be handled by our hotbar system
 var liquidation_used = false
 
 # --- Idle Path ---
 var snake_clicker_level = 0
-var snake_clicker_data = [0.0, 0.1, 0.25, 0.5, 1.0, 2.0, 3.0, 5.0, 7.5, 10.0, 25.0]
+var snake_clicker_data = [
+	0.0, 0.1, 0.2, 0.35, 0.5, 0.7, 0.95, 1.0, 1.25, 1.5, #Levels 0-9
+	1.75, 2.0, 2.4, 2.8, 3.0, 3.5, 4.0, 4.75, 5.5, 6.25, #Levels 10-19
+	7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 16.0, 18.0, 20.0, #Levels 20-29
+	50.0 #Level 30
+	]
 var get_rich_quick_unlocked = false
 var custom_aftertaste_unlocked = false
 var arcane_flow_unlocked = false
@@ -211,10 +231,10 @@ var autotomy_used_this_garden = false
 # --- Frenzy Path ---
 var sugar_rush_unlocked = false
 var chain_reaction_level = 0
-var chain_reaction_data = [1, 5, 10, 999] # Lvl 0, 1, 2, 3
+var chain_reaction_data = [1, 5, 10, 15, 20, 999] # Lvl 0, 1, 2, 3, 4, 5
 var overdrive_level = 0
 var lingering_rush_level = 0
-var lingering_rush_data = [5.0, 5.5, 6.0, 6.5, 7.0, 7.5]
+var lingering_rush_data = [5.0, 5.5, 6.0, 6.5, 7.0, 10.0]
 var juggernaut_unlocked = false
 # track the combo itself
 var current_combo = 0
@@ -260,7 +280,7 @@ var shatter_reality_unlocked = false
 
 #-----------#illusionist------------#
 var ghost_tail_level = 0
-var ghost_tail_data = [0, 7, 10, 15, 20, 34] # Lvl 0, 1, 2, 3, 4, 5
+var ghost_tail_data = [0, 7, 10, 15, 20, 34, 50, 100, 150, 200, 300] # Lvl 0-10
 var three_card_monty_unlocked = false
 var fractured_self_unlocked = false
 var dazzle_pie_unlocked = false
@@ -288,6 +308,7 @@ var block_market_prices: Dictionary = {
 var difficulty_data = {
 	"hatchling": {	#Easy
 		"name": "Hatchling",
+		"campaign_length": 9,
 		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
 		"goal_multiplier": 0.8,   # Shorter garden goals
 		"juice_cost_modifier": 0,    # Upgrades cost the normal amount
@@ -296,6 +317,7 @@ var difficulty_data = {
 	},
 	"viper": {	#Medium
 		"name": "Viper",
+		"campaign_length": 9,
 		"speed_multiplier": 1.0,  # Normal speed
 		"goal_multiplier": 1.0,   # Normal garden goals
 		"juice_cost_modifier": 1,    # Upgrades cost +1 SP
@@ -304,11 +326,21 @@ var difficulty_data = {
 	},
 	"basilisk": {	#Hard
 		"name": "Basilisk",
+		"campaign_length": 12,
 		"speed_multiplier": 0.8,  # Faster snake
-		"goal_multiplier": 1.25,  # Longer garden goals
+		"goal_multiplier": 1.0,  # Longer garden goals
 		"juice_cost_modifier": 2,    # Upgrades cost +2 SP
 		"starting_juice": 0,
 		"start_slots": 2
+	},
+	"Black Mamba": {	#FINAL
+		"name": "Black Mamba",
+		"campaign_length": 13,
+		"speed_multiplier": 0.8,  # Faster snake
+		"goal_multiplier": 1.0,  # Longer garden goals
+		"juice_cost_modifier": 3,    # Upgrades cost +2 SP
+		"starting_juice": 0,
+		"start_slots": 0
 	}
 }
 #---------CLASS PARAMETERS--------#
@@ -678,229 +710,257 @@ var class_data = {
 var upgrade_data = {
 #------------------------------THE CORE (IDLE, PLANNER, LEDGER)-------------------------------------#
 	"The Core": {
-		"Idle": {
+		"Idle": { #Total Tree cost = 1222
 			"Snake Clicker": {
 				"display_name": "Snake Clicker",
 				"description": "0.1 gps, 0.25 gps, 0.5 gps, ...",
-				"costs": [
-					2, 2, 2, 2, 2,
-					2, 2, 2, 2, 30
+				"costs": [ #1086 total cost
+					1, 2, 3, 4, 6,
+					10, 12, 14, 16, 18,
+					20, 22, 24, 26, 28,
+					30, 32, 34, 36, 38,
+					40, 44, 48, 52, 56,
+					60, 65, 70, 75, 200,
 				],
-				"max_level": 10
+				"max_level": 30
 			},
 			"Get Rich Quick": {
 				"display_name": "Get Rich Quick",
 				"description": "Your Speed Hero!\nGain +0.1 GPS for every mL spent in the Acrobat tree.",
-				"costs": [4], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
 			},
 			"Custom Aftertaste": {
 				"display_name": "Custom Aftertaste",
 				"description": "Your Cooking Hero!\nGain +0.1 GPS for every mL spent in the Chef tree.",
-				"costs": [4], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
 			},
 			"Arcane Flow": {
 				"display_name": "Arcane Flow",
 				"description": "Your white mage! Just kidding\nYour Wizard Hero!\nGain +0.1 GPS for every mL spent in the Illusionist tree.",
-				"costs": [4], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
 			},
 			"Pulp Reactor": {
 				"display_name": "Pulp Reactor",
 				"description": "GPS is permanently increased by +1\nfor every 100 Pulp you are currently holding.",
-				"costs": [8],
+				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Snake Clicker", "level": 3}
 			},
 			"Unstable Metabolism": {
 				"display_name": "Unstable Metabolism",
 				"description": "Permanently doubles your total GPS\nThat's it, fetch!",
-				"costs": [10],
+				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Snake Clicker", "level": 3}
 			}
 		},
 		
-		"Planner": {
-			"Diet Slith": {
+		"Planner": { #900 total
+			"Diet Slith": { #555 total
 				"display_name": "Diet Slith",
-				"description": "Decrease your speed by 10%\nSugar Free!",
-				"costs": [1, 1, 2, 2, 3], # 5 levels total
-				"max_level": 5
+				"description": "Decrease your speed by 5%\nSugar Free!",
+				"costs": [
+					3, 6, 9, 12, 15,
+					20, 25, 30, 35, 40,
+					50, 60, 70, 80, 100
+					], # 15 levels total
+				"max_level": 15
 			},
 			"Fruit Foresight": {
 				"display_name": "Fruit Foresight",
 				"description": "See the next fruit!\nUse responsibly",
-				"costs": [3], # One-time purchase
+				"costs": [12], # One-time purchase
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 2} # Requires Diet Slith Lvl 2
+				"prerequisite": {"upgrade": "Diet Slith", "level": 5} # Requires Diet Slith Lvl 2
 			},
 			#New geological survey... ooo lala
 			"Geological Survey": {
-			"display_name": "Geological Survey", "max_level": 1, "costs": [4],
+			"display_name": "Geological Survey", "max_level": 1, "costs": [16],
 			"description": "Gain bonus Juice at end of Garden\nMore rocks = More Juice",
-			"prerequisite": {"upgrade": "Diet Slith", "level": 3}
+			"prerequisite": {"upgrade": "Diet Slith", "level": 5}
 			},
-			"Sovereign Trail": {
+			"Sovereign Trail": { #72 total
 				"display_name": "Sovereign Trail",
 				"description": "Leave a trail for 10 segments!\nLvl 1:Fruits can't spawn in your trail!\nLvl 2: Fruits wills spawn VERY close to your trail",
-				"costs": [2, 4], # Lvl 1: Repel, Lvl 2: Attract
+				"costs": [8, 64], # Lvl 1: Repel, Lvl 2: Attract
 				"max_level": 2,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 2}
+				"prerequisite": {"upgrade": "Diet Slith", "level": 3}
 			},
-			"Meditate": {
+			"Meditate": { #Levels 1-4 195
 				"display_name": "Meditate",
-				"costs": [5, 5, 10],
-				"description": "Pause! Need I say more?\nRequires Diet Slith lvl 5",
-				"max_level": 3,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 5}
+				"costs": [15, 30, 60, 100, 200, 500, 1000, 2500, 5000],
+				"description": "Pause! Need I say more?\nRequires Diet Slith lvl 7",
+				"max_level": 9,
+				"prerequisite": {"upgrade": "Diet Slith", "level": 7}
 			},
 			"Garden Weaver": {
 				"display_name": "Garden Weaver",
-				"description": "Reroll all the fruits MUCH closer!\nRequires Diet Slith Lvl 5",
-				"costs": [5],
+				"description": "Reroll all the fruits MUCH closer!\nRequires Diet Slith Lvl 7",
+				"costs": [50],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 5}
+				"prerequisite": {"upgrade": "Diet Slith", "level": 7}
 			}
 		},
 		"Ledger": {
 			# --- Tier 1 (The Choice) ---
-			"Liquid Assets": {
-				"display_name": "Liquid Assets", "max_level": 5, "costs": [2, 2, 3, 3, 4],
+			"Liquid Assets": { #2501 up to lvl 10
+				"display_name": "Liquid Assets", 
+				"max_level": 15, 
+				"costs": [
+					1, 10, 30, 60, 100, #201
+					150, 250, 400, 600, 900, #2300
+					1200, 1800, 2400, 5000, 9999 #20,399
+					],
 				"description": "Each level grants\n+1 Juice on level up.",
 				"exclusive_with": "Principal Pulp" # This new key locks the other option
 			},
-			"Principal Pulp": {
-				"display_name": "Principal Pulp", "max_level": 3, "costs": [2, 3, 4],
+			"Principal Pulp": { # 4716mL total
+				"display_name": "Principal Pulp",
+				"max_level": 20,
+				"costs": [
+					1, 5, 10, 15, 24, #55
+					36, 50, 75, 100, 125, #386
+					150, 175, 200, 250, 300, #1075
+					400, 500, 600, 700, 1000 #3200
+					],
 				"description": "Multiplies base Pulp reward\nfrom base score at end of Garden.",
 				"exclusive_with": "Liquid Assets"
 			},
 
 			# --- Path A (Juice Focus) Upgrades ---
 			"Fast Track": {
-				"display_name": "Fast-Track", "max_level": 1, "costs": [3],
+				"display_name": "Fast-Track", "max_level": 1, "costs": [1],
 				"description": "Unlocks the 'Skip Garden' button in the Pulp-sicle Stand,\nOn skip, +5mL immediate Juice.",
 				"prerequisite": {"upgrade": "Liquid Assets", "level": 1}
 			},
 			"Gluttons Greed": {
-				"display_name": "Glutton's Greed", "max_level": 1, "costs": [6],
+				"display_name": "Glutton's Greed", "max_level": 1, "costs": [16],
 				"description": "Quantity or Quality, or...\nIncrease fruit reward by max fruits",
-				"prerequisite": {"upgrade": "Fast Track", "level": 1}
+				"prerequisite": {"upgrade": "Liquid Assets", "level": 2}
 			},
-			"Market Crash": {
-				"display_name": "Market Crash", "max_level": 3, "costs": [8, 8, 8],
+			"Market Crash": { #1129
+				"display_name": "Market Crash", "max_level": 10, "costs": [1, 8, 15, 30, 50, 75, 100, 150, 200, 500],
 				"description": "Permanently reduce the Juice cost of all upgrades.\nLvl 1: -1mL\nLvl 2: -2mL",
-				"prerequisite": {"upgrade": "Gluttons Greed", "level": 1}
+				"prerequisite": {"upgrade": "Liquid Assets", "level": 3}
 			},
 
 			# --- Path B (Pulp Focus) Upgrades ---
-			"Golden Handshake": {
-				"display_name": "Golden Handshake", "max_level": 3, "costs": [3, 4, 5],
+			"Golden Handshake": { #567
+				"display_name": "Golden Handshake", "max_level": 10, "costs": [3, 4, 5, 15, 25, 40, 65, 90, 120, 200],
 				"description": "Multiplies all BONUS Pulp rewards\n(Flawless, Par Time, etc.) at the end of each Garden.",
 				"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
 			},
 			"Juice Press": {
-				"display_name": "Juice Press", "max_level": 1, "costs": [5],
+				"display_name": "Juice Press", "max_level": 1, "costs": [64],
 				"description": "Active Ability (Once per Garden):\nConvert all your current Pulp into Juice\nat a 5mg:1mL ratio.",
-				"prerequisite": {"upgrade": "Golden Handshake", "level": 1}
+				"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
 			},
 			"Liquidation": {
 				"display_name": "Liquidation", "max_level": 1, "costs": [1],
 				"description": "Instantly double your current Juice\nNo strings attached",
-				"prerequisite": {"upgrade": "Juice Press", "level": 1}
+				"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
 			}
 		}
 	},#---------------------------------------------------------------------------------------------#
 	#---------------------------HARVEST (GLUTTON, CHEF, GEOMANCER-----------------------------------#
 	#-----------------------------the glutton----------------------------#
 	"The Harvest": {
-		"Glutton": {
-			"Elephant Sized Portions": {
+		"Glutton": { #2760 total
+			"Elephant Sized Portions": { #781
 				"display_name": "Elephant Sized Portions",
 				"description": "Increase growth per fruit.\n+1 per level (depending on class)",
-				"costs": [1,1,2,2,3,3,4,4,5,5],
-				"max_level": 10
+				"costs": [
+					3,5,7,9,12, #36
+					16,20,24,28,32, #120
+					35,40,45,50,55, #225
+					60,70,80,90,100 #400
+					],
+				"max_level": 20
 			},
-			"More Mice": {
+			"More Mice": { #1188
 				"display_name": "More Mice!",
 				"description": "Increases maximum number of fruits\n+1 per level",
-				"costs": [2,2,3,3,4,4],
-				"max_level": 6,
-				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
+				"costs": [
+					5,10,18,30,50,
+					75,100,150,250,500
+					],
+				"max_level": 10,
 			},
-			"Golden Seeds": {
+			"Golden Seeds": { #267
 				"display_name": "Golden Seeds",
 				"description": "Golden Apples can spawn granting SP.\nEach level increases the chance and reward.\nLvl 1: 5% and 1mL\nLvl 2: 10% and 1mL\nLvl 3: 20% and 3mL\nLvl 4: 33% and 3mL",
-				"costs": [3,3,4,4],
+				"costs": [7, 35, 75, 150],
 				"max_level": 4,
 				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
 			},
-			"Patient Gardener": {
+			"Patient Gardener": { #200
 				"display_name": "Patient Gardener",
 				"description": "Fruits will ripen over time,\ngranting bonus growth\nLvl 3 = X3 bonuse",
-				"costs": [3,3,4],
+				"costs": [16, 64, 128],
 				"max_level": 3,
 				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
 			},
-			"Banana Bounty": {
+			"Banana Bounty": { #First 5: 260
 				"display_name": "Banana Bounty",
 				"description":  "Active Ability: Marks a random fruit.\nEating it grants growth equal\nto your max fruit count * your fruit reward.",
-				"costs": [5, 7],
-				"max_level": 2,
+				"costs": [16, 32, 48, 64, 100, 250, 500, 1000, 2500],
+				"max_level": 9,
 				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 5}
 			},
-			"The Satchel": {
+			"The Satchel": { #64
 				"display_name": "The Satchel",
 				"description": "Permanently unlocks another active ability slot.",
-				"costs": [8],
+				"costs": [64],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 10, "and": "Golden Seeds", "and_level": 4}
 			}
 		},
 		
 		"Chef": {
-			"Golden Seed Extract": {
+			"Golden Seed Extract": { # 79
 				"display_name": "Golden Seed Extract",
 				"description": "Increases the spawn chance of valuable Golden Apples.\nEach level adds a 5% chance!",
-				"costs": [3, 4, 5], # Example costs for 3 levels
+				"costs": [3, 12, 64], # Example costs for 3 levels
 				"max_level": 3
 			},
 			"Exotic Seeds": {
 				"display_name": "Exotic Seeds",
 				"description": "Adds new, rare fruits to the spawn pool with each level.\nLvl 1: Jumping Bean\nLvl 2: Ghost Pepper\nLvl 3: Iron Cherry\nLvl 4: Dragon Fruit\nLvl 5: Double odds of these special fruits spawning",
-				"costs": [3, 3, 4, 4, 5], # 5 levels
+				"costs": [4, 12, 24, 36, 81], # 5 levels
 				"max_level": 5
 			},
 			"The Cookbook": {
 				"display_name": "The Cookbook",
 				"description": "Unlocks the Recipe system,\ngranting temporary buffs for eating fruit in a specific sequence.",
-				"costs": [2],
+				"costs": [1],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Golden Seed Extract", "level": 1}
 			},
 			"Expanded Palate": {
 				"display_name": "Expanded Palate",
 				"description": "Adds new, more complex and powerful recipes to your Cookbook.",
-				"costs": [4],
+				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "The Cookbook", "level": 1}
 			},
 			"Golden Glaze": {
 				"display_name": "Golden Glaze",
 				"description": "Golden Apples now act as a 'wild card' ingredient\nfor any step in your current recipe.",
-				"costs": [4],
+				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "The Cookbook", "level": 1}
 			},
 			"Custom Cuisine": {
 				"display_name": "Custom Cuisine",
 				"description": "Permanently enhances all special fruits with powerful secondary effects!",
-				"costs": [5],
+				"costs": [50],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1}
 			},
 			"Mise en Place": {
 				"display_name": "Mise en Place",
 				"description": "Active Ability (Once per RUN):\nInstantly transforms all normal fruits on screen into random special fruits.",
-				"costs": [5],
+				"costs": [96],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Exotic Seeds", "level": 5}
 			}
@@ -908,47 +968,47 @@ var upgrade_data = {
 		
 		"Geode": {
 			"Fertile Ground": {
-				"display_name": "Fertile Ground", "max_level": 3, "costs": [2, 3, 4],
+				"display_name": "Fertile Ground", "max_level": 3, "costs": [4, 16, 64],
 				"description": "Each level grants +1 to Max Fruits\nbut adds +5 rocks to every garden."
 			},
 			"Mineral Rich Soil": {
-				"display_name": "Mineral-Rich Soil", "max_level": 3, "costs": [2, 3, 4],
+				"display_name": "Mineral-Rich Soil", "max_level": 3, "costs": [4, 8, 16],
 				"description": "Each level grants +1 to Fruit Reward\nbut adds +5 rocks to every garden."
 			},
 			"Tectonic Shift": {
-				"display_name": "Tectonic Shift", "max_level": 3, "costs": [2, 3, 4],
+				"display_name": "Tectonic Shift", "max_level": 3, "costs": [2, 4, 8],
 				"description": "Each level grants a speed boost\nbut adds +5 rocks to every garden."
 			},
 			"Heavy Foundation": {
-				"display_name": "Heavy Foundation", "max_level": 3, "costs": [2, 3, 4],
+				"display_name": "Heavy Foundation", "max_level": 3, "costs": [4, 8, 16],
 				"description": "Each level grants a speed decrease\nbut adds +5 rocks to every garden."
 			},
 
 			# --- GEOMANCER TIER 2 (ROCKEATERS) ---
 			"Rockmuncher": {
-				"display_name": "Rockmuncher", "max_level": 1, "costs": [4],
+				"display_name": "Rockmuncher", "max_level": 1, "costs": [32],
 				"description": "You can now eat rocks,\nwhich grant +2 growth.",
 				"prerequisite": {"upgrade": "Fertile Ground", "level": 3}
 			},
 			"Geode Cracker": {
-				"display_name": "Geode Cracker", "max_level": 1, "costs": [4],
+				"display_name": "Geode Cracker", "max_level": 1, "costs": [32],
 				"description": "You can now eat rocks,\nwhich have a chance to grant +1 Juice.",
 				"prerequisite": {"upgrade": "Mineral Rich Soil", "level": 3}
 			},
 			"Kinetic Feast": {
-				"display_name": "Kinetic Feast", "max_level": 1, "costs": [4],
+				"display_name": "Kinetic Feast", "max_level": 1, "costs": [32],
 				"description": "You can eat rocks and\nyou get a speed boost after eating the rock",
 				"prerequisite": {"upgrade": "Tectonic Shift", "level": 3}
 			},
 			"Stones Burden": {
-				"display_name": "Stone's Burden", "max_level": 1, "costs": [4],
+				"display_name": "Stone's Burden", "max_level": 1, "costs": [32],
 				"description": "You can now eat rocks.\nEating a rock temporarily slows you down even further,\nbut it also makes you immune to self-collision for 3 seconds.",
 				"prerequisite": {"upgrade": "Heavy Foundation", "level": 3}
 			},
 
 			# --- GEOMANCER KEYSTONE ---
 			"Calculated Risk": {
-				"display_name": "Calculated Risk", "max_level": 1, "costs": [8],
+				"display_name": "Calculated Risk", "max_level": 1, "costs": [64],
 				"description": "Doubles the Juice bonus from Geological Survey.",
 				"prerequisite": {"upgrade": "Geological Survey", "level": 1} 
 				# The check for having a Rockeater upgrade will be handled in code
@@ -963,84 +1023,84 @@ var upgrade_data = {
 			"Slither Sauce": {
 				"display_name": "Slither Sauce",
 				"description": "Permanently increases movement speed.\nIf you can handle it...",
-				"costs": [1, 1, 2, 2, 3, 3, 4, 4, 5, 5],
+				"costs": [1, 1, 1, 1, 10, 20, 40, 60, 80, 100],
 				"max_level": 10
 			},
 			"Tenderizer": {
 				"display_name": "Tenderizer",
 				"description": "Destroy a rock on impact.\nHas limited charges, which refresh on level up.\nEach level grants another charge.",
-				"costs": [2, 3, 4],
-				"max_level": 3,
+				"costs": [8, 12, 16, 32, 64, 128, 256, 512, 999],
+				"max_level": 9,
 				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
 			},
 			"Juke N Jive": {
 				"display_name": "Juke 'N Jive",
 				"description": "Changing direction 4 times in 1 second\nlets you phase through a single body segment\nGet groovin'",
-				"costs": [4],
+				"costs": [12],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
 			},
 			"Afterburner": {
 				"display_name": "Afterburner",
 				"description": "Speed boost after eating a fruit?\nLvl 1: 33% faster for 2s\nLvl 2: 66.6% faster for 2.5s\nLvl 3: 3s double speed",
-				"costs": [2, 2, 3],
+				"costs": [6, 12, 48],
 				"max_level": 3,
 				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
 			},
 			"Pop Rocks": {
 				"display_name": "Pop Rocks",
 				"description": "When you destroy a rock with Tenderizer,\nit creates a shockwave that destroys adjacent rocks.",
-				"costs": [5],
+				"costs": [16],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Tenderizer", "level": 1}
 			},
 			"Autotomy": {
 				"display_name": "Autotomy",
 				"description": "Active Ability (once per Garden):\nFor 2s, you can sever your own tail on impact,\nsacrificing score to survive.",
-				"costs": [5],
+				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Slither Sauce", "level": 5}
+				"prerequisite": {"upgrade": "Slither Sauce", "level": 6}
 			}
 		},
 		"Frenzy": {
 			"Sugar Rush": {
 				"display_name": "Sugar Rush",
 				"description": "Unlocks the Combo Meter,\nwhich tracks fruits eaten in quick succession.",
-				"costs": [1],
+				"costs": [3],
 				"max_level": 1
 			},
 			"Chain Reaction": {
 				"display_name": "Chain Reaction",
-				"description": "Your combo meter now also acts\nas a score multiplier.\nEach level increases the max combo.",
-				"costs": [2, 3, 4],
-				"max_level": 3,
+				"description": "Make the combo meter do something!\nEach level increases the max combo by 5\nLvl 5: no unlimited combo",
+				"costs": [5, 10, 15, 20, 32],
+				"max_level": 5,
 				"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
 			},
 			"Overdrive": {
 				"display_name": "Overdrive",
 				"description": "While combo is active,\nhold your current direction key for a speed boost.",
-				"costs": [2, 1], # Lvl 2 is cheap for the cosmetic!
+				"costs": [16, 1], # Lvl 2 is cheap for the cosmetic!
 				"max_level": 2,
 				"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
 			},
 			"Lingering Rush": {
 				"display_name": "Lingering Rush",
 				"description": "Increases the duration of the combo timer,\nmaking it easier to chain fruits.",
-				"costs": [2, 2, 3, 3, 4],
+				"costs": [6, 12, 18, 24, 64],
 				"max_level": 5,
 				"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
 			},
 			"Juggernaut": {
 				"display_name": "Juggernaut",
 				"description": "While your combo is pure\n(you haven't opened the upgrade menu),\nthe combo timer is paused.",
-				"costs": [5],
+				"costs": [25],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Lingering Rush", "level": 5}
 			},
 			"Zenith": {
 				"display_name": "Zenith",
 				"description": "Active Ability (Once per Garden):\nInstantly set your combo to 10\nand make the timer not decrease for 10 seconds.",
-				"costs": [5],
+				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Lingering Rush", "level": 5} # Example prerequisite
 				}
@@ -1049,36 +1109,36 @@ var upgrade_data = {
 			"Mulligan Munchie": {
 				"display_name": "Mulligan Munchie",
 				"description": "Grants one Extra Life.\nThe cost increases dramatically with each purchase.",
-				"costs": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], # Example scaling costs
+				"costs": [5, 20, 50, 100, 200, 300, 400, 500, 750, 999], # Example scaling costs
 				"max_level": 10
 			},
 			"Phoenix Dawn": {
 				"display_name": "Phoenix Dawn",
 				"description": "After using an Extra Life,\nthe next fruit you eat restores 25% of your lost length.",
-				"costs": [3], "max_level": 1,
+				"costs": [7], "max_level": 1,
 				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
 			},
 			"Last Stand": {
 				"display_name": "Last Stand",
 				"description": "While on your final life,\nthe chance for Golden Apples to spawn is significantly increased.",
-				"costs": [3], "max_level": 1,
+				"costs": [32], "max_level": 1,
 			},
 			"Sacrificial Molt": {
 				"display_name": "Sacrificial Molt",
 				"description": "Active Ability (Once per RUN):\nHalve your current length to instantly gain one Extra Life charge.",
-				"costs": [4], "max_level": 1,
+				"costs": [16], "max_level": 1,
 				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
 			},
 			"Death Defied": {
 				"display_name": "Death Defied",
 				"description": "Every time you use an Extra Life,\npermanently gain +1 to your Fruit Reward and Max Fruits\non Screen for this run.",
-				"costs": [5], "max_level": 1,
+				"costs": [20], "max_level": 1,
 				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
 			},
 			"Martyrdom": {
 				"display_name": "Martyrdom",
 				"description": "Upon your final death, your snake explodes,\nharvesting all fruit on screen\nfor a final score boost.",
-				"costs": [5], "max_level": 1,
+				"costs": [13], "max_level": 1,
 				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
 			},
 			"New Game S Plus": {
@@ -1095,45 +1155,45 @@ var upgrade_data = {
 		"Illusionist": {
 			"Ghost Tail": {
 				"display_name": "Ghost Tail",
-				"description": "Your last few tail segments become intangible.\nLvl 1: 7\nLvl 2: 10\nLvl 3: 15\nLvl 4: 20\nLvl 5: 34",
-				"costs": [2, 2, 3, 3, 4],
-				"max_level": 5
+				"description": "Your last few tail segments become intangible.\nLvl 1: 7, Lvl 10: 300",
+				"costs": [6, 12, 20, 34, 50, 100, 200, 300, 500, 1000],
+				"max_level": 10
 			},
 			"Phase Shift": {
 				"display_name": "Phase Shift",
 				"description": "Active Ability: Become intangible to your own body for a short time.\nEach level grants another charge.",
-				"costs": [3, 4, 5],
-				"max_level": 3,
+				"costs": [4, 8, 12, 16, 20, 64, 128, 256, 512, 999],
+				"max_level": 10,
 				"exclusive_with": "Blink" # Can't have both
 			},
 			"Blink": {
 				"display_name": "Blink",
 				"description": "Active Ability: Instantly teleport forward 3 tiles.\nPass through your old hole!",
-				"costs": [3, 4, 5],
-				"max_level": 3,
+				"costs": [2, 4, 6, 20, 32, 64, 128, 256, 512, 999],
+				"max_level": 10,
 				"prerequisite": {"upgrade": "Ghost Tail", "level": 2},
 				"exclusive_with": "Phase Shift"
 			},
 			"3 Card Monty": {
 				"display_name": "3-Card Monty",
 				"description": "Permanently reduces the Juice cost of\nall other upgrades by 1 (to a minimum of 1).",
-				"costs": [5],
+				"costs": [3],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Ghost Tail", "level": 3}
+				"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
 			},
 			"Fractured Self": {
 				"display_name": "Fractured Self",
 				"description": "Your body is now rendered in 3-segment chunks\nwith a 3-tile gap between each, allowing you to pass through.",
-				"costs": [8],
+				"costs": [64],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
 			},
 			"Dazzle Pie": {
 				"display_name": "Dazzle Pie",
 				"description": "A permanent, purely aesthetic transformation that adds\na chromatic aberration effect to the game.",
-				"costs": [8],
+				"costs": [1],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Ghost Tail", "level": 5},
+				"prerequisite": {"upgrade": "Ghost Tail", "level": 7},
 				"exclusive_with": "Masters Blueprint"
 		}
 	},	
@@ -1148,42 +1208,42 @@ var upgrade_data = {
 			"Zoning Ordinance": {
 				"display_name": "Zoning Ordinance",
 				"description": "Designate a quadrant as a\n'safe zone' with fewer obstacles\nLvl 1: Top Left\nLvl 2: Top Half\nLvl 3: Bottom-Left Safe as well\nLvl 4: Complete control",
-				"costs": [2, 3, 3, 4],
+				"costs": [6, 18, 32, 128],
 				"max_level": 4,
-				"prerequisite": {"upgrade": "Edge Lord", "level": 3}
+				"prerequisite": {"upgrade": "Edge Lord", "level": 2}
 			},
 			"Border Czar": {
 				"display_name": "Border Czar",
 				"description": "Fruit that spawns on the edge\nof the garden has a higher chance to be special\nGolden fruit chances doubled!",
-				"costs": [3],
+				"costs": [16],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 3}
 			},
 			"Surveyed Land": {
 				"display_name": "Surveyed Land",
-				"description": "The quadrant opposite your 'safe zone' becomes\na 'wilderness' with better fruit but more obstacles.",
-				"costs": [2],
+				"description": "The area opposite your 'safe zone' becomes\na 'wilderness' with better fruit but more obstacles.",
+				"costs": [8],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Zoning Ordinance", "level": 1}
 			},
 			"Burrow": {
 				"display_name": "Burrow",
 				"description": "Active Ability: Pass through one wall\nand emerge on the opposite side\n+ 1 charge per upgrade\nAbility lasts until next wall hit!",
-				"costs": [5, 5, 5],
-				"max_level": 3,
+				"costs": [7, 12, 20, 34, 64, 128, 256, 512, 999],
+				"max_level": 9,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4 to match max_level
 			},
 			"Pocket Garden": {
 				"display_name": "Pocket Garden",
 				"description": "Active Ability: Sacrifice tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.\nLvl 1: 10 segs cost and 20s duration\nLvl 2: 20 segs cost and 30s duration\nLvl 3: 30 segs cost and 60s duration",
-				"costs": [5, 5, 7],
+				"costs": [16, 32, 128],
 				"max_level": 3,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4
 			},
 			"Fold Space": {
 				"display_name": "Fold Space", 
 				"description": "Removes all walls,\nmaking the garden wrap around on itself.",
-				"costs": [8], 
+				"costs": [128], 
 				"max_level": 1, 
 				"prerequisite": {"upgrade": "Edge Lord", "level": 5, "and": "Burrow", "and_level": 3},
 				"exclusive_with": "Shatter Reality" # <-- makes it mutually exclusive
@@ -1191,7 +1251,7 @@ var upgrade_data = {
 			"Shatter Reality": {
 				"display_name": "Shatter Reality", 
 				"description": "Splits the garden into\nfour quadrants with connecting portals.",
-				"costs": [8], 
+				"costs": [128], 
 				"max_level": 1, 
 				"prerequisite": {"upgrade": "Edge Lord", "level": 5},
 				"exclusive_with": "Fold Space" # <-- makes it mutually exclusive
@@ -1199,7 +1259,7 @@ var upgrade_data = {
 			"Masters Blueprint": {
 				"display_name": "Masters Blueprint", 
 				"description": "Transforms the game's visuals into a clean,\nglowing 'blueprint' grid for the rest of the run.\nVisual changes only, enjoy!",
-				"costs": [3], 
+				"costs": [13], 
 				"max_level": 1, 
 				"prerequisite": {"upgrade": "Edge Lord", "level": 5}
 				# This one is independent and has no 'exclusive_with' key
@@ -1212,7 +1272,7 @@ var upgrade_data = {
 			"Coin Flip Curious": {
 			"display_name": "CoinFlip Curious",
 			"description": "From now on...\nEvery fruit eaten now has a 50/50 effect\nEffect 1: Double Growth\nEffect 2: NO GROWTH\nGamble Responsibly...",
-			"costs": [10],
+			"costs": [6],
 			"max_level": 1
 		},
 		"Passive Income": {
@@ -1231,40 +1291,40 @@ var upgrade_data = {
 var meta_upgrade_data = {
 	"Synapse Slot": {
 		"description": "Unlocks one additional active ability slot.\nA crucial investment for any build.",
-		"costs": [10, 25, 50, 75, 100, 150, 200, 300, 500, 1000], # Costs for slots 3 through 10
+		"costs": [200, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 9999], # Costs for slots 1 through 10
 		"max_level": 10 
 	},
 	"Serpents Coffer": {
 		"description": "Gain 'interest' on your unspent\nPulp at the end of each Garden.",
-		"costs": [20, 35, 50, 75],
+		"costs": [50, 200, 500, 1000],
 		"max_level": 4
 	},
 	"Geode Compass": {
 		"description": "Permanently removes a percentage of\nobstacles from all subsequent gardens.",
-		"costs": [15, 25, 40, 60],
+		"costs": [75, 200, 600, 1250],
 		"max_level": 4,
 		
 	},
 	"Four Leaf Clover": {
 		"description": "Permanently increases your 'luck,'\nboosting the chance of all random events.",
-		"costs": [30, 45, 60, 80],
+		"costs": [42, 69, 340, 1000],
 		"max_level": 4
 	},
 	"Chroma Scales": {
 		"description": "Activate the cosmetic options\nyou've permanently unlocked in the Fang Fund.",
-		"costs": [10, 20, 30, 40, 50, 60],
+		"costs": [1, 1, 1, 1, 1, 1],
 		"max_level": 6
 	},
 	"Lasso Larry": {
 		"display_name": "Lasso Larry",
-		"description": "Active Ability: Pulls nearby fruit directly to you.\nLvl 1: Pulls 1 fruit.\nLvl 2: Pulls 2 fruits.\nLvl 3: Pulls 3 fruits.",
-		"costs": [10, 20, 30],
+		"description": "Active Ability: Randomly rerolls a fruit!\nLvl 1: Pulls 1 fruit.\nLvl 2: Pulls 2 fruits.\nLvl 3: Pulls 3 fruits.",
+		"costs": [125, 500, 1000],
 		"max_level": 3
 	},
 	"Harvest Forecast": {
 		"display_name": "Harvest Forecast",
 		"description": "Adds a UI element showing the next special fruits in the spawn queue.\nLvl 1: Shows 1 fruit.\nLvl 2: Shows 2 fruits.\nLvl 3: Shows 3 fruits.\nLvl 4: Shows the next 5 fruits",
-		"costs": [30, 30, 30, 30],
+		"costs": [100, 200, 300, 1000],
 		"max_level": 4
 	}
 }
@@ -1308,7 +1368,8 @@ var common_items = [
 		"name": "Juice Box",
 		"description": "A refreshing treat!\nInstantly grants Juice equal to the current Garden number.",
 		"cost": 30,
-		"rarity": "Common"
+		"rarity": "Common",
+		"max_level": 1
 	}
 ]	# ... (add more common items here later)
 
@@ -1318,7 +1379,8 @@ var rare_items = [
 		"name": "Handicap",
 		"description": "A deal with the devil.\nInstantly unlock a new Ability Slot,\nbut your maximum Extra Lives is now permanently capped at 0.",
 		"cost": 0,
-		"rarity": "Rare" 
+		"rarity": "Rare",
+		"max_level": 1
 	},
 	# ... (add more rare items here later)
 ]
@@ -1329,7 +1391,9 @@ var legendary_items = [
 		"name": "Elephant Devoured",
 		"description": "A truly legendary meal.\nInstantly raises your 'Elephant Sized Portions'\nupgrade to its maximum level.",
 		"cost": 150,
-		"rarity": "Legendary"
+		"rarity": "Legendary",
+		"max_level": 1,
+		"targets_upgrade": "Elephant Sized Portions"
 	},
 	# ... (add more legendary items here later)
 ]
@@ -1344,7 +1408,7 @@ func apply_meta_upgrade(item_id: String):
 			extra_lives_are_capped = true 
 		"elephant_devoured":
 			# Set the level directly to the max defined in its upgrade_data
-			while es_portions_level < upgrade_data["Elephant Sized Portions"]["max_level"]:
+			while es_portions_level < upgrade_data["The Harvest"]["Elephant Sized Portions"]["max_level"]:
 				apply_esp_level_up()
 
 
@@ -1356,7 +1420,7 @@ func reset_for_new_garden():
 	
 	# Reset the XP and goals back to their starting values.
 	score_at_level_start = 0
-	score_needed_for_next_level = 10 # Or your initial starting value
+	score_needed_for_next_level = 5 # Or your initial starting value
 	
 	# Crucially, we do NOT reset juice, pulp, or any purchased upgrades.
 
@@ -1528,6 +1592,7 @@ func start_game():
 	# --- NEW ABILITY SYSTEM RESET ---
 	ability_charges.clear()
 	equipped_abilities.clear()
+	legendary_items_seen_this_run.clear()
 
 
 	juice_spent_this_garden = 0

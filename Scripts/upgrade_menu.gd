@@ -297,14 +297,16 @@ func _on_description_delay_timer_timeout():
 		description_panel.position.y = vertical_center
 	#CLAMP
 	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
-
+	
+	
+	var current_level = main_game.get_upgrade_level_from_key(hovered_upgrade_key)
 	# 8. show it with all the correct info.
-	description_panel.show_info(hovered_upgrade_key, display_name, description, cost)
+	description_panel.show_info(hovered_upgrade_key, display_name, description, cost, current_level, rules.max_level)
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 
 func update_stats_tab():
-	# Update the labels inside your stats panel
+	# Update the labels inside stats panel
 	if is_instance_valid(stats_panel):
 		stats_panel.get_node("ClassLabel").text = "Class: " + GameManager.chosen_class.capitalize()
 		stats_panel.get_node("DifficultyLabel").text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
@@ -332,7 +334,7 @@ func update_snake_eyes_tab():
 	hoard_count_slider.max_value = GameManager.pulp
 
 	
-	# Reset the sliders to 0
+	# Reset the sliders
 	snake_coin_wager_slider.value = 0
 	dice_wager_slider.value = 0
 	hoard_count_slider.value = 0
@@ -361,7 +363,7 @@ func _on_zone_button_pressed(quadrant_index):
 	if GameManager.zoning_ordinance_level > quadrant_index:
 		GameManager.zoned_quadrant = quadrant_index
 		print("Safe zone set to quadrant: ", quadrant_index)
-		# You could add visual feedback here to show which zone is selected
+		# could add visual feedback here to show which zone is selected
 
 func _on_snake_coin_slider_changed(value: float):
 	# This now updates BOTH buttons with the wager amount.

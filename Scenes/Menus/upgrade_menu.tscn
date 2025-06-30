@@ -1,4 +1,4 @@
-[gd_scene load_steps=118 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=124 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
@@ -99,11 +99,17 @@
 [ext_resource type="Texture2D" uid="uid://bp6646o0h2u53" path="res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png" id="81_8ybj1"]
 [ext_resource type="Texture2D" uid="uid://dttaheokqcher" path="res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png" id="82_v6u0p"]
 [ext_resource type="Texture2D" uid="uid://bdd53eb7ltv4q" path="res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png" id="82_ymci1"]
+[ext_resource type="StyleBox" uid="uid://dmk5v3rjm25of" path="res://Assets/Styles/flat_borders/stock_buy_hovered.tres" id="93_rnjq3"]
+[ext_resource type="StyleBox" uid="uid://d043oa40f6ncv" path="res://Assets/Styles/flat_borders/stock_buy_disabled.tres" id="94_bkrv2"]
 [ext_resource type="Texture2D" uid="uid://b4bt0q6fc4lii" path="res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png" id="95_6plnu"]
+[ext_resource type="StyleBox" uid="uid://b6any80t45181" path="res://Assets/Styles/flat_borders/stock_buy_normal.tres" id="95_whqcf"]
 [ext_resource type="Texture2D" uid="uid://kq5s56v31o0r" path="res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png" id="96_l1y2w"]
+[ext_resource type="StyleBox" uid="uid://knpcvr2a5d4w" path="res://Assets/Styles/flat_borders/stock_sell_hovered.tres" id="97_t73xx"]
+[ext_resource type="StyleBox" uid="uid://c417cxfebmabm" path="res://Assets/Styles/flat_borders/stock_sell_disabled.tres" id="98_7tf0a"]
+[ext_resource type="StyleBox" uid="uid://div6mqy3itqah" path="res://Assets/Styles/flat_borders/stock_sell_normal.tres" id="99_v4h5u"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6dxpo"]
-bg_color = Color(0.133333, 0.133333, 0.133333, 1)
+bg_color = Color(0.843137, 1, 0.678431, 0.431373)
 
 [sub_resource type="Theme" id="Theme_d1lbs"]
 
@@ -161,7 +167,7 @@ shadow_size = 16
 shadow_offset = Vector2(-2, 12)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kr3ym"]
-bg_color = Color(0.192157, 0, 0.176471, 1)
+bg_color = Color(0.152941, 0, 0.176471, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fhovb"]
 bg_color = Color(0.192157, 0, 0.176471, 1)
@@ -228,11 +234,10 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 5
+current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1180,6 +1185,7 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="SnakeEyes" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1191,7 +1197,7 @@ anchors_preset = -1
 anchor_right = 1.0
 offset_bottom = 83.0
 grow_horizontal = 2
-theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
+theme_override_colors/font_color = Color(0.960784, 0.65098, 0.137255, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
@@ -1226,10 +1232,11 @@ alignment = 2
 
 [node name="SnakeCoinContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn"]
 layout_mode = 2
+alignment = 1
 
 [node name="SnakeCoinLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
+theme_override_colors/font_color = Color(0.960784, 0.65098, 0.137255, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
@@ -1313,10 +1320,11 @@ value = 1.0
 
 [node name="HouseSpecialContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn"]
 layout_mode = 2
+alignment = 1
 
 [node name="HouseSpecialLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
+theme_override_colors/font_color = Color(0.960784, 0.65098, 0.137255, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
@@ -1422,10 +1430,11 @@ value = 1.0
 [node name="HoardCountContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn"]
 layout_mode = 2
 theme_override_constants/separation = 8
+alignment = 1
 
 [node name="HoardCountLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 0.392157, 0, 1)
+theme_override_colors/font_color = Color(0.960784, 0.65098, 0.137255, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 5
@@ -1587,15 +1596,16 @@ texture = ExtResource("17_lwbsw")
 [node name="RightColumn" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 16
-alignment = 1
+size_flags_vertical = 4
+alignment = 2
 
 [node name="BlockMarketContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn"]
 layout_mode = 2
-theme_override_constants/separation = 4
+theme_override_constants/separation = 0
 alignment = 1
 
 [node name="BlockMarketLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
+visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -1613,12 +1623,14 @@ text_direction = 1
 
 [node name="OrangeBlockRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 9
+size_flags_vertical = 4
+theme_override_constants/separation = 8
 
 [node name="BuyShareOrangeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1630,19 +1642,19 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("93_rnjq3")
+theme_override_styles/disabled = ExtResource("94_bkrv2")
+theme_override_styles/hover_pressed = ExtResource("93_rnjq3")
+theme_override_styles/hover = ExtResource("93_rnjq3")
+theme_override_styles/pressed = ExtResource("93_rnjq3")
+theme_override_styles/normal = ExtResource("95_whqcf")
 icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellShareOrangeButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1654,12 +1666,12 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("97_t73xx")
+theme_override_styles/disabled = ExtResource("98_7tf0a")
+theme_override_styles/hover_pressed = ExtResource("97_t73xx")
+theme_override_styles/hover = ExtResource("97_t73xx")
+theme_override_styles/pressed = ExtResource("97_t73xx")
+theme_override_styles/normal = ExtResource("99_v4h5u")
 icon = ExtResource("19_0x031")
 expand_icon = true
 
@@ -1672,7 +1684,7 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Extra Pulp Co.
 7 mg/share
@@ -1683,12 +1695,14 @@ text_direction = 1
 
 [node name="AppleBlockRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 9
+size_flags_vertical = 4
+theme_override_constants/separation = 8
 
 [node name="BuyShareAppleButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1700,19 +1714,19 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("93_rnjq3")
+theme_override_styles/disabled = ExtResource("94_bkrv2")
+theme_override_styles/hover_pressed = ExtResource("93_rnjq3")
+theme_override_styles/hover = ExtResource("93_rnjq3")
+theme_override_styles/pressed = ExtResource("93_rnjq3")
+theme_override_styles/normal = ExtResource("95_whqcf")
 icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellShareAppleButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1724,12 +1738,12 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("97_t73xx")
+theme_override_styles/disabled = ExtResource("98_7tf0a")
+theme_override_styles/hover_pressed = ExtResource("97_t73xx")
+theme_override_styles/hover = ExtResource("97_t73xx")
+theme_override_styles/pressed = ExtResource("97_t73xx")
+theme_override_styles/normal = ExtResource("99_v4h5u")
 icon = ExtResource("19_0x031")
 expand_icon = true
 
@@ -1742,7 +1756,7 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Extra Pulp Co.
 7 mg/share
@@ -1751,14 +1765,19 @@ horizontal_alignment = 1
 vertical_alignment = 1
 text_direction = 1
 
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow"]
+layout_mode = 2
+
 [node name="LightPulpRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 9
+size_flags_vertical = 4
+theme_override_constants/separation = 8
 
 [node name="BuyLightPulpShareButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1770,19 +1789,19 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("93_rnjq3")
+theme_override_styles/disabled = ExtResource("94_bkrv2")
+theme_override_styles/hover_pressed = ExtResource("93_rnjq3")
+theme_override_styles/hover = ExtResource("93_rnjq3")
+theme_override_styles/pressed = ExtResource("93_rnjq3")
+theme_override_styles/normal = ExtResource("95_whqcf")
 icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellShareLightButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1794,12 +1813,12 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("97_t73xx")
+theme_override_styles/disabled = ExtResource("98_7tf0a")
+theme_override_styles/hover_pressed = ExtResource("97_t73xx")
+theme_override_styles/hover = ExtResource("97_t73xx")
+theme_override_styles/pressed = ExtResource("97_t73xx")
+theme_override_styles/normal = ExtResource("99_v4h5u")
 icon = ExtResource("19_0x031")
 expand_icon = true
 
@@ -1812,7 +1831,7 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Extra Pulp Co.
 7 mg/share
@@ -1823,12 +1842,14 @@ text_direction = 1
 
 [node name="ExtraPulpRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 9
+size_flags_vertical = 4
+theme_override_constants/separation = 8
 
 [node name="BuyExtraPulpShareButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1840,19 +1861,19 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("93_rnjq3")
+theme_override_styles/disabled = ExtResource("94_bkrv2")
+theme_override_styles/hover_pressed = ExtResource("93_rnjq3")
+theme_override_styles/hover = ExtResource("93_rnjq3")
+theme_override_styles/pressed = ExtResource("93_rnjq3")
+theme_override_styles/normal = ExtResource("95_whqcf")
 icon = ExtResource("18_p1goc")
 expand_icon = true
 
 [node name="SellSharePulpButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-size_flags_vertical = 5
+size_flags_vertical = 4
 theme_override_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 1)
 theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
@@ -1864,12 +1885,12 @@ theme_override_constants/outline_size = 14
 theme_override_constants/line_spacing = 6
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 16
-theme_override_styles/focus = ExtResource("8_fm0cu")
-theme_override_styles/disabled = ExtResource("12_s2rwv")
-theme_override_styles/hover_pressed = ExtResource("8_fm0cu")
-theme_override_styles/hover = ExtResource("8_fm0cu")
-theme_override_styles/pressed = ExtResource("8_fm0cu")
-theme_override_styles/normal = ExtResource("11_s2rwv")
+theme_override_styles/focus = ExtResource("97_t73xx")
+theme_override_styles/disabled = ExtResource("98_7tf0a")
+theme_override_styles/hover_pressed = ExtResource("97_t73xx")
+theme_override_styles/hover = ExtResource("97_t73xx")
+theme_override_styles/pressed = ExtResource("97_t73xx")
+theme_override_styles/normal = ExtResource("99_v4h5u")
 icon = ExtResource("19_0x031")
 expand_icon = true
 
@@ -1882,7 +1903,7 @@ theme_override_constants/shadow_offset_x = 5
 theme_override_constants/shadow_offset_y = 5
 theme_override_constants/outline_size = 10
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Extra Pulp Co.
 7 mg/share
@@ -1927,7 +1948,7 @@ alignment = 1
 custom_minimum_size = Vector2(192, 64)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
+theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
@@ -1965,7 +1986,7 @@ text = "Resume"
 custom_minimum_size = Vector2(192, 64)
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
+theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
 theme_override_constants/shadow_offset_x = 4
@@ -2108,9 +2129,8 @@ visible = false
 anchors_preset = 6
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -408.0
-offset_top = -380.5
+offset_left = -552.0
+offset_top = -241.5
 offset_right = 0.0
-offset_bottom = 380.5
+offset_bottom = 241.5
 grow_horizontal = 0
-size_flags_vertical = 4

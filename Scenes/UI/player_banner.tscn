@@ -2,8 +2,8 @@
 
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_fkyj3"]
 [ext_resource type="Script" uid="uid://colf33pfeqrbf" path="res://Scripts/player_banner.gd" id="2_s6con"]
-[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="3_fkyj3"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="3_s6con"]
+[ext_resource type="Texture2D" uid="uid://83ag8anpnnwd" path="res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png" id="3_y7w4t"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_y7w4t"]
 texture = ExtResource("3_s6con")
@@ -42,7 +42,7 @@ alignment = 2
 [node name="ProfilePicture" type="TextureRect" parent="HBox"]
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
-texture = ExtResource("3_fkyj3")
+texture = ExtResource("3_y7w4t")
 expand_mode = 2
 
 [node name="VSeparator2" type="VSeparator" parent="HBox"]

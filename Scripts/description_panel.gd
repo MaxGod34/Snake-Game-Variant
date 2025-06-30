@@ -2,21 +2,27 @@ extends PanelContainer
 
 # --- NODE REFERENCES ---
 # Make sure these paths are correct for your scene!
-@onready var icon_display = $MarginC/GridContainer/IconDisplay
+@onready var icon_display = $MarginC/GridContainer/IconPanel/IconDisplay
 @onready var name_label = $MarginC/GridContainer/UpgradeNameLabel
 @onready var description_label = $MarginC/GridContainer/DescriptionLabel
 @onready var cost_label = $MarginC/GridContainer/CostLabel
+@onready var level_label = $MarginC/GridContainer/CurrentLevelLabel
 
 # This is the master function that main.gd will call.
-func show_info(upgrade_key: String, p_name: String, p_description: String, p_cost: int):
+func show_info(upgrade_key: String, p_name: String, p_description: String, p_cost: int, current_level: int, max_level: int):
 	name_label.text = p_name
 	description_label.text = p_description
+	
+	if max_level > 1:
+		level_label.text = "(Lvl %s / %s)" % [current_level, max_level]
+	else:
+		level_label.text = "Unconsumed"
 	
 	# If the cost is 999, it means the upgrade is maxed out.
 	if p_cost >= 999:
 		cost_label.text = "(MAX LEVEL)"
 	else:
-		cost_label.text = "Cost: %s Juice" % p_cost
+		cost_label.text = "Cost: %s mL Juice" % p_cost
 	
 	icon_display.texture = get_icon_for_upgrade(upgrade_key)	
 		

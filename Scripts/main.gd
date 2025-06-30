@@ -1091,32 +1091,32 @@ func level_up():
 	#Before we calculate the next goal, we need to save the current one
 	GameManager.score_at_level_start = GameManager.score_needed_for_next_level
 	
-	GameManager.player_level += 1
+
 	
 	#SP SCALE
 	if GameManager.chosen_class != "the_alchemist":
-		var juice_to_add = 0
-		if GameManager.player_level >= 10: juice_to_add = 3
-		elif GameManager.player_level >= 5: juice_to_add = 2
-		else: juice_to_add = 1
-		
-		#-----Liquid Assets (Path A Ledger)----
+		var juice_to_add = GameManager.player_level
+	
+	# 2. Add the bonus from the "Liquid Assets" upgrade.
 		juice_to_add += GameManager.liquid_assets_level
 		
-		# If prestige mode is active, double the reward!
+		# 3. Check for the prestige mode bonus.
 		if GameManager.new_game_s_plus_active:
 			juice_to_add *= 2
-			print("NEW GAME S+ BONUS! Gained %s SP!" % juice_to_add)
 			
+		# 4. Add the final, calculated amount to the player's total.
 		GameManager.juice += juice_to_add
+		print("Gained %s Juice from leveling up!" % juice_to_add)
+		# --- x -> x+1 lvl up = + x juice
+		# --- Now, update the level and score goals ---
+		GameManager.score_at_level_start = GameManager.score_needed_for_next_level
+		GameManager.player_level += 1
+	else:
+		GameManager.player_level += 1
 		
 	#EXP/Juice SCALE
-	if GameManager.player_level >= 10:
-		GameManager.score_needed_for_next_level += 15
-	elif GameManager.player_level >= 5:
-		GameManager.score_needed_for_next_level += 10
-	else:
-		GameManager.score_needed_for_next_level += 5
+	var step = (int(GameManager.player_level / 5) + 1) * 5
+	GameManager.score_needed_for_next_level += step
 
 
 
@@ -1186,8 +1186,9 @@ func _start_end_of_garden_sequence():
 	
 	var results_screen = $UI/GardenCompleteScreen
 	var garden_id = GameManager.current_garden
-	var is_final_garden = (garden_id == 9)
-	var is_final_win = (is_final_garden and score >= 666)
+	var campaign_length = GameManager.difficulty_data[GameManager.chosen_difficulty]["campaign_length"]
+	var is_final_garden = (garden_id == campaign_length)
+	var is_final_win = (is_final_garden and score >= GameManager.garden_data[garden_id]["score_goal"])
 	
 	results_screen.display_results(
 		GameManager.garden_data[garden_id]["name"],
@@ -1331,7 +1332,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 
 #------Idle Path-----#
 		if upgrade_name == "Snake Clicker":
-			if GameManager.snake_clicker_level < 10:
+			if GameManager.snake_clicker_level < 30:
 				GameManager.snake_clicker_level += 1
 		elif upgrade_name == "Get Rich Quick":
 			if not GameManager.get_rich_quick_unlocked:
@@ -1350,9 +1351,9 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.unstable_metabolism_unlocked = true
 #---------THE PLANNER-------#
 		elif upgrade_name == "Diet Slith":
-			if GameManager.diet_slith_level < 5:
+			if GameManager.diet_slith_level < 15:
 				GameManager.diet_slith_level += 1
-				head.move_timer.wait_time *= 1.1 
+				head.move_timer.wait_time *= 1.05 
 				print("SNAKE SLOWED! New wait time: ", head.move_timer.wait_time)
 		elif upgrade_name == "Fruit Foresight":
 			if not GameManager.fruit_foresight_unlocked:
@@ -1367,10 +1368,10 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				print("Sovereign Trail Upgraded 1 level!")
 		#----The Ledger Path----
 		elif upgrade_name == "Liquid Assets":
-			if GameManager.chosen_ledger_path == "" and GameManager.liquid_assets_level < 5:
+			if GameManager.chosen_ledger_path == "" and GameManager.liquid_assets_level < 15:
 				GameManager.chosen_ledger_path = "Liquid Assets"
 				GameManager.liquid_assets_level += 1
-			elif GameManager.liquid_assets_level < 5:
+			elif GameManager.liquid_assets_level < 15:
 				GameManager.liquid_assets_level += 1
 		elif upgrade_name == "Fast Track":
 			if not GameManager.fast_track_unlocked:
@@ -1382,16 +1383,16 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.gluttons_greed_unlocked = true
 				print("GLUTTON'S GREED Fruit Reward permanently increased by %s!" % bonus)
 		elif upgrade_name == "Market Crash":
-			if GameManager.market_crash_level < 3:
+			if GameManager.market_crash_level < 10:
 				GameManager.market_crash_level += 1
 		elif upgrade_name == "Principal Pulp":
-			if GameManager.chosen_ledger_path == "" and GameManager.principal_pulp_level < 3:
+			if GameManager.chosen_ledger_path == "" and GameManager.principal_pulp_level < 20:
 				GameManager.chosen_ledger_path = "Principal Pulp"
 				GameManager.principal_pulp_level += 1
-			elif GameManager.principal_pulp_level < 3:
+			elif GameManager.principal_pulp_level < 20:
 				GameManager.principal_pulp_level += 1
 		elif upgrade_name == "Golden Handshake":
-			if GameManager.golden_handshake_level < 3:
+			if GameManager.golden_handshake_level < 10:
 				GameManager.golden_handshake_level += 1
 		elif upgrade_name == "Juice Press":
 			_purchase_or_upgrade_ability("Juice Press")
@@ -1407,7 +1408,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
 			#---More Mice---#
 		elif upgrade_name == "More Mice":
-				if GameManager.more_mice_level < 6: # Your max level
+				if GameManager.more_mice_level < 10: # Your max level
 					GameManager.max_fruits_on_screen += 1
 					GameManager.more_mice_level += 1
 					
@@ -1528,7 +1529,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.sugar_rush_unlocked = true
 				#information_panel.update_display(["sugar_rush_unlocked", true])
 		elif upgrade_name == "Chain Reaction":
-			if GameManager.chain_reaction_level < 3:
+			if GameManager.chain_reaction_level < 5:
 				GameManager.chain_reaction_level += 1
 		elif upgrade_name == "Overdrive":
 			if GameManager.overdrive_level < 2:
@@ -1587,7 +1588,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				apply_cosmetic_upgrades()
 		#--------------------------ILLUSIONIST--------------------#
 		elif upgrade_name == "Ghost Tail":
-			if GameManager.ghost_tail_level < 5:
+			if GameManager.ghost_tail_level < 10:
 				GameManager.ghost_tail_level += 1
 				print("Ghost Tail Upgraded! New ghost length: ", GameManager.ghost_tail_data[GameManager.ghost_tail_level])
 		elif upgrade_name == "3 Card Monty":
@@ -1840,27 +1841,27 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 	var occupied_coords = {}
 	
 	# Add the snake's head
-	var head_grid_pos = Vector2i((head.global_position - tile_offset) / tile_size)
+	var head_grid_pos = Vector2i(((head.global_position - tile_offset) / tile_size).floor())
 	occupied_coords[head_grid_pos] = true
 
 	# Add all snake body segments
 	for segment in snake_body_segments:
-		var seg_grid_pos = Vector2i((segment.global_position - tile_offset) / tile_size)
+		var seg_grid_pos = Vector2i(((segment.global_position - tile_offset) / tile_size).floor())
 		occupied_coords[seg_grid_pos] = true
 
 	# Add all obstacles
 	for obstacle in spawned_obstacles:
-		var obs_grid_pos = Vector2i((obstacle.position - tile_offset) / tile_size)
+		var obs_grid_pos = Vector2i(((obstacle.position - tile_offset) / tile_size).floor())
 		occupied_coords[obs_grid_pos] = true
 
 	# Add all existing fruits
 	for fruit in get_tree().get_nodes_in_group("fruits"):
-		var fruit_grid_pos = Vector2i((fruit.position - tile_offset) / tile_size)
+		var fruit_grid_pos = Vector2i(((fruit.position - tile_offset) / tile_size).floor())
 		occupied_coords[fruit_grid_pos] = true
 
 	# Add any other pending unsafe positions (from More Mice!, etc.)
 	for pos in additional_unsafe_positions:
-		var unsafe_grid_pos = Vector2i((pos - tile_offset) / tile_size)
+		var unsafe_grid_pos = Vector2i(((pos - tile_offset) / tile_size).floor())
 		occupied_coords[unsafe_grid_pos] = true
 		
 	# --- Step 2: Find a random, empty grid coordinate ---
@@ -1899,7 +1900,7 @@ func calculate_safe_spawn_position(additional_unsafe_positions: Array = []) -> V
 			var is_on_trail = false
 			if GameManager.sovereign_trail_level == 1:
 				for piece in trail_pieces:
-					var piece_grid_pos = Vector2i((piece.node.position + tile_offset) / tile_size)
+					var piece_grid_pos = Vector2i(((piece.node.position + tile_offset) / tile_size).floor())
 					if piece_grid_pos == candidate_grid_pos:
 						is_on_trail = true
 						break
@@ -2835,7 +2836,25 @@ func calculate_upgrade_cost(upgrade_key: String) -> int:
 		
 	return max(1, final_cost)
 
-
+func get_meta_upgrade_level(upgrade_key: String) -> int:
+	match upgrade_key:
+		"Synapse Slot": return GameManager.max_ability_slots
+		"Serpents Coffer": return GameManager.serpents_coffer_level
+		"Geode Compass": return GameManager.geode_compass_level
+		"Four Leaf Clover": return GameManager.four_leaf_clover_level
+		"Chroma Scales": return GameManager.chroma_scales_level
+		"Harvest Forecast": return GameManager.harvest_forecast_level
+		"Lasso Larry":
+			# 1. First, check if the key even exists in the dictionary.
+			if upgrade_key in GameManager.ability_charges:
+				# 2. If it exists, get the nested dictionary.
+				var ability_data = GameManager.ability_charges[upgrade_key]
+				# 3. Then, safely return the "total" value.
+				return ability_data.get("total", 0)
+			else:
+				# 4. If the key doesn't exist, it means the level is 0.
+				return 0
+	return 0
 
 func get_upgrade_level_from_key(upgrade_key: String) -> int:
 	if upgrade_key == "Elephant Sized Portions":

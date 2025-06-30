@@ -111,54 +111,75 @@ func _update_pillar_node(upgrade_key: String):
 	if not is_instance_valid(node): return
 
 	var rules = GameManager.meta_upgrade_data[upgrade_key]
-	var current_level = get_meta_upgrade_level(upgrade_key)
+	var current_level = main_game.get_meta_upgrade_level(upgrade_key)
 	
 	# Pass all the data to the node's own update function.
 	node.update_display(upgrade_key, current_level, rules.max_level, true, Color("a3d5ff"), Color.GOLD, "Frosty")
 
-func get_meta_upgrade_level(upgrade_key: String) -> int:
-	match upgrade_key:
-		"Synapse Slot":
-			return GameManager.max_ability_slots
-		"Serpents Coffer":
-			return GameManager.serpents_coffer_level
-		"Geode Compass":
-			return GameManager.geode_compass_level
-		"Four Leaf Clover":
-			return GameManager.four_leaf_clover_level
-		"Chroma Scales":
-			return GameManager.chroma_scales_level
-		"Harvest Forecast":
-			return GameManager.harvest_forecast_level
-		# --- THIS IS THE FIX ---
-		# We now correctly get Lasso Larry's level from the ability_charges dictionary.
-		"Lasso Larry":
-			if "Lasso Larry" in GameManager.ability_charges:
-				return GameManager.ability_charges["Lasso Larry"]["total"]
-			else:
-				return 0
-	return 0
 
 
 
 
 func pick_new_rotating_item():
-	# This is where the magic happens!
+	# This is where the magic happens baby
 	
-	# 1. First, build the loot table based on rarity.
-	var loot_table = []
-	var roll = randf() # A random number between 0.0 and 1.0
-	
-	if roll < 0.05: # 5% chance for a Legendary item
-		loot_table = GameManager.legendary_items 
-	elif roll < 0.30: # 25% chance for a Rare/Cursed item
-		loot_table = GameManager.rare_items
-	else: # 70% chance for a Common item
-		loot_table = GameManager.legendary_items #Replace back with commons
+	var potential_pool = []
+	var roll = randf()
+	if roll < 0.05:
+		potential_pool = GameManager.legendary_items
+	elif roll < 0.30:
+		potential_pool = GameManager.rare_items
+	else:
+		potential_pool = GameManager.common_items
 		
-	# 2. Pick a random item from the chosen table.
-	current_rotating_item = loot_table.pick_random()
+	# 2. Now, create a final, "valid" pool by filtering out invalid items.
+	var valid_pool = []
+	for item_data in potential_pool:
+		var item_id = item_data["id"]
+		var is_valid = true
+		
+		# --- Filter out seen legendaries ---
+		if item_data.get("rarity") == "Legendary" and item_id in GameManager.legendary_items_seen_this_run:
+			is_valid = false
+			
+		# --- Filter out items for maxed-out upgrades ---
+		# We add a new key, "targets_upgrade", to our item data for this.
+		if item_data.has("targets_upgrade"):
+			var target_key = item_data["targets_upgrade"]
+			var target_rules = main_game.get_upgrade_rules(target_key)
+			var target_level = main_game.get_upgrade_level_from_key(target_key)
+			if target_level >= target_rules.max_level:
+				is_valid = false
+		
+		#------------Handicap Item------------
+		if item_id == "handicap" and GameManager.max_ability_slots >= 10:
+			is_valid = false
+		
+		
+		if is_valid:
+			valid_pool.append(item_data)
+			
+	# 3. If the valid pool is empty, pick from the common items as a fallback.
+	if valid_pool.is_empty():
+		# To be extra safe, check the common pool as well.
+		for item_data in GameManager.common_items:
+		 	# Add a check here too if any common items can become invalid.
+			valid_pool.append(item_data)
+		# If it's still empty, we have a bigger problem! But this is a good safeguard.
+		if valid_pool.is_empty():
+			print_debug("ERROR: No valid items found in any loot pool!")
+			return
+		
+	# 4. Pick a random item from the final, valid pool.
+	current_rotating_item = valid_pool.pick_random()
+	
+	# Add this to our "seen" list so it doesn't appear again.
+	if current_rotating_item.get("rarity") == "Legendary":
+		GameManager.legendary_items_seen_this_run.append(current_rotating_item.id)
+		
+	# Finally, update the UI.
 	update_rotating_item_display()
+
 
 
 func _on_rotating_item_mouse_entered():
@@ -220,12 +241,12 @@ func _on_rotating_item_pressed():
 		update_all_displays()
 		
 		# Disable this button since you can only buy one
-		$AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemButton.disabled = true
+		rotating_item_node.disabled = true
 
 
 func _on_pillar_node_pressed(upgrade_key: String):
 	# It gets all the info it needs from the helper function.
-	var current_level = get_meta_upgrade_level(upgrade_key)
+	var current_level = main_game.get_meta_upgrade_level(upgrade_key)
 	var rules = GameManager.meta_upgrade_data[upgrade_key]
 
 	if current_level < rules["max_level"]:
@@ -290,12 +311,13 @@ func _on_skip_garden_button_pressed():
 
 
 func _on_description_delay_timer_timeout():
-	if hovered_item_key == "": return # Safety check
+	if hovered_item_key == "": return
 
 	var rules: Dictionary
 	var cost: int
 	var display_name: String
-	
+	var item_id_for_icon: String # The key we pass to the description panel
+	var current_level: int
 	# --- THIS IS THE FIX ---
 	# We now handle the two different item types separately.
 	
@@ -306,19 +328,39 @@ func _on_description_delay_timer_timeout():
 		
 		display_name = rules.get("name", "Unknown Item")
 		cost = rules.get("cost", 0)
+		# We get the item's specific ID to find the correct icon.
+		item_id_for_icon = rules.get("id", "")
+		current_level = 0 #Double check this line ----------------
 	else:
 		# It's a pillar upgrade. Get its data from meta_upgrade_data.
 		rules = GameManager.meta_upgrade_data.get(hovered_item_key)
 		if rules.is_empty(): return
 		
-		# For pillars, the key IS the display name.
-		display_name = hovered_item_key
+		display_name = rules.get("display_name", hovered_item_key)
+		# For pillars, the key IS the ID for the icon.
+		item_id_for_icon = hovered_item_key
 		
-		var current_level = get_meta_upgrade_level(hovered_item_key)
-		if current_level < rules.costs.size():
-			cost = rules.costs[current_level]
+		current_level = main_game.get_meta_upgrade_level(hovered_item_key)
+		cost = rules.costs[current_level] if current_level < rules.costs.size() else 999
+		# --- THIS IS THE DYNAMIC POSITIONING LOGIC ---
+		var viewport_size = get_viewport().get_visible_rect().size
+		var mouse_position = get_viewport().get_mouse_position()
+		
+		# We position the panel on the opposite side of the screen from the mouse.
+		if mouse_position.x < viewport_size.x / 2.0:
+			description_panel.position.x = (viewport_size.x / 2.0) + 20
 		else:
-			cost = 999 # Maxed out
+			description_panel.position.x = (viewport_size.x / 2.0) - description_panel.size.x - 20
 			
+		# We also vertically center it relative to the mouse.
+		description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
+		description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y)
 	# Now that we have the correct data, we can safely show the info.
-	description_panel.show_info(hovered_item_key, display_name, rules.description, cost)
+	# We pass the specific item_id_for_icon to the show_info function.
+	description_panel.show_info(
+		item_id_for_icon,
+		display_name,
+		rules.description,
+		cost,
+		current_level,
+		rules.max_level)
