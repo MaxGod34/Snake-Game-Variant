@@ -1,0 +1,247 @@
+[gd_scene load_steps=14 format=3 uid="uid://lhanm6uv3i5d"]
+
+[ext_resource type="Script" uid="uid://iyihqjof5kre" path="res://Scripts/fang_fund_menu.gd" id="1_as4yt"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_rkkxi"]
+[ext_resource type="PackedScene" uid="uid://dkrhbgusv7j3h" path="res://Scenes/UI/upgrade_node.tscn" id="2_as4yt"]
+[ext_resource type="Texture2D" uid="uid://dqkem6rp8x468" path="res://Assets/PNGs/RotatingItemIcons/handicap_icon.png" id="3_84dsh"]
+[ext_resource type="StyleBox" uid="uid://cy5g83qtt1153" path="res://Assets/Styles/confirm_button_hover.tres" id="5_w6wo0"]
+[ext_resource type="StyleBox" uid="uid://bo8dyic5cip8s" path="res://Assets/Styles/confirm_button_disabled.tres" id="6_eyggi"]
+[ext_resource type="StyleBox" uid="uid://dyly6h15xmjeg" path="res://Assets/Styles/confirm_button_normal.tres" id="7_4sm26"]
+[ext_resource type="PackedScene" uid="uid://dwy31n0hvcqt2" path="res://Scenes/UI/confirmation_modal.tscn" id="8_7yo4o"]
+[ext_resource type="PackedScene" uid="uid://bdqnq8u7m75ue" path="res://Scenes/UI/description_panel.tscn" id="9_rngq6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_rkkxi"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_as4yt"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.54902, 0.341176, 0, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_84dsh"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_emvag"]
+
+[node name="FangFundMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_as4yt")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152941, 0, 0.176471, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FangFundTitleLabel" type="Label" parent="VBoxContainer"]
+custom_minimum_size = Vector2(256, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_rkkxi")
+theme_override_font_sizes/font_size = 42
+text = "Fang Fund"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TabContainer" type="TabContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_selected_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("1_rkkxi")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/panel = SubResource("StyleBoxEmpty_rkkxi")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_as4yt")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_84dsh")
+current_tab = 0
+
+[node name="Class Acquisitions" type="Control" parent="VBoxContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="ClassUnlockGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Class Acquisitions"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -352.0
+offset_top = -352.0
+offset_right = 352.0
+offset_bottom = 352.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/h_separation = 64
+theme_override_constants/v_separation = 16
+columns = 4
+
+[node name="MulliganNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="PuristNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="LarryNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="PhoenixCoilNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="TycoonNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="DayTraderNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="ManagerNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="CalculatorNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="GhostNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="SpaceNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="BlinkerNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="PsychicNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="DoublesNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="ComboisseurNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="SniperNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="MineralNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="GobbleNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="GlutsNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="GrooveNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="AlchemistNode" parent="VBoxContainer/TabContainer/Class Acquisitions/ClassUnlockGrid" instance=ExtResource("2_as4yt")]
+layout_mode = 2
+icon = ExtResource("3_84dsh")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="BackButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(128, 64)
+layout_mode = 2
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_rkkxi")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("5_w6wo0")
+theme_override_styles/disabled = ExtResource("6_eyggi")
+theme_override_styles/hover_pressed = ExtResource("5_w6wo0")
+theme_override_styles/hover = ExtResource("5_w6wo0")
+theme_override_styles/pressed = ExtResource("5_w6wo0")
+theme_override_styles/normal = ExtResource("7_4sm26")
+text = "Back"
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+theme_override_styles/separator = SubResource("StyleBoxEmpty_emvag")
+
+[node name="DebugPanel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+
+[node name="AddFangsButton" type="Button" parent="DebugPanel"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_rkkxi")
+theme_override_font_sizes/font_size = 24
+text = "Add 100 Fangs"
+
+[node name="ConfirmationModal" parent="." instance=ExtResource("8_7yo4o")]
+visible = false
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 1
+
+[node name="DescriptionPanel" parent="." instance=ExtResource("9_rngq6")]
+visible = false
+layout_mode = 0
+anchors_preset = 0
+
+[node name="DescriptionDelayTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true

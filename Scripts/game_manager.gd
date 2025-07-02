@@ -4,7 +4,11 @@ extends Node
 var chosen_difficulty = "viper"
 var chosen_class = "speedster"
 var run_time: float = 0.0
-
+# --- RUN-SPECIFIC TRACKING ---
+var total_juice_earned_this_run: int = 0
+var total_pulp_earned_this_run: int = 0
+var rocks_destroyed_this_run: int = 0
+var upgrades_purchased_this_run: int = 0
 # --- CLASS & DIFFICULTY MODIFIERS ---
 var juice_on_level_up_disabled: bool = false
 var juice_chance_on_eat: float = 0.0
@@ -23,6 +27,7 @@ var gambling_disabled: bool = false
 var juice_menu_disabled: bool = false
 var pulp_gain_disabled: bool = false
 var juice_tax_rate: float = 0.0
+
 #------Garden Progression----#
 var has_died_this_garden = false
 var current_garden = 1
@@ -418,6 +423,7 @@ var class_data = {
 		"name": "Mulligan",
 		"description": "The balanced, default experience. Starts with an Extra Life and a solid foundation for any build.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 0,
 		"start_upgrades": {
 			"Phoenix Dawn": 1
 		},
@@ -469,6 +475,7 @@ var class_data = {
 		"name": "Purist",
 		"description": "A master of the garden with a disdain for the stench of RNG",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Patient Gardener": 3, # Starts with this maxed out
 			"Elephant Sized Portions": 3
@@ -520,6 +527,7 @@ var class_data = {
 		"name": "Larry",
 		"description": "The ultimate roguelike challenge. You are at the mercy of fate.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
 			"juice_menu_disabled": true # A new flag to disable the Juice upgrade menu
@@ -568,6 +576,7 @@ var class_data = {
 		"name": "Phoenix Coil",
 		"description": "An immortal being who has traded worldly wealth for eternal life.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Death Defied": 1
 		},
@@ -619,6 +628,7 @@ var class_data = {
 		"name": "Tycoon",
 		"description": "A master of passive income who must spend to succeed.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 0,
 		"start_upgrades": {
 			"Snake Clicker": 7
 		},
@@ -671,6 +681,7 @@ var class_data = {
 		"name": "Day Trader",
 		"description": "A fast-start economist who sacrifices raw power for economic velocity.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Liquid Assets": 3,
 			"Fast Track": 1
@@ -722,6 +733,7 @@ var class_data = {
 		"name": "Manager",
 		"description": "A patient investor who leverages Pulp for massive late-game power.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Principal Pulp": 5,
 			"Juice Press": 1
@@ -773,6 +785,7 @@ var class_data = {
 		"name": "Calculator",
 		"description": "A strange being whose power is a reflection of its own state.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
 			# These two flags will trigger new logic in our helper functions
@@ -823,6 +836,7 @@ var class_data = {
 		"name": "Ghost",
 		"description": "An ethereal being who channels their magical nature into raw power.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 0,
 		"start_upgrades": {
 			"Ghost Tail": 4,
 			"Arcane Flow": 1,
@@ -873,6 +887,7 @@ var class_data = {
 		"name": "Space",
 		"description": "An absolute master of the garden's layout, with incredible speed to match.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Edge Lord": 7,
 			"Shatter Reality": 1
@@ -925,6 +940,7 @@ var class_data = {
 		"name": "Blinker",
 		"description": "A high-skill class focused on a single, powerful reality-bending mechanic.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Fractured Self": 1
 		},
@@ -973,6 +989,7 @@ var class_data = {
 		"name": "Psychic",
 		"description": "A master of foresight whose power creates a dangerous feedback loop.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Fruit Foresight": 1,
 			"Diet Slith": 5,
@@ -1026,6 +1043,7 @@ var class_data = {
 		"name": "Doubles",
 		"description": "A pure gambler who thrives on risk and gets faster with every failure.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 0,
 		"start_upgrades": {
 			"Coin Flip Curious": 1,
 			"Passive Income": 1
@@ -1078,6 +1096,7 @@ var class_data = {
 		"name": "Comboisseur",
 		"description": "The ultimate combo master, with a unique challenge and a massive payoff.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Sugar Rush": 1,
 			"Chain Reaction": 1,
@@ -1132,6 +1151,7 @@ var class_data = {
 		"name": "Sniper",
 		"description": "A focused predator who lives for the thrill of the hunt.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Banana Bounty": 2,
 			"More Mice": 4 # Base 1 + 4 = 5 max fruits
@@ -1183,6 +1203,7 @@ var class_data = {
 		"name": "Mineral",
 		"description": "A true master of the earth who sees rocks not as obstacles, but as investments.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Geological Survey": 1
 		},
@@ -1234,6 +1255,7 @@ var class_data = {
 		"name": "Gobble",
 		"description": "A master of ingredients who has learned to harness their very essence.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 0,
 		"start_upgrades": {
 			"Exotic Seeds": 3,
 			"Custom Aftertaste": 1,
@@ -1284,6 +1306,7 @@ var class_data = {
 		"name": "Gluts",
 		"description": "All-in on growth, but with a major logistical challenge.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
 			"fruit_reward_multiplier": 2.0,
@@ -1333,6 +1356,7 @@ var class_data = {
 		"name": "Groove",
 		"description": "A jack-of-all-trades who combines speed and passive income.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {
 			"Juke N Jive": 1,
 			"Mulligan Munchie": 1,
@@ -1384,6 +1408,7 @@ var class_data = {
 		"name": "Alchemist",
 		"description": "Does not gain Juice from leveling up. Every fruit has a 10% chance to grant 1 Juice instead.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
 			"juice_on_level_up_disabled": true,
@@ -2381,11 +2406,14 @@ func start_game():
 	has_died_this_garden = false
 	run_time = 0.0
 	fruits_eaten_this_run = 0
-	total_juice_this_run = 0
-	total_juice_this_run = juice
 	segments_to_restore = 0
 	passive_gps = 0.0
-	
+	#--------Run Stat Tracking----------#
+	total_juice_earned_this_run = 0
+	total_juice_earned_this_run = juice
+	total_pulp_earned_this_run = 0
+	rocks_destroyed_this_run = 0
+	upgrades_purchased_this_run = 0
 	
 	
 	

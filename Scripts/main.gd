@@ -74,10 +74,7 @@ func _ready():
 	rebuild_world_layout()
 	GameManager.generate_full_spawn_queue()
 	# ---Load Config--- 
-	var difficulty = GameManager.chosen_difficulty
-	var p_class = GameManager.chosen_class
-	#var diff_data = GameManager.difficulty_data[difficulty]
-	var class_data = GameManager.class_data[p_class]
+	var class_data = GameManager.class_data[GameManager.chosen_class]
 	# ---Reset Run Stats---
 	GameManager.has_died_this_garden = false
 	GameManager.garden_weaver_used_this_garden = false
@@ -448,11 +445,6 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 		bonuses.total_pulp += reward * GameManager.juice_spent_this_garden
 		bonuses.bonus_list.append("Engagement Bonus + %smg" % reward)
 	#---------------JUICE BONUSES----------------------
-	# Now, handle JUICE bonuses, which don't add to the Pulp total.
-	if GameManager.chosen_class == "the_zealot" and not GameManager.has_died_this_garden:
-		var bonus_juice = GameManager.class_data[GameManager.chosen_class]["juice_on_perfect_garden"]
-		GameManager.juice += bonus_juice
-		bonuses.bonus_list.append("Zealot's Purity: +%s oz of Juice!" % bonus_juice)
 		#GEOLOGICAL SURVEY
 	if GameManager.geological_survey_unlocked:
 		# Get the number of rocks left on the screen.
@@ -473,8 +465,10 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 		if bonus_juice > 0:
 			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_juice, remaining_rocks])
 			GameManager.juice += floori(bonus_juice)
+			GameManager.total_juice_earned_this_run += floori(bonus_juice)
 			bonuses.bonus_list.append("Geological Survey Bonus +% Juice for leaving %s rocks!" % [bonus_juice, remaining_rocks])
-			
+	
+	GameManager.total_pulp_earned_this_run += bonuses.total_pulp
 	return bonuses
 
 func show_ghost_fruit():
@@ -798,6 +792,7 @@ func destroy_obstacle(obstacle_node):
 	var rock_position = obstacle_node.position
 	# Safely remove it from our tracking array.
 	spawned_obstacles.erase(obstacle_node)
+	GameManager.rocks_destroyed_this_run += 1
 	
 	# Play the shrinking animation and queue it for deletion.
 	var tween = create_tween()
@@ -1045,6 +1040,7 @@ func level_up():
 		# 4. Add the final, calculated amount to the player's total.
 		GameManager.juice += juice_to_add
 		print("Gained %s Juice from leveling up!" % juice_to_add)
+		GameManager.total_juice_earned_this_run += juice_to_add
 		# --- x -> x+1 lvl up = + x juice
 		# --- Now, update the level and score goals ---
 		GameManager.score_at_level_start = GameManager.score_needed_for_next_level
@@ -1124,6 +1120,34 @@ func _start_end_of_garden_sequence():
 	var campaign_length = GameManager.difficulty_data[GameManager.chosen_difficulty]["campaign_length"]
 	var is_final_garden = (garden_id == campaign_length)
 	var is_final_win = (is_final_garden and score >= GameManager.garden_data[garden_id]["score_goal"])
+	
+	if is_final_garden:
+		# --- NEW: Update Difficulty Progression ---
+		var completed_class = GameManager.chosen_class
+		var completed_pact = GameManager.chosen_difficulty
+		var progress = SaveManager.get_progress_for_class(completed_class)
+		
+		if completed_pact.begins_with("Pact"):
+			var pact_num = int(completed_pact.split(" ")[1])
+			if pact_num > progress.highest_pact_completed:
+				progress.highest_pact_completed = pact_num
+		elif completed_pact.begins_with("Trial"):
+			if not completed_pact in progress.seals_broken:
+				progress.seals_broken.append(completed_pact)
+		elif completed_pact.begins_with("Cursed"):
+			var cursed_pact_num = int(completed_pact.split(" ")[2])
+			if cursed_pact_num > progress.highest_cursed_pact_completed:
+				progress.highest_cursed_pact_completed = cursed_pact_num
+		
+		# Now, process the XP for the winning run.
+		SaveManager.process_end_of_run_xp(score, completed_pact)
+		
+		# Finally, transition to the main menu.
+		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
+		return
+	
+	
+	
 	
 	results_screen.display_results(
 		GameManager.garden_data[garden_id]["name"],
@@ -1205,6 +1229,7 @@ func _go_to_next_garden():
 	if GameManager.juice_tax_rate > 0:
 		var tax_amount = floori(GameManager.juice * GameManager.juice_tax_rate)
 		GameManager.juice -= tax_amount
+		GameManager.total_juice_earned_this_run -= tax_amount
 		print("TYCOON TAX! Lost %s Juice between gardens." % tax_amount)
 	
 	# Finally, tell the main SceneTransition to go to the next level.
@@ -1278,7 +1303,8 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			print("Purchase failed: Not enough ability slots!")
 			# We need to refund the Juice since the purchase failed.
 			var cost = GameManager.calculate_upgrade_cost("Mulligan Munchie")
-			GameManager.juice += cost	
+			GameManager.juice += cost
+			GameManager.total_juice_earned_this_run -= cost	
 	else:
 
 #------Idle Path-----#
@@ -1350,7 +1376,10 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Liquidation":
 			if not GameManager.liquidation_used:
 				GameManager.liquidation_used = true
+				var diff1 = GameManager.juice
 				GameManager.juice *= 2
+				var diff2 = GameManager.juice
+				GameManager.total_juice_earned_this_run += diff2 - diff1
 				# Need to add a cool effect
 #----------------------------Glutton-------------------------#
 			#---ESP---#
@@ -1585,6 +1614,7 @@ func apply_recipe_buff(buff_data: Dictionary):
 			head.activate_temporary_speed_boost(buff_data["value"], buff_data["duration"])
 		"juice_boost":
 			GameManager.juice += buff_data["value"]
+			GameManager.total_juice_earned_this_run += buff_data["value"]
 			update_hud()
 		"full_recharge":
 			print("ABILITIES RECHARGED")
@@ -1637,6 +1667,7 @@ func on_snake_ate_food(fruit):
 	var rewards = calculate_fruit_rewards(fruit)
 	# 3. Apply rewards
 	GameManager.juice += rewards.juice_reward
+	GameManager.total_juice_earned_this_run = rewards.juice_reward
 	grow_snake(rewards.segments_to_add)
 	
 	if GameManager.speed_increase_on_eat:
@@ -1721,6 +1752,7 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 		growth_multiplier = GameManager.patient_gardener_data[GameManager.patient_gardener_level]["multiplier"]
 		if fruit is GoldenFruit:
 			rewards.juice_reward += 1 # Bonus SP for a rare Ripe Golden Fruit
+
 			
 	#--------Coin Flip Curious--------#
 	if GameManager.coin_flip_curious_unlocked:
@@ -1736,6 +1768,7 @@ func calculate_fruit_rewards(fruit) -> Dictionary:
 			print("LOSE! No growth this time.")
 			
 	# Reward calculation = Effective fruit reward * patient gardner * combo clamped at 1 cuz bugs at 0 lol
+	GameManager.total_juice_earned_this_run += rewards.juice_reward
 	rewards.segments_to_add = get_effective_fruit_reward() * growth_multiplier * max(1, GameManager.current_combo)
 	return rewards
 
@@ -2048,18 +2081,18 @@ func _start_game_over_sequence():
 	await SceneTransition.play_cover_animation("spiral")
 	$UI/GameOverScreen.visible = true
 	game_is_over.emit(final_score)
-	
+
 	# --- NEW: Update and Save Persistent Stats ---
-	SaveManager.save_data.total_deaths += 1
-	SaveManager.save_data.total_juice_earned += GameManager.total_juice_this_run
-	SaveManager.save_data.total_pulp_earned += GameManager.pulp # Assuming pulp is the run total
+	# We now call our master function in the SaveManager.
+	SaveManager.process_end_of_run_xp(
+		final_score,
+		GameManager.chosen_difficulty
+	)
 	
-	# Check for a new high score
-	if final_score > SaveManager.save_data.high_score:
-		SaveManager.save_data.high_score = final_score
-		
-	# Finally, tell the SaveManager to write all this new data to the file.
-	SaveManager.save_game()
+	# We also update the total deaths count.
+	SaveManager.save_data.total_deaths += 1
+
+	SaveManager.save_game() # Save this one extra stat)
 	
 	await SceneTransition.uncover_screen("spiral")
 
@@ -2476,6 +2509,7 @@ func perform_juice_press():
 	# Calculate the conversion at a 5:1 ratio
 	var juice_gained = floori(GameManager.pulp / 5.0)
 	GameManager.juice += juice_gained
+	GameManager.total_juice_earned_this_run += juice_gained
 
 	# Reset Pulp to 0
 	GameManager.pulp = 0
@@ -2675,6 +2709,7 @@ func _on_skip_garden_pressed():
 
 	# 1. Grant the bonus Juice
 	GameManager.juice += 5
+	GameManager.total_juice_earned_this_run += 5
 	GameManager.current_garden += 1 # Extra Fast Track increment
 
 	# 2. Animate the shop sliding out
@@ -2768,6 +2803,7 @@ func handle_upgrade_purchase(upgrade_key: String):
 		# The purchase is valid! Subtract the cost.
 		GameManager.juice -= cost
 		GameManager.juice_spent_this_garden += cost
+		GameManager.upgrades_purchased_this_run += 1
 		
 		# Tell the game to apply the upgrade's effect.
 		_on_upgrade_menu_upgrade_selected(upgrade_key) # This function now ONLY applies the effect

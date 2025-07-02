@@ -137,6 +137,27 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		#"Cursed Pact IV": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
 		#"Cursed Pact V": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
 		#"Mulligan": self.icon = preload("res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png")
+		#----------------Classes----------------#
+		"Mulligan": self.icon = preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Purist": self.icon = preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Larry": self.icon = preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Phoenix Coil": self.icon = preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Tycoon": self.icon = preload("res://Assets/PNGs/snake_lime.png")
+		"Day Trader": self.icon = preload("res://Assets/PNGs/snake_lime.png")
+		"Manager": self.icon = preload("res://Assets/PNGs/snake_lime.png")
+		"Calculator": self.icon = preload("res://Assets/PNGs/snake_lime.png")
+		"Ghost": self.icon = preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Space": self.icon = preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Blinker": self.icon = preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Psychic": self.icon = preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Doubles": self.icon = preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Comboisseur": self.icon = preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Sniper": self.icon = preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Mineral": self.icon = preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Gobble": self.icon = preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Gluts": self.icon = preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Groove": self.icon = preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Alchemist": self.icon = preload("res://Assets/PNGs/golden_fruit_icon.png")
 		#--------DEFAULT-------
 		_:
 			self.icon = null

@@ -362,7 +362,7 @@ func update_stats_tab():
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
 		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [20 + 4 * GameManager.edge_lord_level, 15 + 3 * GameManager.edge_lord_level]
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
-		side_stats_panel.get_node("TotalJuiceStatsLabel").text = "Total Juice this run: " + str(GameManager.total_juice_this_run) + " mL"
+		side_stats_panel.get_node("TotalJuiceStatsLabel").text = "Total Juice this run: " + str(GameManager.total_juice_earned_this_run) + " mL"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"
 
 		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.garden_data[min(GameManager.current_garden + 1, 5)]["score_goal"])
@@ -742,8 +742,10 @@ func _on_sell_stock_pressed(stock_key: String):
 	# Process the transaction
 	if currency == "Juice":
 		GameManager.juice += price
+		GameManager.total_juice_earned_this_run += price
 	else:
 		GameManager.pulp += price
+		GameManager.total_pulp_earned_this_run += price
 		
 	GameManager.block_market_portfolio[stock_key] -= 1
 	

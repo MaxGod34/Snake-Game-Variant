@@ -7,16 +7,23 @@ extends PanelContainer
 @onready var description_label = $MarginC/GridContainer/DescriptionLabel
 @onready var cost_label = $MarginC/GridContainer/CostLabel
 @onready var level_label = $MarginC/GridContainer/CurrentLevelLabel
+@onready var tree_label = $MarginC/GridContainer/TreeLabel
 
 # This is the master function that main.gd will call.
 func show_info(upgrade_key: String, p_name: String, p_description: String, p_cost: int, current_level: int, max_level: int, currency_unit: String):
 	name_label.text = p_name
 	description_label.text = p_description
 	
+	
+	
 	if max_level > 1:
 		level_label.text = "(Lvl %s / %s)" % [current_level, max_level]
 	else:
 		level_label.text = "I have no Pwr Lvl!"
+	
+	if currency_unit == "Fangs":
+		level_label.text = "Unbound"
+		tree_label.text = "Class"
 	
 	# If the cost is 999, it means the upgrade is maxed out.
 	if p_cost >= 999:
@@ -141,6 +148,27 @@ func get_icon_for_upgrade(icon_upgrade_key: String) -> Texture:
 		"handicap": return preload("res://Assets/PNGs/RotatingItemIcons/handicap_icon.png")
 	#----------Legendary---------
 		"elephant_devoured": return preload("res://Assets/PNGs/RotatingItemIcons/elephant_devoured_icon.png")
+#----------------------------Classes----------------------------------#\\\\\\\\\\\\\\\\\\\\\\\\\\///////////////////
+		"Mulligan": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Purist": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Larry": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Phoenix Coil": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Tycoon": return preload("res://Assets/PNGs/snake_lime.png")
+		"Day Trader": return preload("res://Assets/PNGs/snake_lime.png")
+		"Manager": return preload("res://Assets/PNGs/snake_lime.png")
+		"Calculator": return preload("res://Assets/PNGs/snake_lime.png")
+		"Ghost": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Space": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Blinker": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Psychic": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Doubles": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Comboisseur": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Sniper": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Mineral": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Gobble": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Gluts": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Groove": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Alchemist": return preload("res://Assets/PNGs/golden_fruit_icon.png")
 		#--------DEFAULT-------
 		_:
 			return preload("res://Assets/PNGs/basic_square_with_border.png")
