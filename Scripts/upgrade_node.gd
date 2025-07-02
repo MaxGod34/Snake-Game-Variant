@@ -123,6 +123,19 @@ func get_node_icon_for_upgrade(icon_upgrade_key: String):
 		"handicap": self.icon = preload("res://Assets/PNGs/RotatingItemIcons/handicap_icon.png")
 	#----------Legendary---------
 		"elephant_devoured": self.icon = preload("res://Assets/PNGs/RotatingItemIcons/elephant_devoured_icon.png")
+		"Pact 1": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png")
+		"Pact 2": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png")
+		"Pact 3": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_3.png")
+		"Pact 4": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
+		"Pact 5": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_5.png")
+		"Trial of the Harvest": self.icon = preload("res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png")
+		"Trial of the Core": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png")
+		"Trial of the Redline": self.icon = preload("res://Assets/PNGs/UpgradeIcons/SugarRushIcon.png")
+		"Cursed Pact I": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png")
+		"Cursed Pact II": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png")
+		"Cursed Pact III": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_3.png")
+		"Cursed Pact IV": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
+		"Cursed Pact V": self.icon = preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
 		#--------DEFAULT-------
 		_:
 			self.icon = null

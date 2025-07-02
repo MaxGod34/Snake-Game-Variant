@@ -234,10 +234,11 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 0
+current_tab = 5
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1185,7 +1186,6 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="SnakeEyes" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -2126,11 +2126,12 @@ text_direction = 1
 
 [node name="DescriptionPanel" parent="." instance=ExtResource("21_lwbsw")]
 visible = false
-anchors_preset = 6
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -552.0
-offset_top = -241.5
-offset_right = 0.0
-offset_bottom = 241.5
-grow_horizontal = 0
+anchors_preset = 4
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 0.0
+offset_top = -248.0
+offset_right = 540.0
+offset_bottom = 248.0
+grow_horizontal = 1
+size_flags_horizontal = 1

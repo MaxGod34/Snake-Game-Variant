@@ -1,61 +1,83 @@
 extends CanvasLayer
 
-# These signals are how this menu communicates with the main game.
-
+# === Signals ===
 signal resume_game_pressed
 
 
-# --- NODE REFERENCES ---
-# We get direct references to important nodes when the scene is ready.
-# This is faster and safer than using long paths like $.../.../... every time.
+# === Core References ===
+var main_game
+var hovered_upgrade_key: String = ""
+var is_switching_tabs: bool = false
+
+
+# === Gameplay State ===
+var current_dice_guess: int = 1
+var current_hoard_guess: int = 1
+
+
+# === UI References ===
+# -- Top-Level UI --
 @onready var top_tabs = $CenterContainer/PanelContainer/VBoxContainer/TopTabs
-@onready var stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox
-@onready var side_stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer
 @onready var description_label = $DescriptionText
 @onready var description_panel = $DescriptionPanel
 @onready var juice_label = $BottomPanel/BottomRowHBox/BottomJuiceLabel
 @onready var pulp_label = $BottomPanel/BottomRowHBox/BottomPulpLabel
 @onready var resume_button = $BottomPanel/BottomRowHBox/ResumeButton
-#---Snake Eyes UI-------
-@onready var snake_coin_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow2/SnakeCoinSlider
-@onready var snake_coin_heads_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallHeadsButton
-@onready var snake_coin_tails_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallTailsButton
+@onready var description_delay_timer = $DescriptionDelayTimer
 
-@onready var dice_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/HouseSpecialSlider
-@onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RollDiceButton
-@onready var dice_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/GuessLabel
+# -- Stats Panel --
+@onready var stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox
+@onready var side_stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer
 
-@onready var hoard_count_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/HoardCountSlider
-@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/StartHoardCountButton
-@onready var hoard_count_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/GuessLabel
-#----Block Market References---
-@onready var orange_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/OrangeBlockLabel
-@onready var buy_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/BuyShareOrangeButton
-@onready var sell_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/SellShareOrangeButton
-@onready var apple_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/AppleBlockLabel
-@onready var buy_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/BuyShareAppleButton
-@onready var sell_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/SellShareAppleButton
-@onready var light_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/LightPulpLabel
-@onready var buy_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/BuyLightPulpShareButton
-@onready var sell_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/SellShareLightButton
-@onready var extra_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/ExtraPulpLabel
-@onready var buy_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/BuyExtraPulpShareButton
-@onready var sell_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/SellSharePulpButton
-
+# -- Ticker Labels --
 @onready var headline_label_a = $TickerPanel/TickerContainer/HeadlineStage/TopTickerLabelA
 @onready var headline_label_b = $TickerPanel/TickerContainer/HeadlineStage/TopTickerLabelB
 @onready var stats_label_a = $TickerPanel/TickerContainer/StatsStage/BottomTickerLabelA
 @onready var stats_label_b = $TickerPanel/TickerContainer/StatsStage/BottomTickerLabelB
 
 
-@onready var description_delay_timer = $DescriptionDelayTimer
-var hovered_upgrade_key: String = ""
+# === Snake Eyes UI ===
+# -- Snake Coin Wager --
+@onready var snake_coin_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow2/SnakeCoinSlider
+@onready var snake_coin_heads_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallHeadsButton
+@onready var snake_coin_tails_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/SnakeCoinContainer/WagerInputRow/CallTailsButton
+
+# -- Dice Wager --
+@onready var dice_wager_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/HouseSpecialRow/HouseSpecialSlider
+@onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RollDiceButton
+@onready var dice_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/GuessLabel
+
+# -- Hoard Count --
+@onready var hoard_count_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/HoardCountSlider
+@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/StartHoardCountButton
+@onready var hoard_count_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/GuessLabel
 
 
-var tab_controllers: Dictionary = {}
+# === Block Market UI ===
+@onready var orange_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/OrangeBlockLabel
+@onready var buy_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/BuyShareOrangeButton
+@onready var sell_orange_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/OrangeBlockRow/SellShareOrangeButton
 
-# We also need a variable to store the player's current dice guess
-var current_dice_guess: int = 1
+@onready var apple_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/AppleBlockLabel
+@onready var buy_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/BuyShareAppleButton
+@onready var sell_apple_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/AppleBlockRow/SellShareAppleButton
+
+@onready var light_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/LightPulpLabel
+@onready var buy_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/BuyLightPulpShareButton
+@onready var sell_light_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/LightPulpRow/SellShareLightButton
+
+@onready var extra_pulp_block_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/ExtraPulpLabel
+@onready var buy_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/BuyExtraPulpShareButton
+@onready var sell_extra_block_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/RightColumn/BlockMarketContainer/ExtraPulpRow/SellSharePulpButton
+
+
+# === Data: Upgrade UI & Tabs ===
+var all_upgrade_nodes: Dictionary = {} # Upgrade buttons (built in _ready)
+var tab_controllers: Dictionary = {}  # Tab logic
+var player_stats_for_ticker = []
+
+
+# === Assets ===
 var die_faces: Array = [
 	preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png"),
 	preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png"),
@@ -64,36 +86,35 @@ var die_faces: Array = [
 	preload("res://Assets/PNGs/Dice/snake_dice_128_dice_5.png"),
 	preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
 ]
-
-var current_hoard_guess: int = 1
-
-
+# === FLAVOR TEXT ===
 var headlines = [
 	"BREAKING: Local snake discovers 'left' turn, revolutionizes movement.",
 	"The Pulp-sicle Stand reports record profits for the third garden in a row.",
-	"OP-ED: Are 'Extra Lives' making our snakes soft?",
+	"OP-ED: Are 'Extra Lives' making our snakes soft? Overpaid blogger says so...",
 	"Weather forecast: Partly cloudy with a 30% chance of Ghost Peppers.",
 	"Anarchists claim responsibility for latest rock slide in Garden 6.",
 	"The Snake Cup was claimed last night by the Cincinatti Slith marking back-to-back SnakeBall championships.",
-	"Block Market futures slip on shaky jobs report.",
+	"Block Market futures slip on shaky jobs report. Plum Block collapse may have ripple effects. More next...",
 	"Oil at an all time low, AI scams are better than Snake Oil; new study shows.",
 	"Garden 7 under construction still, do not, I repeat, do NOT go in there!",
-	"Loading Round 2...",
+	"Loading Round 2...It's not round 2 Larry, we use GARDENS, GARDENS, got it?!",
 	"Gimme, Gimme, Gimme a man after Slithnight, why'd somebody let me go and type for so long.",
-	"Loading Round 1...",
-	"Glutton breaks newest patch with latest ECON updates. BUY ORANGE STOCK NOW!"
+	"Loading Round 1...I mean...Garden 1...I mean...Wait what garden are they on Larry?!",
+	"Glutton breaks newest patch with latest ECON updates. BUY ORANGE STOCK NOW!",
+	"SBC: Pulp inflation hits 3-year low. AI analysts blame Juice being too lucrative.",
+	"Chef upgrade button mental stability update: touch starvation is making me crack...",
+	"SnakeCoin hits all-time low, bagholders say HODL. AI says get out before the subpoena",
+	"New patch takes out old meta. Players furious. Developer says, \"bite me\"",
+	"Statistics show lucky players are currently online! So watch out, they may out roll you",
+	"EsoSoft shifts primary focus to B2B cloud-based solutions. Investors cheer, gamers fear...",
+	"Research confirms, easter egg clue one is in the fang fund...you didn't see anything, get your stats up",
+	"OMG look at these trash stats Larry! Bahahaha can you believe they're even still alive?!",
+	"Snake bites own tail, judge's decision could set a new precedent for autotomy law for decades to come",
+	"Study finds upgrades do very little. Developer considering further constriction...",
+	"How many apples does it take to feed a snake? Put your guess in the comments below and don't forget to LIKE and SUBSCRIBE!",
+	"Snake McDoogle has passed away at 95 weeks of age. He was a good one, but...oh...nvm he's still good. BUY SOMETHING"
 ]
 
-var player_stats_for_ticker = []
-
-
-# This dictionary will store a reference to every single upgrade button.
-# We will build this dictionary once in _ready() to make updating them easier later.
-var all_upgrade_nodes: Dictionary = {}
-
-# A "gatekeeper" flag to prevent infinite loops when switching tabs.
-var is_switching_tabs: bool = false
-var main_game 
 
 func initialize(p_main_game):
 	# When the menu first loads, we find and connect everything once.
@@ -111,7 +132,13 @@ func initialize(p_main_game):
 	buy_extra_block_button.icon = buy_icon
 	sell_extra_block_button.icon = sell_icon
 
-
+func _process(delta):
+	# We only scroll if the upgrade menu is visible.
+	if not self.visible:
+		return
+		
+	_scroll_ticker(headline_label_a, headline_label_b, headlines, 50.0, delta) # Slower
+	_scroll_ticker(stats_label_a, stats_label_b,[], 80.0, delta) # Faster
 
 
 func _build_node_dictionary():
@@ -145,7 +172,7 @@ func _connect_all_signals():
 		node.pressed.connect(_on_any_node_pressed.bind(upgrade_key))
 		node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
 		node.mouse_exited.connect(_on_any_node_mouse_exited)
-	
+	#---CONNECT ALL SNAKEEYES WAGER STUFF---
 	snake_coin_wager_slider.value_changed.connect(_on_snake_coin_slider_changed)
 	snake_coin_heads_button.pressed.connect(_on_snake_coin_flip_pressed.bind("Heads"))
 	snake_coin_tails_button.pressed.connect(_on_snake_coin_flip_pressed.bind("Tails"))
@@ -153,6 +180,7 @@ func _connect_all_signals():
 	dice_roll_button.pressed.connect(_on_roll_dice_button_pressed)
 	hoard_count_button.pressed.connect(_on_start_hoard_count_pressed)
 	hoard_count_slider.value_changed.connect(_on_hoard_count_slider_changed)
+	#---CONNECT ALL BLOCK/STOCK MARKET BUTTONS
 	buy_apple_block_button.pressed.connect(_on_buy_stock_pressed.bind("Apple Block"))
 	buy_extra_block_button.pressed.connect(_on_buy_stock_pressed.bind("Extra Block"))
 	buy_light_block_button.pressed.connect(_on_buy_stock_pressed.bind("Light Block"))
@@ -169,7 +197,6 @@ func _connect_all_signals():
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/LeftArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(-1))
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/RightArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(1))
 
-
 # This function is called from main.gd right before the menu appears.
 func set_initial_state_and_update():
 	top_tabs.current_tab = 0 # Default to the first tab
@@ -178,21 +205,34 @@ func set_initial_state_and_update():
 # This function refreshes every piece of information in the menu.
 func update_all_displays():
 	update_juice_and_pulp_label()
+	update_stats_tab()
+	
+	var disabled_paths = GameManager.disabled_paths
 	
 	# This one loop now updates every single upgrade node in the game.
+	for i in range(top_tabs.get_tab_count()):
+		var tab_title = top_tabs.get_tab_title(i)
+		if tab_title in disabled_paths or (tab_title == "Snake Eyes" and GameManager.gambling_disabled):
+			top_tabs.set_tab_hidden(i, true)
+		else:
+			top_tabs.set_tab_hidden(i, false)
+			
 	for upgrade_key in all_upgrade_nodes:
 		var node = all_upgrade_nodes[upgrade_key]
-		var rules = main_game.get_upgrade_rules(upgrade_key)
+		var rules = GameManager.get_upgrade_rules(upgrade_key)
 		
 		if rules.is_empty(): continue
 		
-		var current_level = main_game.get_upgrade_level_from_key(upgrade_key)
-		var prereqs_met = main_game.check_prerequisites(upgrade_key)
-		var theme_colors = get_theme_colors(rules)
-		
-		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
-	
-	update_snake_eyes_tab()
+		if node.is_visible_in_tree():
+			var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
+			var prereqs_met = main_game.check_prerequisites(upgrade_key)
+			var theme_colors = get_theme_colors(rules)
+			
+			node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
+	var current_tab_index = top_tabs.current_tab
+	var current_tab_name = top_tabs.get_tab_title(current_tab_index)
+	if current_tab_name == "Snake Eyes":
+		update_snake_eyes_tab()
 	
 func get_theme_colors(rules: Dictionary) -> Dictionary:
 	var colors = {"main": Color.WHITE, "accent": Color.GRAY}
@@ -227,12 +267,9 @@ func get_theme_colors(rules: Dictionary) -> Dictionary:
 		#if can_prestige:
 			#update_button_display("New Game S+")
 
-
-
-
 # --- HELPER FUNCTIONS  ---
 
-# This helper finds any button by its key, no matter which tab it's in.
+
 func find_upgrade_button(upgrade_key: String):
 	# We build the expected button name from the key.
 	# e.g., "Edge Lord" -> "EdgeLordButton"
@@ -244,7 +281,7 @@ func find_upgrade_button(upgrade_key: String):
 		print_debug("Warning: Could not find button named '", button_name, "'")
 	return button
 
-# This helper gets the correct current level for any given upgrade.
+
 
 func _on_any_node_pressed(upgrade_key: String):
 	main_game.handle_upgrade_purchase(upgrade_key)
@@ -268,7 +305,7 @@ func _on_description_delay_timer_timeout():
 		return
 
 	# 2. Get the rules and cost for the hovered upgrade using our helpers.
-	var rules = main_game.get_upgrade_rules(hovered_upgrade_key)
+	var rules = GameManager.get_upgrade_rules(hovered_upgrade_key)
 	# Another safety check in case the key was somehow invalid.
 	if rules.is_empty():
 		return
@@ -301,7 +338,14 @@ func _on_description_delay_timer_timeout():
 	
 	var current_level = main_game.get_upgrade_level_from_key(hovered_upgrade_key)
 	# 8. show it with all the correct info.
-	description_panel.show_info(hovered_upgrade_key, display_name, description, cost, current_level, rules.max_level)
+	description_panel.show_info(
+		hovered_upgrade_key,
+		display_name, description,
+		cost,
+		current_level,
+		rules.max_level,
+		"mL" # currency
+	)
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 
@@ -356,8 +400,6 @@ func update_juice_and_pulp_label():
 
 # --- SIGNAL HANDLER FUNCTIONS ---
 
-
-
 func _on_zone_button_pressed(quadrant_index):
 	# We only allow changing the zone if we have enough levels.
 	if GameManager.zoning_ordinance_level > quadrant_index:
@@ -375,7 +417,6 @@ func _on_dice_slider_changed(value: float):
 	var wager = floori(value)
 	dice_roll_button.text = "Roll for Glory!!\n(%s Juice)" % wager
 	
-
 func _on_dice_arrow_pressed(direction: int):
 	# Add the direction (-1 or 1) to our guess
 	
@@ -733,22 +774,12 @@ func start_tickers():
 	_setup_ticker(headline_label_a, headline_label_b, headlines)
 	_setup_ticker(stats_label_a, stats_label_b, [])
 
-	
-	
-func _process(delta):
-	# We only scroll if the upgrade menu is visible.
-	if not self.visible:
-		return
-		
-	_scroll_ticker(headline_label_a, headline_label_b, headlines, 50.0, delta) # Slower
-	_scroll_ticker(stats_label_a, stats_label_b,[], 80.0, delta) # Faster
 
 func _scroll_ticker(label_a: Label, label_b: Label, text_pool: Array, speed: float, delta: float):
 	# Move both labels to the left every frame.
 	label_a.position.x -= speed * delta
 	label_b.position.x -= speed * delta
 	
-	# --- THIS IS THE FIX ---
 	# This is the "leapfrog" logic.
 	# If a label has moved completely off-screen to the left...
 	if label_a.position.x < -label_a.get_minimum_size().x:

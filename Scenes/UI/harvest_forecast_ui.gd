@@ -33,7 +33,6 @@ func update_forecast(forecast_list: Array, chance: float, level: int):
 				if count >= level: # Show up to the number of fruits our level allows
 					break
 
-	# --- THIS IS THE FIX ---
 	# Now, loop through the CORRECT, filtered list and create the icons.
 	for fruit_type_string in fruits_to_show:
 		var icon = TextureRect.new()

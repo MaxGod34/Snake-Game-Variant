@@ -1,76 +1,19 @@
-[gd_scene load_steps=11 format=3 uid="uid://bdqnq8u7m75ue"]
+[gd_scene load_steps=7 format=3 uid="uid://bdqnq8u7m75ue"]
 
 [ext_resource type="Script" uid="uid://dt65jjmqd6rtw" path="res://Scripts/description_panel.gd" id="1_daodf"]
 [ext_resource type="StyleBox" uid="uid://bj3hmbgm1065w" path="res://Assets/Styles/panels/description_panel_panel1_test.tres" id="1_fnpmw"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_qmwms"]
-[ext_resource type="Texture2D" uid="uid://r4xd40p83pn" path="res://Assets/PNGs/UpgradeIcons/BurrowIcon.png" id="2_kk4sh"]
+[ext_resource type="Texture2D" uid="uid://lvepmx5d05jl" path="res://Assets/PNGs/UpgradeIcons/SynapseSlotIcon.png" id="3_vywvx"]
+[ext_resource type="StyleBox" uid="uid://bnd0a33pmn60h" path="res://Scenes/UI/description_panel_border.tres" id="5_fnpmw"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vywvx"]
-bg_color = Color(0.843137, 1, 0.678431, 1)
-border_color = Color(0.843137, 1, 0.678431, 1)
-border_blend = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_colbl"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
+bg_color = Color(0.843137, 1, 0.678431, 0.572549)
 border_width_left = 8
-border_color = Color(0.843137, 1, 0.678431, 1)
-border_blend = true
-expand_margin_left = 4.0
-expand_margin_top = 4.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fnpmw"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
 border_width_top = 8
-border_width_right = 4
-border_color = Color(0.843137, 1, 0.678431, 1)
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
 border_blend = true
-expand_margin_left = 4.0
-expand_margin_top = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knrs3"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_top = 8
-border_color = Color(0.843137, 1, 0.678431, 1)
-border_blend = true
-expand_margin_left = 4.0
-expand_margin_top = 4.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ri5h"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_top = 8
-border_width_right = 4
-border_color = Color(0.843137, 1, 0.678431, 1)
-border_blend = true
-expand_margin_left = 4.0
-expand_margin_bottom = 4.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a0khq"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_top = 8
-border_color = Color(0.843137, 1, 0.678431, 1)
-border_blend = true
-expand_margin_left = 4.0
 
 [node name="DescriptionPanel" type="PanelContainer"]
 anchors_preset = 8
@@ -84,6 +27,7 @@ offset_right = 160.0
 offset_bottom = 166.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_fnpmw")
@@ -91,36 +35,44 @@ script = ExtResource("1_daodf")
 
 [node name="MarginC" type="MarginContainer" parent="."]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 mouse_filter = 2
 
 [node name="GridContainer" type="GridContainer" parent="MarginC"]
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 columns = 2
 
 [node name="IconPanel" type="Panel" parent="MarginC/GridContainer"]
-custom_minimum_size = Vector2(268, 268)
+custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBoxFlat_vywvx")
 
 [node name="IconDisplay" type="TextureRect" parent="MarginC/GridContainer/IconPanel"]
 custom_minimum_size = Vector2(256, 256)
-layout_mode = 2
-offset_right = 256.0
-offset_bottom = 256.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_kk4sh")
+texture = ExtResource("3_vywvx")
 
 [node name="DescriptionLabel" type="Label" parent="MarginC/GridContainer"]
-custom_minimum_size = Vector2(256, 160)
+custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
-size_flags_vertical = 1
+size_flags_horizontal = 4
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 8
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxFlat_colbl")
+theme_override_font_sizes/font_size = 20
+theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Buy 12 upgrades if you feel like it!
 Lvl 1: this thing Lvl 2: that thing
 Lvl 3: another thing 
@@ -129,48 +81,54 @@ vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="UpgradeNameLabel" type="Label" parent="MarginC/GridContainer"]
-custom_minimum_size = Vector2(256, 96)
+custom_minimum_size = Vector2(256, 128)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_fnpmw")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Elephant-Sized Portions"
-vertical_alignment = 2
+horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="CurrentLevelLabel" type="Label" parent="MarginC/GridContainer"]
-layout_mode = 2
-size_flags_vertical = 1
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
-theme_override_constants/line_spacing = 12
-theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_knrs3")
-text = "Lvl 0 / 10"
-horizontal_alignment = 2
-vertical_alignment = 2
-
 [node name="TreeLabel" type="Label" parent="MarginC/GridContainer"]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_0ri5h")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Tree: Glutton"
-vertical_alignment = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CurrentLevelLabel" type="Label" parent="MarginC/GridContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("1_qmwms")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("5_fnpmw")
+text = "Lvl 0 / 10"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="CostLabel" type="Label" parent="MarginC/GridContainer"]
 layout_mode = 2
-size_flags_vertical = 1
+size_flags_horizontal = 13
+size_flags_vertical = 9
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_a0khq")
-text = "12 mL Juice"
-horizontal_alignment = 2
-vertical_alignment = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = ExtResource("5_fnpmw")
+text = "Cost 12 mL Juice"
+horizontal_alignment = 1
+vertical_alignment = 1

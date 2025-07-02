@@ -57,7 +57,6 @@ func _connect_all_signals():
 	for upgrade_key in pillar_nodes:
 		var node = pillar_nodes[upgrade_key]
 		if is_instance_valid(node):
-			# --- THIS IS THE FIX ---
 			# We now connect to the button's built-in "pressed" signal,
 			# not our old custom one. We use .bind() to tell the handler
 			# which upgrade was clicked. This will correctly send only ONE argument.
@@ -318,7 +317,6 @@ func _on_description_delay_timer_timeout():
 	var display_name: String
 	var item_id_for_icon: String # The key we pass to the description panel
 	var current_level: int
-	# --- THIS IS THE FIX ---
 	# We now handle the two different item types separately.
 	
 	if hovered_item_key == "rotating_item":
@@ -342,19 +340,23 @@ func _on_description_delay_timer_timeout():
 		
 		current_level = main_game.get_meta_upgrade_level(hovered_item_key)
 		cost = rules.costs[current_level] if current_level < rules.costs.size() else 999
-		# --- THIS IS THE DYNAMIC POSITIONING LOGIC ---
-		var viewport_size = get_viewport().get_visible_rect().size
-		var mouse_position = get_viewport().get_mouse_position()
-		
-		# We position the panel on the opposite side of the screen from the mouse.
-		if mouse_position.x < viewport_size.x / 2.0:
-			description_panel.position.x = (viewport_size.x / 2.0) + 20
-		else:
-			description_panel.position.x = (viewport_size.x / 2.0) - description_panel.size.x - 20
-			
-		# We also vertically center it relative to the mouse.
-		description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
-		description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y)
+	# --- THIS IS THE DYNAMIC POSITIONING LOGIC ---
+	var viewport_size = get_viewport().get_visible_rect().size
+	var mouse_position = get_viewport().get_mouse_position()
+	# 4. Create a new Vector2 to hold the panel's final position.
+	var panel_size = description_panel.size
+	var vertical_center = mouse_position.y - panel_size.y / 2
+
+	if mouse_position.x < viewport_size.x / 2.0:
+		# Simulate Center Right (panel appears to the right of cursor)
+		description_panel.position = mouse_position + Vector2(96, 0)
+		description_panel.position.y = vertical_center
+	else:
+		# Simulate Center Left (panel appears to the left of cursor)
+		description_panel.position = mouse_position - Vector2(panel_size.x + 96, 0)
+		description_panel.position.y = vertical_center
+	#CLAMP
+	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
 	# Now that we have the correct data, we can safely show the info.
 	# We pass the specific item_id_for_icon to the show_info function.
 	description_panel.show_info(
@@ -363,4 +365,6 @@ func _on_description_delay_timer_timeout():
 		rules.description,
 		cost,
 		current_level,
-		rules.max_level)
+		rules.max_level,
+		"mg" #currency	
+	)

@@ -4,6 +4,28 @@ extends Node
 var chosen_difficulty = "viper"
 var chosen_class = "speedster"
 var run_time: float = 0.0
+# --- DIFFICULTY PROGRESSION TRACKING ---
+var highest_pact_completed: int = 0 # Starts at 0, goes up to 5
+var seals_broken: Array = [] # Stores the names of the completed trials, e.g., ["Trial of the Core"]
+var highest_cursed_pact_completed: int = 0 # Starts at 0, goes up to 5
+# --- CLASS & DIFFICULTY MODIFIERS ---
+var juice_on_level_up_disabled: bool = false
+var juice_chance_on_eat: float = 0.0
+var obstacle_modifier: float = 1.0
+var geological_survey_multiplies: bool = false
+var all_fruits_special: bool = false
+var speed_on_loss: bool = false
+var speed_increase_on_eat: bool = false
+var disabled_paths: Array = []
+var speed_multiplier_class_mod: float = 1.0
+var dynamic_max_fruits: bool = false
+var dynamic_fruit_reward: bool = false
+var global_juice_cost_multiplier: float = 1.0
+var max_esp_level: int = 20 # The default max level
+var gambling_disabled: bool = false
+var juice_menu_disabled: bool = false
+var pulp_gain_disabled: bool = false
+var juice_tax_rate: float = 0.0
 #------Garden Progression----#
 var has_died_this_garden = false
 var current_garden = 1
@@ -255,12 +277,14 @@ var new_game_s_plus_active = false
 #------------THE ARCHITECT-----------#
 var edge_lord_level = 0
 var edge_lord_data = [
-	Vector2(20, 15), # Level 0
-	Vector2(24, 18), # Level 1
-	Vector2(28, 21), # Level 2
-	Vector2(32, 24), # Level 3
-	Vector2(36, 27), # Level 4
-	Vector2(40, 30)  # Level 5
+	Vector2(12, 9),  # Level 0
+	Vector2(16, 12), # Level 1
+	Vector2(20, 15), # Level 2
+	Vector2(24, 18), # Level 3
+	Vector2(28, 21), # Level 4
+	Vector2(32, 24), # Level 5
+	Vector2(36, 27), # Level 6
+	Vector2(40, 30)  # Level 7
 ]
 var zoning_ordinance_level = 0
 var border_czar_unlocked = false
@@ -306,56 +330,104 @@ var block_market_prices: Dictionary = {
 
 #---------Difficulty parameters-------#
 var difficulty_data = {
-	"hatchling": {	#Easy
-		"name": "Hatchling",
-		"campaign_length": 9,
-		"speed_multiplier": 1.1,  # Slower snake (higher wait_time)
-		"goal_multiplier": 0.8,   # Shorter garden goals
-		"juice_cost_modifier": 0,    # Upgrades cost the normal amount
-		"starting_juice": 69,          # Start with 5 free skill points!
-		"start_slots": 10
+	# --- TIER 1: Pacts of Binding ---
+	"Pact 1": {
+		"name": "Pact 1: Juice Box Hero",
+		"description": "A gentle start. You begin with a massive head start in resources and power.",
+		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10,
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
+			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
+		}
 	},
-	"viper": {	#Medium
-		"name": "Viper",
-		"campaign_length": 9,
-		"speed_multiplier": 1.0,  # Normal speed
-		"goal_multiplier": 1.0,   # Normal garden goals
-		"juice_cost_modifier": 1,    # Upgrades cost +1 SP
-		"starting_juice": 10,
-		"start_slots": 6
+	"Pact 2": {
+		"name": "Pact 2: Pulp Friction",
+		"description": "The training wheels are off. You start with your power, but no extra Juice.",
+		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 7,
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
+			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
+		}
 	},
-	"basilisk": {	#Hard
-		"name": "Basilisk",
-		"campaign_length": 12,
-		"speed_multiplier": 0.8,  # Faster snake
-		"goal_multiplier": 1.0,  # Longer garden goals
-		"juice_cost_modifier": 2,    # Upgrades cost +2 SP
-		"starting_juice": 0,
-		"start_slots": 2
+	"Pact 3": {
+		"name": "Pact 3: Sink or Slither",
+		"description": "The pure experience. No starting bonuses. Good luck.",
+		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 5,
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
 	},
-	"Black Mamba": {	#FINAL
-		"name": "Black Mamba",
-		"campaign_length": 13,
-		"speed_multiplier": 0.8,  # Faster snake
-		"goal_multiplier": 1.0,  # Longer garden goals
-		"juice_cost_modifier": 3,    # Upgrades cost +2 SP
-		"starting_juice": 0,
-		"start_slots": 0
+	"Pact 4": {
+		"name": "Pact 4: The Zoomies",
+		"description": "The garden moves at a frantic pace, leaving little room for error.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
+	},
+	"Pact 5": {
+		"name": "Pact 5: The Blender",
+		"description": "The garden is wild and untamed, choked with obstacles.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
+		"obstacle_modifier": 1.5
+	},
+
+	# --- TIER 2: The Three Trials ---
+	"Trial of the Harvest": {
+		"name": "Seal of the Harvest", "description": "Prove your mastery over consumption. Only The Harvest path is available.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"campaign_length": 9, "locked_paths": ["The Core", "The Redline", "The Ssscale"],
+		"start_upgrades": {"Edge Lord": 7}
+	},
+	"Trial of the Core": {
+		"name": "Seal of the Core", "description": "Back to square one. Only Core path available.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"campaign_length": 9, "locked_paths": ["The Harvest", "The Redline", "The Ssscale"],
+		"start_upgrades": {"Edge Lord": 7}
+	},
+	"Trial of the Redline": {
+		"name": "Seal of the Redline", "description": "Go fast for once! Redline path only.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"campaign_length": 9, "locked_paths": ["The Core", "The Harvest", "The Ssscale"],
+		"start_upgrades": {"Edge Lord": 7}
+	},
+
+	# --- TIER 3: The Cursed Pacts ---
+	"Cursed Pact I": {
+		"name": "Cursed Pact I: Empty-Handed", "description": "You must earn your power. You start with no ability slots.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
+	},
+	"Cursed Pact II": {
+		"name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"campaign_length": 9, "locked_paths": ["Glutton"], "start_upgrades": {}
+	},
+	"Cursed Pact III": {
+		"name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"campaign_length": 9, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
+	},
+	"Cursed Pact IV": {
+		"name": "Cursed Pact IV: Extension Granted", "description": "Win after Garden 12",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
+	},
+
+	"Cursed Pact V": {	#FINAL
+		"name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"campaign_length": 13, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
 	}
 }
 #---------CLASS PARAMETERS--------#
 var class_data = {
-	"speedster": {
-		"name": "Speedster",
-		"description": "Starts fast.\nSpeed upgrades are more effective.\nDefensive upgrades are more expensive.",
-		"start_length": 1,
-		"start_speed": 0.18,
-		"start_fruit_reward": 1,
-		"start_max_fruits": 1,
-		"start_lives": 0,
-		"speed_upgrade_mod": 0.85, # Very good
-		"reward_upgrade_mod": 1,
-		"sp_on_perfect_garden": 0,
+	"Mulligan": {
+		"name": "Mulligan",
+		"description": "The balanced, default experience. Starts with an Extra Life and a solid foundation for any build.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Phoenix Dawn": 1
+		},
+		"start_stats": {
+			"extra_lives": 1,
+			"max_fruits": 2 # Starts with 2 max fruits instead of the default 1
+		},
 		"cost_modifiers": {
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
@@ -396,17 +468,17 @@ var class_data = {
 			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
-	"warlock": {
-		"name": "Warlock",
-		"description": "Grows faster by default.\nFruit-based upgrades are cheaper.",
-		"start_length": 1,
-		"start_speed": 0.25,
-		"start_fruit_reward": 5, # Starts with a better reward
-		"start_max_fruits": 1,
-		"start_lives": 0,
-		"speed_upgrade_mod": 0.95,
-		"reward_upgrade_mod": 2, # Very good
-		"sp_on_perfect_garden": 0,
+	"Purist": {
+		"name": "Purist",
+		"description": "A master of the garden with a disdain for the stench of RNG",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Patient Gardener": 3, # Starts with this maxed out
+			"Elephant Sized Portions": 3
+		},
+		"start_stats": {
+			"gambling_disabled": true # A new flag to disable the Snake Eyes tab
+		},
 		"cost_modifiers": {
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
@@ -447,17 +519,14 @@ var class_data = {
 			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
-	"inchworm": {
-		"name": "Inchworm",
-		"description": "Starts long and slow.\nDefensive and world-expanding upgrades are cheaper.",
-		"start_length": 5,
-		"start_speed": 0.3,
-		"start_fruit_reward": 1,
-		"start_max_fruits": 2,
-		"start_lives": 0,
-		"speed_upgrade_mod": 0.98, # Very bad
-		"reward_upgrade_mod": 1,
-		"sp_on_perfect_garden": 0,
+	"Larry": {
+		"name": "Larry",
+		"description": "The ultimate roguelike challenge. You are at the mercy of fate.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {},
+		"start_stats": {
+			"juice_menu_disabled": true # A new flag to disable the Juice upgrade menu
+		},
 		"cost_modifiers": {
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
@@ -498,17 +567,17 @@ var class_data = {
 			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
-	"phoenix_coil": {
+	"Phoenix Coil": {
 		"name": "Phoenix Coil",
-		"description": "Starts with an extra life.\nCan purchase more lives cheaply.",
-		"start_length": 3,
-		"start_speed": 0.25,
-		"start_fruit_reward": 1,
-		"start_max_fruits": 1,
-		"start_lives": 1, # Starts with an extra life!
-		"speed_upgrade_mod": 0.95,
-		"reward_upgrade_mod": 1,
-		"sp_on_perfect_garden": 0,
+		"description": "An immortal being who has traded worldly wealth for eternal life.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Death Defied": 1
+		},
+		"start_stats": {
+			"extra_lives": 9,
+			"pulp_gain_disabled": true # A new flag to prevent earning Pulp
+		},
 		"cost_modifiers": {
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
@@ -549,18 +618,17 @@ var class_data = {
 			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
-	"sidewinder": {
-		"name": "Sidewinder",
-		"description": "A trickster. Every time you use an ability,\nthere's a 25% chance the charge is not consumed.",
-		"start_length": 3,
-		"start_speed": 0.25,
-		"start_fruit_reward": 1,
-		"start_max_fruits": 1,
-		"start_lives": 0,
-		"speed_upgrade_mod": 0.95,
-		"reward_upgrade_mod": 1,
-		"sp_on_perfect_garden": 0,
-		"cost_modifiers": {
+	"Tycoon": {
+		"name": "Tycoon",
+		"description": "A master of passive income who must spend to succeed.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Snake Clicker": 7
+		},
+		"start_stats": {
+			"juice_tax_rate": 0.40 # A new custom stat we'll implement
+		},
+		"cost_modifiers": { #NEED TO DISCOUNT IDEL, INCREASE OTHERS
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
 			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
@@ -602,18 +670,18 @@ var class_data = {
 			
 		}
 	},
-	"the_zealot": {
-		"name": "The Zealot",
-		"description": "Cannot gain extra lives.\nReceives a massive +5 Juice bonus for completing a Garden without dying.",
-		"start_length": 1,
-		"start_speed": 0.2,
-		"start_fruit_reward": 1,
-		"start_max_fruits": 1,
-		"start_lives": 0, # Cannot get more
-		"speed_upgrade_mod": 0.9,
-		"reward_upgrade_mod": 1,
-		"sp_on_perfect_garden": 5, # The big bonus!
-		"cost_modifiers": {
+	"Day Trader": { 
+		"name": "Day Trader",
+		"description": "A fast-start economist who sacrifices raw power for economic velocity.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Liquid Assets": 3,
+			"Fast Track": 1
+		},
+		"start_stats": {
+			"max_esp_level": 5 # A new flag to cap the ESP upgrade
+		},
+		"cost_modifiers": { #NEED TO DISCOUNT JUICE LEDGER PATHA, INCREASE OTHERS
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
 			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
@@ -653,18 +721,678 @@ var class_data = {
 			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
 		}
 	},
-	"the_alchemist": {
-		"name": "The Alchemist",
+	"Manager": {
+		"name": "Manager",
+		"description": "A patient investor who leverages Pulp for massive late-game power.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Principal Pulp": 5,
+			"Juice Press": 1
+		},
+		"start_stats": {
+			"global_juice_cost_multiplier": 1.20 # A new custom stat
+		},
+		"cost_modifiers": { #NEED TO DISCOUNT LEDGER PATHB, INCREASE OTHERS
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Calculator": {
+		"name": "Calculator",
+		"description": "A strange being whose power is a reflection of its own state.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {},
+		"start_stats": {
+			# These two flags will trigger new logic in our helper functions
+			"dynamic_fruit_reward": true, 
+			"dynamic_max_fruits": true
+		},
+		"cost_modifiers": { #PROLLY DOESN'T NEED ANY MODIFIERS, WE'LL SEE
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Ghost": {
+		"name": "Ghost",
+		"description": "An ethereal being who channels their magical nature into raw power.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Ghost Tail": 4,
+			"Arcane Flow": 1,
+			"Snake Clicker": 3
+		},
+		"start_stats": {},
+		"cost_modifiers": { #discount ILLUSIONIST AND IDLE
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Space": {
+		"name": "Space",
+		"description": "An absolute master of the garden's layout, with incredible speed to match.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Edge Lord": 7,
+			"Shatter Reality": 1
+		},
+		"start_stats": {
+			"speed_multiplier": 0.50, # A 50% speed increase
+			"disabled_paths": ["Idle"]
+		},
+		"cost_modifiers": { #DICOUNT ARCHITECT UPGRADES
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Blinker": {
+		"name": "Blinker",
+		"description": "A high-skill class focused on a single, powerful reality-bending mechanic.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Fractured Self": 1
+		},
+		"start_stats": {},
+		"cost_modifiers": { #DISCOUNT ILLUSIONIST
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Psychic": {
+		"name": "Psychic",
+		"description": "A master of foresight whose power creates a dangerous feedback loop.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Fruit Foresight": 1,
+			"Diet Slith": 5,
+			"Meditate": 3
+		},
+		"start_stats": {
+			# This new flag will trigger our new speed-up logic
+			"speed_increase_on_eat": true 
+		},
+		"cost_modifiers": { #DISCOUNT PLANNER, INCREASE ARCHITECT AND GLUTTON
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Doubles": {
+		"name": "Doubles",
+		"description": "A pure gambler who thrives on risk and gets faster with every failure.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Coin Flip Curious": 1,
+			"Passive Income": 1
+		},
+		"start_stats": {
+			"disabled_paths": ["Planner"],
+			"speed_on_loss": true # A new flag for our custom logic
+		},
+		"cost_modifiers": {# INCREASE GLUTTON AND LEDGER
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Comboisseur": {
+		"name": "Comboisseur",
+		"description": "The ultimate combo master, with a unique challenge and a massive payoff.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Sugar Rush": 1,
+			"Chain Reaction": 1,
+			"Overdrive": 2,
+			"Lingering Rush": 2,
+			"Diet Slith": 3
+		},
+		"start_stats": {
+			"all_fruits_special": true # A new flag for our custom logic
+		},
+		"cost_modifiers": { #DISCOUNT FRENZY PATH AND CHEF, INCREASE ALL OTHER PATHS NOT REDLINER
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Sniper": {
+		"name": "Sniper",
+		"description": "A focused predator who lives for the thrill of the hunt.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Banana Bounty": 2,
+			"More Mice": 4 # Base 1 + 4 = 5 max fruits
+		},
+		"start_stats": {
+			"disabled_paths": ["Magician"]
+		},
+		"cost_modifiers": { #DISCOUNT GLUTTON AND INCREASE FRENZY AND GEODE
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Mineral": {
+		"name": "Mineral",
+		"description": "A true master of the earth who sees rocks not as obstacles, but as investments.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Geological Survey": 1
+		},
+		"start_stats": {
+			"obstacle_modifier": 1.5, # A 50% increase in rocks
+			"geological_survey_multiplies": true # A flag for our custom bonus logic
+		},
+		"cost_modifiers": { #DISCOUNT GEOMANCER, INCREASE ARCHITECT
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Gobble": {
+		"name": "Gobble",
+		"description": "A master of ingredients who has learned to harness their very essence.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Exotic Seeds": 3,
+			"Custom Aftertaste": 1,
+			"Snake Clicker": 3
+		},
+		"start_stats": {},
+		"cost_modifiers": { #discount chef and idle, increase glutton
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Gluts": {
+		"name": "Gluts",
+		"description": "All-in on growth, but with a major logistical challenge.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {},
+		"start_stats": {
+			"fruit_reward_multiplier": 2.0,
+			"max_fruits_cap": 1
+		},
+		"cost_modifiers": { #discount glutton, nothing else
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Groove": {
+		"name": "Groove",
+		"description": "A jack-of-all-trades who combines speed and passive income.",
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {
+			"Juke N Jive": 1,
+			"Mulligan Munchie": 1,
+			"Get Rich Quick": 1,
+			"Snake Clicker": 3
+		},
+		"start_stats": {},
+		"cost_modifiers": { #discount all starting skills, increase glutton
+			#--------Idle Modifiers-------#
+			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
+			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
+			#------Gambling Modifiers--------#
+			"Coin Flip Curious": 0, "Passive Income": 0,
+			#------The Ledger Modifiers------#
+			"Liquid Assets": 0, "Principal Pulp": 0, "Fast Track": 0, "Gluttons Greed": 0,
+			"Market Crash": 0, "Golden Handshake": 0, "Juice Press": 0, "Liquidation": 0,
+			#-----GEODE/GEOMANCER Modifiers-----#
+			"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
+			"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
+			"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+			#Frenzy Modifiers
+			"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
+			"Juggernaut": 0, "Zenith": 0,
+			# Illusionist Modifiers
+			"Ghost Tail": 0, "Phase Shift": -1, "Blink": 0, "3 Card Monty": 0,
+			"Fractured Self": 0, "Dazzle Pie": 0,
+			# Planner Path Modifiers
+			"Diet Slith": 0, "Fruit Foresight": 0,"Geological Survey": 0, 
+			"Sovereign Trail": 0, "Meditate": 0, "Garden Weaver": 0,
+			# Glutton Modifiers
+			"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
+			"Patient Gardener": 0, "Banana Bounty": 0, "The Satchel": 0,
+			# Acrobat Modifiers
+			"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
+			"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
+			# Architect Modifiers
+			"Edge Lord": 0, "Zoning Ordinance": 0, "Border Czar": 0, "Surveyed Land": 0,
+			"Burrow": 0, "Pocket Garden": 0, "Fold Space": 0, "Masters Blueprint": 0, 
+			"Shatter Reality": 0,
+			# Survivor Modifiers
+			"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0, "Sacrificial Molt": 0,
+			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
+			# Chef Modifiers
+			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
+		}
+	},
+	"Alchemist": {
+		"name": "Alchemist",
 		"description": "Does not gain Juice from leveling up. Every fruit has a 10% chance to grant 1 Juice instead.",
-		"start_length": 3,
-		"start_speed": 0.25,
-		"start_fruit_reward": 1,
-		"start_max_fruits": 1,
-		"start_lives": 0,
-		"speed_upgrade_mod": 0.95,
-		"reward_upgrade_mod": 1,
-		"sp_on_perfect_garden": 0,
-		"cost_modifiers": {
+		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"start_upgrades": {},
+		"start_stats": {
+			"juice_on_level_up_disabled": true,
+			"juice_chance_on_eat": 0.25
+		},
+		"cost_modifiers": { #discount chef and glutton and illusionist. increase everything else
 			#--------Idle Modifiers-------#
 			"Snake Clicker": 0, "Get Rich Quick": 0, "Custom Aftertaste": 0, 
 			"Arcane Flow": 0, "Pulp Reactor": 0, "Unstable Metabolism": 0,
@@ -713,7 +1441,7 @@ var upgrade_data = {
 		"Idle": { #Total Tree cost = 1222
 			"Snake Clicker": {
 				"display_name": "Snake Clicker",
-				"description": "0.1 gps, 0.25 gps, 0.5 gps, ...",
+				"description": "Passively grow over time.\nEach level increases your Growth Per Second (GPS).",
 				"costs": [ #1086 total cost
 					1, 2, 3, 4, 6,
 					10, 12, 14, 16, 18,
@@ -781,7 +1509,7 @@ var upgrade_data = {
 			},
 			"Sovereign Trail": { #72 total
 				"display_name": "Sovereign Trail",
-				"description": "Leave a trail for 10 segments!\nLvl 1:Fruits can't spawn in your trail!\nLvl 2: Fruits wills spawn VERY close to your trail",
+				"description": "Leave your mark. Your trail affects where new fruits can spawn.",
 				"costs": [8, 64], # Lvl 1: Repel, Lvl 2: Attract
 				"max_level": 2,
 				"prerequisite": {"upgrade": "Diet Slith", "level": 3}
@@ -830,7 +1558,7 @@ var upgrade_data = {
 			# --- Path A (Juice Focus) Upgrades ---
 			"Fast Track": {
 				"display_name": "Fast-Track", "max_level": 1, "costs": [1],
-				"description": "Unlocks the 'Skip Garden' button in the Pulp-sicle Stand,\nOn skip, +5mL immediate Juice.",
+				"description": "Unlocks the 'Skip Garden' button in the Pulp Stand,\nOn skip, +5mL Juice.",
 				"prerequisite": {"upgrade": "Liquid Assets", "level": 1}
 			},
 			"Gluttons Greed": {
@@ -888,7 +1616,7 @@ var upgrade_data = {
 			},
 			"Golden Seeds": { #267
 				"display_name": "Golden Seeds",
-				"description": "Golden Apples can spawn granting SP.\nEach level increases the chance and reward.\nLvl 1: 5% and 1mL\nLvl 2: 10% and 1mL\nLvl 3: 20% and 3mL\nLvl 4: 33% and 3mL",
+				"description": "Unlocks Golden Apples, which grant Juice.\nEach level increases their spawn chance and reward.",
 				"costs": [7, 35, 75, 150],
 				"max_level": 4,
 				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
@@ -902,7 +1630,7 @@ var upgrade_data = {
 			},
 			"Banana Bounty": { #First 5: 260
 				"display_name": "Banana Bounty",
-				"description":  "Active Ability: Marks a random fruit.\nEating it grants growth equal\nto your max fruit count * your fruit reward.",
+				"description":  "Active Ability: Marks a fruit as a\nhigh-value bounty for massive growth.",
 				"costs": [16, 32, 48, 64, 100, 250, 500, 1000, 2500],
 				"max_level": 9,
 				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 5}
@@ -919,13 +1647,13 @@ var upgrade_data = {
 		"Chef": {
 			"Golden Seed Extract": { # 79
 				"display_name": "Golden Seed Extract",
-				"description": "Increases the spawn chance of valuable Golden Apples.\nEach level adds a 5% chance!",
+				"description": "A potent concoction. Increases the spawn chance of valuable Golden Apples.",
 				"costs": [3, 12, 64], # Example costs for 3 levels
 				"max_level": 3
 			},
 			"Exotic Seeds": {
 				"display_name": "Exotic Seeds",
-				"description": "Adds new, rare fruits to the spawn pool with each level.\nLvl 1: Jumping Bean\nLvl 2: Ghost Pepper\nLvl 3: Iron Cherry\nLvl 4: Dragon Fruit\nLvl 5: Double odds of these special fruits spawning",
+				"description": "A taste for the strange.\nAdds new, rare fruits to the spawn pool.",
 				"costs": [4, 12, 24, 36, 81], # 5 levels
 				"max_level": 5
 			},
@@ -1002,7 +1730,7 @@ var upgrade_data = {
 			},
 			"Stones Burden": {
 				"display_name": "Stone's Burden", "max_level": 1, "costs": [32],
-				"description": "You can now eat rocks.\nEating a rock temporarily slows you down even further,\nbut it also makes you immune to self-collision for 3 seconds.",
+				"description": "Eating a rock slows you but grants temporary invulnerability.",
 				"prerequisite": {"upgrade": "Heavy Foundation", "level": 3}
 			},
 
@@ -1035,14 +1763,14 @@ var upgrade_data = {
 			},
 			"Juke N Jive": {
 				"display_name": "Juke 'N Jive",
-				"description": "Changing direction 4 times in 1 second\nlets you phase through a single body segment\nGet groovin'",
+				"description": "Changing direction 4 times in 1 second\nlets you phase through a body segment\nGet groovin'",
 				"costs": [12],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
 			},
 			"Afterburner": {
 				"display_name": "Afterburner",
-				"description": "Speed boost after eating a fruit?\nLvl 1: 33% faster for 2s\nLvl 2: 66.6% faster for 2.5s\nLvl 3: 3s double speed",
+				"description": "Speed boost after eating a fruit?",
 				"costs": [6, 12, 48],
 				"max_level": 3,
 				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
@@ -1056,7 +1784,7 @@ var upgrade_data = {
 			},
 			"Autotomy": {
 				"display_name": "Autotomy",
-				"description": "Active Ability (once per Garden):\nFor 2s, you can sever your own tail on impact,\nsacrificing score to survive.",
+				"description": " Active Ability: Sever your own tail on impact\nto survive a fatal crash.",
 				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Slither Sauce", "level": 6}
@@ -1099,7 +1827,7 @@ var upgrade_data = {
 			},
 			"Zenith": {
 				"display_name": "Zenith",
-				"description": "Active Ability (Once per Garden):\nInstantly set your combo to 10\nand make the timer not decrease for 10 seconds.",
+				"description": "Active Ability: Instantly set your combo to 10 and freeze the timer.",
 				"costs": [32],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Lingering Rush", "level": 5} # Example prerequisite
@@ -1108,7 +1836,7 @@ var upgrade_data = {
 		"Survivor": {
 			"Mulligan Munchie": {
 				"display_name": "Mulligan Munchie",
-				"description": "Grants one Extra Life.\nThe cost increases dramatically with each purchase.",
+				"description": "Grants one Extra Life.\nYou got it for sure...",
 				"costs": [5, 20, 50, 100, 200, 300, 400, 500, 750, 999], # Example scaling costs
 				"max_level": 10
 			},
@@ -1131,7 +1859,7 @@ var upgrade_data = {
 			},
 			"Death Defied": {
 				"display_name": "Death Defied",
-				"description": "Every time you use an Extra Life,\npermanently gain +1 to your Fruit Reward and Max Fruits\non Screen for this run.",
+				"description": "Every time you use an Extra Life, permanently gain +1 to your Fruit Reward and Max Fruits on Screen for this run.",
 				"costs": [20], "max_level": 1,
 				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
 			},
@@ -1143,7 +1871,7 @@ var upgrade_data = {
 			},
 			"New Game S Plus": {
 				"display_name": "New Game S+",
-				"description": "PRESTIGE! If you reach the final Garden without dying,\nyou may choose to restart at Garden 1 with all upgrades\nand double Juice gain.",
+				"description": "PRESTIGE! Beat the game without dying to restart with all your power",
 				"costs": [1], "max_level": 1,
 				# The prerequisite for this one will be handled in code, not here.
 			}
@@ -1183,7 +1911,7 @@ var upgrade_data = {
 			},
 			"Fractured Self": {
 				"display_name": "Fractured Self",
-				"description": "Your body is now rendered in 3-segment chunks\nwith a 3-tile gap between each, allowing you to pass through.",
+				"description": "Your body is now rendered in 3-segment chunks",
 				"costs": [64],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
@@ -1201,41 +1929,41 @@ var upgrade_data = {
 		"Architect": {
 			"Edge Lord": {
 				"display_name": "Edge Lord",
-				"description": "Increases the size\nof the play area.\nLvl 1: small\nLvl 2: not so small\nLvl 3: not BIG\nLvl 4: what you're lookin' for",
-				"costs": [2, 2, 2, 2, 2],
-				"max_level": 5
+				"description": "Increases the size of the play area.",
+				"costs": [2, 4, 8, 16, 32, 64, 128],
+				"max_level": 7
 			},
 			"Zoning Ordinance": {
 				"display_name": "Zoning Ordinance",
-				"description": "Designate a quadrant as a\n'safe zone' with fewer obstacles\nLvl 1: Top Left\nLvl 2: Top Half\nLvl 3: Bottom-Left Safe as well\nLvl 4: Complete control",
+				"description": "Designate a quadrant as a 'safe zone' with fewer obstacles\nLvl 1: Top Left\nLvl 2: Top Half\nLvl 3: 1 quadrant not safe\nLvl 4: Complete control",
 				"costs": [6, 18, 32, 128],
 				"max_level": 4,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 2}
 			},
 			"Border Czar": {
 				"display_name": "Border Czar",
-				"description": "Fruit that spawns on the edge\nof the garden has a higher chance to be special\nGolden fruit chances doubled!",
+				"description": "Control the borders, control the world.\nFruit on the edge is more likely to be special.",
 				"costs": [16],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 3}
 			},
 			"Surveyed Land": {
 				"display_name": "Surveyed Land",
-				"description": "The area opposite your 'safe zone' becomes\na 'wilderness' with better fruit but more obstacles.",
+				"description": "A double-edged sword.\nCreate a \"wilderness\" with better fruit but more rocks.",
 				"costs": [8],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Zoning Ordinance", "level": 1}
 			},
 			"Burrow": {
 				"display_name": "Burrow",
-				"description": "Active Ability: Pass through one wall\nand emerge on the opposite side\n+ 1 charge per upgrade\nAbility lasts until next wall hit!",
+				"description": "Active Ability: Pass through one wall\nand emerge on the opposite side.\nAbility lasts until next wall hit!",
 				"costs": [7, 12, 20, 34, 64, 128, 256, 512, 999],
 				"max_level": 9,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4 to match max_level
 			},
 			"Pocket Garden": {
 				"display_name": "Pocket Garden",
-				"description": "Active Ability: Sacrifice tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.\nLvl 1: 10 segs cost and 20s duration\nLvl 2: 20 segs cost and 30s duration\nLvl 3: 30 segs cost and 60s duration",
+				"description": "Active Ability: Sacrifice tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.\nLvl increases duration and segment cost",
 				"costs": [16, 32, 128],
 				"max_level": 3,
 				"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4
@@ -1258,7 +1986,7 @@ var upgrade_data = {
 			},
 			"Masters Blueprint": {
 				"display_name": "Masters Blueprint", 
-				"description": "Transforms the game's visuals into a clean,\nglowing 'blueprint' grid for the rest of the run.\nVisual changes only, enjoy!",
+				"description": "Transforms the game's visuals into a clean, glowing blueprint grid.",
 				"costs": [13], 
 				"max_level": 1, 
 				"prerequisite": {"upgrade": "Edge Lord", "level": 5}
@@ -1271,13 +1999,13 @@ var upgrade_data = {
 		"Passives": {
 			"Coin Flip Curious": {
 			"display_name": "CoinFlip Curious",
-			"description": "From now on...\nEvery fruit eaten now has a 50/50 effect\nEffect 1: Double Growth\nEffect 2: NO GROWTH\nGamble Responsibly...",
+			"description": "A 50/50 chance.\nEvery fruit grants double growth or zero growth\nGamble Responsibly...",
 			"costs": [6],
 			"max_level": 1
 		},
 		"Passive Income": {
 			"display_name": "Passive Income",
-			"description": "From now on...\nEvery bet won results in a +1 to your fruit reward\nYou heard me...get on with it!",
+			"description": "Every bet won results in a +1 to your fruit reward\nYou heard me...get on with it!",
 			"costs": [13],
 			"max_level": 1
 		}
@@ -1323,7 +2051,7 @@ var meta_upgrade_data = {
 	},
 	"Harvest Forecast": {
 		"display_name": "Harvest Forecast",
-		"description": "Adds a UI element showing the next special fruits in the spawn queue.\nLvl 1: Shows 1 fruit.\nLvl 2: Shows 2 fruits.\nLvl 3: Shows 3 fruits.\nLvl 4: Shows the next 5 fruits",
+		"description": "Adds a UI element showing the next\nspecial fruits in the spawn queue.\nLvl 1-3: Shows 1-3 special fruit.\nLvl 4: Shows the next 5 fruits",
 		"costs": [100, 200, 300, 1000],
 		"max_level": 4
 	}
@@ -1451,14 +2179,19 @@ func generate_full_spawn_queue():
 	# 2. Get the list of unlocked special fruits.
 	var unlocked_specials = get_unlocked_special_fruits()
 	
-	# 3. Build and shuffle the deck.
-	if unlocked_specials.is_empty():
-		for i in range(100): fruit_deck.append("Fruit")
+	if all_fruits_special:
+		if not unlocked_specials.is_empty():
+			for i in range(100):
+				fruit_deck.append(unlocked_specials.pick_random())
 	else:
-		for i in range(num_special_fruits):
-			fruit_deck.append(unlocked_specials.pick_random())
-		for i in range(100 - num_special_fruits):
-			fruit_deck.append("Fruit")
+		# 3. Build and shuffle the deck.
+		if unlocked_specials.is_empty():
+			for i in range(100): fruit_deck.append("Fruit")
+		else:
+			for i in range(num_special_fruits):
+				fruit_deck.append(unlocked_specials.pick_random())
+			for i in range(100 - num_special_fruits):
+				fruit_deck.append("Fruit")
 			
 	fruit_deck.shuffle()
 	full_spawn_queue = fruit_deck
@@ -1500,10 +2233,79 @@ func get_base_special_fruit_chance() -> float:
 	return total_chance
 
 
+func get_upgrade_rules(upgrade_key: String) -> Dictionary:
+	for path_key in GameManager.upgrade_data:
+		for sub_path_key in GameManager.upgrade_data[path_key]:
+			if upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
+				var rules = GameManager.upgrade_data[path_key][sub_path_key][upgrade_key]
+				rules["path"] = path_key
+				rules["sub_path"] = sub_path_key
+				return rules
+	return {}
+
+
+func check_prerequisites(upgrade_key: String) -> bool:
+	var rules = GameManager.get_upgrade_rules(upgrade_key)
+	if not rules.has("prerequisite"): return true
+	if rules.is_empty(): return false # Double check this line
+
+	var prereq_data = rules["prerequisite"]
+	if get_upgrade_level_from_key(prereq_data["upgrade"]) < prereq_data["level"]:
+		return false
+		
+	if prereq_data.has("and") and get_upgrade_level_from_key(prereq_data["and"]) < prereq_data["and_level"]:
+		return false
+		
+	return true
+
+func calculate_upgrade_cost(upgrade_key: String) -> int:
+	var rules = get_upgrade_rules(upgrade_key)
+	var current_level = get_upgrade_level_from_key(upgrade_key)
+	
+	if current_level >= rules.max_level: return 999 # A high number for "unaffordable"
+	
+	var base_cost = rules.costs[current_level]
+	var diff_mod = difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
+	var class_mod = class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
+	var final_cost = base_cost + diff_mod + class_mod
+	
+	# Apply cost reduction upgrades
+	if GameManager.three_card_monty_unlocked and upgrade_key != "3 Card Monty":
+		final_cost -= 1
+	if GameManager.market_crash_level > 0 and upgrade_key != "Market Crash":
+		final_cost -= GameManager.market_crash_level
+		
+	return max(1, final_cost)
+
+func get_upgrade_level_from_key(upgrade_key: String) -> int:
+	if upgrade_key == "Elephant Sized Portions":
+		return es_portions_level
+	
+	if upgrade_key == "Mulligan Munchie":
+		return extra_lives
+	
+	if upgrade_key in ability_charges:
+		return ability_charges[upgrade_key].total
+	
+	var var_name_level = upgrade_key.to_snake_case().replace(" ", "") + "_level"
+	if var_name_level in GameManager:
+		return GameManager.get(var_name_level)
+		
+	var var_name_unlocked = upgrade_key.to_snake_case().replace(" ", "") + "_unlocked"
+	if var_name_unlocked in GameManager:
+		return 1 if GameManager.get(var_name_unlocked) else 0
+
+	return 0
+
 func apply_esp_level_up():
-	if es_portions_level < upgrade_data["The Harvest"]["Glutton"]["Elephant Sized Portions"]["max_level"]:
+	# It now uses its OWN helper function to get the rules.
+	var rules = get_upgrade_rules("Elephant Sized Portions")
+	
+	# We check against the max_level defined in the rules.
+	if es_portions_level < rules.get("max_level", 20):
 		es_portions_level += 1
-		fruit_reward += class_data[chosen_class]["reward_upgrade_mod"]
+		# The fruit_reward is now handled by get_effective_fruit_reward,
+		# so we no longer need to change it here. This is much cleaner.
 		print("Elephant Sized Portions leveled up! New level: ", es_portions_level)
 
 
@@ -1540,7 +2342,6 @@ func get_total_juice_spent_in_path(path_upgrades: Array) -> int:
 
 		var current_level = 0
 		
-		# --- THIS IS THE FIX ---
 		# We now correctly check for each property type.
 		
 		# Is it a multi-level active ability?
@@ -1571,12 +2372,11 @@ func get_total_juice_spent_in_path(path_upgrades: Array) -> int:
 
 	
 func start_game():
-	var p_class_data = class_data[chosen_class]
-	var diff_data = difficulty_data[chosen_difficulty]
+	var diff_data = difficulty_data.get(chosen_difficulty, {})
 	# Reset all stats for a new run
 	player_level = 1
 	juice = 0
-	juice += diff_data["starting_juice"]	# add starting sp
+	juice += diff_data.get("start_juice", 0)	# add starting sp
 	pulp = 0
 	score_needed_for_next_level = 5
 	score_at_level_start = 0
@@ -1589,6 +2389,35 @@ func start_game():
 	segments_to_restore = 0
 	passive_gps = 0.0
 	
+	
+	
+	highest_pact_completed = 1 # Starts at 0, goes up to 5
+	seals_broken = []# Stores the names of the completed trials, e.g., ["Trial of the Core"]
+	highest_cursed_pact_completed = 0
+	
+	
+	
+	
+		# --- CLASS & DIFFICULTY MODIFIERS ---
+	juice_on_level_up_disabled = false
+	juice_chance_on_eat = 0.0
+	obstacle_modifier = 1.0
+	geological_survey_multiplies = false
+	all_fruits_special = false
+	speed_on_loss = false
+	speed_increase_on_eat = false
+	disabled_paths = []
+	speed_multiplier_class_mod = 1.0
+	dynamic_max_fruits = false
+	dynamic_fruit_reward = false
+	global_juice_cost_multiplier = 1.0
+	max_esp_level = 20 # The default max level
+	gambling_disabled = false
+	juice_menu_disabled = false
+	pulp_gain_disabled = false
+	juice_tax_rate = 0.0
+	
+	
 	# --- NEW ABILITY SYSTEM RESET ---
 	ability_charges.clear()
 	equipped_abilities.clear()
@@ -1599,11 +2428,9 @@ func start_game():
 	abilities_used_this_garden = 0
 	garden_start_time = 0.0 
 	#----BASE REWARD AND ENGINE---#
-	fruit_reward = p_class_data["start_fruit_reward"]
-	max_fruits_on_screen = p_class_data["start_max_fruits"]
 
 	# --- "PULP" META-UPGRADE LEVELS ---
-	max_ability_slots = diff_data["start_slots"]
+	max_ability_slots = diff_data.get("start_slots", 0)
 	serpents_coffer_level = 0
 	geode_compass_level = 0
 	four_leaf_clover_level = 0
@@ -1690,7 +2517,6 @@ func start_game():
 	combo_is_pure = true
 		# SURVIVOR PATH
 	extra_lives = 0
-	extra_lives += p_class_data["start_lives"]
 	phoenix_dawn_unlocked = false
 	last_stand_unlocked = false
 	sacrificial_molt_used_this_run = false
@@ -1722,7 +2548,88 @@ func start_game():
 	block_market_portfolio = {}
 	block_market_prices = {"Orange Block": {"price": 10, "currency": "Juice"}, "Apple Block":  {"price": 10, "currency": "Juice"}, "Light Block":  {"price": 25, "currency": "Pulp"}, "Extra Block":  {"price": 25, "currency": "Pulp"}}	
 	
+	
+	#------apply difficulty multipliers--------
+	var diff_upgrades = diff_data.get("start_upgrades", {})
+	for upgrade_key in diff_upgrades:
+		_apply_starting_upgrade(upgrade_key, diff_upgrades[upgrade_key])
+
+	# --- 4. Apply Modifiers from the chosen CLASS ---
+	var class_upgrades = class_data.get("start_upgrades", {})
+	for upgrade_key in class_upgrades:
+		_apply_starting_upgrade(upgrade_key, class_upgrades[upgrade_key])
+		
+	var class_stats = class_data.get("start_stats", {})
+	for stat_key in class_stats:
+		match stat_key:
+			"extra_lives": extra_lives += class_stats[stat_key]
+			"max_fruits": max_fruits_on_screen = class_stats[stat_key]
+			"fruit_reward_multiplier": fruit_reward *= class_stats[stat_key]
+			"max_fruits_cap": max_fruits_on_screen = class_stats[stat_key] # This will need a check in the "More Mice" upgrade
+			"juice_tax_rate": juice_tax_rate = class_stats[stat_key]
+			"max_esp_level": max_esp_level = class_stats[stat_key]
+			"global_juice_cost_multiplier": global_juice_cost_multiplier = class_stats[stat_key]
+			"speed_multiplier": speed_multiplier_class_mod = class_stats[stat_key]
+			"obstacle_modifier": obstacle_modifier = class_stats[stat_key]
+			"disabled_paths": disabled_paths = class_stats[stat_key]
+			# --- Boolean Flags ---
+			"juice_on_level_up_disabled": juice_on_level_up_disabled = true
+			"juice_chance_on_eat": juice_chance_on_eat = class_stats[stat_key]
+			"geological_survey_multiplies": geological_survey_multiplies = true
+			"all_fruits_special": all_fruits_special = true
+			"speed_on_loss": speed_on_loss = true
+			"speed_increase_on_eat": speed_increase_on_eat = true
+			"dynamic_max_fruits": dynamic_max_fruits = true
+			"dynamic_fruit_reward": dynamic_fruit_reward = true
+			"gambling_disabled": gambling_disabled = true
+			"juice_menu_disabled": juice_menu_disabled = true
+			"pulp_gain_disabled": pulp_gain_disabled = true
+	
 	#-------------finally------------
 	reset_for_new_garden()
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false
+
+
+
+func _apply_starting_upgrade(upgrade_key: String, levels_to_add: int):
+	print("Applying starting upgrade: %s, Level: %s" % [upgrade_key, levels_to_add])
+	
+	# Define a list of all possible active abilities.
+	var active_abilities = [
+		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty", 
+		"Sacrificial Molt", "Meditate", "Mise en Place", "Zenith", "Autotomy", 
+		"Tenderizer", "Juice Press"
+	]
+
+	for i in range(levels_to_add):
+		# Check if the upgrade is an active ability.
+		if upgrade_key in active_abilities:
+			# If yes, we use our new, powerful helper function.
+			purchase_or_upgrade_ability(upgrade_key)
+		elif upgrade_key == "Elephant Sized Portions": apply_esp_level_up()
+		elif upgrade_key == "Juke N Jive": juke_and_jive_unlocked = true
+		elif upgrade_key == "Mulligan Munchie": extra_lives += 1
+		else:
+			# If it's a passive upgrade, we handle it directly.
+			var var_name_level = upgrade_key.to_snake_case().replace("'", "").replace("-", "_") + "_level"
+			var var_name_unlocked = upgrade_key.to_snake_case().replace("'", "").replace("-", "_") + "_unlocked"
+
+			if var_name_level in self:
+				set(var_name_level, get(var_name_level) + 1)
+			elif var_name_unlocked in self:
+				set(var_name_unlocked, true)
+		
+	
+func purchase_or_upgrade_ability(ability_key: String):
+	# Check if we already own this ability.
+	if not ability_key in ability_charges:
+		# If not, check if we have an empty slot.
+		if equipped_abilities.size() < max_ability_slots:
+			equipped_abilities.append(ability_key)
+			# Create the new entry with 1 charge.
+			ability_charges[ability_key] = {"current": 1, "total": 1}
+	else:
+		# If we already own it, just add to both current and total charges.
+		ability_charges[ability_key].current += 1
+		ability_charges[ability_key].total += 1

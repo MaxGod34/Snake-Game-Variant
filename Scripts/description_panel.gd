@@ -9,20 +9,20 @@ extends PanelContainer
 @onready var level_label = $MarginC/GridContainer/CurrentLevelLabel
 
 # This is the master function that main.gd will call.
-func show_info(upgrade_key: String, p_name: String, p_description: String, p_cost: int, current_level: int, max_level: int):
+func show_info(upgrade_key: String, p_name: String, p_description: String, p_cost: int, current_level: int, max_level: int, currency_unit: String):
 	name_label.text = p_name
 	description_label.text = p_description
 	
 	if max_level > 1:
 		level_label.text = "(Lvl %s / %s)" % [current_level, max_level]
 	else:
-		level_label.text = "Unconsumed"
+		level_label.text = "I have no Pwr Lvl!"
 	
 	# If the cost is 999, it means the upgrade is maxed out.
 	if p_cost >= 999:
 		cost_label.text = "(MAX LEVEL)"
 	else:
-		cost_label.text = "Cost: %s mL Juice" % p_cost
+		cost_label.text = "Cost: %s %s" % [p_cost, currency_unit]
 	
 	icon_display.texture = get_icon_for_upgrade(upgrade_key)	
 		
