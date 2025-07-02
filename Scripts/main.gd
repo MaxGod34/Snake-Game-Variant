@@ -76,7 +76,7 @@ func _ready():
 	# ---Load Config--- 
 	var difficulty = GameManager.chosen_difficulty
 	var p_class = GameManager.chosen_class
-	var diff_data = GameManager.difficulty_data[difficulty]
+	#var diff_data = GameManager.difficulty_data[difficulty]
 	var class_data = GameManager.class_data[p_class]
 	# ---Reset Run Stats---
 	GameManager.has_died_this_garden = false
@@ -85,7 +85,7 @@ func _ready():
 	initial_snake_length = 1
 	# ---Speed Setup---
 	var start_speed = GameManager.class_data[GameManager.chosen_class].get("start_speed", 0.3)
-	var speed_mod = GameManager.difficulty_data[GameManager.chosen_difficulty].get("speed_multiplier", 1.0)
+	#var speed_mod = GameManager.difficulty_data[GameManager.chosen_difficulty].get("speed_multiplier", 1.0)
 	# ---Grid Setup---
 	tile_offset = Vector2(tile_size / 2.0, tile_size / 2.0)
 	# ---Hotbar Setup---
@@ -1159,6 +1159,34 @@ func _transition_to_shop():
 	await shop_screen.animate_in() # Play the shop's slide-in animation
 
 func _go_to_next_garden():
+	
+	# --- NEW: Update Difficulty Progression ---
+	var completed_class_key = GameManager.chosen_class
+	var completed_pact_key = GameManager.chosen_difficulty
+	
+	var progress = SaveManager.get_progress_for_class(completed_class_key)
+	
+	if completed_pact_key.begins_with("Pact"):
+		var pact_number = int(completed_pact_key.split(" ")[1])
+		# We only update if this is a new highest level
+		if pact_number > progress.highest_pact_completed:
+			progress.highest_pact_completed = pact_number
+			
+	elif completed_pact_key.begins_with("Trial"):
+		# Add the completed trial to our list if it's not already there
+		if not completed_pact_key in progress.seals_broken:
+			progress.seals_broken.append(completed_pact_key)
+			
+	elif completed_pact_key.begins_with("Cursed"):
+		var cursed_pact_number = int(completed_pact_key.split(" ")[2])
+		if cursed_pact_number > progress.highest_cursed_pact_completed:
+			progress.highest_cursed_pact_completed = cursed_pact_number
+
+	
+	# After updating the progression, save the game.
+	SaveManager.save_game()
+	
+	
 	var shop_screen = $UI/PulpsicleStand
 	await shop_screen.animate_out() # Animate the shop sliding away
 	await SceneTransition.play_cover_animation("random")
@@ -1182,6 +1210,7 @@ func _go_to_next_garden():
 	# Finally, tell the main SceneTransition to go to the next level.
 	GameManager.current_garden += 1
 	SceneTransition.transition_to("res://Scenes/main.tscn", "random")
+
 
 func _on_garden_complete_continue_pressed():
 	# This is called by the results screen button.
@@ -2019,6 +2048,19 @@ func _start_game_over_sequence():
 	await SceneTransition.play_cover_animation("spiral")
 	$UI/GameOverScreen.visible = true
 	game_is_over.emit(final_score)
+	
+	# --- NEW: Update and Save Persistent Stats ---
+	SaveManager.save_data.total_deaths += 1
+	SaveManager.save_data.total_juice_earned += GameManager.total_juice_this_run
+	SaveManager.save_data.total_pulp_earned += GameManager.pulp # Assuming pulp is the run total
+	
+	# Check for a new high score
+	if final_score > SaveManager.save_data.high_score:
+		SaveManager.save_data.high_score = final_score
+		
+	# Finally, tell the SaveManager to write all this new data to the file.
+	SaveManager.save_game()
+	
 	await SceneTransition.uncover_screen("spiral")
 
 func game_over():

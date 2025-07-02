@@ -1,5 +1,9 @@
 extends Control
 
+#--- DEBUGGING ---
+@onready var debug_panel = $DebugPanel
+
+
 # --- NODE REFERENCES ---
 # We'll get references to our main panels and the "Begin Run" button.
 @onready var loadout_display_panel = $MarginContainer/MainLayout/LoadoutDisplayPanel
@@ -9,9 +13,6 @@ extends Control
 @onready var class_description_label = $MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ClassDescriptionLabel
 @onready var difficulty_name_label = $MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/DifficultyNameLabel
 @onready var difficulty_description_label = $MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/DifficultyDescriptionLabel
-
-
-
 
 
 # This dictionary will store a reference to every single class node.
@@ -26,11 +27,11 @@ var difficulty_nodes: Dictionary = {}
 @onready var seal_harvest_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer/TrialoftheHarvestNode
 @onready var seal_core_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer/TrialoftheCoreNode
 @onready var seal_redline_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer/TrialoftheRedlineNode
-@onready var cursed_pact_1_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2/CursedPactINode
-@onready var cursed_pact_2_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2/CursedPactIINode
-@onready var cursed_pact_3_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2/CursedPactIIINode
-@onready var cursed_pact_4_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4/CursedPactIVNode
-@onready var cursed_pact_5_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4/CursedPactVNode
+@onready var cursed_pact_1_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2/CursedPact1Node
+@onready var cursed_pact_2_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2/CursedPact2Node
+@onready var cursed_pact_3_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2/CursedPact3Node
+@onready var cursed_pact_4_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4/CursedPact4Node
+@onready var cursed_pact_5_node = $MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4/CursedPact5Node
 
 # These variables will store the player's current choices.
 var selected_class_key: String = ""
@@ -43,8 +44,17 @@ func _ready():
 	_build_difficulty_node_dictionary()
 	_connect_all_difficulty_nodes()
 	begin_run_button.pressed.connect(_on_begin_run_button_pressed)
+	#---debug panel---
+	debug_panel.get_node("VBoxContainer/UnlockNextPactButton").pressed.connect(_on_debug_unlock_next_pact)
+	debug_panel.get_node("VBoxContainer/CompleteSealsButton").pressed.connect(_on_debug_complete_seals)
+	debug_panel.get_node("VBoxContainer/UnlockNextCursedPactButton").pressed.connect(_on_debug_unlock_next_cursed_pact)
+	debug_panel.get_node("VBoxContainer/ResetSaveButton").pressed.connect(_on_debug_reset_save)
 	# We'll also want to update the display to its initial state.
 	update_all_displays()
+
+func _unhandled_input(event: InputEvent):
+	if event.is_action_pressed("ui_F1"):
+		debug_panel.visible = not debug_panel.visible
 
 
 func _build_difficulty_node_dictionary():
@@ -54,9 +64,9 @@ func _build_difficulty_node_dictionary():
 		"Trial of the Harvest": seal_harvest_node,
 		"Trial of the Core": seal_core_node,
 		"Trial of the Redline": seal_redline_node,
-		"Cursed Pact I": cursed_pact_1_node, "Cursed Pact II": cursed_pact_2_node,
-		"Cursed Pact III": cursed_pact_3_node, "Cursed Pact IV": cursed_pact_4_node,
-		"Cursed Pact V": cursed_pact_5_node
+		"Cursed Pact 1": cursed_pact_1_node, "Cursed Pact 2": cursed_pact_2_node,
+		"Cursed Pact 3": cursed_pact_3_node, "Cursed Pact 4": cursed_pact_4_node,
+		"Cursed Pact 5": cursed_pact_5_node
 	}
 	
 func _connect_all_difficulty_nodes():
@@ -101,25 +111,33 @@ func update_all_displays():
 	begin_run_button.disabled = (selected_class_key == "" or selected_difficulty_key == "")
 
 func update_class_roster():
-	# This loop updates the visuals for every single class icon.
 	for class_key in class_nodes:
-		#var node = class_nodes[class_key]
-		# We can create a helper in GameManager to get class data later.
-		# For now, we'll just set the icon.
-		# node.icon = preload("res://path/to/" + class_key + "_icon.png")
-		
-		# Add a border if this class is the currently selected one.
+		var node = class_nodes[class_key]
+		var is_unlocked = class_key in SaveManager.save_data.unlocked_classes
+		node.icon = get_icon_for_class(class_key)
+		# We can use our UpgradeNode's update function for this!
+		# We'll use a special theme color to show selection.
+		var stylebox = StyleBoxFlat.new()
+		stylebox.set_border_width_all(4)
+		stylebox.bg_color = Color(0, 0, 0, 0)
 		if class_key == selected_class_key:
-			# We can create a StyleBox to add a golden border here.
-			pass
+			stylebox.border_color = Color.DEEP_SKY_BLUE
 		else:
-			# Remove the border if it's not selected.
-			pass
+			stylebox.border_color = Color.TRANSPARENT # No border if not selected
+		node.add_theme_stylebox_override("normal", stylebox)
+		
+		# Dim the icon if it's locked
+		node.disabled = not is_unlocked
+		if not is_unlocked:
+			node.modulate = Color.DARK_GRAY
+		else:
+			node.modulate = Color.WHITE
 
 func _on_class_node_pressed(class_key: String):
 	print("Player selected class: ", class_key)
 	# Set the new selected class.
 	selected_class_key = class_key
+	selected_difficulty_key = ""
 	# And immediately update all the displays to reflect the change.
 	update_all_displays()
 
@@ -137,23 +155,11 @@ func update_loadout_display():
 		if class_data:
 			class_name_label.text = class_data.get("name", "Unknown Class")
 			class_description_label.text = class_data.get("description", "")
-		
-		# Update the UI elements with the data.
-		class_name_label.text = class_data.name
-		class_description_label.text = class_data.description
-		
-		var diff_data = GameManager.difficulty_data.get(selected_difficulty_key)
-			# Update a new label in your LoadoutDisplayPanel with this info.
-		if diff_data:
-			difficulty_name_label.text = diff_data.get("name", "Unknown Pact")
-			difficulty_description_label.text = diff_data.get("description", "")
-		
-		# Load and set the artwork texture.
-		if class_data.has("artwork_path") and ResourceLoader.exists(class_data.artwork_path):
-			class_artwork.texture = load(class_data.artwork_path)
-		else:
-			class_artwork.texture = null # Fallback if no art is found
-		
+			if class_data.has("artwork_path") and ResourceLoader.exists(class_data.artwork_path):
+				class_artwork.texture = load(class_data.artwork_path)
+			else:
+				class_artwork.texture = null # Fallback if no art is found
+
 	# --- Update Difficulty Display ---
 	if selected_difficulty_key == "":
 		difficulty_name_label.text = "Select a Pact"
@@ -165,55 +171,62 @@ func update_loadout_display():
 			difficulty_description_label.text = diff_data.get("description", "")
 	
 func update_difficulty_pacts():
-	# This function updates the visuals for every difficulty icon.
+	# If no class is selected, we can't show any difficulty progress.
+	if selected_class_key == "":
+		# Loop through and disable all pact nodes here.
+		for pact_key in difficulty_nodes:
+			difficulty_nodes[pact_key].icon = get_icon_for_pact(pact_key)
+			difficulty_nodes[pact_key].disabled = true
+			difficulty_nodes[pact_key].modulate = Color.DARK_SLATE_GRAY
+		return
+		
+	# Get the specific progress for the currently selected class.
+	var progress = SaveManager.get_progress_for_class(selected_class_key)
+	
 	for pact_key in difficulty_nodes:
 		var node = difficulty_nodes[pact_key]
-		var rules = GameManager.difficulty_data.get(pact_key) # Use .get() for safety
-		if not rules: continue # Skip if the key is somehow wrong
-
+		var rules = GameManager.difficulty_data.get(pact_key)
+		if not rules: continue
 		var is_locked = true
 		var is_completed = false
 		
-		# --- This is the new, robust logic for checking the state ---
+		# --- This logic now correctly reads from the PER-CLASS progress data ---
 		if pact_key.begins_with("Pact"):
 			var pact_number = int(pact_key.split(" ")[1])
-			if pact_number <= GameManager.highest_pact_completed + 1: is_locked = false
-			if pact_number <= GameManager.highest_pact_completed: is_completed = true
+			if pact_number <= progress.highest_pact_completed + 1: is_locked = false
+			if pact_number <= progress.highest_pact_completed: is_completed = true
 		elif pact_key.begins_with("Trial"):
-			if GameManager.highest_pact_completed >= 5: is_locked = false
-			if pact_key in GameManager.seals_broken: is_completed = true
+			if progress.highest_pact_completed >= 5: is_locked = false
+			if pact_key in progress.seals_broken: is_completed = true
 		elif pact_key.begins_with("Cursed"):
-			if GameManager.seals_broken.size() == 3: is_locked = false
-			var cursed_pact_number = roman_to_int(pact_key.split(" ")[2])
-			if cursed_pact_number <= GameManager.highest_cursed_pact_completed + 1: is_locked = false
-			if cursed_pact_number <= GameManager.highest_cursed_pact_completed: is_completed = true
+			if progress.seals_broken.size() == 3:
+				var cursed_pact_number = int(pact_key.split(" ")[2])
+				if cursed_pact_number <= progress.highest_cursed_pact_completed + 1: is_locked = false
+				if cursed_pact_number <= progress.highest_cursed_pact_completed: is_completed = true
 		
-		# --- Apply Visuals ---
-		var theme_color = Color.DARK_SLATE_GRAY
-		if is_completed: theme_color = Color.GOLD
-		elif not is_locked: theme_color = Color.WHITE
-		
-		# We now call a new helper function to get the correct icon for each pact.
 		node.icon = get_icon_for_pact(pact_key)
+		# --- Apply Visuals ---
+		var stylebox = StyleBoxFlat.new()
+		stylebox.set_border_width_all(4)
+		stylebox.bg_color = Color(0,0,0,0)
 		
-		var current_level_for_display = 1 if is_completed else 0
+		if pact_key == selected_difficulty_key:
+			stylebox.border_color = Color.DEEP_SKY_BLUE
+		elif is_completed:
+			stylebox.border_color = Color.GOLD # A clear "completed" color
+		else:
+			stylebox.border_color = Color.TRANSPARENT
+			
+		node.add_theme_stylebox_override("normal", stylebox)
 		
-		# We can still use our UpgradeNode's update function for the border and disabled state.
-		node.update_display(pact_key, current_level_for_display, 1, not is_locked, theme_color, theme_color)
-		
-		# Add a padlock icon if the node is locked
-		var padlock = node.get_node_or_null("PadlockIcon")
-		if is_instance_valid(padlock):
-			padlock.visible = is_locked
+		node.disabled = is_locked
+		node.modulate = Color.WHITE if not is_locked else Color.DARK_GRAY
 	
 func _on_difficulty_node_pressed(pact_key: String):
 	print("Player selected difficulty: ", pact_key)
 	selected_difficulty_key = pact_key
 	update_all_displays()
-func roman_to_int(roman: String) -> int:
-	var roman_map = {"I": 1, "i": 1, "V": 5} # Can expand this later
-	if roman in roman_map: return roman_map[roman]
-	return 0
+
 
 func _on_begin_run_button_pressed():
 	# 1. First, do a safety check to make sure both a class and difficulty are selected.
@@ -246,9 +259,64 @@ func get_icon_for_pact(pact_key: String) -> Texture2D:
 		"Trial of the Harvest": return preload("res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png")
 		"Trial of the Core": return preload("res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png")
 		"Trial of the Redline": return preload("res://Assets/PNGs/UpgradeIcons/SugarRushIcon.png")
-		"Cursed Pact I": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png")
-		"Cursed Pact II": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png")
-		"Cursed Pact III": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_3.png")
-		"Cursed Pact IV": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
-		"Cursed Pact V": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
+		"Cursed Pact 1": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png")
+		"Cursed Pact 2": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png")
+		"Cursed Pact 3": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_3.png")
+		"Cursed Pact 4": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
+		"Cursed Pact 5": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
 		_: return null # Default case
+func get_icon_for_class(class_key: String) -> Texture2D:
+	# This function returns the correct icon for each class.
+	# You will need to create these icons and update the paths!
+	match class_key:
+		"Mulligan": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Purist": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Larry": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Phoenix Coil": return preload("res://Assets/PNGs/snake_fruit_red.png")
+		"Tycoon": return preload("res://Assets/PNGs/snake_lime.png")
+		"Day Trader": return preload("res://Assets/PNGs/snake_lime.png")
+		"Manager": return preload("res://Assets/PNGs/snake_lime.png")
+		"Calculator": return preload("res://Assets/PNGs/snake_lime.png")
+		"Ghost": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Space": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Blinker": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Psychic": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
+		"Doubles": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Comboisseur": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Sniper": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Mineral": return preload("res://Assets/PNGs/iron_cherry_icon.png")
+		"Gobble": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Gluts": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Groove": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
+		"Alchemist": return preload("res://Assets/PNGs/golden_fruit_icon.png")
+
+		_: return null # Default case
+
+
+func _on_debug_unlock_next_pact():
+	if selected_class_key == "": return
+	# Get the progress for the SELECTED class.
+	var progress = SaveManager.get_progress_for_class(selected_class_key)
+	progress.highest_pact_completed += 1
+	SaveManager.save_game()
+	update_all_displays()
+
+func _on_debug_complete_seals():
+	if selected_class_key == "": return
+	var progress = SaveManager.get_progress_for_class(selected_class_key)
+	progress.seals_broken = ["Trial of the Harvest", "Trial of the Core", "Trial of the Redline"]
+	SaveManager.save_game()
+	update_all_displays()
+
+func _on_debug_unlock_next_cursed_pact():
+	if selected_class_key == "": return
+	var progress = SaveManager.get_progress_for_class(selected_class_key)
+	progress.highest_cursed_pact_completed += 1
+	SaveManager.save_game()
+	update_all_displays()
+
+func _on_debug_reset_save():
+	# We'll need to create this new helper function in our SaveManager.
+	SaveManager.reset_save_data()
+	# After resetting, we reload the entire scene to get a fresh start.
+	get_tree().reload_current_scene()

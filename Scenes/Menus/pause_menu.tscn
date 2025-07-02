@@ -104,5 +104,4 @@ is_sub_panel = true
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/QuitToMenuButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="CenterContainer/PanelContainer/VBoxContainer/QuitToMenuButton" to="." method="_on_quit_to_menu_button_pressed"]
 [connection signal="back_pressed" from="OptionsMenuPanel" to="." method="_on_options_menu_panel_back_pressed"]

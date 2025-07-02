@@ -4,10 +4,7 @@ extends Node
 var chosen_difficulty = "viper"
 var chosen_class = "speedster"
 var run_time: float = 0.0
-# --- DIFFICULTY PROGRESSION TRACKING ---
-var highest_pact_completed: int = 0 # Starts at 0, goes up to 5
-var seals_broken: Array = [] # Stores the names of the completed trials, e.g., ["Trial of the Core"]
-var highest_cursed_pact_completed: int = 0 # Starts at 0, goes up to 5
+
 # --- CLASS & DIFFICULTY MODIFIERS ---
 var juice_on_level_up_disabled: bool = false
 var juice_chance_on_eat: float = 0.0
@@ -334,7 +331,7 @@ var difficulty_data = {
 	"Pact 1": {
 		"name": "Pact 1: Juice Box Hero",
 		"description": "A gentle start. You begin with a massive head start in resources and power.",
-		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10,
+		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10, "start_juice": 32,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
 			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
 		}
@@ -342,7 +339,7 @@ var difficulty_data = {
 	"Pact 2": {
 		"name": "Pact 2: Pulp Friction",
 		"description": "The training wheels are off. You start with your power, but no extra Juice.",
-		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 7,
+		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 7, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
 			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
 		}
@@ -350,19 +347,19 @@ var difficulty_data = {
 	"Pact 3": {
 		"name": "Pact 3: Sink or Slither",
 		"description": "The pure experience. No starting bonuses. Good luck.",
-		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 5,
+		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 5, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
 	},
 	"Pact 4": {
 		"name": "Pact 4: The Zoomies",
 		"description": "The garden moves at a frantic pace, leaving little room for error.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
 	},
 	"Pact 5": {
 		"name": "Pact 5: The Blender",
 		"description": "The garden is wild and untamed, choked with obstacles.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
 		"obstacle_modifier": 1.5
 	},
@@ -370,48 +367,48 @@ var difficulty_data = {
 	# --- TIER 2: The Three Trials ---
 	"Trial of the Harvest": {
 		"name": "Seal of the Harvest", "description": "Prove your mastery over consumption. Only The Harvest path is available.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Core", "The Redline", "The Ssscale"],
 		"start_upgrades": {"Edge Lord": 7}
 	},
 	"Trial of the Core": {
 		"name": "Seal of the Core", "description": "Back to square one. Only Core path available.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Harvest", "The Redline", "The Ssscale"],
 		"start_upgrades": {"Edge Lord": 7}
 	},
 	"Trial of the Redline": {
 		"name": "Seal of the Redline", "description": "Go fast for once! Redline path only.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Core", "The Harvest", "The Ssscale"],
 		"start_upgrades": {"Edge Lord": 7}
 	},
 
 	# --- TIER 3: The Cursed Pacts ---
-	"Cursed Pact I": {
+	"Cursed Pact 1": {
 		"name": "Cursed Pact I: Empty-Handed", "description": "You must earn your power. You start with no ability slots.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
 	},
-	"Cursed Pact II": {
+	"Cursed Pact 2": {
 		"name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["Glutton"], "start_upgrades": {}
 	},
-	"Cursed Pact III": {
+	"Cursed Pact 3": {
 		"name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
 	},
-	"Cursed Pact IV": {
+	"Cursed Pact 4": {
 		"name": "Cursed Pact IV: Extension Granted", "description": "Win after Garden 12",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
 	},
 
-	"Cursed Pact V": {	#FINAL
+	"Cursed Pact 5": {	#FINAL
 		"name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0,
+		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 13, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
 	}
 }
@@ -2388,12 +2385,6 @@ func start_game():
 	total_juice_this_run = juice
 	segments_to_restore = 0
 	passive_gps = 0.0
-	
-	
-	
-	highest_pact_completed = 1 # Starts at 0, goes up to 5
-	seals_broken = []# Stores the names of the completed trials, e.g., ["Trial of the Core"]
-	highest_cursed_pact_completed = 0
 	
 	
 	
