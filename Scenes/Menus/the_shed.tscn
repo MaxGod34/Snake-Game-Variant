@@ -1,0 +1,403 @@
+[gd_scene load_steps=21 format=3 uid="uid://312pl5kncw66"]
+
+[ext_resource type="Script" uid="uid://bpiqb64asplal" path="res://Scripts/the_shed.gd" id="1_fndh6"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_vq6i6"]
+[ext_resource type="StyleBox" uid="uid://cy5g83qtt1153" path="res://Assets/Styles/confirm_button_hover.tres" id="2_gmyed"]
+[ext_resource type="StyleBox" uid="uid://cd84k60mmhdim" path="res://Assets/Styles/shed_styles/chroma_scales_shed_button_hover.tres" id="2_hyo5v"]
+[ext_resource type="StyleBox" uid="uid://bo8dyic5cip8s" path="res://Assets/Styles/confirm_button_disabled.tres" id="3_bjfkh"]
+[ext_resource type="StyleBox" uid="uid://dgcfvhvqhqghr" path="res://Assets/Styles/shed_styles/chroma_scales_shed_button_disabled.tres" id="3_nqje7"]
+[ext_resource type="StyleBox" uid="uid://dyly6h15xmjeg" path="res://Assets/Styles/confirm_button_normal.tres" id="4_2wrln"]
+[ext_resource type="StyleBox" uid="uid://cg55kymlfxogo" path="res://Assets/Styles/shed_styles/chroma_scales_shed_button_normal.tres" id="4_plr7c"]
+[ext_resource type="StyleBox" uid="uid://dwycah7gsvp0i" path="res://Assets/Styles/shed_styles/player_banner_shed_button_hover.tres" id="5_udk8x"]
+[ext_resource type="StyleBox" uid="uid://bs3yrtjleogag" path="res://Assets/Styles/shed_styles/player_banner_shed_button_disabled.tres" id="6_fndh6"]
+[ext_resource type="StyleBox" uid="uid://djqr0ld77jf61" path="res://Assets/Styles/shed_styles/player_banner_shed_button_normal.tres" id="7_tmkkg"]
+[ext_resource type="PackedScene" uid="uid://dkrhbgusv7j3h" path="res://Scenes/UI/upgrade_node.tscn" id="8_ciw3c"]
+[ext_resource type="Texture2D" uid="uid://dqkem6rp8x468" path="res://Assets/PNGs/RotatingItemIcons/handicap_icon.png" id="10_tmkkg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmkkg"]
+content_margin_left = 15.0
+content_margin_top = 12.0
+content_margin_right = 15.0
+content_margin_bottom = 8.0
+bg_color = Color(0.277528, 0.277528, 0.277528, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ciw3c"]
+bg_color = Color(0.0156863, 0.0156863, 0.0156863, 0.901961)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xhu0t"]
+bg_color = Color(0.333333, 0.333333, 0.333333, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_numoj"]
+content_margin_left = 32.0
+content_margin_top = 12.0
+content_margin_right = 32.0
+content_margin_bottom = 8.0
+bg_color = Color(0.4, 0.4, 0.4, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_133se"]
+content_margin_left = 15.0
+content_margin_top = 12.0
+content_margin_right = 15.0
+content_margin_bottom = 8.0
+bg_color = Color(0.277528, 0.277528, 0.277528, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t75gs"]
+content_margin_left = 32.0
+content_margin_top = 12.0
+content_margin_right = 32.0
+content_margin_bottom = 8.0
+bg_color = Color(0.0666667, 0.0666667, 0.0666667, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xhu0t"]
+
+[node name="TheShed" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fndh6")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.152941, 0, 0.176471, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="ChromaCustomizationLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.419608, 0.309804, 0.231373, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 64
+text = "The Shed"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ShedTabs" type="TabContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_disabled_color = Color(0.541176, 0.603922, 0.356863, 1)
+theme_override_colors/font_unselected_color = Color(0.541176, 0.603922, 0.356863, 1)
+theme_override_colors/font_hovered_color = Color(0.541176, 0.603922, 0.356863, 1)
+theme_override_colors/font_selected_color = Color(0.831125, 0.885576, 0.691667, 1)
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/tab_focus = SubResource("StyleBoxFlat_tmkkg")
+theme_override_styles/tab_disabled = SubResource("StyleBoxFlat_ciw3c")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xhu0t")
+theme_override_styles/tab_selected = SubResource("StyleBoxFlat_numoj")
+theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_133se")
+theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_t75gs")
+tab_alignment = 1
+current_tab = 0
+
+[node name="Customization" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="CategoryListPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel"]
+custom_minimum_size = Vector2(384, 0)
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="ChromaCustomizationLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.0941176, 0.611765, 0.678431, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 42
+text = "Chroma Scales"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_xhu0t")
+
+[node name="SelectPigmentsButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.0509804, 0.415686, 0.831373, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("2_hyo5v")
+theme_override_styles/disabled = ExtResource("3_nqje7")
+theme_override_styles/hover_pressed = ExtResource("2_hyo5v")
+theme_override_styles/hover = ExtResource("2_hyo5v")
+theme_override_styles/pressed = ExtResource("2_hyo5v")
+theme_override_styles/normal = ExtResource("4_plr7c")
+text = "Colors"
+
+[node name="SelectPatternButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.0509804, 0.415686, 0.831373, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("2_hyo5v")
+theme_override_styles/disabled = ExtResource("3_nqje7")
+theme_override_styles/hover_pressed = ExtResource("2_hyo5v")
+theme_override_styles/hover = ExtResource("2_hyo5v")
+theme_override_styles/pressed = ExtResource("2_hyo5v")
+theme_override_styles/normal = ExtResource("4_plr7c")
+text = "Patterns"
+
+[node name="SelectBackgroundButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.0509804, 0.415686, 0.831373, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 0
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("2_hyo5v")
+theme_override_styles/disabled = ExtResource("3_nqje7")
+theme_override_styles/hover_pressed = ExtResource("2_hyo5v")
+theme_override_styles/hover = ExtResource("2_hyo5v")
+theme_override_styles/pressed = ExtResource("2_hyo5v")
+theme_override_styles/normal = ExtResource("4_plr7c")
+text = "Backgrounds"
+
+[node name="MessageLabel2" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 42
+text = "Player Banner"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="SelectAvatarButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("5_udk8x")
+theme_override_styles/disabled = ExtResource("6_fndh6")
+theme_override_styles/hover_pressed = ExtResource("5_udk8x")
+theme_override_styles/hover = ExtResource("5_udk8x")
+theme_override_styles/pressed = ExtResource("5_udk8x")
+theme_override_styles/normal = ExtResource("7_tmkkg")
+text = "Avatars"
+
+[node name="SelectFrameButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("5_udk8x")
+theme_override_styles/disabled = ExtResource("6_fndh6")
+theme_override_styles/hover_pressed = ExtResource("5_udk8x")
+theme_override_styles/hover = ExtResource("5_udk8x")
+theme_override_styles/pressed = ExtResource("5_udk8x")
+theme_override_styles/normal = ExtResource("7_tmkkg")
+text = "Frames"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_xhu0t")
+
+[node name="SelectionPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 42
+text = "Equipped"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="EquippedColor" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+text = "
+get your oclor here"
+icon = ExtResource("10_tmkkg")
+
+[node name="EquippedPattern" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBackground" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedAvatar" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedFrame" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 42
+text = "Unlocked Cosmetics"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ItemGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+columns = 6
+
+[node name="Career Stats" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Milestones" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="Dark Slith" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 3
+
+[node name="BottomHUDRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+alignment = 1
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/BottomHUDRow"]
+custom_minimum_size = Vector2(128, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 36
+theme_override_styles/focus = ExtResource("2_gmyed")
+theme_override_styles/disabled = ExtResource("3_bjfkh")
+theme_override_styles/hover_pressed = ExtResource("2_gmyed")
+theme_override_styles/hover = ExtResource("2_gmyed")
+theme_override_styles/pressed = ExtResource("2_gmyed")
+theme_override_styles/normal = ExtResource("4_2wrln")
+text = "Back"

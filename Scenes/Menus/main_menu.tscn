@@ -196,7 +196,7 @@ theme_override_styles/pressed = ExtResource("4_anmaw")
 theme_override_styles/normal = ExtResource("6_lg1h6")
 text = "Fang Fund"
 
-[node name="ThePitButton" type="Button" parent="CenterContainer/VBoxContainer"]
+[node name="TheShedButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(288, 80)
 layout_mode = 2
 mouse_default_cursor_shape = 2
@@ -215,7 +215,7 @@ theme_override_styles/hover_pressed = ExtResource("4_anmaw")
 theme_override_styles/hover = ExtResource("4_anmaw")
 theme_override_styles/pressed = ExtResource("4_anmaw")
 theme_override_styles/normal = ExtResource("6_lg1h6")
-text = "The Pit"
+text = "The Shed"
 
 [node name="OptionsButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 80)
@@ -272,6 +272,6 @@ stretch_mode = 4
 
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/FangFundButton" to="." method="_on_fang_fund_button_pressed"]
-[connection signal="pressed" from="CenterContainer/VBoxContainer/ThePitButton" to="." method="_on_the_pit_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/TheShedButton" to="." method="_on_the_shed_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/OptionsButton" to="." method="_on_options_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

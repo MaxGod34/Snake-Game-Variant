@@ -20,6 +20,8 @@ var hovered_item_key: String = ""
 var pending_purchase_key: String = ""
 var cosmetic_key_to_type: Dictionary = {}
 
+var current_category: String = "Colors"
+
 func _ready():
 	_build_node_dictionaries()
 	_connect_all_signals()
@@ -232,7 +234,7 @@ func update_cosmetic_grids():
 		var is_unlocked = item_key in SaveManager.save_data.unlocked_cosmetics[item_type.to_lower()]
 		
 		node.update_display(item_key, 1 if is_unlocked else 0, 1, true, Color.WHITE, Color.GOLD)
-		# --- THIS IS THE FIX for the color swatches ---
+
 		if rules.has("hex_code"):
 			node.icon = preload("res://Assets/Icons/white_swatch.png")
 			# We modulate the node itself, not a child.

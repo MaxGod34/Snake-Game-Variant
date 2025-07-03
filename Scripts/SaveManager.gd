@@ -13,6 +13,14 @@ var save_data = {
 	"unlocked_cosmetics": {
 		"colors": [],"patterns": [],"backgrounds": [],"avatars": [],"frames": []
 	},
+	"equipped_cosmetics": {
+		"color_1": "#FFFFFF",
+		"color_2": "#888888",
+		"pattern": "None",
+		"background": "Default",
+		"avatar": "Default",
+		"frame": "Default"
+	},
 	# --- Per-Class Difficulty Progression ---
 	"class_progression": {},
 	# --- Career Statistics & Milestone ---
@@ -79,6 +87,14 @@ func reset_save_data():
 		"unlocked_classes": ["Mulligan", "Ghost", "Tycoon", "Doubles", "Gobble"],
 		"unlocked_cosmetics": {
 			"colors": [], "patterns": [], "backgrounds": [], "avatars": [], "frames": []
+		},
+		"equipped_cosmetics": {
+			"color_1": "#FFFFFF",
+			"color_2": "#888888",
+			"pattern": "None",
+			"background": "Default",
+			"avatar": "Default",
+			"frame": "Default"
 		},
 		"class_progression": {},
 		"high_score": 0,

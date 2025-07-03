@@ -17,8 +17,8 @@ func _on_quit_button_pressed() -> void:
 
 
 
-func _on_the_pit_button_pressed() -> void:
-	pass # for now
+func _on_the_shed_button_pressed() -> void:
+	SceneTransition.transition_to("res://Scenes/Menus/the_shed.tscn")
 
 
 func _on_fang_fund_button_pressed() -> void:
