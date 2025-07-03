@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bsuvg08eaqq4w"
-path="res://.godot/imported/MaterialRichSoilIcon.png-3f7d10de24bd78606a9d2fc66be0e44f.ctex"
+path="res://.godot/imported/MineralRichSoilIcon.png-130ce29b9221b1719cc94bbedb86ea83.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/PNGs/UpgradeIcons/MaterialRichSoilIcon.png"
-dest_files=["res://.godot/imported/MaterialRichSoilIcon.png-3f7d10de24bd78606a9d2fc66be0e44f.ctex"]
+source_file="res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png"
+dest_files=["res://.godot/imported/MineralRichSoilIcon.png-130ce29b9221b1719cc94bbedb86ea83.ctex"]
 
 [params]
 

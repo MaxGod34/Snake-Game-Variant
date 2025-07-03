@@ -113,8 +113,13 @@ func update_all_displays():
 func update_class_roster():
 	for class_key in class_nodes:
 		var node = class_nodes[class_key]
+		var class_data = GameManager.class_data[class_key]
 		var is_unlocked = class_key in SaveManager.save_data.unlocked_classes
-		node.icon = get_icon_for_class(class_key)
+
+		# We now get the icon path directly from the data.
+		var icon_path = class_data.get("icon_path", "")
+		if ResourceLoader.exists(icon_path):
+			node.icon = load(icon_path)
 		# We can use our UpgradeNode's update function for this!
 		# We'll use a special theme color to show selection.
 		var stylebox = StyleBoxFlat.new()
@@ -153,7 +158,7 @@ func update_loadout_display():
 		# If a class IS selected, get its data.
 		var class_data = GameManager.class_data.get(selected_class_key)
 		if class_data:
-			class_name_label.text = class_data.get("name", "Unknown Class")
+			class_name_label.text = class_data.get("display_name", "Unknown Class")
 			class_description_label.text = class_data.get("description", "")
 			if class_data.has("artwork_path") and ResourceLoader.exists(class_data.artwork_path):
 				class_artwork.texture = load(class_data.artwork_path)
@@ -167,26 +172,20 @@ func update_loadout_display():
 	else:
 		var diff_data = GameManager.difficulty_data.get(selected_difficulty_key)
 		if diff_data:
-			difficulty_name_label.text = diff_data.get("name", "Unknown Pact")
+			difficulty_name_label.text = diff_data.get("display_name", "Unknown Pact")
 			difficulty_description_label.text = diff_data.get("description", "")
 	
 func update_difficulty_pacts():
-	# If no class is selected, we can't show any difficulty progress.
-	if selected_class_key == "":
+	var progress = { "highest_pact_completed": -1, "seals_broken": [], "highest_cursed_pact_completed": -1 }
+	if selected_class_key != "":
+		progress = SaveManager.get_progress_for_class(selected_class_key)
 		# Loop through and disable all pact nodes here.
-		for pact_key in difficulty_nodes:
-			difficulty_nodes[pact_key].icon = get_icon_for_pact(pact_key)
-			difficulty_nodes[pact_key].disabled = true
-			difficulty_nodes[pact_key].modulate = Color.DARK_SLATE_GRAY
-		return
-		
-	# Get the specific progress for the currently selected class.
-	var progress = SaveManager.get_progress_for_class(selected_class_key)
-	
+
 	for pact_key in difficulty_nodes:
 		var node = difficulty_nodes[pact_key]
 		var rules = GameManager.difficulty_data.get(pact_key)
 		if not rules: continue
+
 		var is_locked = true
 		var is_completed = false
 		
@@ -204,7 +203,9 @@ func update_difficulty_pacts():
 				if cursed_pact_number <= progress.highest_cursed_pact_completed + 1: is_locked = false
 				if cursed_pact_number <= progress.highest_cursed_pact_completed: is_completed = true
 		
-		node.icon = get_icon_for_pact(pact_key)
+		var icon_path = rules.get("icon_path", "")
+		if ResourceLoader.exists(icon_path):
+			node.icon = load(icon_path)
 		# --- Apply Visuals ---
 		var stylebox = StyleBoxFlat.new()
 		stylebox.set_border_width_all(4)
@@ -246,52 +247,6 @@ func _on_begin_run_button_pressed():
 	#    GameManager will handle the rest, including applying all the modifiers
 	#    and transitioning to the main game scene.
 	GameManager.start_game()
-
-func get_icon_for_pact(pact_key: String) -> Texture2D:
-	# This function returns the correct icon for each difficulty.
-	# You will need to create these icons and update the paths!
-	match pact_key:
-		"Pact 1": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png")
-		"Pact 2": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png")
-		"Pact 3": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_3.png")
-		"Pact 4": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
-		"Pact 5": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_5.png")
-		"Trial of the Harvest": return preload("res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png")
-		"Trial of the Core": return preload("res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png")
-		"Trial of the Redline": return preload("res://Assets/PNGs/UpgradeIcons/SugarRushIcon.png")
-		"Cursed Pact 1": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png")
-		"Cursed Pact 2": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_2.png")
-		"Cursed Pact 3": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_3.png")
-		"Cursed Pact 4": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_4.png")
-		"Cursed Pact 5": return preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
-		_: return null # Default case
-func get_icon_for_class(class_key: String) -> Texture2D:
-	# This function returns the correct icon for each class.
-	# You will need to create these icons and update the paths!
-	match class_key:
-		"Mulligan": return preload("res://Assets/PNGs/snake_fruit_red.png")
-		"Purist": return preload("res://Assets/PNGs/snake_fruit_red.png")
-		"Larry": return preload("res://Assets/PNGs/snake_fruit_red.png")
-		"Phoenix Coil": return preload("res://Assets/PNGs/snake_fruit_red.png")
-		"Tycoon": return preload("res://Assets/PNGs/snake_lime.png")
-		"Day Trader": return preload("res://Assets/PNGs/snake_lime.png")
-		"Manager": return preload("res://Assets/PNGs/snake_lime.png")
-		"Calculator": return preload("res://Assets/PNGs/snake_lime.png")
-		"Ghost": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
-		"Space": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
-		"Blinker": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
-		"Psychic": return preload("res://Assets/PNGs/snake_poker_chip_white.png")
-		"Doubles": return preload("res://Assets/PNGs/iron_cherry_icon.png")
-		"Comboisseur": return preload("res://Assets/PNGs/iron_cherry_icon.png")
-		"Sniper": return preload("res://Assets/PNGs/iron_cherry_icon.png")
-		"Mineral": return preload("res://Assets/PNGs/iron_cherry_icon.png")
-		"Gobble": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
-		"Gluts": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
-		"Groove": return preload("res://Assets/PNGs/ghost_pepper_icon.png")
-		"Alchemist": return preload("res://Assets/PNGs/golden_fruit_icon.png")
-
-		_: return null # Default case
-
 
 func _on_debug_unlock_next_pact():
 	if selected_class_key == "": return

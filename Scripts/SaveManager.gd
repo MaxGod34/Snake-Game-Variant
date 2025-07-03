@@ -11,11 +11,7 @@ var save_data = {
 	"serpent_fangs": 0,
 	"unlocked_classes": ["Mulligan", "Ghost", "Tycoon", "Doubles", "Gobble"],
 	"unlocked_cosmetics": {
-		"colors": [],
-		"patterns": [],
-		"backgrounds": [],
-		"pfps": [],
-		"frames": []
+		"colors": [],"patterns": [],"backgrounds": [],"avatars": [],"frames": []
 	},
 	# --- Per-Class Difficulty Progression ---
 	"class_progression": {},
@@ -32,7 +28,7 @@ var save_data = {
 }
 
 # This is the path to our save file.
-const SAVE_PATH = "user://savegame.json"
+const SAVE_PATH = "user://savegame_v2.json"
 
 func _ready():
 	# When the game first boots up, we immediately try to load any existing save data.
@@ -47,40 +43,50 @@ func save_game():
 	print("Game Saved!")
 
 func load_game():
-	# This function loads the data from our file.
+	# This function now safely loads data and handles potential corruption.
 	if not FileAccess.file_exists(SAVE_PATH):
 		print("No save file found. Using default data.")
-		return # If no save file exists, we just use the default values.
+		return
 		
 	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
 	var json = JSON.new()
 	
-	# We parse the text from the file.
 	var parse_error = json.parse(file.get_as_text())
 	if parse_error != OK:
 		print("Error parsing save file: ", json.get_error_message())
 		return
 		
-	# If successful, we overwrite our default data with the loaded data.
 	var loaded_data = json.data
+	
+
+	# Instead of blindly overwriting, we now check each key.
 	for key in save_data:
 		if loaded_data.has(key):
-			save_data[key] = loaded_data[key]
+			# Special check for our nested dictionary to prevent corruption.
+			if key == "unlocked_cosmetics" and typeof(loaded_data[key]) == TYPE_DICTIONARY:
+				save_data[key] = loaded_data[key]
+			elif key != "unlocked_cosmetics":
+				save_data[key] = loaded_data[key]
 			
 	print("Save file loaded successfully!")
 
 func reset_save_data():
-	# This function simply resets the save_data dictionary back to its original, default state.
 	save_data = {
+		"player_xp": 0,
+		"player_level": 1,
+		"garden_master_rank": 0,
+		"serpent_fangs": 0,
+		"unlocked_classes": ["Mulligan", "Ghost", "Tycoon", "Doubles", "Gobble"],
+		"unlocked_cosmetics": {
+			"colors": [], "patterns": [], "backgrounds": [], "avatars": [], "frames": []
+		},
+		"class_progression": {},
 		"high_score": 0,
 		"total_pulp_earned": 0,
 		"total_juice_earned": 0,
 		"total_deaths": 0,
-		"unlocked_classes": ["Mulligan", "Tycoon", "Ghost", "Doubles", "Gobble"],
-		"unlocked_cosmetics": [],
-		"class_progression": {}
+		"milestone_progress": { "rocks_destroyed": 0, "total_upgrades_purchased": 0, "combos_achieved": 0 }
 	}
-	# After resetting, we immediately save the new, empty data to the file.
 	save_game()
 	print("Save data has been reset to default.")
 
@@ -95,7 +101,7 @@ func get_progress_for_class(class_key: String) -> Dictionary:
 		}
 	return save_data.class_progression[class_key]
 
-func process_end_of_run_xp(p_total_score: int, p_difficulty_key: String):
+func process_end_of_run_xp(p_total_score: int, p_total_pulp: int, p_difficulty_key: String):
 	# 1. Update all our career stat totals with the data from the completed run.
 	save_data.total_juice_earned += GameManager.total_juice_earned_this_run
 	save_data.total_pulp_earned += GameManager.total_pulp_earned_this_run
@@ -104,7 +110,7 @@ func process_end_of_run_xp(p_total_score: int, p_difficulty_key: String):
 	
 	# 2. Calculate the XP earned this run using our new formula.
 	var base_xp = p_total_score
-	var pulp_bonus = GameManager.total_pulp_earned_this_run * 0.5
+	var pulp_bonus = p_total_pulp * 0.5
 	var capped_pulp_bonus = min(pulp_bonus, p_total_score)
 	
 	var difficulty_multiplier = get_difficulty_xp_multiplier(p_difficulty_key)
@@ -150,7 +156,11 @@ func check_for_level_up():
 		xp_needed = get_xp_for_next_level()
 
 func get_difficulty_xp_multiplier(difficulty_key: String) -> float:
-	# This helper returns the correct XP multiplier based on the difficulty key.
+	var diff_data = GameManager.difficulty_data.get(difficulty_key)
+	if not diff_data: return 1.0 # Safety default
+
+	# We can add a "multiplier" key to our difficulty data to make this cleaner.
+	# For now, we can use a match statement.
 	if difficulty_key.begins_with("Pact"):
 		var pact_number = int(difficulty_key.split(" ")[1])
 		# Linearly scale from 0.5x to 0.9x for Pacts 1-5
@@ -160,8 +170,7 @@ func get_difficulty_xp_multiplier(difficulty_key: String) -> float:
 		return 1.5
 		
 	elif difficulty_key.begins_with("Cursed"):
-		var cursed_pact_number = int(difficulty_key.split(" ")[2])
-		# Use a match statement for the specific Cursed Pact multipliers
+		var cursed_pact_number = GameManager.roman_to_int(difficulty_key.split(" ")[2])
 		match cursed_pact_number:
 			1: return 2.0
 			2: return 2.5

@@ -334,95 +334,109 @@ var block_market_prices: Dictionary = {
 var difficulty_data = {
 	# --- TIER 1: Pacts of Binding ---
 	"Pact 1": {
-		"name": "Pact 1: Juice Box Hero",
+		"display_name": "Pact 1: Juice Box Hero",
 		"description": "A gentle start. You begin with a massive head start in resources and power.",
 		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10, "start_juice": 32,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
 			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
-		}
+		},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
 	},
 	"Pact 2": {
-		"name": "Pact 2: Pulp Friction",
+		"display_name": "Pact 2: Pulp Friction",
 		"description": "The training wheels are off. You start with your power, but no extra Juice.",
 		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 7, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
 			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
-		}
+		},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_2.png",
 	},
 	"Pact 3": {
-		"name": "Pact 3: Sink or Slither",
+		"display_name": "Pact 3: Sink or Slither",
 		"description": "The pure experience. No starting bonuses. Good luck.",
 		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 5, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png",
 	},
 	"Pact 4": {
-		"name": "Pact 4: The Zoomies",
+		"display_name": "Pact 4: The Zoomies",
 		"description": "The garden moves at a frantic pace, leaving little room for error.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png",
 	},
 	"Pact 5": {
-		"name": "Pact 5: The Blender",
+		"display_name": "Pact 5: The Blender",
 		"description": "The garden is wild and untamed, choked with obstacles.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
-		"obstacle_modifier": 1.5
+		"obstacle_modifier": 1.5,
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_5.png",
 	},
 
 	# --- TIER 2: The Three Trials ---
 	"Trial of the Harvest": {
-		"name": "Seal of the Harvest", "description": "Prove your mastery over consumption. Only The Harvest path is available.",
+		"display_name": "Seal of the Harvest", "description": "Prove your mastery over consumption. Only The Harvest path is available.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Core", "The Redline", "The Ssscale"],
-		"start_upgrades": {"Edge Lord": 7}
+		"start_upgrades": {"Edge Lord": 7},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png",
 	},
 	"Trial of the Core": {
-		"name": "Seal of the Core", "description": "Back to square one. Only Core path available.",
+		"display_name": "Seal of the Core", "description": "Back to square one. Only Core path available.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Harvest", "The Redline", "The Ssscale"],
-		"start_upgrades": {"Edge Lord": 7}
+		"start_upgrades": {"Edge Lord": 7},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png",
 	},
 	"Trial of the Redline": {
-		"name": "Seal of the Redline", "description": "Go fast for once! Redline path only.",
+		"display_name": "Seal of the Redline", "description": "Go fast for once! Redline path only.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Core", "The Harvest", "The Ssscale"],
-		"start_upgrades": {"Edge Lord": 7}
+		"start_upgrades": {"Edge Lord": 7},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png",
 	},
 
 	# --- TIER 3: The Cursed Pacts ---
 	"Cursed Pact 1": {
-		"name": "Cursed Pact I: Empty-Handed", "description": "You must earn your power. You start with no ability slots.",
+		"display_name": "Cursed Pact I: Empty-Handed", "description": "You must earn your power. You start with no ability slots.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {}
+		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
 	},
 	"Cursed Pact 2": {
-		"name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
+		"display_name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["Glutton"], "start_upgrades": {}
+		"campaign_length": 9, "locked_paths": ["Glutton"], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_2.png",
 	},
 	"Cursed Pact 3": {
-		"name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
+		"display_name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
+		"campaign_length": 9, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png",
 	},
 	"Cursed Pact 4": {
-		"name": "Cursed Pact IV: Extension Granted", "description": "Win after Garden 12",
+		"display_name": "Cursed Pact IV: Extension Granted", "description": "Win after Garden 12",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
+		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png",
 	},
 
 	"Cursed Pact 5": {	#FINAL
-		"name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
+		"display_name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 13, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {}
+		"campaign_length": 13, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
+		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
 	}
 }
 #---------CLASS PARAMETERS--------#
 var class_data = {
 	"Mulligan": {
-		"name": "Mulligan",
+		"display_name": "Mulligan",
 		"description": "The balanced, default experience. Starts with an Extra Life and a solid foundation for any build.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Phoenix Dawn": 1
@@ -472,9 +486,10 @@ var class_data = {
 		}
 	},
 	"Purist": {
-		"name": "Purist",
+		"display_name": "Purist",
 		"description": "A master of the garden with a disdain for the stench of RNG",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Patient Gardener": 3, # Starts with this maxed out
@@ -524,9 +539,10 @@ var class_data = {
 		}
 	},
 	"Larry": {
-		"name": "Larry",
+		"display_name": "Larry",
 		"description": "The ultimate roguelike challenge. You are at the mercy of fate.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
@@ -573,9 +589,10 @@ var class_data = {
 		}
 	},
 	"Phoenix Coil": {
-		"name": "Phoenix Coil",
+		"display_name": "Phoenix Coil",
 		"description": "An immortal being who has traded worldly wealth for eternal life.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Death Defied": 1
@@ -625,9 +642,10 @@ var class_data = {
 		}
 	},
 	"Tycoon": {
-		"name": "Tycoon",
+		"display_name": "Tycoon",
 		"description": "A master of passive income who must spend to succeed.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Snake Clicker": 7
@@ -678,9 +696,10 @@ var class_data = {
 		}
 	},
 	"Day Trader": { 
-		"name": "Day Trader",
+		"display_name": "Day Trader",
 		"description": "A fast-start economist who sacrifices raw power for economic velocity.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Liquid Assets": 3,
@@ -730,9 +749,10 @@ var class_data = {
 		}
 	},
 	"Manager": {
-		"name": "Manager",
+		"display_name": "Manager",
 		"description": "A patient investor who leverages Pulp for massive late-game power.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Principal Pulp": 5,
@@ -782,9 +802,10 @@ var class_data = {
 		}
 	},
 	"Calculator": {
-		"name": "Calculator",
+		"display_name": "Calculator",
 		"description": "A strange being whose power is a reflection of its own state.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
@@ -833,9 +854,10 @@ var class_data = {
 		}
 	},
 	"Ghost": {
-		"name": "Ghost",
+		"display_name": "Ghost",
 		"description": "An ethereal being who channels their magical nature into raw power.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Ghost Tail": 4,
@@ -884,9 +906,10 @@ var class_data = {
 		}
 	},
 	"Space": {
-		"name": "Space",
+		"display_name": "Space",
 		"description": "An absolute master of the garden's layout, with incredible speed to match.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Edge Lord": 7,
@@ -937,9 +960,10 @@ var class_data = {
 		}
 	},
 	"Blinker": {
-		"name": "Blinker",
+		"display_name": "Blinker",
 		"description": "A high-skill class focused on a single, powerful reality-bending mechanic.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Fractured Self": 1
@@ -986,9 +1010,10 @@ var class_data = {
 		}
 	},
 	"Psychic": {
-		"name": "Psychic",
+		"display_name": "Psychic",
 		"description": "A master of foresight whose power creates a dangerous feedback loop.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Fruit Foresight": 1,
@@ -1040,9 +1065,10 @@ var class_data = {
 		}
 	},
 	"Doubles": {
-		"name": "Doubles",
+		"display_name": "Doubles",
 		"description": "A pure gambler who thrives on risk and gets faster with every failure.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_break.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Coin Flip Curious": 1,
@@ -1093,9 +1119,10 @@ var class_data = {
 		}
 	},
 	"Comboisseur": {
-		"name": "Comboisseur",
+		"display_name": "Comboisseur",
 		"description": "The ultimate combo master, with a unique challenge and a massive payoff.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_break.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Sugar Rush": 1,
@@ -1148,9 +1175,10 @@ var class_data = {
 		}
 	},
 	"Sniper": {
-		"name": "Sniper",
+		"display_name": "Sniper",
 		"description": "A focused predator who lives for the thrill of the hunt.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_break.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Banana Bounty": 2,
@@ -1200,9 +1228,10 @@ var class_data = {
 		}
 	},
 	"Mineral": {
-		"name": "Mineral",
+		"display_name": "Mineral",
 		"description": "A true master of the earth who sees rocks not as obstacles, but as investments.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/snake_break.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Geological Survey": 1
@@ -1252,9 +1281,10 @@ var class_data = {
 		}
 	},
 	"Gobble": {
-		"name": "Gobble",
+		"display_name": "Gobble",
 		"description": "A master of ingredients who has learned to harness their very essence.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Exotic Seeds": 3,
@@ -1303,9 +1333,10 @@ var class_data = {
 		}
 	},
 	"Gluts": {
-		"name": "Gluts",
+		"display_name": "Gluts",
 		"description": "All-in on growth, but with a major logistical challenge.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
@@ -1353,9 +1384,10 @@ var class_data = {
 		}
 	},
 	"Groove": {
-		"name": "Groove",
+		"display_name": "Groove",
 		"description": "A jack-of-all-trades who combines speed and passive income.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Juke N Jive": 1,
@@ -1405,9 +1437,10 @@ var class_data = {
 		}
 	},
 	"Alchemist": {
-		"name": "Alchemist",
+		"display_name": "Alchemist",
 		"description": "Does not gain Juice from leveling up. Every fruit has a 10% chance to grant 1 Juice instead.",
 		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
+		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
@@ -1472,36 +1505,48 @@ var upgrade_data = {
 					40, 44, 48, 52, 56,
 					60, 65, 70, 75, 200,
 				],
-				"max_level": 30
+				"max_level": 30,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png",
+				"type": "Passive"
 			},
 			"Get Rich Quick": {
 				"display_name": "Get Rich Quick",
 				"description": "Your Speed Hero!\nGain +0.1 GPS for every mL spent in the Acrobat tree.",
-				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/get_rich_quick_icon.png",
+				"type": "Passive"
 			},
 			"Custom Aftertaste": {
 				"display_name": "Custom Aftertaste",
 				"description": "Your Cooking Hero!\nGain +0.1 GPS for every mL spent in the Chef tree.",
-				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/CustomAfterTasteIcon.png",
+				"type": "Passive"
 			},
 			"Arcane Flow": {
 				"display_name": "Arcane Flow",
 				"description": "Your white mage! Just kidding\nYour Wizard Hero!\nGain +0.1 GPS for every mL spent in the Illusionist tree.",
-				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1}
+				"costs": [24], "max_level": 1, "prerequisite": {"upgrade": "Snake Clicker", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ArcaneFlowIcon.png",
+				"type": "Passive"
 			},
 			"Pulp Reactor": {
 				"display_name": "Pulp Reactor",
 				"description": "GPS is permanently increased by +1\nfor every 100 Pulp you are currently holding.",
 				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Snake Clicker", "level": 3}
+				"prerequisite": {"upgrade": "Snake Clicker", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PulpReactorIcon.png",
+				"type": "Keystone"
 			},
 			"Unstable Metabolism": {
 				"display_name": "Unstable Metabolism",
 				"description": "Permanently doubles your total GPS\nThat's it, fetch!",
 				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Snake Clicker", "level": 3}
+				"prerequisite": {"upgrade": "Snake Clicker", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/UnstableMetabolismIcon.png",
+				"type": "Keystone"
 			}
 		},
 		
@@ -1514,41 +1559,53 @@ var upgrade_data = {
 					20, 25, 30, 35, 40,
 					50, 60, 70, 80, 100
 					], # 15 levels total
-				"max_level": 15
+				"max_level": 15,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/DietSlithIcon.png",
+				"type": "Passive"
 			},
 			"Fruit Foresight": {
 				"display_name": "Fruit Foresight",
 				"description": "See the next fruit!\nUse responsibly",
 				"costs": [12], # One-time purchase
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 5} # Requires Diet Slith Lvl 2
+				"prerequisite": {"upgrade": "Diet Slith", "level": 5}, # Requires Diet Slith Lvl 2
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png",
+				"type": "Passive"
 			},
 			#New geological survey... ooo lala
 			"Geological Survey": {
-			"display_name": "Geological Survey", "max_level": 1, "costs": [16],
-			"description": "Gain bonus Juice at end of Garden\nMore rocks = More Juice",
-			"prerequisite": {"upgrade": "Diet Slith", "level": 5}
+				"display_name": "Geological Survey", "max_level": 1, "costs": [16],
+				"description": "Gain bonus Juice at end of Garden\nMore rocks = More Juice",
+				"prerequisite": {"upgrade": "Diet Slith", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png",
+				"type": "Passive"
 			},
 			"Sovereign Trail": { #72 total
 				"display_name": "Sovereign Trail",
 				"description": "Leave your mark. Your trail affects where new fruits can spawn.",
 				"costs": [8, 64], # Lvl 1: Repel, Lvl 2: Attract
 				"max_level": 2,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 3}
+				"prerequisite": {"upgrade": "Diet Slith", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png",
+				"type": "Passive"
 			},
 			"Meditate": { #Levels 1-4 195
 				"display_name": "Meditate",
 				"costs": [15, 30, 60, 100, 200, 500, 1000, 2500, 5000],
 				"description": "Pause! Need I say more?\nRequires Diet Slith lvl 7",
 				"max_level": 9,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 7}
+				"prerequisite": {"upgrade": "Diet Slith", "level": 7},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MeditateIcon.png",
+				"type": "Active Ability"
 			},
 			"Garden Weaver": {
 				"display_name": "Garden Weaver",
 				"description": "Reroll all the fruits MUCH closer!\nRequires Diet Slith Lvl 7",
 				"costs": [50],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Diet Slith", "level": 7}
+				"prerequisite": {"upgrade": "Diet Slith", "level": 7},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png",
+				"type": "Keystone"
 			}
 		},
 		"Ledger": {
@@ -1562,7 +1619,9 @@ var upgrade_data = {
 					1200, 1800, 2400, 5000, 9999 #20,399
 					],
 				"description": "Each level grants\n+1 Juice on level up.",
-				"exclusive_with": "Principal Pulp" # This new key locks the other option
+				"exclusive_with": "Principal Pulp", # This new key locks the other option
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/LiquidAssetsIcon.png",
+				"type": "Passive"
 			},
 			"Principal Pulp": { # 4716mL total
 				"display_name": "Principal Pulp",
@@ -1574,41 +1633,55 @@ var upgrade_data = {
 					400, 500, 600, 700, 1000 #3200
 					],
 				"description": "Multiplies base Pulp reward\nfrom base score at end of Garden.",
-				"exclusive_with": "Liquid Assets"
+				"exclusive_with": "Liquid Assets",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png",
+				"type": "Passive"
 			},
 
 			# --- Path A (Juice Focus) Upgrades ---
 			"Fast Track": {
 				"display_name": "Fast-Track", "max_level": 1, "costs": [1],
 				"description": "Unlocks the 'Skip Garden' button in the Pulp Stand,\nOn skip, +5mL Juice.",
-				"prerequisite": {"upgrade": "Liquid Assets", "level": 1}
+				"prerequisite": {"upgrade": "Liquid Assets", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/WormholeIcon.png",
+				"type": "In-Active Ability"
 			},
 			"Gluttons Greed": {
 				"display_name": "Glutton's Greed", "max_level": 1, "costs": [16],
 				"description": "Quantity or Quality, or...\nIncrease fruit reward by max fruits",
-				"prerequisite": {"upgrade": "Liquid Assets", "level": 2}
+				"prerequisite": {"upgrade": "Liquid Assets", "level": 2},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GluttonsGreedIcon.png",
+				"type": "Boost"
 			},
 			"Market Crash": { #1129
 				"display_name": "Market Crash", "max_level": 10, "costs": [1, 8, 15, 30, 50, 75, 100, 150, 200, 500],
 				"description": "Permanently reduce the Juice cost of all upgrades.\nLvl 1: -1mL\nLvl 2: -2mL",
-				"prerequisite": {"upgrade": "Liquid Assets", "level": 3}
+				"prerequisite": {"upgrade": "Liquid Assets", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MarketCrashIcon.png",
+				"type": "Keystone"
 			},
 
 			# --- Path B (Pulp Focus) Upgrades ---
 			"Golden Handshake": { #567
 				"display_name": "Golden Handshake", "max_level": 10, "costs": [3, 4, 5, 15, 25, 40, 65, 90, 120, 200],
 				"description": "Multiplies all BONUS Pulp rewards\n(Flawless, Par Time, etc.) at the end of each Garden.",
-				"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
+				"prerequisite": {"upgrade": "Principal Pulp", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenHandshakeIcon.png",
+				"type": "Passive"
 			},
 			"Juice Press": {
 				"display_name": "Juice Press", "max_level": 1, "costs": [64],
 				"description": "Active Ability (Once per Garden):\nConvert all your current Pulp into Juice\nat a 5mg:1mL ratio.",
-				"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
+				"prerequisite": {"upgrade": "Principal Pulp", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/JuicePressIcon.png",
+				"type": "Active Ability"
 			},
 			"Liquidation": {
 				"display_name": "Liquidation", "max_level": 1, "costs": [1],
 				"description": "Instantly double your current Juice\nNo strings attached",
-				"prerequisite": {"upgrade": "Principal Pulp", "level": 1}
+				"prerequisite": {"upgrade": "Principal Pulp", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/LiquidationIcon.png",
+				"type": "Keystone"
 			}
 		}
 	},#---------------------------------------------------------------------------------------------#
@@ -1625,7 +1698,9 @@ var upgrade_data = {
 					35,40,45,50,55, #225
 					60,70,80,90,100 #400
 					],
-				"max_level": 20
+				"max_level": 20,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png",
+				"type": "Passive"
 			},
 			"More Mice": { #1188
 				"display_name": "More Mice!",
@@ -1635,34 +1710,44 @@ var upgrade_data = {
 					75,100,150,250,500
 					],
 				"max_level": 10,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MoreMiceIcon.png",
+				"type": "Passive"
 			},
 			"Golden Seeds": { #267
 				"display_name": "Golden Seeds",
 				"description": "Unlocks Golden Apples, which grant Juice.\nEach level increases their spawn chance and reward.",
 				"costs": [7, 35, 75, 150],
 				"max_level": 4,
-				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
+				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenSeedsIcon.png",
+				"type": "Passive"
 			},
 			"Patient Gardener": { #200
 				"display_name": "Patient Gardener",
 				"description": "Fruits will ripen over time,\ngranting bonus growth\nLvl 3 = X3 bonuse",
 				"costs": [16, 64, 128],
 				"max_level": 3,
-				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3}
+				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PatientGardenerIcon.png",
+				"type": "Passive"
 			},
 			"Banana Bounty": { #First 5: 260
 				"display_name": "Banana Bounty",
 				"description":  "Active Ability: Marks a fruit as a\nhigh-value bounty for massive growth.",
 				"costs": [16, 32, 48, 64, 100, 250, 500, 1000, 2500],
 				"max_level": 9,
-				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 5}
+				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/BananaBountyIcon.png",
+				"type": "Active Ability"
 			},
 			"The Satchel": { #64
 				"display_name": "The Satchel",
 				"description": "Permanently unlocks another active ability slot.",
 				"costs": [64],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 10, "and": "Golden Seeds", "and_level": 4}
+				"prerequisite": {"upgrade": "Elephant Sized Portions", "level": 10, "and": "Golden Seeds", "and_level": 4},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/TheSatchelIcon.png",
+				"type": "Passive"
 			}
 		},
 		
@@ -1671,96 +1756,128 @@ var upgrade_data = {
 				"display_name": "Golden Seed Extract",
 				"description": "A potent concoction. Increases the spawn chance of valuable Golden Apples.",
 				"costs": [3, 12, 64], # Example costs for 3 levels
-				"max_level": 3
+				"max_level": 3,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenSeedExtractIcon.png",
+				"type": "Passive"
 			},
 			"Exotic Seeds": {
 				"display_name": "Exotic Seeds",
 				"description": "A taste for the strange.\nAdds new, rare fruits to the spawn pool.",
 				"costs": [4, 12, 24, 36, 81], # 5 levels
-				"max_level": 5
+				"max_level": 5,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ExoticSeedsIcon.png",
+				"type": "Passive"
 			},
 			"The Cookbook": {
 				"display_name": "The Cookbook",
 				"description": "Unlocks the Recipe system,\ngranting temporary buffs for eating fruit in a specific sequence.",
 				"costs": [1],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Golden Seed Extract", "level": 1}
+				"prerequisite": {"upgrade": "Golden Seed Extract", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/TheCookbookIcon.png",
+				"type": "Passive"
 			},
 			"Expanded Palate": {
 				"display_name": "Expanded Palate",
 				"description": "Adds new, more complex and powerful recipes to your Cookbook.",
 				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "The Cookbook", "level": 1}
+				"prerequisite": {"upgrade": "The Cookbook", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ExpandedPalateIcon.png",
+				"type": "Passive"
 			},
 			"Golden Glaze": {
 				"display_name": "Golden Glaze",
 				"description": "Golden Apples now act as a 'wild card' ingredient\nfor any step in your current recipe.",
 				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "The Cookbook", "level": 1}
+				"prerequisite": {"upgrade": "The Cookbook", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenGlazeIcon.png",
+				"type": "Passive"
 			},
 			"Custom Cuisine": {
 				"display_name": "Custom Cuisine",
 				"description": "Permanently enhances all special fruits with powerful secondary effects!",
 				"costs": [50],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1}
+				"prerequisite": {"upgrade": "The Cookbook", "level": 1, "and": "Exotic Seeds", "and_level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/CustomCuisineIcon.png",
+				"type": "Keystone"
 			},
 			"Mise en Place": {
 				"display_name": "Mise en Place",
 				"description": "Active Ability (Once per RUN):\nInstantly transforms all normal fruits on screen into random special fruits.",
 				"costs": [96],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Exotic Seeds", "level": 5}
+				"prerequisite": {"upgrade": "Exotic Seeds", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MiseenPlaceIcon.png",
+				"type": "Keystone"
 			}
 		},
 		
 		"Geode": {
 			"Fertile Ground": {
 				"display_name": "Fertile Ground", "max_level": 3, "costs": [4, 16, 64],
-				"description": "Each level grants +1 to Max Fruits\nbut adds +5 rocks to every garden."
+				"description": "Each level grants +1 to Max Fruits\nbut adds +5 rocks to every garden.",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/FertileGroundIcon.png",
+				"type": "Passive"
 			},
 			"Mineral Rich Soil": {
 				"display_name": "Mineral-Rich Soil", "max_level": 3, "costs": [4, 8, 16],
-				"description": "Each level grants +1 to Fruit Reward\nbut adds +5 rocks to every garden."
+				"description": "Each level grants +1 to Fruit Reward\nbut adds +5 rocks to every garden.",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png",
+				"type": "Passive"
 			},
 			"Tectonic Shift": {
 				"display_name": "Tectonic Shift", "max_level": 3, "costs": [2, 4, 8],
-				"description": "Each level grants a speed boost\nbut adds +5 rocks to every garden."
+				"description": "Each level grants a speed boost\nbut adds +5 rocks to every garden.",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/TectonicShiftIcon.png",
+				"type": "Passive"
 			},
 			"Heavy Foundation": {
 				"display_name": "Heavy Foundation", "max_level": 3, "costs": [4, 8, 16],
-				"description": "Each level grants a speed decrease\nbut adds +5 rocks to every garden."
+				"description": "Each level grants a speed decrease\nbut adds +5 rocks to every garden.",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/HeavyFoundationIcon.png",
+				"type": "Passive"
 			},
 
 			# --- GEOMANCER TIER 2 (ROCKEATERS) ---
 			"Rockmuncher": {
 				"display_name": "Rockmuncher", "max_level": 1, "costs": [32],
 				"description": "You can now eat rocks,\nwhich grant +2 growth.",
-				"prerequisite": {"upgrade": "Fertile Ground", "level": 3}
+				"prerequisite": {"upgrade": "Fertile Ground", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png",
+				"type": "Passive"
 			},
 			"Geode Cracker": {
 				"display_name": "Geode Cracker", "max_level": 1, "costs": [32],
 				"description": "You can now eat rocks,\nwhich have a chance to grant +1 Juice.",
-				"prerequisite": {"upgrade": "Mineral Rich Soil", "level": 3}
+				"prerequisite": {"upgrade": "Mineral Rich Soil", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GeodeCrackerIcon.png",
+				"type": "Passive"
 			},
 			"Kinetic Feast": {
 				"display_name": "Kinetic Feast", "max_level": 1, "costs": [32],
 				"description": "You can eat rocks and\nyou get a speed boost after eating the rock",
-				"prerequisite": {"upgrade": "Tectonic Shift", "level": 3}
+				"prerequisite": {"upgrade": "Tectonic Shift", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/KineticFeastIcon.png",
+				"type": "Passive"
 			},
 			"Stones Burden": {
 				"display_name": "Stone's Burden", "max_level": 1, "costs": [32],
 				"description": "Eating a rock slows you but grants temporary invulnerability.",
-				"prerequisite": {"upgrade": "Heavy Foundation", "level": 3}
+				"prerequisite": {"upgrade": "Heavy Foundation", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/StonesBurdenIcon.png",
+				"type": "Passive"
 			},
 
 			# --- GEOMANCER KEYSTONE ---
 			"Calculated Risk": {
 				"display_name": "Calculated Risk", "max_level": 1, "costs": [64],
 				"description": "Doubles the Juice bonus from Geological Survey.",
-				"prerequisite": {"upgrade": "Geological Survey", "level": 1} 
+				"prerequisite": {"upgrade": "Geological Survey", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/CalculatedRiskIcon.png",
+				"type": "Keystone"
 				# The check for having a Rockeater upgrade will be handled in code
 			}
 		}
@@ -1774,42 +1891,54 @@ var upgrade_data = {
 				"display_name": "Slither Sauce",
 				"description": "Permanently increases movement speed.\nIf you can handle it...",
 				"costs": [1, 1, 1, 1, 10, 20, 40, 60, 80, 100],
-				"max_level": 10
+				"max_level": 10,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/SlitherSauceIcon.png",
+				"type": "Passive"
 			},
 			"Tenderizer": {
 				"display_name": "Tenderizer",
 				"description": "Destroy a rock on impact.\nHas limited charges, which refresh on level up.\nEach level grants another charge.",
 				"costs": [8, 12, 16, 32, 64, 128, 256, 512, 999],
 				"max_level": 9,
-				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
+				"prerequisite": {"upgrade": "Slither Sauce", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/TenderizerIcon.png",
+				"type": "Active Ability"
 			},
 			"Juke N Jive": {
 				"display_name": "Juke 'N Jive",
 				"description": "Changing direction 4 times in 1 second\nlets you phase through a body segment\nGet groovin'",
 				"costs": [12],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
+				"prerequisite": {"upgrade": "Slither Sauce", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/JukeNJiveIcon.png",
+				"type": "Passive/Ability"
 			},
 			"Afterburner": {
 				"display_name": "Afterburner",
 				"description": "Speed boost after eating a fruit?",
 				"costs": [6, 12, 48],
 				"max_level": 3,
-				"prerequisite": {"upgrade": "Slither Sauce", "level": 3}
+				"prerequisite": {"upgrade": "Slither Sauce", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/AfterburnerIcon.png",
+				"type": "Passive"
 			},
 			"Pop Rocks": {
 				"display_name": "Pop Rocks",
 				"description": "When you destroy a rock with Tenderizer,\nit creates a shockwave that destroys adjacent rocks.",
 				"costs": [16],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Tenderizer", "level": 1}
+				"prerequisite": {"upgrade": "Tenderizer", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PopRocksIcon.png",
+				"type": "Passive"
 			},
 			"Autotomy": {
 				"display_name": "Autotomy",
 				"description": " Active Ability: Sever your own tail on impact\nto survive a fatal crash.",
 				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Slither Sauce", "level": 6}
+				"prerequisite": {"upgrade": "Slither Sauce", "level": 6},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/AutotomyIcon.png",
+				"type": "Keystone Ability"
 			}
 		},
 		"Frenzy": {
@@ -1817,42 +1946,54 @@ var upgrade_data = {
 				"display_name": "Sugar Rush",
 				"description": "Unlocks the Combo Meter,\nwhich tracks fruits eaten in quick succession.",
 				"costs": [3],
-				"max_level": 1
+				"max_level": 1,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/SugarRushIcon.png",
+				"type": "Passive"
 			},
 			"Chain Reaction": {
 				"display_name": "Chain Reaction",
 				"description": "Make the combo meter do something!\nEach level increases the max combo by 5\nLvl 5: no unlimited combo",
 				"costs": [5, 10, 15, 20, 32],
 				"max_level": 5,
-				"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
+				"prerequisite": {"upgrade": "Sugar Rush", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ChainReactionIcon.png",
+				"type": "Passive"
 			},
 			"Overdrive": {
 				"display_name": "Overdrive",
 				"description": "While combo is active,\nhold your current direction key for a speed boost.",
 				"costs": [16, 1], # Lvl 2 is cheap for the cosmetic!
 				"max_level": 2,
-				"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
+				"prerequisite": {"upgrade": "Sugar Rush", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/OverdriveIcon.png",
+				"type": "Passive"
 			},
 			"Lingering Rush": {
 				"display_name": "Lingering Rush",
 				"description": "Increases the duration of the combo timer,\nmaking it easier to chain fruits.",
 				"costs": [6, 12, 18, 24, 64],
 				"max_level": 5,
-				"prerequisite": {"upgrade": "Sugar Rush", "level": 1}
+				"prerequisite": {"upgrade": "Sugar Rush", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/LingeringRushIcon.png",
+				"type": "Passive"
 			},
 			"Juggernaut": {
 				"display_name": "Juggernaut",
 				"description": "While your combo is pure\n(you haven't opened the upgrade menu),\nthe combo timer is paused.",
 				"costs": [25],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Lingering Rush", "level": 5}
+				"prerequisite": {"upgrade": "Lingering Rush", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/JuggernautIcon.png",
+				"type": "Keystone"
 			},
 			"Zenith": {
 				"display_name": "Zenith",
 				"description": "Active Ability: Instantly set your combo to 10 and freeze the timer.",
 				"costs": [32],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Lingering Rush", "level": 5} # Example prerequisite
+				"prerequisite": {"upgrade": "Lingering Rush", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ZenithIcon.png",
+				"type": "Keystone Ability"
 				}
 			},
 		"Survivor": {
@@ -1860,41 +2001,55 @@ var upgrade_data = {
 				"display_name": "Mulligan Munchie",
 				"description": "Grants one Extra Life.\nYou got it for sure...",
 				"costs": [5, 20, 50, 100, 200, 300, 400, 500, 750, 999], # Example scaling costs
-				"max_level": 10
+				"max_level": 10,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png",
+				"type": "Passive"
 			},
 			"Phoenix Dawn": {
 				"display_name": "Phoenix Dawn",
 				"description": "After using an Extra Life,\nthe next fruit you eat restores 25% of your lost length.",
 				"costs": [7], "max_level": 1,
-				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
+				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PhoenixDawnIcon.png",
+				"type": "Passive"
 			},
 			"Last Stand": {
 				"display_name": "Last Stand",
 				"description": "While on your final life,\nthe chance for Golden Apples to spawn is significantly increased.",
 				"costs": [32], "max_level": 1,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/LastStandIcon.png",
+				"type": "Passive"
 			},
 			"Sacrificial Molt": {
 				"display_name": "Sacrificial Molt",
 				"description": "Active Ability (Once per RUN):\nHalve your current length to instantly gain one Extra Life charge.",
 				"costs": [16], "max_level": 1,
-				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1}
+				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png",
+				"type": "Active Ability"
 			},
 			"Death Defied": {
 				"display_name": "Death Defied",
 				"description": "Every time you use an Extra Life, permanently gain +1 to your Fruit Reward and Max Fruits on Screen for this run.",
 				"costs": [20], "max_level": 1,
-				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
+				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/DeathDefiedIcon.png",
+				"type": "Passive"
 			},
 			"Martyrdom": {
 				"display_name": "Martyrdom",
 				"description": "Upon your final death, your snake explodes,\nharvesting all fruit on screen\nfor a final score boost.",
 				"costs": [13], "max_level": 1,
-				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2}
+				"prerequisite": {"upgrade": "Mulligan Munchie", "level": 2},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MartyrdomIcon.png",
+				"type": "On-Death Ability"
 			},
 			"New Game S Plus": {
 				"display_name": "New Game S+",
 				"description": "PRESTIGE! Beat the game without dying to restart with all your power",
 				"costs": [1], "max_level": 1,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png",
+				"type": "???"
 				# The prerequisite for this one will be handled in code, not here.
 			}
 		}
@@ -1907,14 +2062,18 @@ var upgrade_data = {
 				"display_name": "Ghost Tail",
 				"description": "Your last few tail segments become intangible.\nLvl 1: 7, Lvl 10: 300",
 				"costs": [6, 12, 20, 34, 50, 100, 200, 300, 500, 1000],
-				"max_level": 10
+				"max_level": 10,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/GhostTailIcon.png",
+				"type": "Passive"
 			},
 			"Phase Shift": {
 				"display_name": "Phase Shift",
 				"description": "Active Ability: Become intangible to your own body for a short time.\nEach level grants another charge.",
 				"costs": [4, 8, 12, 16, 20, 64, 128, 256, 512, 999],
 				"max_level": 10,
-				"exclusive_with": "Blink" # Can't have both
+				"exclusive_with": "Blink", # Can't have both
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PhaseShiftIcon.png",
+				"type": "Active Ability"
 			},
 			"Blink": {
 				"display_name": "Blink",
@@ -1922,21 +2081,27 @@ var upgrade_data = {
 				"costs": [2, 4, 6, 20, 32, 64, 128, 256, 512, 999],
 				"max_level": 10,
 				"prerequisite": {"upgrade": "Ghost Tail", "level": 2},
-				"exclusive_with": "Phase Shift"
+				"exclusive_with": "Phase Shift",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/BlinkIcon.png",
+				"type": "Active Ability"
 			},
 			"3 Card Monty": {
 				"display_name": "3-Card Monty",
 				"description": "Permanently reduces the Juice cost of\nall other upgrades by 1 (to a minimum of 1).",
 				"costs": [3],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
+				"prerequisite": {"upgrade": "Ghost Tail", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/3CardMontyIcon.png",
+				"type": "Passive"
 			},
 			"Fractured Self": {
 				"display_name": "Fractured Self",
 				"description": "Your body is now rendered in 3-segment chunks",
 				"costs": [64],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Ghost Tail", "level": 5}
+				"prerequisite": {"upgrade": "Ghost Tail", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png",
+				"type": "Keystone"
 			},
 			"Dazzle Pie": {
 				"display_name": "Dazzle Pie",
@@ -1944,7 +2109,9 @@ var upgrade_data = {
 				"costs": [1],
 				"max_level": 1,
 				"prerequisite": {"upgrade": "Ghost Tail", "level": 7},
-				"exclusive_with": "Masters Blueprint"
+				"exclusive_with": "Masters Blueprint",
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png",
+				"type": "Keystone"
 		}
 	},	
 			
@@ -1953,42 +2120,54 @@ var upgrade_data = {
 				"display_name": "Edge Lord",
 				"description": "Increases the size of the play area.",
 				"costs": [2, 4, 8, 16, 32, 64, 128],
-				"max_level": 7
+				"max_level": 7,
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png",
+				"type": "Passive"
 			},
 			"Zoning Ordinance": {
 				"display_name": "Zoning Ordinance",
 				"description": "Designate a quadrant as a 'safe zone' with fewer obstacles\nLvl 1: Top Left\nLvl 2: Top Half\nLvl 3: 1 quadrant not safe\nLvl 4: Complete control",
 				"costs": [6, 18, 32, 128],
 				"max_level": 4,
-				"prerequisite": {"upgrade": "Edge Lord", "level": 2}
+				"prerequisite": {"upgrade": "Edge Lord", "level": 2},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ZoningOrdinanceIcon.png",
+				"type": "Passive"
 			},
 			"Border Czar": {
 				"display_name": "Border Czar",
 				"description": "Control the borders, control the world.\nFruit on the edge is more likely to be special.",
 				"costs": [16],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Edge Lord", "level": 3}
+				"prerequisite": {"upgrade": "Edge Lord", "level": 3},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png",
+				"type": "Passive"
 			},
 			"Surveyed Land": {
 				"display_name": "Surveyed Land",
 				"description": "A double-edged sword.\nCreate a \"wilderness\" with better fruit but more rocks.",
 				"costs": [8],
 				"max_level": 1,
-				"prerequisite": {"upgrade": "Zoning Ordinance", "level": 1}
+				"prerequisite": {"upgrade": "Zoning Ordinance", "level": 1},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/SurveyedLandIcon.png",
+				"type": "Passive"
 			},
 			"Burrow": {
 				"display_name": "Burrow",
 				"description": "Active Ability: Pass through one wall\nand emerge on the opposite side.\nAbility lasts until next wall hit!",
 				"costs": [7, 12, 20, 34, 64, 128, 256, 512, 999],
 				"max_level": 9,
-				"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4 to match max_level
+				"prerequisite": {"upgrade": "Edge Lord", "level": 4}, # This should be 4 to match max_level
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/BurrowIcon.png",
+				"type": "Active Ability"
 			},
 			"Pocket Garden": {
 				"display_name": "Pocket Garden",
 				"description": "Active Ability: Sacrifice tail segments to\ncreate a temporary 5x5 safe zone that spawns fruit.\nLvl increases duration and segment cost",
 				"costs": [16, 32, 128],
 				"max_level": 3,
-				"prerequisite": {"upgrade": "Edge Lord", "level": 4} # This should be 4
+				"prerequisite": {"upgrade": "Edge Lord", "level": 4}, # This should be 4
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png",
+				"type": "Active Ability"
 			},
 			"Fold Space": {
 				"display_name": "Fold Space", 
@@ -1996,7 +2175,9 @@ var upgrade_data = {
 				"costs": [128], 
 				"max_level": 1, 
 				"prerequisite": {"upgrade": "Edge Lord", "level": 5, "and": "Burrow", "and_level": 3},
-				"exclusive_with": "Shatter Reality" # <-- makes it mutually exclusive
+				"exclusive_with": "Shatter Reality", # <-- makes it mutually exclusive
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png",
+				"type": "Keystone"
 			},
 			"Shatter Reality": {
 				"display_name": "Shatter Reality", 
@@ -2004,14 +2185,18 @@ var upgrade_data = {
 				"costs": [128], 
 				"max_level": 1, 
 				"prerequisite": {"upgrade": "Edge Lord", "level": 5},
-				"exclusive_with": "Fold Space" # <-- makes it mutually exclusive
+				"exclusive_with": "Fold Space", # <-- makes it mutually exclusive
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png",
+				"type": "Keystone"
 			},
 			"Masters Blueprint": {
 				"display_name": "Masters Blueprint", 
 				"description": "Transforms the game's visuals into a clean, glowing blueprint grid.",
 				"costs": [13], 
 				"max_level": 1, 
-				"prerequisite": {"upgrade": "Edge Lord", "level": 5}
+				"prerequisite": {"upgrade": "Edge Lord", "level": 5},
+				"icon_path": "res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png",
+				"type": "Keystone"
 				# This one is independent and has no 'exclusive_with' key
 			}
 		}
@@ -2023,18 +2208,21 @@ var upgrade_data = {
 			"display_name": "CoinFlip Curious",
 			"description": "A 50/50 chance.\nEvery fruit grants double growth or zero growth\nGamble Responsibly...",
 			"costs": [6],
-			"max_level": 1
+			"max_level": 1,
+			"icon_path": "res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png",
+			"type": "Passive"
 		},
 		"Passive Income": {
 			"display_name": "Passive Income",
 			"description": "Every bet won results in a +1 to your fruit reward\nYou heard me...get on with it!",
 			"costs": [13],
-			"max_level": 1
+			"max_level": 1,
+			"icon_path": "res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png",
+			"type": "Passive"
 		}
 	}
 	}
-		#----Gambleer----#
-		
+
 }
 
 
@@ -2042,42 +2230,194 @@ var meta_upgrade_data = {
 	"Synapse Slot": {
 		"description": "Unlocks one additional active ability slot.\nA crucial investment for any build.",
 		"costs": [200, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 9999], # Costs for slots 1 through 10
-		"max_level": 10 
+		"max_level": 10,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/SynapseSlotIcon.png",
+		"type": "Slot"
 	},
 	"Serpents Coffer": {
 		"description": "Gain 'interest' on your unspent\nPulp at the end of each Garden.",
 		"costs": [50, 200, 500, 1000],
-		"max_level": 4
+		"max_level": 4,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/SerpentsCofferIcon.png",
+		"type": "Passive"
 	},
 	"Geode Compass": {
 		"description": "Permanently removes a percentage of\nobstacles from all subsequent gardens.",
 		"costs": [75, 200, 600, 1250],
 		"max_level": 4,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png",
+		"type": "Passive"
 		
 	},
 	"Four Leaf Clover": {
 		"description": "Permanently increases your 'luck,'\nboosting the chance of all random events.",
 		"costs": [42, 69, 340, 1000],
-		"max_level": 4
+		"max_level": 4,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png",
+		"type": "Passive"
 	},
 	"Chroma Scales": {
 		"description": "Activate the cosmetic options\nyou've permanently unlocked in the Fang Fund.",
 		"costs": [1, 1, 1, 1, 1, 1],
-		"max_level": 6
+		"max_level": 6,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png",
+		"type": "Aesthetic"
 	},
 	"Lasso Larry": {
 		"display_name": "Lasso Larry",
 		"description": "Active Ability: Randomly rerolls a fruit!\nLvl 1: Pulls 1 fruit.\nLvl 2: Pulls 2 fruits.\nLvl 3: Pulls 3 fruits.",
 		"costs": [125, 500, 1000],
-		"max_level": 3
+		"max_level": 3,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png",
+		"type": "Active Ability"
 	},
 	"Harvest Forecast": {
 		"display_name": "Harvest Forecast",
 		"description": "Adds a UI element showing the next\nspecial fruits in the spawn queue.\nLvl 1-3: Shows 1-3 special fruit.\nLvl 4: Shows the next 5 fruits",
 		"costs": [100, 200, 300, 1000],
-		"max_level": 4
+		"max_level": 4,
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png",
+		"type": "QoL"
 	}
 }
+
+var cosmetic_data = {
+	"Colors": {
+		"Ectoplasm Green": {"name": "Ectoplasm Green", "fang_cost": 50, "hex_code": "#7ED321", "description": "Add a little color to your game!"},
+		"Molten Gold": {"name": "Molten Gold", "fang_cost": 50, "hex_code": "#F5A623", "description": "Add a little color to your game!"},
+		"Void Purple": {"name": "Void Purple", "fang_cost": 50, "hex_code": "#BD10E2", "description": "Add a little color to your game!"},
+		"Electric Lime": {"name": "Electric Lime", "fang_cost": 50, "hex_code": "#AFFF00", "description": "Add a little color to your game!"},
+		"Venom Pink": {"name": "Venom Pink", "fang_cost": 50, "hex_code": "#FF5CA3", "description": "Add a little color to your game!"},
+		"Plasma Teal": {"name": "Plasma Teal", "fang_cost": 50, "hex_code": "#00FFD5", "description": "Add a little color to your game!"},
+		"Infrared Orange": {"name": "Infrared Orange", "fang_cost": 50, "hex_code": "#FF6A00", "description": "Add a little color to your game!"},
+		"Royal Slime": {"name": "Royal Slime", "fang_cost": 50, "hex_code": "#98DE00", "description": "Add a little color to your game!"},
+		"Ultraviolet": {"name": "Ultraviolet", "fang_cost": 50, "hex_code": "#9D00FF", "description": "Add a little color to your game!"},
+		"Radioactive Gold": {"name": "Radioactive Gold", "fang_cost": 50, "hex_code": "#FFD700", "description": "Add a little color to your game!"},
+		"Cyber Blue": {"name": "Cyber Blue", "fang_cost": 50, "hex_code": "#00AFFF", "description": "Add a little color to your game!"},
+		"Witch Green": {"name": "Witch Green", "fang_cost": 50, "hex_code": "#00FF7F", "description": "Add a little color to your game!"},
+		"Crimson Curse": {"name": "Crimson Curse", "fang_cost": 50, "hex_code": "#D1003C", "description": "Add a little color to your game!"},
+		"Ghost White": {"name": "Ghost White", "fang_cost": 50, "hex_code": "#F8F8FF", "description": "Add a little color to your game!"},
+		"Vanta Violet": {"name": "Vanta Violet", "fang_cost": 50, "hex_code": "#7D00A3", "description": "Add a little color to your game!"},
+		"Peach Fuzz": {"name": "Peach Fuzz", "fang_cost": 50, "hex_code": "#FFB07C", "description": "Add a little color to your game!"},
+		"Steel Cyan": {"name": "Steel Cyan", "fang_cost": 50, "hex_code": "#38E5FF", "description": "Add a little color to your game!"},
+		"Dream Tangerine": {"name": "Dream Tangerine", "fang_cost": 50, "hex_code": "#FF9472", "description": "Add a little color to your game!"},
+	},
+	"Patterns": {
+		"Diamondback": {"name": "Diamondback Pattern","fang_cost": 75, "icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", "description": "Add a nice pattern to your snake!"},
+		"Tiger Stripes": {"name": "Tiger Stripes Pattern","fang_cost": 75, "icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", "description": "Add a nice pattern to your snake!"}
+	},
+	"Backgrounds": {
+		"The Void": {"name": "The Void","fang_cost": 200, "icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png", "description": "Change up the background!"},
+		"The Grid": {"name": "The Grid","fang_cost": 200, "icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png", "description": "Change up the background!"}
+	},
+	"Avatars": {
+		#Class Icons/Avatars
+		"Mulligan Icon": {"name": "Mulligan Icon", "fang_cost": 50, "icon_path": "", "descripton": "unlock the mulligan class icon as a pfp!"},
+		#Upgrade Icons/Avatars
+		"3 Card Monty Icon": {"name": "3-Card Monty Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/3CardMontyIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Afterburner Icon": {"name": "Afterburner Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/AfterburnerIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Arcane Flow Icon": {"name": "Arcane Flow", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ArcaneFlowIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Autotomy Icon": {"name": "Autotomy Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/AutotomyIcon.png", "description": "Get this exclusive upgrade icon as a pfp!" },
+		"Banana Bounty Icon": {"name": "Banana Bounty Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/BananaBountyIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Blink Icon": {"name": "Blink Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/BlinkIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Border Czar Icon": {"name": "Border Czar Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Burrow Icon": {"name": "Burrow Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/BurrowIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Calculated Risk Icon": {"name": "Calculated Risk Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CalculatedRiskIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Chain Reaction Icon": {"name": "Chain Reaction Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ChainReactionIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Chorma Scaled Icon": {"name": "Chroma Scales Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Coin Flip Curious Icon": {"name": "Coin Flip Curious Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Custom Aftertaste Icon": {"name": "Custom Aftertaste Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CustomAfterTasteIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Custom Cuisine Icon": {"name": "Custom Cuisine Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CustomCuisineIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Dazzle Pie Icon": {"name": "Dazzle Pie Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Death Defied Icon": {"name": "Death Defied Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/DeathDefiedIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Diet Slith Icon": {"name": "Diet Slith Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/DietSlithIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Edge Lord Icon": {"name": "Edge Lord Icon", "fang_cost": 50, " icon_path": "res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Elephant Sized Portions Icon": {"name": "Elephant Sized Portions Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Exotic Seeds Icon": {"name": "Exotic Seeds Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ExoticSeedsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Expanded Palate Icon": {"name": "Expanded Palate Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ExpandedPalateIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Fertile Ground Icon": {"name": "Fertile Ground Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FertileGroundIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Fold Space Icon": {"name": "Fold Space Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Four Leaf Clover Icon": {"name": "Four Leaf Clover Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Fractured Self Icon": {"name": "Four Leaf Clover Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Fruit Foresight Icon": {"name": "Fruit Foresight Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Garden Weaver Icon": {"name": "Garden Weaver Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Geode Compass Icon": {"name": "Geode Compass Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Geode Cracker Icon": {"name": "Geode Cracker Icon", "fang_cost": 50, "icon_path":"res://Assets/PNGs/UpgradeIcons/GeodeCrackerIcon.png", "description": "Get this exclusive upgrade icon as a pfp!" },
+		"Geological Survey Icon": {"name": "Geological Survey Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Get Rich Quick Icon": {"name": "Get Rich Quick Icon", "fang_cost": 50, "icon_path":"res://Assets/PNGs/UpgradeIcons/get_rich_quick_icon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Ghost Tail Icon": {"name": "Ghost Tail Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GhostTailIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Gluttons Greed Icon": {"name": "Glutton's Greed Icon", "fang_cost": 50, "icon_path":"res://Assets/PNGs/UpgradeIcons/GluttonsGreedIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Golden Glaze Icon": {"name": "Golden Glaze Icon", "fang_cost": 50, "icon_path":"res://Assets/PNGs/UpgradeIcons/GoldenGlazeIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Golden Handshake Icon": {"name": "Golden Handshake Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenHandshakeIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Golden Seed Extract Icon": {"name": "Golden Seed Extract Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenSeedExtractIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Golden Seeds Icon": {"name": "Golden Seeds Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenSeedsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Harvest Forecast Icon": {"name": "Harvest Forecast Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Heavy Foundation Icon": {"name": "Heavy Foundation Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/HeavyFoundationIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Juggernaut Icon": {"name": "Juggernaut Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/JuggernautIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Juice Press Icon": {"name": "Juice Press Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/JuicePressIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Juke N Jive Icon": {"name": "Juke 'N Jive Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/JukeNJiveIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Kinetic Feast Icon": {"name": "Kinetc Feast Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/KineticFeastIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Lasso Larry Icon": {"name": "Lasso Larry Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Last Stand Icon": {"name": "Last Stand Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/LastStandIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Lingering Rush Icon": {"name": "Lingering Rush Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/LingeringRushIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Liquid Assets Icon": {"name": "Liquid Assets Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/LiquidAssetsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Liquidation Icon": {"name": "Liquidation Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/LiquidationIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Market Crash Icon": {"name": "Market Crash Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MarketCrashIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Martyrdom Icon": {"name": "Martyrdom Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MartyrdomIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Masters Blueprint Icon": {"name": "Master's Blueprint Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Meditate Icon": {"name": "Meditate Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MeditateIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Mineral Rich Soil Icon": {"name": "Mineral-Rich Soil Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Mise en Place Icon": {"name": "Mise en Place Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MiseenPlaceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"More Mice Icon": {"name": "More Mice Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MoreMiceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Mulligan Munchie Icon": {"name": "Mulligan Munchie Icon","fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"New Game S Plus Icon": {"name": "New Game S Plus Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Overdrive Icon": {"name": "Overdrive Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/OverdriveIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Passive Income Icon": {"name": "Passive Income Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Patient Gardener Icon": {"name": "Patient Gradener Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PatientGardenerIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Phase Shift Icon": {"name": "Phase Shift Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PhaseShiftIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Phoenix Dawn Icon": {"name": "Phoenix Dawn Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PhoenixDawnIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Pocket Garden Icon": {"name": "Pocket Garden Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Pop Rocks Icon": {"name": "Pop Rocks Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PopRocksIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Principal Pulp Icon": {"name": "Principal Pulp Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Pulp Reactor Icon": {"name": "Pulp Reactor Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PulpReactorIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Rockmuncher Icon": {"name": "Rockmuncher Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Sacrifical Molt Icon": {"name": "Sacrificial Molt Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Serpents Coffer Icon": {"name": "Serpent's Coffer Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SerpentsCofferIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Shatter Reality Icon": {"name": "Shatter Reality Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Slither Sauce Icon": {"name": "Slither Sauce Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SlitherSauceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Snake Clicker Icon": {"name": "Snake Clicker Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SnakeClickerIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Sovereign Trail Icon": {"name": "Sovereign Trail Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Stones Burden Icon": {"name": "Stones Burden Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/StonesBurdenIcon.png", "description": "Get this exclusive upgrade icon as a pfp!",},
+		"Sugar Rush Icon": {"name": "Sugar Rush Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SugarRushIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Surveyed Land Icon": {"name": "Surveyed Land Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SurveyedLandIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Synapse Slot Icon": {"name": "Synapse Slot Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SynapseSlotIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Tectonic Shift Icon": {"name": "Tectonic Shift Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/TectonicShiftIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Tenderizer Icon": {"name": "Tenderizer Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/TenderizerIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"The Cookbook Icon": {"name": "The Cookbook Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/TheCookbookIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"The Satchel Icon": {"name": "The Satchel Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/TheSatchelIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Unstable Metabolism Icon": {"name": "Unstable Metabolism Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/UnstableMetabolismIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Wormhole Icon": {"name": "Wormhole Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/WormholeIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Zenith Icon": {"name": "Zenith Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ZenithIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Zoning Ordinance Icon": {"name": "Zoning Ordinance Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ZoningOrdinanceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		#Fruit Avatars
+		"OG Fruit Icon": {"name": "OG Fruit Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/snake_fruit_red.png", "description": "Get this exclusive fruit icon as a pfp!"},
+		"Golden Fruit Icon": {"name": "Golden Fruit Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/golden_fruit_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
+		"Jumping Bean Icon": {"name": "Jumping Bean Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/jumping_bean_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
+		"Ghost Pepper Icon": {"name": "Ghost Pepper Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/ghost_pepper_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
+		"Iron Cherry Icon": {"name": "Iron Cherry Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/iron_cherry_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
+		"Dragon Fruit Icon": {"name": "Dragon Fruit Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/dragon_fruit_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
+		#Rock Avatars
+		#Snake Avatars
+		#Misc Avatars
+	},
+	"Frames": {
+		"Golden Frame": {"name": "Golden Frame", "fang_cost": 500, "icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_heads - Copy.png", "description": "Custom Frames for Fair Prices"},
+		"Cursed Frame": {"name": "Cursed Frame","fang_cost": 500, "icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_tails.png", "description": "Custom Frames for Fair Prices"}
+	}
+}
+
+
+
 
 
 

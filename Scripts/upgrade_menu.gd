@@ -222,17 +222,13 @@ func update_all_displays():
 		var rules = GameManager.get_upgrade_rules(upgrade_key)
 		
 		if rules.is_empty(): continue
-		
-		if node.is_visible_in_tree():
-			var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
-			var prereqs_met = main_game.check_prerequisites(upgrade_key)
-			var theme_colors = get_theme_colors(rules)
+
+		var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
+		var prereqs_met = GameManager.check_prerequisites(upgrade_key)
+		var theme_colors = get_theme_colors(rules)
 			
-			node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
-	var current_tab_index = top_tabs.current_tab
-	var current_tab_name = top_tabs.get_tab_title(current_tab_index)
-	if current_tab_name == "Snake Eyes":
-		update_snake_eyes_tab()
+		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
+	update_snake_eyes_tab()
 	
 func get_theme_colors(rules: Dictionary) -> Dictionary:
 	var colors = {"main": Color.WHITE, "accent": Color.GRAY}
@@ -298,22 +294,15 @@ func _on_any_node_mouse_exited():
 	hovered_upgrade_key = ""
 
 func _on_description_delay_timer_timeout():
-	# This function runs ONLY if the mouse has hovered for 0.2 seconds.
-	
-	# 1. Safety check: If we aren't hovering anything, do nothing.
-	if hovered_upgrade_key == "":
-		return
-
-	# 2. Get the rules and cost for the hovered upgrade using our helpers.
+	if hovered_upgrade_key == "": return
+	var currency_unit: String = "mL"
+	# 2. Get the rules and cost for the hovered upgrade using our helpers in main.gd.
 	var rules = GameManager.get_upgrade_rules(hovered_upgrade_key)
-	# Another safety check in case the key was somehow invalid.
-	if rules.is_empty():
-		return
+	if rules.is_empty(): return
 		
-	var cost = main_game.calculate_upgrade_cost(hovered_upgrade_key)
+	var cost = GameManager.calculate_upgrade_cost(hovered_upgrade_key)
+	var current_level = GameManager.get_upgrade_level_from_key(hovered_upgrade_key)
 	# We get the display name directly from the rules dictionary.
-	var display_name = rules.get("display_name", hovered_upgrade_key)
-	var description = rules.get("description", "No description available.")
 	
 	# --- THIS IS THE NEW POSITIONING LOGIC ---
 	
@@ -336,16 +325,8 @@ func _on_description_delay_timer_timeout():
 	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
 	
 	
-	var current_level = main_game.get_upgrade_level_from_key(hovered_upgrade_key)
 	# 8. show it with all the correct info.
-	description_panel.show_info(
-		hovered_upgrade_key,
-		display_name, description,
-		cost,
-		current_level,
-		rules.max_level,
-		"mL" # currency
-	)
+	description_panel.show_info(rules, current_level, cost, currency_unit)
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 

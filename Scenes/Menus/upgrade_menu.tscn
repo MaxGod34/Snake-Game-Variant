@@ -57,7 +57,7 @@
 [ext_resource type="Texture2D" uid="uid://c6c1svy62s64y" path="res://Assets/PNGs/UpgradeIcons/CustomCuisineIcon.png" id="39_3lowy"]
 [ext_resource type="Texture2D" uid="uid://bcjd514w70nsx" path="res://Assets/PNGs/UpgradeIcons/MiseenPlaceIcon.png" id="40_vsm7p"]
 [ext_resource type="Texture2D" uid="uid://dru6k5p1hqpn0" path="res://Assets/PNGs/UpgradeIcons/FertileGroundIcon.png" id="41_3lowy"]
-[ext_resource type="Texture2D" uid="uid://bsuvg08eaqq4w" path="res://Assets/PNGs/UpgradeIcons/MaterialRichSoilIcon.png" id="42_vj0ii"]
+[ext_resource type="Texture2D" uid="uid://bsuvg08eaqq4w" path="res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png" id="42_vj0ii"]
 [ext_resource type="Texture2D" uid="uid://bfpsk0vw60lk4" path="res://Assets/PNGs/UpgradeIcons/TectonicShiftIcon.png" id="43_fuyda"]
 [ext_resource type="Texture2D" uid="uid://b4qy778c8u3c7" path="res://Assets/PNGs/UpgradeIcons/HeavyFoundationIcon.png" id="44_d7a18"]
 [ext_resource type="Texture2D" uid="uid://dh4u53ovggagq" path="res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png" id="45_8af8k"]
@@ -2134,4 +2134,5 @@ offset_top = -248.0
 offset_right = 540.0
 offset_bottom = 248.0
 grow_horizontal = 1
-size_flags_horizontal = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1

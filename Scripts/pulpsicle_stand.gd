@@ -314,32 +314,24 @@ func _on_description_delay_timer_timeout():
 
 	var rules: Dictionary
 	var cost: int
-	var display_name: String
-	var item_id_for_icon: String # The key we pass to the description panel
 	var current_level: int
-	# We now handle the two different item types separately.
+	var currency_unit: String = "mg"
 	
 	if hovered_item_key == "rotating_item":
-		# It's the rotating item. Get its data from current_rotating_item.
 		rules = current_rotating_item
 		if rules.is_empty(): return
-		
-		display_name = rules.get("name", "Unknown Item")
 		cost = rules.get("cost", 0)
-		# We get the item's specific ID to find the correct icon.
-		item_id_for_icon = rules.get("id", "")
-		current_level = 0 #Double check this line ----------------
+		current_level = 0 # Rotating items are always single-purchase
 	else:
-		# It's a pillar upgrade. Get its data from meta_upgrade_data.
+		# It's a pillar upgrade.
 		rules = GameManager.meta_upgrade_data.get(hovered_item_key)
 		if rules.is_empty(): return
 		
-		display_name = rules.get("display_name", hovered_item_key)
-		# For pillars, the key IS the ID for the icon.
-		item_id_for_icon = hovered_item_key
-		
-		current_level = main_game.get_meta_upgrade_level(hovered_item_key)
+
+		current_level = GameManager.get_meta_upgrade_level(hovered_item_key)
 		cost = rules.costs[current_level] if current_level < rules.costs.size() else 999
+	
+	
 	# --- THIS IS THE DYNAMIC POSITIONING LOGIC ---
 	var viewport_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position()
@@ -359,12 +351,4 @@ func _on_description_delay_timer_timeout():
 	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
 	# Now that we have the correct data, we can safely show the info.
 	# We pass the specific item_id_for_icon to the show_info function.
-	description_panel.show_info(
-		item_id_for_icon,
-		display_name,
-		rules.description,
-		cost,
-		current_level,
-		rules.max_level,
-		"mg" #currency	
-	)
+	description_panel.show_info(rules, current_level, cost, currency_unit)

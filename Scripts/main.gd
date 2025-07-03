@@ -1140,7 +1140,7 @@ func _start_end_of_garden_sequence():
 				progress.highest_cursed_pact_completed = cursed_pact_num
 		
 		# Now, process the XP for the winning run.
-		SaveManager.process_end_of_run_xp(score, completed_pact)
+		SaveManager.process_end_of_run_xp(score, GameManager.total_pulp_earned_this_run, completed_pact)
 		
 		# Finally, transition to the main menu.
 		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
@@ -2086,6 +2086,7 @@ func _start_game_over_sequence():
 	# We now call our master function in the SaveManager.
 	SaveManager.process_end_of_run_xp(
 		final_score,
+		GameManager.total_pulp_earned_this_run,
 		GameManager.chosen_difficulty
 	)
 	

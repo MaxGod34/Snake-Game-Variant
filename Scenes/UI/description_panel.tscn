@@ -49,8 +49,8 @@ columns = 2
 [node name="IconPanel" type="Panel" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_vywvx")
 
 [node name="IconDisplay" type="TextureRect" parent="MarginC/GridContainer/IconPanel"]
