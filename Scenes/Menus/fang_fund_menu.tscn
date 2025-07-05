@@ -280,7 +280,7 @@ metadata/_tab_index = 2
 [node name="SerpentsSigilHbox" type="HBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 128
+theme_override_constants/separation = 96
 alignment = 1
 
 [node name="AvatarVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox"]
@@ -305,7 +305,7 @@ autowrap_mode = 3
 
 [node name="AvatarGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/AvatarVbox"]
 layout_mode = 2
-columns = 3
+columns = 2
 
 [node name="FrameVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox"]
 layout_mode = 2
@@ -329,7 +329,31 @@ autowrap_mode = 3
 
 [node name="FrameGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/FrameVbox"]
 layout_mode = 2
-columns = 3
+columns = 2
+
+[node name="BannersVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox"]
+layout_mode = 2
+
+[node name="BannersLabel" type="Label" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/BannersVbox"]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_rkkxi")
+theme_override_font_sizes/font_size = 32
+text = "Banners"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="BannerGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/BannersVbox"]
+layout_mode = 2
+columns = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

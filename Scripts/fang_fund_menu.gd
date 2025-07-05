@@ -13,6 +13,7 @@ extends Control
 @onready var background_grid = $"VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/EnvironmentsVbox/BackgroundGrid"
 @onready var avatar_grid = $"VBoxContainer/TabContainer/Serpent's Sigil/SerpentsSigilHbox/AvatarVbox/AvatarGrid"
 @onready var frame_grid = $"VBoxContainer/TabContainer/Serpent's Sigil/SerpentsSigilHbox/FrameVbox/FrameGrid"
+@onready var banner_grid = $"VBoxContainer/TabContainer/Serpent's Sigil/SerpentsSigilHbox/BannersVbox/BannerGrid"
 
 var cosmetic_nodes: Dictionary = {}
 var class_nodes: Dictionary = {}
@@ -23,6 +24,9 @@ var cosmetic_key_to_type: Dictionary = {}
 var current_category: String = "Colors"
 
 func _ready():
+	call_deferred("_initialize")
+
+func _initialize():
 	_build_node_dictionaries()
 	_connect_all_signals()
 	update_all_displays()
@@ -48,6 +52,7 @@ func _connect_all_signals():
 	_setup_cosmetic_grid("Backgrounds", background_grid)
 	_setup_cosmetic_grid("Avatars", avatar_grid)
 	_setup_cosmetic_grid("Frames", frame_grid)
+	_setup_cosmetic_grid("Banners", banner_grid)
 	
 	# This loop connects the signals from each class node.
 	for class_key in class_nodes:
@@ -56,6 +61,7 @@ func _connect_all_signals():
 			node.pressed.connect(_on_class_unlock_pressed.bind(class_key))
 			node.mouse_entered.connect(_on_any_node_mouse_entered.bind(class_key))
 			node.mouse_exited.connect(_on_any_node_mouse_exited.bind(class_key))
+			
 			
 	debug_panel.get_node("AddFangsButton").pressed.connect(_on_debug_add_fangs_pressed)
 	description_delay_timer.timeout.connect(_on_description_delay_timer_timeout)
@@ -80,6 +86,17 @@ func _setup_cosmetic_grid(type_key: String, grid_node: GridContainer):
 		node.pressed.connect(_on_cosmetic_node_pressed.bind(item_key))
 		node.mouse_entered.connect(_on_any_node_mouse_entered.bind(item_key))
 		node.mouse_exited.connect(_on_any_node_mouse_exited.bind(item_key))
+	
+	var max_width = 0
+	for child in grid_node.get_children():
+		if child.get_minimum_size().x > max_width:
+			max_width = child.get_minimum_size().x
+			
+	# 3. If we found a valid width, force all buttons in the grid to use it.
+	#    This makes all columns uniform and prevents any "squishing".
+	if max_width > 0:
+		for child in grid_node.get_children():
+			child.custom_minimum_size.x = max_width
 
 # --- MASTER UPDATE FUNCTION ---
 func update_all_displays():
@@ -154,7 +171,7 @@ func _on_unlock_confirmed():
 			SaveManager.save_data.unlocked_cosmetics[item_type.to_lower()].append(item_key)
 			SaveManager.save_game()
 			update_all_displays()
-			
+	update_all_displays()
 	# 3. Reset the pending key.
 	pending_purchase_key = ""
 
@@ -175,6 +192,7 @@ func _on_any_node_mouse_entered(item_key: String):
 	hovered_item_key = item_key
 	description_delay_timer.start()
 
+
 # This function now stops the timer and hides the panel.
 func _on_any_node_mouse_exited(item_key: String):
 	# We only act if the mouse is exiting the currently hovered item.
@@ -189,7 +207,7 @@ func _on_description_delay_timer_timeout():
 	var rules: Dictionary
 	var cost: int
 	var current_level: int
-	var currency_unit: String = "mL"
+	var currency_unit: String = "fangs"
 	
 	# We now gather all the data needed by the new show_info function.
 	
@@ -253,6 +271,7 @@ func update_cosmetic_grids():
 
 
 
+
 func _on_cosmetic_node_pressed(item_key: String):
 	# This is the master handler for purchasing any cosmetic.
 	var item_type = cosmetic_key_to_type[item_key]
@@ -266,3 +285,4 @@ func _on_cosmetic_node_pressed(item_key: String):
 		confirmation_modal.show_confirmation(message)
 	else:
 		print("Not enough Fangs!")
+	

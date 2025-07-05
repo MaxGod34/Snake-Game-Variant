@@ -239,12 +239,15 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MarginContainer" type="MarginContainer" parent="UI"]
-layout_direction = 3
-anchors_preset = 12
+custom_minimum_size = Vector2(1280, 222)
+anchors_preset = 7
+anchor_left = 0.5
 anchor_top = 1.0
-anchor_right = 1.0
+anchor_right = 0.5
 anchor_bottom = 1.0
-offset_top = -260.0
+offset_left = -629.0
+offset_top = -239.0
+offset_right = 629.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -264,17 +267,16 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="PlayerBanner" parent="UI/MarginContainer/HBoxContainer/VBoxContainer" instance=ExtResource("10_6iyac")]
-custom_minimum_size = Vector2(0, 256)
 layout_mode = 2
 
 [node name="VSeparator" type="Panel" parent="UI/MarginContainer/HBoxContainer"]
-custom_minimum_size = Vector2(64, 256)
+custom_minimum_size = Vector2(96, 222)
 layout_mode = 2
 size_flags_vertical = 8
 theme_override_styles/panel = SubResource("StyleBoxTexture_wsu2k")
 
 [node name="InformationPanel" parent="UI/MarginContainer/HBoxContainer" instance=ExtResource("12_jkdf5")]
-custom_minimum_size = Vector2(384, 256)
+custom_minimum_size = Vector2(416, 222)
 layout_mode = 2
 size_flags_vertical = 8
 

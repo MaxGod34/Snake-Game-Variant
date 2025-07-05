@@ -2480,10 +2480,47 @@ var cosmetic_data = {
 		#Snake Avatars
 		#Misc Avatars
 	},
+	"Banners": {
+		"Default": {
+			"fang_cost": 0,
+			"name": "Default Banner",
+			"icon_path": "res://Assets/PNGs/snake_break.png",
+			"description": "The standard issue, reliable and clean.",
+			"type": "flat",
+			"bg_color": "#333333",
+			"border_color": "#FFFFFF"
+		},
+		"Gilded": {
+			"fang_cost": 500,
+			"name": "Gilded Banner",
+			"icon_path": "res://Assets/PNGs/jumping_bean_icon.png",
+			"description": "A touch of class for the discerning serpent.",
+			"type": "flat",
+			"bg_color": "#4a4a4a",
+			"border_color": "#F5A623" # A rich gold
+		},
+		"SnakeCoin Casino": {
+			"fang_cost": 250, 
+			"name": "SnakeCoin Casino Banner", 
+			"icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_tails.png",
+			"description": "Show off your love of the game. The house always wins.",
+			"type": "texture",
+			"texture_path": "res://Assets/PNGs/snake_poker_chip_white.png"
+		}
+	},
 	"Frames": {
-		"Default": {"name": "Default Frame", "fang_cost": 0, "icon_path": "res://Assets/PNGs/snake_border.png", "description": "Default Frame"},
-		"Golden Frame": {"name": "Golden Frame", "fang_cost": 500, "icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_heads - Copy.png", "description": "Custom Frames for Fair Prices"},
-		"Cursed Frame": {"name": "Cursed Frame","fang_cost": 500, "icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_tails.png", "description": "Custom Frames for Fair Prices"}
+		"Default": {
+			"name": "Default Frame", "fang_cost": 0,"type": "flat", "color": "#FFFFFF",
+			"icon_path": "res://Assets/PNGs/snake_border.png", "description": "Default Frame"
+		},
+		"Golden Frame": {
+			"name": "Golden Frame", "fang_cost": 75,"type": "flat", "color": "#F5A623",
+			"icon_path": "res://Assets/PNGs/snake_border.png", "description": "Golden Frame"
+		},
+		"Cursed Frame": {
+			"name": "Cursed Frame", "fang_cost": 75,"type": "texture", "texture_path": "#FFFFFF",
+			"icon_path": "res://Assets/PNGs/snake_border.png", "description": "Cursed Frame"
+		},
 	}
 }
 

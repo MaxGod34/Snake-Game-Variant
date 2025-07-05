@@ -66,6 +66,7 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 	self.add_theme_stylebox_override("hover", style_hovered)
 	self.add_theme_stylebox_override("focus", style_hovered)
 	self.add_theme_stylebox_override("pressed", style_pressed)
+
 	
 	# --- Update Level Indicators ---
 	var indicator_container = $IndicatorContainer
@@ -91,3 +92,5 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 	else:
 		modulate = Color.WHITE
 		disabled = (current_level >= max_level)
+
+	

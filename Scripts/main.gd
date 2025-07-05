@@ -1998,8 +1998,40 @@ func apply_cosmetic_upgrades():
 		background_rect.color = Color("#222222")
 		
 	# --- Apply Avatar & Frame (Unlocked at Level 3 & 5) ---
+	apply_banner_style()
 	# We pass the loadout data to the player banner, and it handles its own visuals.
 	player_banner.update_cosmetics(loadout)
+
+
+func apply_banner_style():
+	# 1. Get the key of the currently equipped banner.
+	var banner_key = SaveManager.save_data.equipped_cosmetics.get("banner", "Default")
+	var rules = GameManager.cosmetic_data.Banners.get(banner_key)
+	if not rules: return
+
+	# 2. Create the new StyleBox based on the rules.
+	var new_stylebox: StyleBox
+	if rules.type == "texture":
+		var style_tex = StyleBoxTexture.new()
+		style_tex.texture = load(rules.texture_path)
+		style_tex.texture_margin_left = 4
+		style_tex.texture_margin_right = 4
+		style_tex.texture_margin_top = 4
+		style_tex.texture_margin_bottom = 4
+		style_tex.axis_stretch_horizontal = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+		style_tex.axis_stretch_vertical = StyleBoxTexture.AXIS_STRETCH_MODE_TILE
+		new_stylebox = style_tex
+	else: # Default to "flat" style
+		var style_flat = StyleBoxFlat.new()
+		style_flat.bg_color = Color(rules.bg_color)
+		style_flat.border_width_bottom = 2
+		style_flat.border_color = Color(rules.border_color)
+		new_stylebox = style_flat
+
+	# 3. Apply the new style to both the PlayerBanner and InformationPanel.
+	player_banner.add_theme_stylebox_override("panel", new_stylebox)
+	information_panel.add_theme_stylebox_override("panel", new_stylebox)
+
 
 func _animate_lighthouse():
 	# Create a new tween that will loop forever.

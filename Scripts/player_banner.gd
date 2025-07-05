@@ -9,8 +9,46 @@ extends PanelContainer
 @onready var upgrade_prompt_label = $HBox/StatsContainer/HBoxContainer2/UpgradePromptLabel
 @onready var pulp_label = $HBox/StatsContainer/HBoxContainer2/PulpLabel
 
+@onready var avatar_texture_rect = $HBox/Panel/ProfilePicture
+@onready var frame_panel = $HBox/Panel
+
 var current_displayed_score = 0
 var floating_text_container: Node
+
+
+func update_cosmetics(loadout: Dictionary):
+	# --- Update Avatar ---
+	var avatar_key = loadout.get("avatar", "Default")
+	var avatar_rules = GameManager.cosmetic_data.Avatars.get(avatar_key)
+	if avatar_rules and avatar_rules.has("icon_path"):
+		var icon_path = avatar_rules.icon_path
+		if ResourceLoader.exists(icon_path):
+			avatar_texture_rect.texture = load(icon_path)
+			
+	# --- Update Frame ---
+	var frame_key = loadout.get("frame", "Default")
+	var frame_rules = GameManager.cosmetic_data.Frames.get(frame_key)
+	if frame_rules:
+		var new_stylebox: StyleBox
+		if frame_rules.type == "texture":
+			var style_tex = StyleBoxTexture.new()
+			style_tex.texture = load(frame_rules.texture_path)
+			# You can set margins here to control how the texture tiles
+			new_stylebox = style_tex
+		else: # Default to "flat" style
+			var style_flat = StyleBoxFlat.new()
+			style_flat.bg_color = Color.TRANSPARENT # Make the panel itself clear
+			style_flat.border_width_bottom = 2
+			style_flat.border_width_top = 2
+			style_flat.border_width_left = 2
+			style_flat.border_width_right = 2
+			style_flat.border_color = Color(frame_rules.color)
+			new_stylebox = style_flat
+			
+		# Apply the new style to the frame panel.
+		frame_panel.add_theme_stylebox_override("panel", new_stylebox)
+
+
 
 # This is the master function that main.gd will call.
 func update_display(data: Dictionary):

@@ -26,7 +26,7 @@ var gps_trend: float = 0.0
 
 func _ready():
 	var mat = ShaderMaterial.new()
-	mat.shader = preload("res://gps_line.gdshader")
+	mat.shader = preload("res://Shaders/gps_line.gdshader")
 	gps_graph.material = mat
 
 	

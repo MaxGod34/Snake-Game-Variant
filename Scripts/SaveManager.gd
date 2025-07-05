@@ -15,7 +15,8 @@ var save_data = {
 		"patterns": ["Default"],
 		"backgrounds": ["Default"],
 		"avatars": ["Default"],
-		"frames": ["Default"]
+		"frames": ["Default"],
+		"banners": ["Default"]
 	},
 	"equipped_cosmetics": {
 		"head_color": "Default Lime",
@@ -29,7 +30,8 @@ var save_data = {
 		"pattern": "Default",
 		"background": "Default",
 		"avatar": "Default",
-		"frame": "Default"
+		"frame": "Default",
+		"banner": "Default"
 	},
 	# --- Per-Class Difficulty Progression ---
 	"class_progression": {},
@@ -100,7 +102,8 @@ func reset_save_data():
 			"patterns": ["Default"],
 			"backgrounds": ["Default"],
 			"avatars": ["Default"],
-			"frames": ["Default"]
+			"frames": ["Default"],
+			"banners": ["Default"]
 		},
 		"equipped_cosmetics": {
 			"head_color": "Default Lime",
@@ -114,7 +117,8 @@ func reset_save_data():
 			"pattern": "Default",
 			"background": "Default",
 			"avatar": "Default",
-			"frame": "Default"
+			"frame": "Default",
+			"banner": "Default"
 		},
 		"class_progression": {},
 		"high_score": 0,

@@ -11,6 +11,7 @@ extends Control
 @onready var backgrounds_page = $MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage
 @onready var avatars_page = $MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage
 @onready var frames_page = $MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage
+@onready var banners_page = $MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage
 
 
 # This variable will store which category is currently being displayed.
@@ -56,6 +57,7 @@ func _on_category_button_pressed(category_name: String):
 	backgrounds_page.visible = (category_name == "Backgrounds")
 	avatars_page.visible = (category_name == "Avatars")
 	frames_page.visible = (category_name == "Frames")
+	banners_page.visible = (category_name == "Banners")
 			
 	update_all_displays()
 
@@ -65,6 +67,7 @@ func update_all_displays():
 		"Backgrounds": update_simple_grid("Backgrounds", backgrounds_page.find_child("BackgroundGrid"))
 		"Avatars": update_simple_grid("Avatars", avatars_page.find_child("AvatarGrid"))
 		"Frames": update_simple_grid("Frames", frames_page.find_child("FrameGrid"))
+		"Banners": update_simple_grid("Banners", banners_page.find_child("BannerGrid"))
 
 
 func update_chroma_palette_page():
@@ -143,6 +146,7 @@ func _on_equip_item_pressed(category: String, item_key: String):
 		"Backgrounds": category_save_key = "background"
 		"Avatars": category_save_key = "avatar"
 		"Frames": category_save_key = "frame"
+		"Banners": category_save_key = "banner"
 		
 	if category_save_key == "":
 		print_debug("ERROR: Invalid category key in _on_equip_item_pressed: ", category)
@@ -175,6 +179,7 @@ func update_equipped_display(row1: HBoxContainer, row2: HBoxContainer):
 	_update_equipped_item_node(row1.get_node("EquippedBackgroundNode"), "Backgrounds", loadout.background)
 	_update_equipped_item_node(row1.get_node("EquippedAvatarNode"), "Avatars", loadout.avatar)
 	_update_equipped_item_node(row1.get_node("EquippedFrameNode"), "Frames", loadout.frame)
+	_update_equipped_item_node(row1.get_node("EquippedBannerNode"), "Banners", loadout.banner)
 	print("Current Loadout: ", loadout)
 	
 func _update_equipped_color_node(node: Button, color_key, slot_index: int):
