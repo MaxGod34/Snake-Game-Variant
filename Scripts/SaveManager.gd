@@ -11,12 +11,22 @@ var save_data = {
 	"serpent_fangs": 0,
 	"unlocked_classes": ["Mulligan", "Ghost", "Tycoon", "Doubles", "Gobble"],
 	"unlocked_cosmetics": {
-		"colors": [],"patterns": [],"backgrounds": [],"avatars": [],"frames": []
+		"colors": ["Default Lime", "Default White", "Default Gray", "Default Purple"],
+		"patterns": ["Default"],
+		"backgrounds": ["Default"],
+		"avatars": ["Default"],
+		"frames": ["Default"]
 	},
 	"equipped_cosmetics": {
-		"color_1": "#FFFFFF",
-		"color_2": "#888888",
-		"pattern": "None",
+		"head_color": "Default Lime",
+		"body_colors": [              # An array to hold up to 5 body colors
+			"Default Purple",                # Slot 1 (Default)
+			"Default Purple",                # Slot 2 (Default)
+			null,                     # Slot 3 (Unused by default)
+			null,                     # Slot 4 (Unused by default)
+			null                      # Slot 5 (Unused by default)
+		],
+		"pattern": "Default",
 		"background": "Default",
 		"avatar": "Default",
 		"frame": "Default"
@@ -86,12 +96,22 @@ func reset_save_data():
 		"serpent_fangs": 0,
 		"unlocked_classes": ["Mulligan", "Ghost", "Tycoon", "Doubles", "Gobble"],
 		"unlocked_cosmetics": {
-			"colors": [], "patterns": [], "backgrounds": [], "avatars": [], "frames": []
+			"colors": ["Default Lime", "Default White", "Default Gray", "Default Purple"],
+			"patterns": ["Default"],
+			"backgrounds": ["Default"],
+			"avatars": ["Default"],
+			"frames": ["Default"]
 		},
 		"equipped_cosmetics": {
-			"color_1": "#FFFFFF",
-			"color_2": "#888888",
-			"pattern": "None",
+			"head_color": "Default Lime",
+			"body_colors": [              # An array to hold up to 5 body colors
+				"Default Purple",                # Slot 1 (Default)
+				"Default Purple",                # Slot 2 (Default)
+				null,                     # Slot 3 (Unused by default)
+				null,                     # Slot 4 (Unused by default)
+				null                      # Slot 5 (Unused by default)
+			],
+			"pattern": "Default",
 			"background": "Default",
 			"avatar": "Default",
 			"frame": "Default"

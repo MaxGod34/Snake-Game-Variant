@@ -2283,6 +2283,10 @@ var meta_upgrade_data = {
 
 var cosmetic_data = {
 	"Colors": {
+		"Default Lime": {"name": "Default Lime", "fang_cost": 0, "hex_code": "#00ff00", "description": "Default Lime"},
+		"Default Purple": {"name": "Default Purple", "fang_cost": 0, "hex_code": "#27002d", "description": "Default Purple"},
+		"Default White": {"name": "Default White", "fang_cost": 0, "hex_code": "#ffffff", "description": "Default White"},
+		"Default Gray": {"name": "Default Gray", "fang_cost": 0, "hex_code": "#444444", "description": "Default Gray"},
 		"Ectoplasm Green": {"name": "Ectoplasm Green", "fang_cost": 50, "hex_code": "#7ED321", "description": "Add a little color to your game!"},
 		"Molten Gold": {"name": "Molten Gold", "fang_cost": 50, "hex_code": "#F5A623", "description": "Add a little color to your game!"},
 		"Void Purple": {"name": "Void Purple", "fang_cost": 50, "hex_code": "#BD10E2", "description": "Add a little color to your game!"},
@@ -2303,14 +2307,46 @@ var cosmetic_data = {
 		"Dream Tangerine": {"name": "Dream Tangerine", "fang_cost": 50, "hex_code": "#FF9472", "description": "Add a little color to your game!"},
 	},
 	"Patterns": {
-		"Diamondback": {"name": "Diamondback Pattern","fang_cost": 75, "icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", "description": "Add a nice pattern to your snake!"},
-		"Tiger Stripes": {"name": "Tiger Stripes Pattern","fang_cost": 75, "icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", "description": "Add a nice pattern to your snake!"}
+		"Default": {
+			"name": "Default Pattern", "fang_cost": 0, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
+			"description": "Default Pattern", 
+			"color_slots": 1
+		},
+		"Diamondback": {
+			"name": "Diamondback Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
+			"description": "Add a nice pattern to your snake!",
+			"color_slots": 3
+		},
+		"Tiger Stripes": {
+			"name": "Tiger Stripes Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", 
+			"description": "Add a nice pattern to your snake!",
+			"color_slots": 2
+		}
 	},
-	"Backgrounds": {
-		"The Void": {"name": "The Void","fang_cost": 200, "icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png", "description": "Change up the background!"},
-		"The Grid": {"name": "The Grid","fang_cost": 200, "icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png", "description": "Change up the background!"}
+	"Backgrounds": { #NEED TO ADD A LOT MORE PROPERTIES
+		"Default": {
+			"name": "Default Background", 
+			"fang_cost": 200, 
+			"icon_path": "res://Assets/PNGs/GambleSprites/basket.png", 
+			"description": "Default Background"
+		},
+		"The Void": {
+			"name": "The Void",
+			"fang_cost": 200, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png", 
+			"description": "Change up the background!"
+		},
+		"The Grid": {
+			"name": "The Grid",
+			"fang_cost": 200,
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png",
+			"description": "Change up the background!"}
 	},
 	"Avatars": {
+		"Default": {"name": "Snake break", "fang_cost": 0, "icon_path": "res://Assets/PNGs/snake_break.png", "description": "Default Avatar"},
 		#Class Icons/Avatars
 		"Mulligan Icon": {"name": "Mulligan Icon", "fang_cost": 50, "icon_path": "", "descripton": "unlock the mulligan class icon as a pfp!"},
 		#Upgrade Icons/Avatars
@@ -2411,6 +2447,7 @@ var cosmetic_data = {
 		#Misc Avatars
 	},
 	"Frames": {
+		"Default": {"name": "Default Frame", "fang_cost": 0, "icon_path": "res://Assets/PNGs/snake_border.png", "description": "Default Frame"},
 		"Golden Frame": {"name": "Golden Frame", "fang_cost": 500, "icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_heads - Copy.png", "description": "Custom Frames for Fair Prices"},
 		"Cursed Frame": {"name": "Cursed Frame","fang_cost": 500, "icon_path": "res://Assets/PNGs/GambleSprites/snake_poker_chip_tails.png", "description": "Custom Frames for Fair Prices"}
 	}

@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://312pl5kncw66"]
+[gd_scene load_steps=20 format=3 uid="uid://312pl5kncw66"]
 
 [ext_resource type="Script" uid="uid://bpiqb64asplal" path="res://Scripts/the_shed.gd" id="1_fndh6"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_vq6i6"]
@@ -12,7 +12,6 @@
 [ext_resource type="StyleBox" uid="uid://bs3yrtjleogag" path="res://Assets/Styles/shed_styles/player_banner_shed_button_disabled.tres" id="6_fndh6"]
 [ext_resource type="StyleBox" uid="uid://djqr0ld77jf61" path="res://Assets/Styles/shed_styles/player_banner_shed_button_normal.tres" id="7_tmkkg"]
 [ext_resource type="PackedScene" uid="uid://dkrhbgusv7j3h" path="res://Scenes/UI/upgrade_node.tscn" id="8_ciw3c"]
-[ext_resource type="Texture2D" uid="uid://dqkem6rp8x468" path="res://Assets/PNGs/RotatingItemIcons/handicap_icon.png" id="10_tmkkg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmkkg"]
 content_margin_left = 15.0
@@ -156,7 +155,7 @@ autowrap_mode = 3
 layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_xhu0t")
 
-[node name="SelectPigmentsButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+[node name="ChromaPaletteButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -176,31 +175,9 @@ theme_override_styles/hover_pressed = ExtResource("2_hyo5v")
 theme_override_styles/hover = ExtResource("2_hyo5v")
 theme_override_styles/pressed = ExtResource("2_hyo5v")
 theme_override_styles/normal = ExtResource("4_plr7c")
-text = "Colors"
+text = "Chroma Palette"
 
-[node name="SelectPatternButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
-theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
-theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.0509804, 0.415686, 0.831373, 1)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_colors/font_focus_color = Color(0, 0, 0, 1)
-theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 0
-theme_override_fonts/font = ExtResource("1_vq6i6")
-theme_override_font_sizes/font_size = 36
-theme_override_styles/focus = ExtResource("2_hyo5v")
-theme_override_styles/disabled = ExtResource("3_nqje7")
-theme_override_styles/hover_pressed = ExtResource("2_hyo5v")
-theme_override_styles/hover = ExtResource("2_hyo5v")
-theme_override_styles/pressed = ExtResource("2_hyo5v")
-theme_override_styles/normal = ExtResource("4_plr7c")
-text = "Patterns"
-
-[node name="SelectBackgroundButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+[node name="BackgroundsButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -238,7 +215,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="SelectAvatarButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+[node name="AvatarsButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -258,7 +235,7 @@ theme_override_styles/pressed = ExtResource("5_udk8x")
 theme_override_styles/normal = ExtResource("7_tmkkg")
 text = "Avatars"
 
-[node name="SelectFrameButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
+[node name="FramesButton" type="Button" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer"]
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -286,16 +263,26 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_xhu0t")
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
+[node name="ChromaPalettePage" type="Control" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
+visible = false
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 8
 
-[node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 96)
+[node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -304,42 +291,66 @@ theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("1_vq6i6")
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 32
 text = "Equipped"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
+[node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_constants/separation = 32
 alignment = 1
 
-[node name="EquippedColor" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
-layout_mode = 2
-text = "
-get your oclor here"
-icon = ExtResource("10_tmkkg")
-
-[node name="EquippedPattern" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+[node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
 icon = null
 
-[node name="EquippedBackground" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+[node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
 icon = null
 
-[node name="EquippedAvatar" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+[node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
 icon = null
 
-[node name="EquippedFrame" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+[node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
 icon = null
 
-[node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 96)
+[node name="PatternLibraryLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -348,13 +359,363 @@ theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("1_vq6i6")
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 32
+text = "Patterns"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="PatternGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+columns = 6
+
+[node name="PatternLibraryLabel2" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Color Library"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ColorGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+columns = 6
+
+[node name="BackgroundsPage" type="Control" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Equipped"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
 text = "Unlocked Cosmetics"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="ItemGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ScrollContainer/VBoxContainer"]
+[node name="BackgroundGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+columns = 6
+
+[node name="AvatarsPage" type="Control" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Equipped"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Unlocked Cosmetics"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="AvatarGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+columns = 6
+
+[node name="FramesPage" type="Control" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Equipped"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
+layout_mode = 2
+icon = null
+
+[node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Unlocked Cosmetics"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="FrameGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 3
