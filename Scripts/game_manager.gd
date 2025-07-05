@@ -2311,39 +2311,73 @@ var cosmetic_data = {
 			"name": "Default Pattern", "fang_cost": 0, 
 			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
 			"description": "Default Pattern", 
-			"color_slots": 1
-		},
-		"Diamondback": {
-			"name": "Diamondback Pattern","fang_cost": 75, 
-			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
-			"description": "Add a nice pattern to your snake!",
-			"color_slots": 3
+			"sequence": [0]
 		},
 		"Tiger Stripes": {
 			"name": "Tiger Stripes Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", 
 			"description": "Add a nice pattern to your snake!",
-			"color_slots": 2
-		}
+			"sequence": [0,1]
+		},
+		"Dimer": {
+			"name": "Dimer Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", 
+			"description": "Add a nice pattern to your snake!",
+			"sequence": [0,0,0,0,0,0,0,0,0,0,
+						1,1,1,1,1,1,1,1,1,1]
+		},
+		"Simple Spread": {
+			"name": "Simple Spread Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
+			"description": "Add a nice pattern to your snake!",
+			"sequence": [0,1,1,1,0]
+		},
+		"Slith Spread": {
+			"name": "Slith Spread Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
+			"description": "Add a nice pattern to your snake!",
+			"sequence": [0,1,2,3,2,1]
+		},
+		"MAX AURA": {
+			"name": "MAX AURA Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
+			"description": "Add a nice pattern to your snake!",
+			"sequence": [0,1,2,3,4]
+		},
+		"Fading Fast": {
+			"name": "Fading Fast Pattern","fang_cost": 75, 
+			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
+			"description": "Add a nice pattern to your snake!",
+			"sequence": [4,4,4,4,4,3,2,1,0,1,2,3,]
+		},
+		
 	},
-	"Backgrounds": { #NEED TO ADD A LOT MORE PROPERTIES
+	"Backgrounds": {
 		"Default": {
-			"name": "Default Background", 
-			"fang_cost": 200, 
-			"icon_path": "res://Assets/PNGs/GambleSprites/basket.png", 
-			"description": "Default Background"
+			"name": "Default", "fang_cost": 0, "type": "solid_color", "color": "#222222", 
+			"icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", "description": "Default Background"
 		},
 		"The Void": {
-			"name": "The Void",
-			"fang_cost": 200, 
-			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png", 
-			"description": "Change up the background!"
+			"name": "The Void", "fang_cost": 200, "type": "particles", "effect_name": "Void",
+			"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png", "description": "The Void..."
 		},
-		"The Grid": {
-			"name": "The Grid",
-			"fang_cost": 200,
-			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png",
-			"description": "Change up the background!"}
+		"The Undergrowth": {
+			"name": "The Undergrowth", "fang_cost": 200, "type": "particles", "effect_name": "Undergrowth",
+			"icon_path": "res://Assets/PNGs/golden_fruit_icon.png", "description": "Get Growin'"
+		},
+		"The Digital Stream": {
+			"name": "The Digital Stream", "fang_cost": 250, "type": "shader", "shader_name": "DigitalStream",
+			"icon_path": "res://Assets/PNGs/iron_cherry_icon.png", "description": "Let's Get Digital, Digital"
+		},
+		"The Blueprint": {
+			"name": "The Blueprint", "fang_cost": 150, "type": "shader", "shader_name": "Blueprint",
+			"icon_path": "res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png", "description": "Who moved my T-square?!"
+		},
+		"The Cove": {
+			"name": "The Cove", "fang_cost": 200, "type": "particles", "effect_name": "Cove", 
+			"icon_path": "res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png", "description": "Dark Stormy Night"
+		},
+
 	},
 	"Avatars": {
 		"Default": {"name": "Snake break", "fang_cost": 0, "icon_path": "res://Assets/PNGs/snake_break.png", "description": "Default Avatar"},

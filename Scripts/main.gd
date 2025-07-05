@@ -49,7 +49,7 @@ var exclamation_scene = preload("res://Scenes/Snake/exclamation.tscn")
 var ability_slot_scene = preload("res://Scenes/UI/ability_slot.tscn")
 
 # ---Shaders---
-var trippy_grid_shader = preload("res://trippy_grid.gdshader")
+var trippy_grid_shader = preload("res://Shaders/trippy_grid.gdshader")
 
 # ---Timers and Effects---
 @onready var combo_timer = $ComboTimer
@@ -65,6 +65,7 @@ var trippy_grid_shader = preload("res://trippy_grid.gdshader")
 @onready var dividing_wall_tilemap = $DividingWallTileMap
 @onready var camera = $Camera2D
 var current_camera_quadrant: int = 0
+@onready var lighthouse_pivot = $LighthousePivot
 
 #-------SIGNALS--------#
 signal game_is_over(score)
@@ -543,6 +544,7 @@ func handle_meta_upgrade_purchase(upgrade_key: String):
 			GameManager.four_leaf_clover_level += 1
 		"Chroma Scales":
 			GameManager.chroma_scales_level += 1
+			apply_cosmetic_upgrades()
 		"Harvest Forecast":
 			GameManager.harvest_forecast_level += 1
 		"Lasso Larry":
@@ -951,6 +953,7 @@ func grow_snake(segments_to_add: int):
 	
 	growth_history.append({"growth": segments_to_add, "time": GameManager.run_time})	
 	update_tail_visuals()
+	apply_cosmetic_upgrades()
 
 	# We only update the score display once at the very end.
 	update_hud()
@@ -1900,33 +1903,113 @@ func draw_grid(grid_color: Color):
 	grid_tilemap.modulate = grid_color
 
 func apply_cosmetic_upgrades():
-	# This is now the single source of truth for all visual styles.
 	
-	# PRIORITY 1: Master's Blueprint (The ultimate visual override)
+	background_rect.material = null
+	$VoidParticles.emitting = false
+	$CoveParticles.emitting = false
+	$PitParticles.emitting = false
+	lighthouse_pivot.visible = false
+	if is_instance_valid(get_node_or_null("LighthouseTween")):
+		get_node("LighthouseTween").kill()
+	
+	# --- Priority Override Checks ---
 	if GameManager.masters_blueprint_unlocked:
-		apply_blueprint_visuals() # This helper handles all blueprint effects
-		
-	# PRIORITY 2: Dazzle Pie
+		apply_blueprint_visuals()
+		return
 	elif GameManager.dazzle_pie_unlocked:
-		apply_dazzle_visuals() # This new helper handles the Dazzle effects
+		$UI/DazzleOverlay.visible = true
+		draw_grid(Color("FFFFFF", 0.1)) # A faint white grid
+
 	
-	# PRIORITY 3: Chroma Scales (The default customizable look)
+	
+	
+	# --- Default Chroma Scales Logic ---
+	var chroma_level = GameManager.chroma_scales_level
+	var loadout = SaveManager.save_data.equipped_cosmetics
+	
+	# --- Apply Head Color (Unlocked at Level 1) ---
+	var head_sprite = head.get_node_or_null("FillSprite")
+	if chroma_level >= 1:
+		var head_color_key = loadout.get("head_color", "Default White")
+		var head_color_data = GameManager.cosmetic_data.Colors.get(head_color_key)
+		if head_color_data:
+			head_sprite.modulate = Color(head_color_data.hex_code)
 	else:
-		apply_chroma_scales_visuals() # This helper handles player-chosen colors
+		head_sprite.modulate = Color.LIME_GREEN # Default head color
 
-func update_snake_visuals_from_chroma():
+	# --- Apply Body Colors & Pattern (Unlocked at Level 2) ---
+	if chroma_level >= 2:
+		var pattern_data = GameManager.cosmetic_data.Patterns.get(loadout.pattern)
+		if pattern_data:
+			var pattern_sequence = pattern_data.sequence
+			for i in range(snake_body_segments.size()):
+				var segment = snake_body_segments[i]
+				# Use the modulo operator to loop through the pattern sequence
+				var color_index = pattern_sequence[i % pattern_sequence.size()]
+				
+				# Safety check for the color index
+				if color_index < loadout.body_colors.size():
+					var color_key = loadout.body_colors[color_index]
+					if color_key != null:
+						var color_data = GameManager.cosmetic_data.Colors.get(color_key)
+						if color_data:
+							segment.get_node("FillSprite").modulate = Color(color_data.hex_code)
+	else:
+		# If patterns aren't unlocked, all body segments are the default purple.
+		for segment in snake_body_segments:
+			segment.get_node("FillSprite").modulate = Color.PURPLE
+			
+	# --- Apply Background (Unlocked at Level 4) ---
+	if chroma_level >= 4:
+		var bg_key = loadout.get("background", "Default")
+		var bg_rules = GameManager.cosmetic_data.Backgrounds.get(bg_key)
+		
+		if bg_rules:
+			# We now use a clean match statement on the background's "type".
+			match bg_rules.get("type", "solid_color"):
+				"solid_color":
+					background_rect.color = Color(bg_rules.get("color", "#222222"))
+				"particles":
+					# For particle effects, we set a base color and then turn on the correct system.
+					var effect_name = bg_rules.get("effect_name", "")
+					if effect_name == "Void":
+						background_rect.color = Color("#0a0f22")
+						$VoidParticles.emitting = true
+					elif effect_name == "Undergrowth":
+						background_rect.color = Color("#2d2c2a")
+						# You would have an UndergrowthParticles node for this
+					elif effect_name == "Cove":
+						background_rect.color = Color("#333a45")
+						$CoveParticles.emitting = true
+						$LighthousePivot.visible = true
+						_animate_lighthouse()
+				"shader":
+					# For shaders, we load the correct shader resource and apply it.
+					var shader_name = bg_rules.get("shader_name", "")
+					var shader_path = "res://Shaders/" + shader_name + ".gdshader"
+					if ResourceLoader.exists(shader_path):
+						var shader_mat = ShaderMaterial.new()
+						shader_mat.shader = load(shader_path)
+						background_rect.material = shader_mat
+					else:
+						background_rect.color = Color("#222222") # Fallback
+	else:
+		# If backgrounds aren't unlocked, use the default.
+		background_rect.color = Color("#222222")
+		
+	# --- Apply Avatar & Frame (Unlocked at Level 3 & 5) ---
+	# We pass the loadout data to the player banner, and it handles its own visuals.
+	player_banner.update_cosmetics(loadout)
 
-	for i in range(snake_body_segments.size()):
-		var segment = snake_body_segments[i]
-		if GameManager.chroma_scales_level >= 1:
-			var pattern_rate = GameManager.equipped_pattern_rate
-			if (i + 2) % pattern_rate == 0:
-				segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_2
-			else:
-				segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_1
-		else:
-			# Default single color if pattern is not activated
-			segment.get_node("FillSprite").modulate = GameManager.equipped_body_color_1
+func _animate_lighthouse():
+	# Create a new tween that will loop forever.
+	var tween = create_tween().set_loops()
+	tween.set_name("LighthouseTween") # Give it a name so we can kill it later
+	
+	# Animate the pivot rotating from -45 to +45 degrees over 10 seconds.
+	tween.tween_property(lighthouse_pivot, "rotation_degrees", 45, 10.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	# Then, animate it back.
+	tween.tween_property(lighthouse_pivot, "rotation_degrees", -45, 10.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 func update_gps_graph():
 	# --- Calculate GPS ---
@@ -1952,38 +2035,6 @@ func update_gps_graph():
 
 	# We could add the color-changing shader logic here later!
 
-func apply_dazzle_visuals():
-	# This function handles the Dazzle Pie effect.
-	
-	# 1. Turn ON the Dazzle overlay for the chromatic aberration.
-	$UI/DazzleOverlay.visible = true
-	
-	# 2. Ensure the background is in its default state (no shader).
-	background_rect.material = null
-	background_rect.color = Color("#222222")
-	
-	# 3. Draw a unique, subtle grid for the Dazzle effect.
-	draw_grid(Color("FFFFFF", 0.1)) # A faint white grid
-	
-	# 4. Make sure the snake has its normal Chroma Scales colors.
-	update_snake_visuals_from_chroma()
-
-func apply_chroma_scales_visuals():
-	# Turn off all keystone effects
-	$UI/DazzleOverlay.visible = false
-	background_rect.material = null
-	# Check if the player has unlocked the basic grid via Chroma Scales
-	if GameManager.chroma_scales_level >= 4: # Assuming level 4 unlocks the background
-		$BlueprintGridTileMap.clear()
-		draw_grid(Color("FFFFFF", 0.1)) # A very faint white grid
-		background_rect.color = GameManager.equipped_background_color
-	else:
-		# If not, ensure the grid is clear and the background is default
-		$BlueprintGridTileMap.clear()
-		background_rect.color = Color("#222222")
-		
-	# Apply the normal snake colors
-	update_snake_visuals_from_chroma()
 
 func update_all_objects_to_blueprint_color():
 	var blueprint_glow_color = Color("AFEEEE")
@@ -2267,7 +2318,7 @@ func update_tail_visuals():
 		return # IMPORTANT: Stop here!
 	
 	else:
-		update_snake_visuals_from_chroma()
+		apply_cosmetic_upgrades()
 		# Loop through all segments and set their state
 		for i in range(total_segments):
 			var segment = snake_body_segments[i]
@@ -2308,7 +2359,7 @@ func update_tail_visuals():
 			else:
 				# --- SOLID STATE ---
 				# Restore original color based on your Chroma Scales settings.
-				update_snake_visuals_from_chroma() # Assuming this helper exists and works
+				apply_cosmetic_upgrades() # Assuming this helper exists and works
 				# FIX: Use set_deferred to safely re-enable the collision shape.
 				collision_shape.set_deferred("disabled", false)
 

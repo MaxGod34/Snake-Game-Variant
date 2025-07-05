@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=32 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
@@ -9,11 +9,12 @@
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="6_ynf5e"]
 [ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/PNGs/ShopTransitionTileSet.png" id="7_344ge"]
 [ext_resource type="PackedScene" uid="uid://u2l27qdcge0g" path="res://Scenes/UI/player_banner.tscn" id="10_6iyac"]
-[ext_resource type="Shader" uid="uid://cb162chj1y1rf" path="res://dazzle_effect.gdshader" id="10_d1ilt"]
+[ext_resource type="Shader" uid="uid://cb162chj1y1rf" path="res://Shaders/dazzle_effect.gdshader" id="10_d1ilt"]
 [ext_resource type="Texture2D" uid="uid://6o6bur1ea26j" path="res://Assets/PNGs/grid_tile.png" id="10_hptm8"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="11_fdnlq"]
 [ext_resource type="PackedScene" uid="uid://cy78aj0eaeuv2" path="res://Scenes/UI/information_panel.tscn" id="12_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://8jgmx7q20qg5" path="res://Scenes/Menus/pulpsicle_stand.tscn" id="13_jkdf5"]
+[ext_resource type="Texture2D" uid="uid://clyqatd0ptcbg" path="res://Assets/PNGs/light.png" id="15_wsu2k"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1ilt"]
 texture = ExtResource("10_hptm8")
@@ -67,6 +68,41 @@ texture_region_size = Vector2i(32, 32)
 tile_size = Vector2i(32, 32)
 sources/0 = SubResource("TileSetAtlasSource_ynf5e")
 
+[sub_resource type="CanvasTexture" id="CanvasTexture_jkdf5"]
+
+[sub_resource type="Gradient" id="Gradient_wsu2k"]
+offsets = PackedFloat32Array(0, 0.496063, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_k12tt"]
+gradient = SubResource("Gradient_wsu2k")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_h1bgf"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1280, 960, 1)
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 2.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, 0, 0)
+scale_max = 1.5
+color_ramp = SubResource("GradientTexture1D_k12tt")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_b3802"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fevyy"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(1279.96, 1, 1)
+direction = Vector3(0, 1, 0)
+spread = 5.0
+initial_velocity_min = 200.0
+initial_velocity_max = 300.0
+gravity = Vector3(0, 980, 0)
+scale_max = 2.0
+color = Color(0.639216, 0.835294, 1, 0.686275)
+
 [node name="Main" type="Node2D"]
 process_mode = 3
 script = ExtResource("1_jjgbg")
@@ -93,6 +129,7 @@ tile_set = SubResource("TileSet_6iyac")
 format = 2
 
 [node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
+visible = false
 position = Vector2(640, 480)
 amount = 25
 texture = ExtResource("2_21xkr")
@@ -314,6 +351,35 @@ one_shot = true
 
 [node name="DragonFruitBuffTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="VoidParticles" type="GPUParticles2D" parent="."]
+visible = false
+z_index = 5
+position = Vector2(1280, 960)
+amount = 150
+texture = SubResource("CanvasTexture_jkdf5")
+lifetime = 20.0
+process_material = SubResource("ParticleProcessMaterial_h1bgf")
+
+[node name="CoveParticles" type="GPUParticles2D" parent="."]
+visible = false
+z_index = 5
+position = Vector2(1280, -32)
+amount = 600
+texture = SubResource("CanvasTexture_b3802")
+lifetime = 5.0
+process_material = SubResource("ParticleProcessMaterial_fevyy")
+
+[node name="LighthousePivot" type="Node2D" parent="."]
+visible = false
+position = Vector2(1280, 960)
+
+[node name="PointLight2D" type="PointLight2D" parent="LighthousePivot"]
+color = Color(1, 1, 0.878431, 1)
+energy = 0.5
+blend_mode = 2
+texture = ExtResource("15_wsu2k")
+texture_scale = 10.0
 
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
 [connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
