@@ -336,7 +336,7 @@ var difficulty_data = {
 	"Pact 1": {
 		"display_name": "Pact 1: Juice Box Hero",
 		"description": "A gentle start. You begin with a massive head start in resources and power.",
-		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10, "start_juice": 32,
+		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10, "start_juice": 3200,
 		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
 			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
 		},
@@ -2174,7 +2174,7 @@ var upgrade_data = {
 				"description": "Removes all walls,\nmaking the garden wrap around on itself.",
 				"costs": [128], 
 				"max_level": 1, 
-				"prerequisite": {"upgrade": "Edge Lord", "level": 5, "and": "Burrow", "and_level": 3},
+				"prerequisite": {"upgrade": "Edge Lord", "level": 7, "and": "Burrow", "and_level": 3},
 				"exclusive_with": "Shatter Reality", # <-- makes it mutually exclusive
 				"icon_path": "res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png",
 				"type": "Keystone"
@@ -2184,7 +2184,7 @@ var upgrade_data = {
 				"description": "Splits the garden into\nfour quadrants with connecting portals.",
 				"costs": [128], 
 				"max_level": 1, 
-				"prerequisite": {"upgrade": "Edge Lord", "level": 5},
+				"prerequisite": {"upgrade": "Edge Lord", "level": 7},
 				"exclusive_with": "Fold Space", # <-- makes it mutually exclusive
 				"icon_path": "res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png",
 				"type": "Keystone"
@@ -2194,7 +2194,7 @@ var upgrade_data = {
 				"description": "Transforms the game's visuals into a clean, glowing blueprint grid.",
 				"costs": [13], 
 				"max_level": 1, 
-				"prerequisite": {"upgrade": "Edge Lord", "level": 5},
+				"prerequisite": {"upgrade": "Edge Lord", "level": 7},
 				"icon_path": "res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png",
 				"type": "Keystone"
 				# This one is independent and has no 'exclusive_with' key

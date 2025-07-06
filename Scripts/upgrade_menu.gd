@@ -350,7 +350,7 @@ func update_stats_tab():
 	if is_instance_valid(side_stats_panel):
 		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
-		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [20 + 4 * GameManager.edge_lord_level, 15 + 3 * GameManager.edge_lord_level]
+		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [12 + 4 * GameManager.edge_lord_level, 9 + 3 * GameManager.edge_lord_level]
 		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
 		side_stats_panel.get_node("TotalJuiceStatsLabel").text = "Total Juice this run: " + str(GameManager.total_juice_earned_this_run) + " mL"
 		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"

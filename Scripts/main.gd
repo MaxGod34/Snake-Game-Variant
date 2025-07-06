@@ -1543,7 +1543,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				SceneTransition.transition_to("res://Scenes/main.tscn")
 #-------------------------------Architect--------------------------#
 		elif upgrade_name == "Edge Lord":
-			if GameManager.edge_lord_level < 5:
+			if GameManager.edge_lord_level < 7:
 				GameManager.edge_lord_level += 1
 				rebuild_world_layout()
 		elif upgrade_name == "Zoning Ordinance":

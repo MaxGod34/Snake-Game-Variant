@@ -59,7 +59,7 @@ func uncover_screen(animation_type: String):
 
 func cover_screen_drip():
 	var size = Vector2i(get_viewport().size / 32)
-	var column_delay = 0.03
+	var column_delay = 0.02
 	var fall_delay = 0.01
 
 	for x in range(size.x - 1, -1, -1):  # REVERSED here
@@ -79,7 +79,7 @@ func _run_column_drip(x: int, height: int, delay: float) -> void:
 
 func uncover_screen_drip():
 	var size = Vector2i(get_viewport().size / 32)
-	var column_delay = 0.03
+	var column_delay = 0.02
 	var fall_delay = 0.01
 
 	for x in range(size.x - 1, -1, -1):  # REVERSED here

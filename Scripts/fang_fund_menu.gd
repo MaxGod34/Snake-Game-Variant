@@ -100,7 +100,7 @@ func _setup_cosmetic_grid(type_key: String, grid_node: GridContainer):
 	if max_width > 0:
 		for child in grid_node.get_children():
 			child.custom_minimum_size.x = max_width
-			print("new min width", child.custom_minimum_size.x)
+
 
 # --- MASTER UPDATE FUNCTION ---
 func update_all_displays():
