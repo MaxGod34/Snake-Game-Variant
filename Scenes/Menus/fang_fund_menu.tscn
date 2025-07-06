@@ -191,6 +191,7 @@ icon = ExtResource("3_84dsh")
 
 [node name="Chroma Lab" type="ScrollContainer" parent="VBoxContainer/TabContainer"]
 visible = false
+clip_contents = false
 layout_mode = 2
 metadata/_tab_index = 1
 
@@ -202,6 +203,8 @@ alignment = 1
 
 [node name="PigmentsVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox"]
 layout_mode = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
 
 [node name="PigmentsLabel" type="Label" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/PigmentsVbox"]
 custom_minimum_size = Vector2(256, 64)
@@ -222,10 +225,14 @@ autowrap_mode = 3
 
 [node name="ColorGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/PigmentsVbox"]
 layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 24
 columns = 2
 
 [node name="PatternsVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox"]
 layout_mode = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
 
 [node name="PatternsLabel" type="Label" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/PatternsVbox"]
 custom_minimum_size = Vector2(256, 64)
@@ -246,10 +253,14 @@ autowrap_mode = 3
 
 [node name="PatternGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/PatternsVbox"]
 layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 24
 columns = 2
 
 [node name="EnvironmentsVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox"]
 layout_mode = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
 
 [node name="EnvironmentsLabel" type="Label" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/EnvironmentsVbox"]
 custom_minimum_size = Vector2(256, 64)
@@ -270,10 +281,13 @@ autowrap_mode = 3
 
 [node name="BackgroundGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Chroma Lab/ChromaHbox/EnvironmentsVbox"]
 layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 24
 columns = 2
 
 [node name="Serpent\'s Sigil" type="ScrollContainer" parent="VBoxContainer/TabContainer"]
 visible = false
+clip_contents = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -285,6 +299,8 @@ alignment = 1
 
 [node name="AvatarVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox"]
 layout_mode = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
 
 [node name="AvatarLabel" type="Label" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/AvatarVbox"]
 custom_minimum_size = Vector2(256, 64)
@@ -305,10 +321,14 @@ autowrap_mode = 3
 
 [node name="AvatarGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/AvatarVbox"]
 layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 24
 columns = 2
 
 [node name="FrameVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox"]
 layout_mode = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
 
 [node name="FrameLabel" type="Label" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/FrameVbox"]
 custom_minimum_size = Vector2(256, 64)
@@ -329,10 +349,14 @@ autowrap_mode = 3
 
 [node name="FrameGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/FrameVbox"]
 layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 24
 columns = 2
 
 [node name="BannersVbox" type="VBoxContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox"]
 layout_mode = 2
+size_flags_horizontal = 5
+size_flags_vertical = 5
 
 [node name="BannersLabel" type="Label" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/BannersVbox"]
 custom_minimum_size = Vector2(256, 64)
@@ -353,6 +377,8 @@ autowrap_mode = 3
 
 [node name="BannerGrid" type="GridContainer" parent="VBoxContainer/TabContainer/Serpent\'s Sigil/SerpentsSigilHbox/BannersVbox"]
 layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 24
 columns = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
@@ -423,18 +449,16 @@ layout_mode = 1
 
 [node name="DescriptionPanel" parent="." instance=ExtResource("9_rngq6")]
 visible = false
-layout_mode = 0
-anchors_preset = 0
+layout_mode = 1
+anchors_preset = -1
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 0.0
 offset_top = 0.0
-offset_right = 320.0
-offset_bottom = 332.0
-grow_horizontal = 1
-grow_vertical = 1
+offset_right = 0.0
+offset_bottom = 496.0
 
 [node name="DescriptionDelayTimer" type="Timer" parent="."]
 wait_time = 0.1

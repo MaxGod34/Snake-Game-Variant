@@ -366,7 +366,8 @@ autowrap_mode = 3
 
 [node name="BasePactRow" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="Pact1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
@@ -383,16 +384,20 @@ layout_mode = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
-alignment = 1
+size_flags_horizontal = 4
+theme_override_constants/separation = 48
 
 [node name="Pact4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer3" instance=ExtResource("3_u6nc0")]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
 
 [node name="Pact5Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer3" instance=ExtResource("3_u6nc0")]
 custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
 
 [node name="SealsRowLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 custom_minimum_size = Vector2(256, 64)
@@ -414,7 +419,8 @@ autowrap_mode = 3
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="TrialoftheHarvestNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
@@ -449,7 +455,8 @@ autowrap_mode = 3
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="CursedPact1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
@@ -466,7 +473,8 @@ layout_mode = 2
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+size_flags_horizontal = 4
+theme_override_constants/separation = 48
 alignment = 1
 
 [node name="CursedPact4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4" instance=ExtResource("3_u6nc0")]

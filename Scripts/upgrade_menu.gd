@@ -116,6 +116,10 @@ var headlines = [
 ]
 
 
+
+
+
+
 func initialize(p_main_game):
 	# When the menu first loads, we find and connect everything once.
 	self.main_game = p_main_game
@@ -131,6 +135,7 @@ func initialize(p_main_game):
 	sell_light_block_button.icon = sell_icon
 	buy_extra_block_button.icon = buy_icon
 	sell_extra_block_button.icon = sell_icon
+
 
 func _process(delta):
 	# We only scroll if the upgrade menu is visible.
@@ -315,18 +320,22 @@ func _on_description_delay_timer_timeout():
 
 	if mouse_position.x < viewport_size.x / 2.0:
 		# Simulate Center Right (panel appears to the right of cursor)
-		description_panel.position = mouse_position + Vector2(60, 0)
+		description_panel.position = mouse_position + Vector2(128, 0)
 		description_panel.position.y = vertical_center
 	else:
 		# Simulate Center Left (panel appears to the left of cursor)
-		description_panel.position = mouse_position - Vector2(panel_size.x + 60, 0)
+		description_panel.position = mouse_position - Vector2(panel_size.x + 128, 0)
 		description_panel.position.y = vertical_center
 	#CLAMP
 	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
 	
+	description_panel.size = Vector2(540, 496)
+	description_panel.custom_minimum_size = Vector2(540, 496)
+	await get_tree().process_frame
 	
 	# 8. show it with all the correct info.
-	description_panel.show_info(rules, current_level, cost, currency_unit)
+	await description_panel.show_info(rules, current_level, cost, currency_unit)
+
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
 
@@ -434,17 +443,13 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	
 	# 3. Take the player's Juice.
 	GameManager.juice -= wager
-	# FIX: We now call main_game.update_hud() to instantly update the main UI.
 		
 	main_game.update_hud()
 	update_juice_and_pulp_label()
 	
 	var outcome = "Heads" if randf() < 0.5 else "Tails"
 	print("The result is... ", outcome)
-	 #-----Set the text of the label on the coin
-	
 
-	
 	# 4. Play the coin flip animation.
 	var coin = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl
 	var coin_sprite = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/CoinContainerControl/CoinSprite
@@ -463,11 +468,9 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	tween.tween_property(coin, "scale", Vector2(1.5, 0.1), 0.2)
 	tween.tween_property(coin, "scale", Vector2(1.0, 1.0), 0.2)
 	
-	
 	await tween.finished
 	
 	# 5. Determine the outcome.
-	
 	
 	# 6. Check for a win and distribute rewards.
 	if player_choice == outcome:
@@ -486,12 +489,10 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	# Extra delay -> await get_tree().create_timer(1.5).timeout
 	coin.visible = false
 	
-	# FIX: We now call update_snake_eyes_tab() AFTER the bet resolves
-	# to correctly update the slider's max value and re-enable the buttons.
+	# HOT-FIX: call update_snake_eyes_tab() AFTER the bet resolves to correctly update the slider's max value and re-enable the buttons.
 	update_snake_eyes_tab()
-	# We also call main_game.update_hud() again to show the final winnings.
+	# also call main_game.update_hud() again to show the final winnings.
 	main_game.update_hud()
-	
 	set_gambling_ui_disabled(false)
 	
 func set_gambling_ui_disabled(is_disabled: bool):
@@ -626,7 +627,7 @@ func play_result_animation(is_win: bool, custom_message: String = ""):
 		result_label.text = win_messages.pick_random()
 		result_label.modulate = Color.GOLD
 	else:
-		# Your great idea for random losing messages!
+		# Random losing messages!
 		var lose_messages = ["Oof.", "Tough Luck.", "Not this time...", "The House Wins."]
 		result_label.text = lose_messages.pick_random()
 		result_label.modulate = Color.GRAY

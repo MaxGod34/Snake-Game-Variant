@@ -2618,7 +2618,7 @@ func reset_for_new_garden():
 	
 	# Reset the XP and goals back to their starting values.
 	score_at_level_start = 0
-	score_needed_for_next_level = 5 # Or your initial starting value
+	score_needed_for_next_level = 5 # Or initial starting value
 	
 	# Crucially, we do NOT reset juice, pulp, or any purchased upgrades.
 

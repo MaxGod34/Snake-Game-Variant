@@ -78,7 +78,7 @@ func _connect_all_difficulty_nodes():
 
 func _build_class_node_dictionary():
 	# This powerful loop finds every single class node in the scene.
-	# It assumes your nodes are named like "MulliganNode", "GlutsNode", etc.
+	# It assumes nodes are named like "MulliganNode", "GlutsNode", etc.
 	var grid = $MarginContainer/MainLayout/ClassRosterPanel/ClassGrid
 	for class_key in GameManager.class_data.keys():
 		# We now use the robust to_pascal_case() function to build the node name.

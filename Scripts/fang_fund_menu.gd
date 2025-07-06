@@ -23,6 +23,8 @@ var cosmetic_key_to_type: Dictionary = {}
 
 var current_category: String = "Colors"
 
+
+
 func _ready():
 	call_deferred("_initialize")
 
@@ -31,9 +33,10 @@ func _initialize():
 	_connect_all_signals()
 	update_all_displays()
 
+
 func _unhandled_input(event: InputEvent):
 	# We'll use F2 as our secret debug key for this menu.
-	if event.is_action_pressed("ui_F1"): # You may need to add "ui_f2" in your Input Map
+	if event.is_action_pressed("ui_F1"): # Input Map for F1 debug
 		debug_panel.visible = not debug_panel.visible
 
 
@@ -97,6 +100,7 @@ func _setup_cosmetic_grid(type_key: String, grid_node: GridContainer):
 	if max_width > 0:
 		for child in grid_node.get_children():
 			child.custom_minimum_size.x = max_width
+			print("new min width", child.custom_minimum_size.x)
 
 # --- MASTER UPDATE FUNCTION ---
 func update_all_displays():
@@ -231,15 +235,20 @@ func _on_description_delay_timer_timeout():
 	var mouse_position = get_global_mouse_position()
 	
 	if mouse_position.x < viewport_size.x / 2.0:
-		description_panel.position.x = mouse_position.x + 40
+		description_panel.position.x = mouse_position.x + 128
 	else:
-		description_panel.position.x = mouse_position.x - description_panel.size.x - 40
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
 		
 	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
 	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
-	
+	description_panel.size = Vector2(540, 496)
+	description_panel.custom_minimum_size = Vector2(540, 496)
+	await get_tree().process_frame
 	# Now that it's in the right place, show it with all the correct info.
-	description_panel.show_info(rules, current_level, cost, currency_unit)
+	await description_panel.show_info(rules, current_level, cost, currency_unit)
+	
+	
+
 
 
 

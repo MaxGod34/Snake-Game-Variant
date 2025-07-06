@@ -2,7 +2,7 @@ extends PanelContainer
 
 # --- NODE REFERENCES ---
 # Get references to all the labels and containers we need to update.
-# Make sure these paths match your scene tree exactly!
+# Make sure these paths match THIS scene tree exactly!
 @onready var run_timer_label = $HBoxContainer/GardenDataContainer/RunTimerLabel
 @onready var combo_window_label = $HBoxContainer/GardenDataContainer/FrenzyMeter/ComboWindowLabel
 @onready var combo_counter_label = $HBoxContainer/GardenDataContainer/FrenzyMeter/ComboCounterLabel
@@ -146,7 +146,7 @@ func update_recipe_display(recipe: Dictionary, progress: int):
 		icon.custom_minimum_size = Vector2(24, 24)
 
 		# Use a match statement to load the correct icon texture.
-		# You MUST replace these paths with the actual paths to your icon files!
+		
 		match ingredient_type_string:
 			"Fruit":
 				icon.texture = preload("res://Assets/PNGs/snake_fruit_red.png")

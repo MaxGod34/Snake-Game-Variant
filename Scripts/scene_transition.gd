@@ -1,6 +1,6 @@
 extends CanvasLayer
 
-@export var transition_speed: float = 0.01 
+var transition_speed: float
 
 @onready var tile_map = $TileMap
 @onready var input_blocker = $InputBlocker
@@ -70,7 +70,7 @@ func cover_screen_drip():
 	await get_tree().create_timer(total_time - 0.5).timeout
 
 func start_column_drip(x: int, height: int, delay: float) -> void:
-	call_deferred("_run_column_drip", x, height, delay)
+	_run_column_drip(x, height, delay)
 
 func _run_column_drip(x: int, height: int, delay: float) -> void:
 	for y in height:
@@ -132,50 +132,62 @@ func spiral_positions(width: int, height: int) -> Array:
 
 
 func cover_screen_spiral():
-	transition_speed = 0.001
+	transition_speed = 0.1
 	var size = Vector2i(get_viewport().size / 32)
 	var spiral = spiral_positions(size.x, size.y)
-	for pos in spiral:
-		tile_map.set_cell(0, pos, 0, Vector2i(0, 0))
-		await get_tree().create_timer(transition_speed).timeout
+	var batch_size = 6  # You can tweak this value for speed vs smoothness
+
+	for i in range(0, spiral.size(), batch_size):
+		for j in range(batch_size):
+			if i + j < spiral.size():
+				var pos = spiral[i + j]
+				tile_map.set_cell(0, pos, 0, Vector2i(0, 0))
+		await get_tree().process_frame
+		print(transition_speed, "Current Wait time")
 
 func uncover_screen_spiral():
-	transition_speed = 0.001
+	transition_speed = 0.1
 	var size = Vector2i(get_viewport().size / 32)
 	var spiral = spiral_positions(size.x, size.y)
-	for pos in spiral:
-		tile_map.erase_cell(0, pos)
-		await get_tree().create_timer(transition_speed).timeout
+	var batch_size = 6
+
+	for i in range(0, spiral.size(), batch_size):
+		for j in range(batch_size):
+			if i + j < spiral.size():
+				var pos = spiral[i + j]
+				tile_map.erase_cell(0, pos)
+		await get_tree().process_frame
 
 
 # --- Diagonal Animation ---
 func cover_screen_diagonal():
-	transition_speed = 0.02
+	transition_speed = 0.01  # Optional delay for smoother pacing
 	var size = Vector2i(get_viewport().size / 32)
-	var max_steps = size.x + size.y
+	var max_steps = size.x + size.y - 1
+
 	for step in range(max_steps):
 		for x in range(step + 1):
 			var y = step - x
 			if x < size.x and y < size.y:
 				tile_map.set_cell(0, Vector2i(x, y), 0, Vector2i(0, 0))
-		if transition_speed > 0:
-			await get_tree().create_timer(transition_speed).timeout
+		await get_tree().process_frame 
 
 func uncover_screen_diagonal():
-	transition_speed = 0.02
+	transition_speed = 0.01
 	var size = Vector2i(get_viewport().size / 32)
-	var max_steps = size.x + size.y
+	var max_steps = size.x + size.y - 1
+
 	for step in range(max_steps):
 		for x in range(step + 1):
 			var y = (size.y - 1) - (step - x)
 			if x < size.x and y >= 0:
 				tile_map.erase_cell(0, Vector2i(x, y))
-		if transition_speed > 0:
-			await get_tree().create_timer(transition_speed).timeout
+		await get_tree().process_frame
 
 
 #Flake Animation -------
 func cover_screen_flakes():
+	transition_speed = 0.01
 	var size = Vector2i(get_viewport().size / 32)
 	
 	var all_tiles = []

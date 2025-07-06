@@ -56,5 +56,5 @@ func reset_from_bounty():
 	if self is GoldenFruit:
 		get_node("FillSprite").modulate = Color.GOLD
 	else:
-		# This assumes your normal fruit is red. Change if needed!
+		# This assumes THE normal fruit is red. Change if needed!
 		get_node("FillSprite").modulate = Color.RED 

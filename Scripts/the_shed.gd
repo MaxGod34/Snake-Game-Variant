@@ -2,7 +2,7 @@ extends Control
 
 # --- NODE REFERENCES ---
 # We get direct references to our main containers and buttons.
-# Please double-check that these paths are a perfect match for your scene tree.
+# Double-check that these paths are a perfect match for the scene tree.
 @onready var category_list_vbox = $MarginContainer/VBoxContainer/ShedTabs/Customization/CategoryListPanel/VBoxContainer
 @onready var back_button = $MarginContainer/VBoxContainer/BottomHUDRow/BackButton
 # --- Page Containers ---
@@ -138,8 +138,7 @@ func _populate_grid_from_data(category_key: String, grid_node: GridContainer):
 func _on_equip_item_pressed(category: String, item_key: String):
 	print("Equipping %s for category %s" % [item_key, category])
 	
-	# --- THIS IS THE FIX ---
-	# We now use a match statement to get the correct, SINGULAR key for our save data.
+	# use a match statement to get the correct, SINGULAR key for our save data.
 	var category_save_key = ""
 	match category:
 		"Patterns": category_save_key = "pattern"

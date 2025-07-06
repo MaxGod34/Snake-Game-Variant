@@ -1391,7 +1391,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			print("ESP bought! New Fruit Reward: ", get_effective_fruit_reward())
 			#---More Mice---#
 		elif upgrade_name == "More Mice":
-				if GameManager.more_mice_level < 10: # Your max level
+				if GameManager.more_mice_level < 10: # More Mice max level
 					GameManager.max_fruits_on_screen += 1
 					GameManager.more_mice_level += 1
 					
@@ -1907,7 +1907,6 @@ func apply_cosmetic_upgrades():
 	background_rect.material = null
 	$VoidParticles.emitting = false
 	$CoveParticles.emitting = false
-	$PitParticles.emitting = false
 	lighthouse_pivot.visible = false
 	if is_instance_valid(get_node_or_null("LighthouseTween")):
 		get_node("LighthouseTween").kill()
@@ -2076,7 +2075,7 @@ func update_all_objects_to_blueprint_color():
 	for fruit in get_tree().get_nodes_in_group("fruits"):
 		fruit.get_node("FillSprite").modulate = blueprint_glow_color
 	for rock in spawned_obstacles:
-		rock.get_node("FillSprite").modulate = Color.BLACK # Your chosen rock color
+		rock.get_node("FillSprite").modulate = Color.BLACK # The Chosen rock color
 
 func apply_blueprint_visuals():
 	# Turn OFF other effects
@@ -2386,13 +2385,13 @@ func update_tail_visuals():
 			if is_ghost:
 				# --- GHOST STATE ---
 				fill_sprite.modulate = ghost_color
-				# FIX: Use set_deferred to safely disable the collision shape.
+				# Use set_deferred to safely disable the collision shape.
 				collision_shape.set_deferred("disabled", true)
 			else:
 				# --- SOLID STATE ---
-				# Restore original color based on your Chroma Scales settings.
+				# Restore original color based on player Chroma Scales settings.
 				apply_cosmetic_upgrades() # Assuming this helper exists and works
-				# FIX: Use set_deferred to safely re-enable the collision shape.
+				# HOT PATCH/QUICK FIX: Use set_deferred to safely re-enable the collision shape.
 				collision_shape.set_deferred("disabled", false)
 
 func perform_garden_weave():

@@ -20,6 +20,7 @@ script = ExtResource("1_vin40")
 [node name="TileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_sd3nk")
 format = 2
+layer_0/z_index = 10
 
 [node name="InputBlocker" type="ColorRect" parent="."]
 visible = false

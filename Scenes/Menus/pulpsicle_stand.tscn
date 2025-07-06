@@ -135,12 +135,13 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
 [node name="SynapseRow" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 64
+size_flags_horizontal = 4
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="SynapseSlotNode" parent="AnimationContainer/MainContainer/VBoxContainer/SynapseRow" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 6
 size_flags_vertical = 4
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
@@ -153,6 +154,7 @@ icon = ExtResource("5_1juo5")
 [node name="ColorRect" type="TextureRect" parent="AnimationContainer/MainContainer/VBoxContainer/SynapseRow"]
 custom_minimum_size = Vector2(640, 160)
 layout_mode = 2
+size_flags_horizontal = 4
 texture = ExtResource("6_2goil")
 
 [node name="HSeparator8" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
@@ -210,6 +212,8 @@ Skip"
 [node name="RotatingItemNode" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow" instance=ExtResource("4_ky7o8")]
 custom_minimum_size = Vector2(160, 160)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("10_2goil")
 
 [node name="HSeparator3" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
@@ -221,11 +225,13 @@ theme_override_styles/separator = SubResource("StyleBoxFlat_ky7o8")
 [node name="PillarsContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 custom_minimum_size = Vector2(1080, 0)
 layout_mode = 2
-theme_override_constants/separation = 48
+size_flags_horizontal = 4
+size_flags_vertical = 4
 alignment = 1
 
 [node name="ChromaScalesNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -236,6 +242,7 @@ icon = ExtResource("6_6w6tv")
 
 [node name="SerpentsCofferNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -246,6 +253,7 @@ icon = ExtResource("11_6na3d")
 
 [node name="GeodeCompassNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -256,6 +264,7 @@ icon = ExtResource("12_rc0gc")
 
 [node name="FourLeafCloverNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -266,6 +275,7 @@ icon = ExtResource("14_6na3d")
 
 [node name="HarvestForecastNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -276,6 +286,7 @@ icon = ExtResource("15_rc0gc")
 
 [node name="LassoLarryNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
 layout_mode = 2
+size_flags_horizontal = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -373,14 +384,15 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 [node name="DescriptionPanel" parent="AnimationContainer" instance=ExtResource("12_p3c4b")]
 visible = false
 layout_mode = 1
-anchors_preset = 4
+anchors_preset = -1
 anchor_left = 0.0
+anchor_top = 0.0
 anchor_right = 0.0
+anchor_bottom = 0.0
 offset_left = 0.0
-offset_top = -232.5
-offset_right = 540.0
-offset_bottom = 208.5
-grow_horizontal = 1
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 496.0
 
 [node name="DescriptionDelayTimer" type="Timer" parent="."]
 wait_time = 0.1

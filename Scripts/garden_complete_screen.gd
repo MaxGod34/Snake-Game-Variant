@@ -5,7 +5,7 @@ signal continue_pressed
 
 # --- Node References ---
 # Get direct references to the labels we need to update.
-# Make sure these paths match your scene tree exactly!
+# Make sure these paths match THIS scene tree exactly!
 @onready var title_label = $CenterContainer/PanelContainer/VBoxContainer/TitleLabel
 @onready var stats_label = $CenterContainer/PanelContainer/VBoxContainer/StatsLabel
 @onready var bonus_list_container = $CenterContainer/PanelContainer/VBoxContainer/BonusListContainer
@@ -19,7 +19,7 @@ signal continue_pressed
 # This one function now handles EVERYTHING.
 func display_results(garden_name, bonus_list: Array, pulp_this_garden: int, is_final_garden: bool, is_final_win: bool):
 	# --- Part 1: Handle the "Game Win" state ---
-	# This is the logic from your old 'setup' function.
+	# This is the logic from the old 'setup' function.
 	bonus_list_container.visible = false
 	total_pulp_label.visible = false
 	grand_total_label.visible = false

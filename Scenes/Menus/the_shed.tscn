@@ -392,7 +392,7 @@ autowrap_mode = 3
 [node name="PatternGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 5
 theme_override_constants/h_separation = 16
 columns = 6
 
@@ -415,7 +415,7 @@ autowrap_mode = 3
 [node name="ColorGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 5
 theme_override_constants/h_separation = 16
 columns = 6
 
@@ -528,7 +528,7 @@ autowrap_mode = 3
 [node name="BackgroundGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 4
 theme_override_constants/h_separation = 16
 columns = 6
 
@@ -641,7 +641,7 @@ autowrap_mode = 3
 [node name="AvatarGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 4
 theme_override_constants/h_separation = 16
 columns = 6
 
@@ -754,7 +754,7 @@ autowrap_mode = 3
 [node name="FrameGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 4
 theme_override_constants/h_separation = 16
 columns = 6
 
@@ -867,7 +867,7 @@ autowrap_mode = 3
 [node name="BannerGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 3
+size_flags_vertical = 4
 theme_override_constants/h_separation = 16
 columns = 6
 

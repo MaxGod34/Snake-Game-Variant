@@ -37,9 +37,10 @@ func _ready() -> void:
 	_connect_all_signals()
 
 
+
 func _build_node_dictionary():
 	# We build a dictionary of our pillar nodes for easy access.
-	# FIX: The keys now perfectly match the keys in GameManager.meta_upgrade_data.
+	# OLD FIX: The keys now perfectly match the keys in GameManager.meta_upgrade_data.
 	pillar_nodes = {
 		"Synapse Slot": synapse_node,
 		"Serpents Coffer": serpents_coffer_node,
@@ -328,7 +329,7 @@ func _on_description_delay_timer_timeout():
 		if rules.is_empty(): return
 		
 
-		current_level = GameManager.get_meta_upgrade_level(hovered_item_key)
+		current_level = main_game.get_meta_upgrade_level(hovered_item_key)
 		cost = rules.costs[current_level] if current_level < rules.costs.size() else 999
 	
 	
@@ -351,4 +352,7 @@ func _on_description_delay_timer_timeout():
 	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
 	# Now that we have the correct data, we can safely show the info.
 	# We pass the specific item_id_for_icon to the show_info function.
-	description_panel.show_info(rules, current_level, cost, currency_unit)
+	description_panel.size = Vector2(540, 496)
+	description_panel.custom_minimum_size = Vector2(540, 496)
+	await get_tree().process_frame
+	await description_panel.show_info(rules, current_level, cost, currency_unit)

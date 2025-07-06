@@ -126,6 +126,7 @@ color = Color(0.133333, 0.133333, 0.133333, 1)
 
 [node name="BlueprintGridTileMap" type="TileMap" parent="."]
 tile_set = SubResource("TileSet_6iyac")
+rendering_quadrant_size = 32
 format = 2
 
 [node name="AtmosphereParticles" type="CPUParticles2D" parent="."]
@@ -245,9 +246,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -629.0
+offset_left = -640.0
 offset_top = -239.0
-offset_right = 629.0
+offset_right = 640.0
+offset_bottom = -13.0
 grow_horizontal = 2
 grow_vertical = 0
 
@@ -278,6 +280,7 @@ theme_override_styles/panel = SubResource("StyleBoxTexture_wsu2k")
 [node name="InformationPanel" parent="UI/MarginContainer/HBoxContainer" instance=ExtResource("12_jkdf5")]
 custom_minimum_size = Vector2(416, 222)
 layout_mode = 2
+size_flags_horizontal = 1
 size_flags_vertical = 8
 
 [node name="FloatingLabelContainer" type="MarginContainer" parent="UI"]
@@ -355,18 +358,18 @@ one_shot = true
 one_shot = true
 
 [node name="VoidParticles" type="GPUParticles2D" parent="."]
-visible = false
 z_index = 5
 position = Vector2(1280, 960)
+emitting = false
 amount = 150
 texture = SubResource("CanvasTexture_jkdf5")
 lifetime = 20.0
 process_material = SubResource("ParticleProcessMaterial_h1bgf")
 
 [node name="CoveParticles" type="GPUParticles2D" parent="."]
-visible = false
 z_index = 5
 position = Vector2(1280, -32)
+emitting = false
 amount = 600
 texture = SubResource("CanvasTexture_b3802")
 lifetime = 5.0
