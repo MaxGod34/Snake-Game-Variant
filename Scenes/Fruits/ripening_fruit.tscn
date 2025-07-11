@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://d31n70cgsuodn"]
+
+[ext_resource type="Script" uid="uid://4142tfd0jhk2" path="res://Scripts/ripening_fruit.gd" id="1_lh7ug"]
+[ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="2_rf5fq"]
+
+[node name="RipeningFruit" type="Node2D"]
+script = ExtResource("1_lh7ug")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_rf5fq")
+
+[node name="RipenTimer" type="Timer" parent="."]

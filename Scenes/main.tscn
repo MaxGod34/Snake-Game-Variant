@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=37 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
@@ -15,6 +15,7 @@
 [ext_resource type="PackedScene" uid="uid://cy78aj0eaeuv2" path="res://Scenes/UI/information_panel.tscn" id="12_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://8jgmx7q20qg5" path="res://Scenes/Menus/pulpsicle_stand.tscn" id="13_jkdf5"]
 [ext_resource type="Texture2D" uid="uid://clyqatd0ptcbg" path="res://Assets/PNGs/light.png" id="15_wsu2k"]
+[ext_resource type="Texture2D" uid="uid://e2l8j4grsls7" path="res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png" id="16_k12tt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d1ilt"]
 texture = ExtResource("10_hptm8")
@@ -59,6 +60,22 @@ axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 modulate_color = Color(0.703808, 0.703808, 0.703808, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wsu2k"]
+bg_color = Color(0.490243, 0.000401988, 0.551919, 0.745098)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b3802"]
+content_margin_left = 32.0
+content_margin_top = 16.0
+content_margin_right = 32.0
+content_margin_bottom = 16.0
+bg_color = Color(0, 0, 0, 0.835294)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k12tt"]
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ynf5e"]
 texture = ExtResource("2_21xkr")
 texture_region_size = Vector2i(32, 32)
@@ -102,6 +119,8 @@ initial_velocity_max = 300.0
 gravity = Vector3(0, 980, 0)
 scale_max = 2.0
 color = Color(0.639216, 0.835294, 1, 0.686275)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h1bgf"]
 
 [node name="Main" type="Node2D"]
 process_mode = 3
@@ -322,6 +341,306 @@ theme_override_font_sizes/font_size = 64
 text = "Loading Next Garden"
 horizontal_alignment = 1
 
+[node name="EasterEggDebugPanel" type="PanelContainer" parent="UI"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/EasterEggDebugPanel"]
+layout_mode = 2
+
+[node name="CompleteCurrentStepButton" type="Button" parent="UI/EasterEggDebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "Complete Current Garden's EE Step"
+
+[node name="CompleteSuperStep10Button" type="Button" parent="UI/EasterEggDebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "Complete Super Egg Step 10"
+
+[node name="CompleteSuperStep11Button" type="Button" parent="UI/EasterEggDebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "Complete Super Egg Step 11"
+
+[node name="CompleteAllStepsButton" type="Button" parent="UI/EasterEggDebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "complete all 8 EE steps"
+
+[node name="ResetEEProgressButton" type="Button" parent="UI/EasterEggDebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "Reset EE progress"
+
+[node name="JumpToGarden8Button" type="Button" parent="UI/EasterEggDebugPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "JUMP TO GARDEN 8!"
+
+[node name="BossTrialLabel" type="Label" parent="UI"]
+visible = false
+custom_minimum_size = Vector2(256, 160)
+anchors_preset = -1
+anchor_top = 0.1
+anchor_right = 1.0
+anchor_bottom = 0.1
+offset_bottom = 43.0
+grow_horizontal = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_wsu2k")
+text = "The Ouroboros demands a sacrifice.
+Prove your devotion"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="CreditsCanvas" type="CanvasLayer" parent="UI"]
+layer = 20
+visible = false
+
+[node name="CreditsPanel" type="PanelContainer" parent="UI/CreditsCanvas"]
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -360.5
+offset_right = 360.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_b3802")
+
+[node name="CreditsContainer" type="VBoxContainer" parent="UI/CreditsCanvas/CreditsPanel"]
+layout_mode = 2
+
+[node name="CreditRow1" type="HBoxContainer" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+visible = false
+layout_mode = 2
+alignment = 1
+
+[node name="CreditLabel" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer/CreditRow1"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 28
+text = "Lead Visionary..................."
+
+[node name="NameLabel" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer/CreditRow1"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "{player}"
+
+[node name="NameLabel" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "CREDITS"
+
+[node name="CreditSeparator" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel2" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "------------The Garden of Eatin'-------------"
+
+[node name="CreditSeparator2" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel3" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "One idea.
+No team.
+No budget.
+No safety net."
+
+[node name="CreditSeparator3" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel4" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "But that never mattered."
+
+[node name="CreditSeparator4" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel5" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "It'll never mean a thing unless someone
+sits down and acutally plays it."
+
+[node name="CreditSeparator5" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel6" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "That's where you come in!"
+
+[node name="CreditSeparator6" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel9" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "All I did was put it together,
+you're the one who cracked it, GG"
+
+[node name="CreditSeparator11" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel7" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "Larry roll the credits
+And make it slithy!"
+
+[node name="CreditSeparator7" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel8" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "
+"
+
+[node name="CreditSeparator8" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="CreditSeparator10" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel10" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "----------------------------------------------------
+Most Creative Cheese........You
+First to Find That One Thing.........You
+Most Deaths in 5 Minutes..............You
+Best Use of a Useless Item..........You
+Menu Button Masher....................You
+Marked As Spam in My Inbox Folder....You
+First to Give Up, Then Come Back.....You
+Accidental Speedrunner..............You
+Contemplated Using a TAS............You
+Is There a Garden 14?...................You
+Worst Upgrade Ideas.............You
+"
+
+[node name="CreditSeparator9" type="HSeparator" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_k12tt")
+
+[node name="NameLabel11" type="Label" parent="UI/CreditsCanvas/CreditsPanel/CreditsContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_fonts/font = ExtResource("6_ynf5e")
+theme_override_font_sizes/font_size = 24
+text = "----------SPONSORED BY----------
+Snake Oil
+
+Snake Oil, if you're lookin' for a quick fix,
+give us a call at 1-800-666-9942 
+We definitely have what you're lookin' for
+
+(expect a check in the mail for your half)
+
+--------------------------------------
+That's enough,
+
+I'm not sure how you cracked it, but you did it.
+
+Thanks for being the other half of this thing.
+
+-Max"
+
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 
 [node name="PocketGardenContainer" type="Node2D" parent="."]
@@ -387,8 +706,31 @@ blend_mode = 2
 texture = ExtResource("15_wsu2k")
 texture_scale = 10.0
 
+[node name="Garden8EggTimer" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+
+[node name="OuroborosBoundary" type="Line2D" parent="."]
+visible = false
+width = 16.0
+default_color = Color(0.705882, 0.0823529, 0.913725, 1)
+
+[node name="ArenaShrinkTimer" type="Timer" parent="."]
+
+[node name="OuroborosHead" type="Area2D" parent="." groups=["boss_head"]]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="OuroborosHead"]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("16_k12tt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="OuroborosHead"]
+shape = SubResource("RectangleShape2D_h1bgf")
+
+[node name="CursedFruitSpawnTimer" type="Timer" parent="."]
+
 [connection signal="game_is_over" from="." to="UI/GameOverScreen" method="on_game_over"]
-[connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu"]
+[connection signal="quit_to_menu_pressed" from="UI/GameOverScreen" to="." method="_on_quit_to_menu_pressed"]
 [connection signal="continue_pressed" from="UI/GardenCompleteScreen" to="." method="_on_garden_complete_continue_pressed"]
 [connection signal="quit_to_menu" from="PauseMenu" to="." method="_on_quit_to_menu_pressed"]
 [connection signal="timeout" from="PocketGardenTimer" to="." method="_on_pocket_garden_timer_timeout"]

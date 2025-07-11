@@ -260,13 +260,7 @@ func get_theme_colors(rules: Dictionary) -> Dictionary:
 		"Passives": colors.accent = Color("ffffff")
 		
 	return colors
-	
-	#var ng_plus_button = find_upgrade_button("New Game S+")
-	#if is_instance_valid(ng_plus_button):
-		#var can_prestige = (GameManager.current_garden == 5 and GameManager.times_died_this_run == 0)
-		#ng_plus_button.get_parent().visible = can_prestige
-		#if can_prestige:
-			#update_button_display("New Game S+")
+
 
 # --- HELPER FUNCTIONS  ---
 
@@ -474,6 +468,10 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	
 	# 6. Check for a win and distribute rewards.
 	if player_choice == outcome:
+		if GameManager.current_garden == 2 and not GameManager.ascension_steps_completed.has("garden_2"):
+			print("EASTER EGG STEP 2 COMPLETE!")
+			GameManager.ascension_steps_completed["garden_2"] = true
+			main_game._apply_easter_egg_boon(2)
 		print("WINNER!")
 		GameManager.juice += (wager * 2)
 		if GameManager.passive_income_unlocked:
@@ -534,6 +532,10 @@ func _on_roll_dice_button_pressed():
 	# 6. Check for a win and distribute rewards.
 	if current_dice_guess == outcome:
 		print("WINNER! 6x PAYOUT!")
+		if GameManager.current_garden == 6 and not GameManager.ascension_steps_completed.has("garden_6"):
+			print("EASTER EGG STEP 6 COMPLETE!")
+			GameManager.ascension_steps_completed["garden_6"] = true
+			main_game._apply_easter_egg_boon(6)
 		GameManager.juice += (wager * 6)
 		if GameManager.passive_income_unlocked:
 			GameManager.correct_bets_this_run += 1

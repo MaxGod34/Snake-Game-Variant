@@ -19,6 +19,7 @@ signal skip_garden_pressed
 @onready var continue_button = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/ContinueButton
 @onready var animation_container = $AnimationContainer
 @onready var skip_garden_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
+@onready var new_game_s_plus_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/NewGameSPlusButton
 @onready var description_panel = $AnimationContainer/DescriptionPanel
 @onready var description_delay_timer = $DescriptionDelayTimer
 # This dictionary will store a reference to every single pillar button.
@@ -77,6 +78,7 @@ func _connect_all_signals():
 	continue_button.pressed.connect(_on_continue_button_pressed)
 
 	skip_garden_button.pressed.connect(_on_skip_garden_button_pressed)
+	new_game_s_plus_button.pressed.connect(_on_new_game_s_plus_pressed)
 
 
 # This is the master function that main.gd will call.
@@ -95,8 +97,8 @@ func update_all_displays():
 		_update_pillar_node(upgrade_key)
 	update_rotating_item_display()
 	# --- NEW: Show/Hide the Skip Button ---
-	var skip_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
-	skip_button.visible = (GameManager.fast_track_unlocked and GameManager.current_garden < 8)
+	skip_garden_button.visible = (GameManager.fast_track_unlocked and GameManager.current_garden < 8)
+	new_game_s_plus_button.visible = (GameManager.current_garden == 8 and GameManager.times_died_this_run == 0)
 
 # --- UPDATE FUNCTIONS ---
 
@@ -146,8 +148,8 @@ func pick_new_rotating_item():
 		# We add a new key, "targets_upgrade", to our item data for this.
 		if item_data.has("targets_upgrade"):
 			var target_key = item_data["targets_upgrade"]
-			var target_rules = main_game.get_upgrade_rules(target_key)
-			var target_level = main_game.get_upgrade_level_from_key(target_key)
+			var target_rules = GameManager.get_upgrade_rules(target_key)
+			var target_level = GameManager.get_upgrade_level_from_key(target_key)
 			if target_level >= target_rules.max_level:
 				is_valid = false
 		
@@ -356,3 +358,7 @@ func _on_description_delay_timer_timeout():
 	description_panel.custom_minimum_size = Vector2(540, 496)
 	await get_tree().process_frame
 	await description_panel.show_info(rules, current_level, cost, currency_unit)
+
+func _on_new_game_s_plus_pressed():
+	# We just need to tell the GameManager to start a prestige run.
+	GameManager.start_new_game_s_plus()

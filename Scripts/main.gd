@@ -28,12 +28,16 @@ var next_fruit_position: Vector2
 var fruit_spawn_is_pending: bool = false
 var ghost_fruit_instance = null
 var time_since_last_fruit: float = 0.0
+var fruit_eaten_in_first_minute: bool = false
 
 # ---UI References---
 @onready var last_fruit_label = $UI/MarginContainer/HBoxContainer/InformationPanel.get_node("HBoxContainer/GardenDataContainer/FrenzyMeter/ComboWindowLabel")
 @onready var ability_hotbar = $UI/MarginContainer/HBoxContainer/VBoxContainer/AbilityHotbar
 @onready var player_banner = $UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner
 @onready var information_panel = $UI/MarginContainer/HBoxContainer/InformationPanel
+@onready var ee_debug_panel = $UI/EasterEggDebugPanel
+@onready var credits_canvas = $UI/CreditsCanvas
+
 
 # ---Preload Scenes
 var head_scene = preload("res://Scenes/Snake/snake_head.tscn")
@@ -58,7 +62,7 @@ var trippy_grid_shader = preload("res://Shaders/trippy_grid.gdshader")
 @onready var fruit_flood_tick_timer = $FruitFloodTickTimer
 @onready var fruit_flood_duration_timer = $FruitFloodDurationTimer
 @onready var zenith_timer = $ZenithTimer
-
+@onready var cursed_fruit_timer = $CursedFruitSpawnTimer
 # ---Camera and Visuals---
 @onready var boundary_indicator = $BoundaryIndicator
 @onready var background_rect = $"Background-Color-Rect" 
@@ -133,14 +137,19 @@ func _ready():
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 		# ---GAME OVER SCREEN---
 	$UI/GameOverScreen.restart_pressed.connect(_on_restart_pressed)
-	$UI/GameOverScreen.quit_to_menu_pressed.connect(_on_quit_to_menu_pressed)
 		# ---PAUSE MENU---
 	$PauseMenu.resume_game.connect(toggle_pause)
 		# ---SCENE TRANSITION---
 	SceneTransition.transition_finished.connect(_on_transition_finished)
 		# ---FLOATING TEXT FOR SCORE ANIMATION
 	$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.floating_text_container = $UI/FloatingTextContainer
-	
+	#---------EE Debuggin--------#
+	ee_debug_panel.get_node("VBoxContainer/CompleteCurrentStepButton").pressed.connect(_on_debug_complete_current_step)
+	ee_debug_panel.get_node("VBoxContainer/CompleteAllStepsButton").pressed.connect(_on_debug_complete_all_steps)
+	ee_debug_panel.get_node("VBoxContainer/ResetEEProgressButton").pressed.connect(_on_debug_reset_ee_progress)
+	ee_debug_panel.get_node("VBoxContainer/JumpToGarden8Button").pressed.connect(_on_debug_jump_to_garden_8)
+	ee_debug_panel.get_node("VBoxContainer/CompleteSuperStep10Button").pressed.connect(_on_debug_complete_super_step_10)
+	ee_debug_panel.get_node("VBoxContainer/CompleteSuperStep11Button").pressed.connect(_on_debug_complete_super_step_11)
 	# ---FINAL UI INITIALIZATION---
 	$UI/UpgradeMenu.initialize(self)
 
@@ -159,12 +168,18 @@ func _ready():
 	zenith_timer.timeout.connect(_on_zenith_timer_timeout)
 	fruit_flood_tick_timer.timeout.connect(_on_fruit_flood_tick_timer_timeout)
 	fruit_flood_duration_timer.timeout.connect(_on_fruit_flood_duration_timer_timeout)
+	$ArenaShrinkTimer.timeout.connect(_on_arena_shrink_timer_timeout)
+	cursed_fruit_timer.timeout.connect(_on_cursed_fruit_spawn_timer_timeout)
 	# --- post-Init ---
 	update_hud()
 	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
 	apply_cosmetic_upgrades()
 	pick_new_recipe()
+	#-----Garden 8 Easter Egg Step-----#
+	if GameManager.new_game_s_plus_active and GameManager.current_garden == 8:
+		fruit_eaten_in_first_minute = false
+		$Garden8EggTimer.start()
 	
 func _process(delta):
 	# ---Hard Pause Check---
@@ -249,6 +264,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	for i in range(10):
 		if event.is_action_pressed("activate_slot_" + str(i + 1)):
 			_on_ability_slot_activated(i)
+	if event.is_action_pressed("ui_F1"):
+		ee_debug_panel.visible = not ee_debug_panel.visible
 
 func _on_ability_slot_activated(slot_index: int):
 	# Check if there's actually an ability in this slot
@@ -1106,6 +1123,8 @@ func _on_upgrade_menu_resume_game_pressed():
 	update_hud()
 
 func _start_end_of_garden_sequence():
+	# --- State 0: Easter Egg Check ---
+	_check_for_easter_egg_step_completion()
 	# --- State 1: Game Paused & Bonuses Calculated ---
 	head.move_timer.stop()
 	$ComboTimer.stop()
@@ -1113,7 +1132,7 @@ func _start_end_of_garden_sequence():
 	
 	var score = snake_body_segments.size() + 1
 	var bonus_data = _calculate_garden_bonuses(score)
-	GameManager.pulp += bonus_data.total_pulp
+	GameManager.total_pulp_earned_this_run += bonus_data.total_pulp
 
 	# --- State 2: Transition to Results Screen ---
 	await SceneTransition.play_cover_animation("flakes")
@@ -1125,22 +1144,18 @@ func _start_end_of_garden_sequence():
 	var is_final_win = (is_final_garden and score >= GameManager.garden_data[garden_id]["score_goal"])
 	
 	if is_final_garden:
+		print("Campaign Complete! Updating Progression")
 		# --- NEW: Update Difficulty Progression ---
 		var completed_class = GameManager.chosen_class
 		var completed_pact = GameManager.chosen_difficulty
 		var progress = SaveManager.get_progress_for_class(completed_class)
 		
-		if completed_pact.begins_with("Pact"):
-			var pact_num = int(completed_pact.split(" ")[1])
-			if pact_num > progress.highest_pact_completed:
-				progress.highest_pact_completed = pact_num
-		elif completed_pact.begins_with("Trial"):
-			if not completed_pact in progress.seals_broken:
-				progress.seals_broken.append(completed_pact)
-		elif completed_pact.begins_with("Cursed"):
-			var cursed_pact_num = int(completed_pact.split(" ")[2])
-			if cursed_pact_num > progress.highest_cursed_pact_completed:
-				progress.highest_cursed_pact_completed = cursed_pact_num
+		if GameManager.chosen_difficulty == "Cursed Pact 5" and not GameManager.should_spawn_corrupted_ouroboros:
+			print("Victor Lap Unlocked!")
+			_start_garden_13()
+			return
+		
+		update_difficulty_progression()
 		
 		# Now, process the XP for the winning run.
 		SaveManager.process_end_of_run_xp(score, GameManager.total_pulp_earned_this_run, completed_pact)
@@ -1161,7 +1176,7 @@ func _start_end_of_garden_sequence():
 	)
 	results_screen.visible = true
 	
-	await SceneTransition.uncover_screen("drip")
+	await SceneTransition.uncover_screen("curtains")
 
 	# --- State 3: Wait for Player Input ---
 	# The game now pauses here indefinitely until the player clicks "Continue".
@@ -1186,33 +1201,7 @@ func _transition_to_shop():
 	await shop_screen.animate_in() # Play the shop's slide-in animation
 
 func _go_to_next_garden():
-	
-	# --- NEW: Update Difficulty Progression ---
-	var completed_class_key = GameManager.chosen_class
-	var completed_pact_key = GameManager.chosen_difficulty
-	
-	var progress = SaveManager.get_progress_for_class(completed_class_key)
-	
-	if completed_pact_key.begins_with("Pact"):
-		var pact_number = int(completed_pact_key.split(" ")[1])
-		# We only update if this is a new highest level
-		if pact_number > progress.highest_pact_completed:
-			progress.highest_pact_completed = pact_number
-			
-	elif completed_pact_key.begins_with("Trial"):
-		# Add the completed trial to our list if it's not already there
-		if not completed_pact_key in progress.seals_broken:
-			progress.seals_broken.append(completed_pact_key)
-			
-	elif completed_pact_key.begins_with("Cursed"):
-		var cursed_pact_number = int(completed_pact_key.split(" ")[2])
-		if cursed_pact_number > progress.highest_cursed_pact_completed:
-			progress.highest_cursed_pact_completed = cursed_pact_number
 
-	
-	# After updating the progression, save the game.
-	SaveManager.save_game()
-	
 	
 	var shop_screen = $UI/PulpsicleStand
 	await shop_screen.animate_out() # Animate the shop sliding away
@@ -1292,7 +1281,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	print("Player chose upgrade: ", upgrade_name)
 	
 	if upgrade_name in active_abilities:
-		GameManager._purchase_or_upgrade_ability(upgrade_name)
+		GameManager.purchase_or_upgrade_ability(upgrade_name)
 		
 		
 	elif upgrade_name == "Mulligan Munchie":
@@ -1536,11 +1525,6 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Martyrdom": 
 			if not GameManager.martyrdom_unlocked:
 				GameManager.martyrdom_unlocked = true
-		elif upgrade_name == "New Game S Plus": 
-			if not GameManager.new_game_s_plus_active:
-				GameManager.new_game_s_plus_active = true
-				GameManager.current_garden = 1
-				SceneTransition.transition_to("res://Scenes/main.tscn")
 #-------------------------------Architect--------------------------#
 		elif upgrade_name == "Edge Lord":
 			if GameManager.edge_lord_level < 7:
@@ -1656,12 +1640,91 @@ func update_combo_meter():
 	var max_combo = GameManager.chain_reaction_data[GameManager.chain_reaction_level]
 	if GameManager.current_combo > max_combo:
 		GameManager.current_combo = max_combo
-		
+	
+	if GameManager.current_combo > GameManager.highest_combo_this_garden:
+		GameManager.highest_combo_this_garden = GameManager.current_combo
+	
 	# Start the combo timer with the correct duration from the Lingering Rush upgrade.
 	var combo_duration = GameManager.lingering_rush_data[GameManager.lingering_rush_level]
 	$ComboTimer.start(combo_duration)
 
 func on_snake_ate_food(fruit):
+	if fruit.fruit_type == "Cursed":
+		print("ATE A CURSED FRUIT")
+		var debuffs = ["speed_up", "shrink", "reverse_controls"]
+		match debuffs.pick_random():
+			"speed_up": head.move_timer.wait_time *= 0.8
+			"shrink": 
+				if snake_body_segments.size() > 5:
+					for i in range(5): snake_body_segments.pop_back().queue_free()
+			"reverse_contols": pass # add reverse controls stuff here
+		fruit.queue_free()
+		return
+	# -1.
+	if fruit.fruit_type == "Paradox":
+		print("Paradox Fruit eaten! The Ouroboros is vulnerable!")
+		fruit.queue_free()
+		_start_boss_vulnerable_phase()
+		return
+	#---Garden 10 Super EE check---#
+	if GameManager.current_garden == 10 and GameManager.paradox_engine_active:
+		if fruit.fruit_type != "Fruit" and not fruit.fruit_type in GameManager.garden_10_special_fruits_eaten:
+			GameManager.garden_10_special_fruits_eaten.append(fruit.fruit_type)
+			print("Super Egg: Ate new special fruit type: ", fruit.fruit_type)
+	
+	if GameManager.is_ouroboros_fight_active and GameManager.current_trial_key == "Haste":
+		var goal = 30 if GameManager.should_spawn_corrupted_ouroboros else 15
+		GameManager.trial_haste_fruits_eaten += 1
+		$UI/BossTrialLabel.text = "Haste: %s / %s" % [GameManager.trial_haste_fruits_eaten, goal]
+		if GameManager.trial_haste_fruits_eaten >= 15:
+			_on_trial_complete()
+	
+	if GameManager.is_ouroboros_fight_active and GameManager.current_trial_key == "Patience":
+		if fruit is RipeningFruit: # Make sure we're eating the right kind of fruit
+			var state = fruit.states[fruit.current_state_index]
+			match state:
+				"Green":
+					head.activate_temporary_speed_boost(2.0, 1.0) # Double speed for 1s
+				"Yellow":
+					head.activate_temporary_speed_boost(0.5, 2.0) # Half speed for 2s
+					# We can add logic here to speed up the ArenaShrinkTimer
+				"Red":
+					var goal = 5 if GameManager.should_spawn_corrupted_ouroboros else 3
+					GameManager.trial_patience_fruits_eaten += 1
+					$UI/BossTrialLabel.text = "Patience: %s / %s" % GameManager.trial_patience_fruits_eaten
+					if GameManager.trial_patience_fruits_eaten >= goal:
+						_on_trial_complete()
+					else:
+						_spawn_ripening_fruit() # Spawn the next one
+				"Rotten":
+					head.activate_control_reversal(3.0) # Reversed controls for 3s
+			
+			fruit.queue_free()
+			return
+	
+	if GameManager.is_ouroboros_fight_active and GameManager.current_trial_key == "Memory":
+		var required_fruit = GameManager.trial_memory_sequence[GameManager.trial_memory_progress]
+		if fruit.fruit_type == required_fruit:
+			# Correct!
+			GameManager.trial_memory_progress += 1
+			if GameManager.trial_memory_progress >= GameManager.trial_memory_sequence.size():
+				_on_trial_complete()
+		else:
+			# Incorrect!
+			_on_trial_failed("Memory")
+		
+		# We need to clear all fruits and respawn them for the next attempt or phase.
+		for f in get_tree().get_nodes_in_group("fruits"): f.queue_free()
+		return
+	
+	
+	
+	# 0. --- Check for Garden 8 Easter Egg Failure ---
+	if $Garden8EggTimer.is_stopped() == false:
+		print("Garden 8 Easter Egg Failed: Ate fruit too early!")
+		fruit_eaten_in_first_minute = true
+		$Garden8EggTimer.stop()
+		
 	# 1a. First, update combo meter.
 	update_combo_meter()
 	# 1b. Next, check and update the cookbook progress.
@@ -2180,6 +2243,11 @@ func _start_game_over_sequence():
 	await SceneTransition.uncover_screen("spiral")
 
 func game_over():
+	
+	if GameManager.is_ouroboros_fight_active and GameManager.current_trial_key == "Sacrifice":
+		_on_trial_complete()
+		return
+	
 	var munchie_data = GameManager.ability_charges.get("Mulligan Munchie")
 	if munchie_data and munchie_data.current > 0:
 		use_extra_life()
@@ -2868,6 +2936,12 @@ func handle_upgrade_purchase(upgrade_key: String):
 	var rules = GameManager.get_upgrade_rules(upgrade_key)
 	var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
 	
+	if GameManager.free_upgrades_unlocked:
+		_on_upgrade_menu_upgrade_selected(upgrade_key)
+		$UI/UpgradeMenu.update_all_displays()
+		print("VICTORY LAP UPGRADE IS FREE")
+		return
+	
 	if upgrade_key == "Elephant Sized Portions" and current_level >= GameManager.max_esp_level:
 		print("ESP level capped by Day Trader class!")
 		return
@@ -2891,6 +2965,12 @@ func handle_upgrade_purchase(upgrade_key: String):
 		# Tell the game to apply the upgrade's effect.
 		_on_upgrade_menu_upgrade_selected(upgrade_key) # This function now ONLY applies the effect
 		
+		if GameManager.paradox_engine_active:
+			var upgrades_to_grant = 2 if GameManager.paradox_engine_is_upgraded else 1
+			
+			for i in range(upgrades_to_grant):
+				_grant_random_paradox_upgrade()
+		
 		# After the purchase, refresh the entire upgrade menu UI.
 		# It's important to do this AFTER the effect has been applied.
 		$UI/UpgradeMenu.update_all_displays()
@@ -2898,3 +2978,628 @@ func handle_upgrade_purchase(upgrade_key: String):
 		#--T0-DO-- Add a rejection notification
 		#--			Add a delay on the animation and rejection with a wanh
 		print("Cannot afford upgrade: ", upgrade_key)
+
+func _check_for_easter_egg_step_completion():
+	# 1. The quest is only active in New Game S+.
+	if not GameManager.new_game_s_plus_active: return
+
+	var garden_id = GameManager.current_garden
+	
+	
+	if GameManager.paradox_engine_active:
+		if garden_id == 10 and GameManager.garden_10_special_fruits_eaten.size() >= 4:
+			GameManager.super_egg_step_10_complete = true
+			_apply_easter_egg_boon(10)
+		elif garden_id == 11 and GameManager.garden_11_juke_count >= 11 and GameManager.highest_combo_this_garden >= 11:
+			GameManager.super_egg_step_11_complete = true
+			_apply_easter_egg_boon(11)
+		# Check to spawn Super EE boss
+		if GameManager.super_egg_step_10_complete and GameManager.super_egg_step_11_complete:
+			print("THE FINAL COIL IS COMPLETE! The Corrupted Ouroboros awaits...")
+			GameManager.should_spawn_corrupted_ouroboros = true
+		
+		return #We only enter this block after we already have the base egg done so we want to return from here
+	
+	# Steps 1-8 still the same
+	var step_key = "garden_%s" % garden_id
+	
+	# 2. If we've already completed this step, do nothing.
+	if GameManager.ascension_steps_completed.has(step_key): return
+		
+	var step_is_complete = false
+	#---Double check these are reset and used properly on new game s+
+	# 3. Check for special class exceptions first.
+	if GameManager.chosen_class == "Larry" and (garden_id == 2 or garden_id == 6):
+		print("LARRY EXCEPTION: Auto-completing gambling step.")
+		step_is_complete = true
+	else:
+		# 4. If not an exception, use a match statement for the normal checks.
+		match garden_id:
+			1: # The Offering of Scarcity
+				if GameManager.fruits_eaten_this_run <= 3:
+					step_is_complete = true
+			3: # The Offering of Discipline
+				if GameManager.abilities_used_this_garden == 1:
+					step_is_complete = true
+			4: # The Offering of Wealth
+				if GameManager.juice >= 25:
+					step_is_complete = true
+			5: # The Offering of Poverty
+				if GameManager.juice < 50:
+					step_is_complete = true
+			7: # The Offering of Patience
+				if GameManager.juice_spent_this_garden == 0:
+					step_is_complete = true
+			8: # The Offering of Defiance
+				if not fruit_eaten_in_first_minute:
+					step_is_complete = true
+				
+	# 4. If the step was completed, record it and apply the boon.
+	if step_is_complete:
+		print("EASTER EGG STEP %s COMPLETE!" % garden_id)
+		GameManager.ascension_steps_completed[step_key] = true
+		_apply_easter_egg_boon(garden_id)
+
+func _apply_easter_egg_boon(garden_id: int):
+	# This function applies the correct reward for each step of the quest.
+	
+	# We can play a shared "secret found" sound effect here.
+	play_screen_flash(Color.GOLD)
+	print("Step ", garden_id, " completed")
+	match garden_id:
+		1: # Boon of Potential
+			GameManager.fruit_reward += 1
+			print("Fruit Reward +1")
+		2: # Boon of Fortune
+			GameManager.passive_income_unlocked = true
+			print("Passive Income Unlocked!")
+		3: # Boon of Focus
+			GameManager.max_ability_slots += 1
+			print("Free Ability Slot")
+		4: # Boon of Abundance
+			GameManager.juice *= 2
+			print("Juice has been doubled")
+		5: # Boon of Opportunity
+			GameManager.global_juice_cost_multiplier = 0.8 # 20% discount
+			print("20% juice discount applied")
+		6: # Boon of Possibility
+			GameManager.max_ability_slots = 10 # Unlock all slots
+			print("All slots unlocked")
+		7: # Boon of Insight
+			GameManager.liquid_assets_level += 1 # A free level in Liquid Assets
+			print("Liquid Assets + 1")
+		8: # The Serpent's Eye
+			print("Ouroboros is waiting...")
+			# This boon is just a flag that the Garden 9 boss will check for.
+			# We can add a cool visual effect here, like making the snake's eyes glow.
+			pass
+		10: # Boon of Duality
+			print("BOON OF DUALITY! Special Fruit Chance Doubled!")
+			#---TO-DO: Add double fruit chance flag---
+			GameManager.special_fruit_chance_doubled = true
+		11: # Boon of Ascension
+			print("BOON OF ASCENSION! Paradox Engine upgraded!")
+			GameManager.paradox_engine_is_upgraded = true
+	# After applying a boon, we should always update the UI.
+	update_hud()
+
+
+func _check_and_start_boss_fight():
+	
+	if GameManager.current_garden == 12 and GameManager.should_spawn_corrupted_ouroboros:
+		print("THE CORRUPTED OUROBOROS APPEARS!")
+		GameManager.is_ouroboros_fight_active = true
+		_setup_corrupted_arena()
+		_start_next_corrupted_boss_phase()
+		return
+	
+	# NOW we check if the first egg just got completed
+	var ee_steps_done = GameManager.ascension_steps_completed.size()
+	
+	if GameManager.current_garden == 9 and ee_steps_done == 8:
+		print("The OUROBOROS HAS AWOKEN")
+		GameManager.is_ouroboros_fight_active = true
+		_setup_ouroboros_arena()
+		_start_next_boss_phase()
+
+func _setup_ouroboros_arena():
+	# --- Override all cosmetics ---
+	# 1. Hide the normal background and all particle effects.
+	background_rect.color = Color.BLACK
+	$VoidParticles.emitting = false
+	$CoveParticles.emitting = false
+
+	
+	# 2. Add a new, cooler background (e.g., a swirling nebula TextureRect).
+	# For now, we'll just set it to black.
+	
+	# 3. Make the snake ethereal.
+	head.get_node("FillSprite").modulate = Color.WHITE
+	for segment in snake_body_segments:
+		segment.get_node("FillSprite").modulate = Color.WHITE
+		
+	# 4. Remove all normal obstacles and fruits.
+	for obstacle in spawned_obstacles:
+		obstacle.queue_free()
+	spawned_obstacles.clear()
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		fruit.queue_free()
+		
+	# 5. Create the Ouroboros boundary.
+	var ouroboros_boundary = $OuroborosBoundary
+	ouroboros_boundary.clear_points()
+	var radius = 400 # The starting size of the arena
+	for i in range(101):
+		var angle = i / 100.0 * 2.0 * PI
+		ouroboros_boundary.add_point(Vector2(cos(angle), sin(angle)) * radius)
+	ouroboros_boundary.position = head.position # Center it on the player
+	ouroboros_boundary.visible = true
+
+
+func _start_next_boss_phase():
+	print("Starting Ouroboros Phase %s" % GameManager.ouroboros_phase)
+	$ArenaShrinkTimer.start(0.5)
+	# TRIAL-SPECIFIC TRACKERS ---
+	GameManager.trial_haste_fruits_eaten = 0
+	GameManager.trial_patience_fruits_eaten = 0
+	GameManager.trial_illusion_phases = 0
+	GameManager.trial_memory_sequence = []
+	GameManager.trial_memory_progress = 0
+	
+	match GameManager.ouroboros_phase:
+		1: _start_trial_of_sacrifice()
+		2: _start_random_mastery_trial()
+		3: _start_random_mastery_trial()
+
+func _start_trial_of_sacrifice():
+	GameManager.current_trial_key = "Sacrifice"
+	$UI/BossTrialLabel.text = "The Ouroboros demands a sacrifice.\nProve you've got what it takes..."
+	$UI/BossTrialLabel.visible = true
+	
+func _on_trial_complete():
+	print("TRIAL COMPLETE!")
+	# Stop the arena from shrinking.
+	$ArenaShrinkTimer.stop()
+	$UI/BossTrialLabel.visible = false
+	
+	# --- Apply the Boon for the Trial of Sacrifice ---
+	if GameManager.current_trial_key == "Sacrifice":
+		_recharge_all_abilities()
+		play_screen_flash(Color.GOLD)
+		
+	# Spawn the reward fruit.
+	var paradox_fruit = preload("res://Scenes/Fruits/fruit_of_paradox.tscn").instantiate()
+	paradox_fruit.position = $OuroborosBoundary.position # Spawn in the center
+	add_child(paradox_fruit)
+
+
+func _start_random_mastery_trial():
+	var trial_pool = ["Haste", "Patience", "Precision", "Memory", "Illusion"]
+	var chosen_trial = trial_pool.pick_random()
+	_start_trial(chosen_trial, false) # false means it's NOT corrupted
+
+
+func _start_trial(trial_key: String, is_corrupted: bool):
+	GameManager.current_trial_key = trial_key
+	
+	# If the trial is corrupted, start spawning Cursed Fruits.
+	if is_corrupted:
+		$CursedFruitSpawnTimer.start(5.0)
+		
+	# Use a match statement to call the correct setup function.
+	match trial_key:
+		"Haste": _start_trial_of_haste(is_corrupted)
+		"Patience": _start_trial_of_patience(is_corrupted)
+		"Precision": _start_trial_of_precision(is_corrupted)
+		"Memory": _start_trial_of_memory(is_corrupted)
+		"Illusion": _start_trial_of_illusion(is_corrupted)
+
+
+# --- NEW TRIAL HELPER FUNCTIONS ---
+
+func _start_trial_of_haste(is_corrupted: bool):
+	var goal = 30 if is_corrupted else 15
+	$UI/BossTrialLabel.text = "The Ouroboros grants you impossible speed.\nDo not falter. Collect %s fruits." % goal
+	$UI/BossTrialLabel.visible = true
+	head.move_timer.wait_time /= 1.5 # 50% speed increase
+	# We'll need to add logic to on_snake_ate_food to check if 15 fruits have been collected.
+
+func _start_trial_of_patience(is_corrupted: bool):
+	var goal = 5 if is_corrupted else 3
+	$UI/BossTrialLabel.text = "Perfection cannot be rushed.\nEat %s perfectly ripe fruits." % goal
+	$UI/BossTrialLabel.visible = true
+	GameManager.trial_patience_fruits_eaten = 0
+	# This will require a new "ripening_fruit.tscn" with its own script to handle the color cycle.
+	_spawn_ripening_fruit()
+
+func _start_trial_of_precision(is_corrupted: bool):
+	$UI/BossTrialLabel.text = "The path is narrow for those who ascend.\nNavigate the maze."
+	$UI/BossTrialLabel.visible = true
+	
+	var maze_size = Vector2i(24,18) if is_corrupted else Vector2i(20,15)
+	var maze_data = _generate_maze_data(maze_size.x, maze_size.y) 
+	
+	# 2. Use the data to spawn the wall nodes.
+	for y in range(maze_data.size()):
+		for x in range(maze_data[y].size()):
+			if maze_data[y][x] == 1: # 1 represents a wall
+				var wall = preload("res://Scenes/phantom_wall.tscn").instantiate()
+				# We need to calculate the correct position based on the main grid
+				var world_pos = Vector2(x * 2, y * 2) * tile_size + tile_offset
+				wall.position = world_pos
+				add_child(wall)
+				
+	# 3. Spawn a single fruit at the end of the maze.
+	var end_pos = Vector2(19 * 2, 14 * 2) * tile_size + tile_offset
+	spawn_fruit(end_pos)
+
+func _generate_maze_data(width, height) -> Array:
+	var maze = []
+	for y in range(height):
+		maze.append([])
+		for x in range(width):
+			maze[y].append(1) # Fill with walls
+
+	var stack = [Vector2i(0, 0)]
+	maze[0][0] = 0
+
+	while not stack.is_empty():
+		var current = stack.back()
+		var neighbors = []
+		var directions = [Vector2i(0, -2), Vector2i(0, 2), Vector2i(-2, 0), Vector2i(2, 0)]
+		directions.shuffle()
+
+		for dir in directions:
+			var nx = current.x + dir.x
+			var ny = current.y + dir.y
+			if nx >= 0 and nx < width and ny >= 0 and ny < height and maze[ny][nx] == 1:
+				neighbors.append(Vector2i(nx, ny))
+
+		if not neighbors.is_empty():
+			var next = neighbors.pick_random()
+			maze[next.y][next.x] = 0
+			maze[current.y + (next.y - current.y) / 2][current.x + (next.x - current.x) / 2] = 0
+			stack.append(next)
+		else:
+			stack.pop_back()
+			
+	return maze
+
+
+func _start_trial_of_memory(is_corrupted: bool):
+	$UI/BossTrialLabel.text = "Follow the true path."
+	$UI/BossTrialLabel.visible = true
+	
+	var sequence_length = 5 if is_corrupted else 3
+	# 1. Get the list of special fruits and pick 3 for the sequence.
+	var unlocked_specials = GameManager.get_unlocked_special_fruits()
+	GameManager.trial_memory_sequence.clear()
+	for i in range(sequence_length):
+		GameManager.trial_memory_sequence.append(unlocked_specials.pick_random())
+	
+	# 2. Display the sequence to the player (we can use a tween for this).
+	# ... (code to show the 3 fruit icons one by one)
+	
+	# 3. Spawn the correct fruits plus some fakes.
+	var fruits_to_spawn = GameManager.trial_memory_sequence.duplicate()
+	for i in range(7): # Add 5 fakes
+		fruits_to_spawn.append(unlocked_specials.pick_random())
+	fruits_to_spawn.shuffle()
+	
+	for fruit_key in fruits_to_spawn:
+		var fruit_instance = instantiate_fruit_from_key(fruit_key)
+		fruit_instance.position = calculate_safe_spawn_position()
+		add_child(fruit_instance)
+
+
+func _start_trial_of_illusion(is_corrupted: bool):
+	var goal = 5 if is_corrupted else 3
+	$UI/BossTrialLabel.text = "Your form is a lie. Prove it.\nPass through yourself %s times." % goal
+	$UI/BossTrialLabel.visible = true
+	GameManager.trial_illusion_phases = 0
+
+func report_illusion_phase():
+	var goal = 5 if GameManager.should_spawn_corrupted_ouroboros else 3
+	# This function is called by the snake head during the trial.
+	GameManager.trial_illusion_phases += 1
+	play_screen_flash(Color.PURPLE) # Cool feedback!
+	$UI/BossTrialLabel.text = "Illusion: %s / %s" % [GameManager.trial_illusion_phases, goal]
+	
+	if GameManager.trial_illusion_phases >= goal:
+		_on_trial_complete()
+
+func _spawn_ripening_fruit():
+	# use the robust safe spawn function to find a spot.
+	var spawn_pos = calculate_safe_spawn_position()
+	if spawn_pos == Vector2(-100, -100): return # No safe space found
+	
+	var ripening_fruit = preload("res://Scenes/Fruits/ripening_fruit.tscn").instantiate()
+	ripening_fruit.position = spawn_pos
+	add_child(ripening_fruit)
+
+
+
+
+func _start_boss_vulnerable_phase():
+	var ouroboros_boundary = $OuroborosBoundary
+	var head_node = $OuroborosHead
+	
+	# 1. Pick a random point along the circular boundary.
+	var random_point_index = randi() % ouroboros_boundary.get_point_count()
+	var spawn_position = ouroboros_boundary.get_point_position(random_point_index)
+	
+	# 2. Position the head at that point.
+	head_node.position = spawn_position
+	head_node.visible = true
+	
+	# 3. Add a cool "portal" or "emerge" animation.
+	var tween = create_tween()
+	head_node.scale = Vector2.ZERO
+	tween.tween_property(head_node, "scale", Vector2.ONE, 0.4).set_trans(Tween.TRANS_BACK)
+
+func _on_boss_head_collided():
+	# This function is called from snake_head.gd when it hits the boss head.
+	print("Direct hit! Phase %s complete!" % GameManager.ouroboros_phase)
+	$OuroborosHead.visible = false
+	play_screen_flash(Color.WHITE)
+	
+	# --- Update Progression ---
+	GameManager.ouroboros_phase += 1
+	if GameManager.ouroboros_phase > 3:
+		# YOU WIN!
+		_on_boss_defeated()
+	else:
+		# Start the next phase.
+		_start_next_boss_phase()
+
+func _on_boss_defeated():
+	print("THE OUROBOROS IS DEFEATED!")
+	if GameManager.should_spawn_corrupted_ouroboros:
+		# --- Super Egg Rewards --- #
+		SaveManager.save_data.serpent_fangs += 5000
+		SaveManager.save_data.unlocked_cosmetics.patterns.append("Ouroboros Scales")
+		SaveManager.save_data.unlocked_cosmetics.frames.append("Corrupted Frame")
+		SaveManager.save_data.pantheon_entries[GameManager.chosen_class] = "Conquered the Final Coil"
+		if GameManager.chosen_difficulty == "Cursed Pact 5":
+			GameManager.free_upgrades_unlocked = true
+			GameManager.roll_credits_unlocked = true
+			_start_garden_13()
+			return
+		
+	SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
+
+func _on_arena_shrink_timer_timeout():
+	var boundary = $OuroborosBoundary
+	# We get the current radius from the first point's length.
+	var current_radius = boundary.get_point_position(0).length()
+
+	# If the arena is too small, the player loses.
+	if current_radius <= 50:
+		game_over()
+		return
+
+	# Shrink the radius by a small amount.
+	var new_radius = current_radius - 2.0
+
+	# Redraw the circle with the new, smaller radius.
+	boundary.clear_points()
+	for i in range(101):
+		var angle = i / 100.0 * 2.0 * PI
+		boundary.add_point(Vector2(cos(angle), sin(angle)) * new_radius)
+
+func _on_trial_failed(failed_trial_key: String):
+	print("TRIAL FAILED: ", failed_trial_key)
+	GameManager.trial_failed = true
+	
+	# 1. Give strong visual and audio feedback.
+	play_screen_flash(Color.CRIMSON)
+	# We can add a "failure" sound effect here later.
+	
+	# 2. Apply the punishments.
+	# Increase snake speed by making the timer wait less time.
+	head.move_timer.wait_time *= 0.95 
+	# Increase arena shrink speed by making its timer fire more often.
+	$ArenaShrinkTimer.wait_time *= 0.9
+	
+	_start_trial(failed_trial_key, GameManager.should_spawn_corrupted_ouroboros)
+
+
+func _on_debug_complete_current_step():
+	# This function simulates completing the step for the garden you are currently in.
+	var garden_id = GameManager.current_garden
+	var step_key = "garden_%s" % garden_id
+	
+	if not GameManager.ascension_steps_completed.has(step_key):
+		print("DEBUG: Force completing EE step for Garden %s" % garden_id)
+		GameManager.ascension_steps_completed[step_key] = true
+		_apply_easter_egg_boon(garden_id)
+	else:
+		print("DEBUG: Step for Garden %s already complete." % garden_id)
+
+func _on_debug_complete_all_steps():
+	# This function is a shortcut to complete all 8 steps at once.
+	print("DEBUG: Force completing all 8 Ascension steps.")
+	for i in range(1, 9):
+		var step_key = "garden_%s" % i
+		if not GameManager.ascension_steps_completed.has(step_key):
+			GameManager.ascension_steps_completed[step_key] = true
+			_apply_easter_egg_boon(i)
+	GameManager.paradox_engine_active = true
+	print("DEBUG: Paradox Engine is now active!")
+			
+func _on_debug_reset_ee_progress():
+	print("DEBUG: Resetting all Easter Egg progress for this run.")
+	GameManager.ascension_steps_completed.clear()
+	GameManager.super_egg_step_10_complete = false
+	GameManager.super_egg_step_11_complete = false
+	
+	# We would also need to remove any boons that were applied.
+	# A full reset would require restarting the run.
+func _on_debug_jump_to_garden_8():
+	print("DEBUG: Jumping to Garden 8...")
+	head.move_timer.stop()
+	# 1. We manually set the current garden to 7.
+	#    This is because our _go_to_next_garden function will increment it to 8.
+	GameManager.current_garden = 7
+	
+	# 2. We can give the player some resources to simulate a real run.
+	GameManager.juice += 200
+	GameManager.pulp += 1000
+	
+	# 3. Now, we just call our existing function to handle the transition.
+	#    This is very clean because it will also correctly reset all the
+	#    per-garden stats and recharge abilities, just like a real run.
+	_go_to_next_garden()
+	
+func report_juke_and_jive_success():
+	if GameManager.current_garden == 11 and GameManager.paradox_engine_active:
+		GameManager.garden_11_juke_count += 1
+		print("Super Egg: Juke count is now: ", GameManager.garden_11_juke_count)
+
+func _grant_random_paradox_upgrade():
+	print("PARADOX ENGINE RUNNING HOT: FREE UPGRADE COMING...")
+	var valid_upgrade_pool: Array = []
+	for path_key in GameManager.upgrade_data:
+		for sub_path_key in GameManager.upgrade_data[path_key]:
+			for upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
+				var rules = GameManager.get_upgrade_rules(upgrade_key)
+				var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
+				
+				if current_level >= rules.max_level:
+					continue
+				if not GameManager.check_prerequisites(upgrade_key):
+					continue
+				valid_upgrade_pool.append(upgrade_key)
+	if not valid_upgrade_pool.is_empty():
+		var chosen_upgrade = valid_upgrade_pool.pick_random()
+		print("Paradox Engine chose: ", chosen_upgrade)
+		_on_upgrade_menu_upgrade_selected(chosen_upgrade)
+	else:
+		print("PARADOX ENGINE FOUND NO AVAILABLE UPGRADES. GRANTING BONUS JUICE INSTEAD!")
+		GameManager.juice += 10
+
+func _setup_corrupted_arena():
+	# This function is a more intense version of our normal boss arena setup.
+	
+	# 1. Override all cosmetics.
+	background_rect.color = Color.BLACK
+	$VoidParticles.emitting = false
+	$CoveParticles.emitting = false
+	
+	# 2. Add new, more intense effects.
+	# We could add a red "vignette" shader or a screen shake timer here.
+	
+	# 3. Make the snake look corrupted.
+	head.get_node("FillSprite").modulate = Color.CRIMSON
+	for segment in snake_body_segments:
+		segment.get_node("FillSprite").modulate = Color.CRIMSON
+		
+	# 4. Remove all normal obstacles and fruits.
+	for obstacle in spawned_obstacles:
+		obstacle.queue_free()
+	spawned_obstacles.clear()
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		fruit.queue_free()
+		
+	# 5. Create the Corrupted Ouroboros boundary.
+	# 5. Create the Ouroboros boundary.
+	var ouroboros_boundary = $OuroborosBoundary
+	ouroboros_boundary.default_color = Color.RED
+	ouroboros_boundary.clear_points()
+	var radius = 400 # The starting size of the arena
+	for i in range(101):
+		var angle = i / 100.0 * 2.0 * PI
+		ouroboros_boundary.add_point(Vector2(cos(angle), sin(angle)) * radius)
+	ouroboros_boundary.position = head.position # Center it on the player
+	ouroboros_boundary.visible = true
+
+func _start_next_corrupted_boss_phase():
+	print("Starting Corrupted Ouroboros Phase %s" % GameManager.ouroboros_phase)
+	
+	# The corrupted arena shrinks 25% faster.
+	$ArenaShrinkTimer.wait_time = 0.075 
+	$ArenaShrinkTimer.start()
+	
+	# The Corrupted Ouroboros does NOT have a sacrifice phase.
+	# It immediately starts with a random, harder trial.
+	_start_random_corrupted_mastery_trial()
+
+func _start_random_corrupted_mastery_trial():
+	var trial_pool = ["Haste", "Patience", "Precision", "Memory", "Illusion"]
+	var chosen_trial = trial_pool.pick_random()
+	_start_trial(chosen_trial, true) # true means it IS corrupted
+
+func _on_cursed_fruit_spawn_timer_timeout():
+	# This function just spawns one cursed fruit at a safe location.
+	var cursed_fruit = preload("res://Scenes/Fruits/cursed_fruit.tscn").instantiate()
+	cursed_fruit.position = calculate_safe_spawn_position()
+	add_child(cursed_fruit)
+
+func _start_garden_13():
+	# 1. Set the garden number.
+	GameManager.current_garden = 13
+	
+	# 2. Check if we should roll the credits.
+	if GameManager.roll_credits_unlocked:
+		_animate_credits()
+	
+	# 3. Transition to the scene.
+	SceneTransition.transition_to("res://Scenes/main.tscn", "random")
+func _animate_credits():
+	var credits_container = credits_canvas.get_node("CreditsContainer")
+	
+	credits_canvas.visible = true
+	credits_canvas.modulate.a = 0.7
+	
+	var screen_height = get_viewport_rect().size.y
+	var start_pos = screen_height
+	var end_pos = -credits_container.get_minimum_size().y
+	
+	credits_container.position.y = start_pos
+	
+	var tween = create_tween()
+	tween.tween_property(credits_container, "position:y", end_pos, 60.0).set_ease(Tween.EASE_IN_OUT)
+
+func update_difficulty_progression():
+	var completed_class_key = GameManager.chosen_class
+	var completed_pact_key = GameManager.chosen_difficulty
+	
+	var progress = SaveManager.get_progress_for_class(completed_class_key)
+	
+	print("Updating progression for %s on difficulty %s" % [completed_class_key, completed_pact_key])
+	
+	if completed_pact_key.begins_with("Pact"):
+		var pact_number = int(completed_pact_key.split(" ")[1])
+		if pact_number > progress.highest_pact_completed:
+			progress.highest_pact_completed = pact_number
+			
+	elif completed_pact_key.begins_with("Trial"):
+		if not completed_pact_key in progress.seals_broken:
+			progress.seals_broken.append(completed_pact_key)
+			
+	elif completed_pact_key.begins_with("Cursed"):
+		var cursed_pact_number = int(completed_pact_key.split(" ")[2])
+		if cursed_pact_number > progress.highest_cursed_pact_completed:
+			progress.highest_cursed_pact_completed = cursed_pact_number
+			
+	SaveManager.save_game()
+
+func _on_debug_complete_super_step_10():
+	# This simulates completing the Trial of the Harvest/Step 10
+	if not GameManager.paradox_engine_active:
+		print("DEBUG ERROR: Cannot complete super egg step before normal egg is done.")
+		return
+		
+	print("DEBUG: Force completing Super EE step 10.")
+	GameManager.super_egg_step_10_complete = true
+	_apply_easter_egg_boon(10)
+
+func _on_debug_complete_super_step_11():
+	# This simulates completing the Trial of the Acrobat/Step 11
+	if not GameManager.super_egg_step_10_complete:
+		print("DEBUG ERROR: Must complete step 10 first.")
+		return
+		
+	print("DEBUG: Force completing Super EE step 11.")
+	GameManager.super_egg_step_11_complete = true
+	_apply_easter_egg_boon(11)

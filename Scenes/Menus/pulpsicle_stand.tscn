@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://8jgmx7q20qg5"]
+[gd_scene load_steps=31 format=3 uid="uid://8jgmx7q20qg5"]
 
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_7n2mm"]
 [ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scripts/pulpsicle_stand.gd" id="1_i1qs4"]
@@ -21,6 +21,7 @@
 [ext_resource type="PackedScene" uid="uid://bdqnq8u7m75ue" path="res://Scenes/UI/description_panel.tscn" id="12_p3c4b"]
 [ext_resource type="Texture2D" uid="uid://jpnu2y5giqfk" path="res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png" id="12_rc0gc"]
 [ext_resource type="Texture2D" uid="uid://dmj6ta0j3erh6" path="res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png" id="14_6na3d"]
+[ext_resource type="Texture2D" uid="uid://dic538ovhfvqd" path="res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png" id="14_k06tx"]
 [ext_resource type="Texture2D" uid="uid://7lnf3ukolxsh" path="res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png" id="15_rc0gc"]
 [ext_resource type="Texture2D" uid="uid://cejds41wnjyen" path="res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png" id="16_5s2i6"]
 
@@ -180,6 +181,8 @@ vertical_alignment = 1
 
 [node name="RotatingItemRow" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer"]
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 theme_override_constants/separation = 32
 alignment = 1
 
@@ -215,6 +218,25 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 icon = ExtResource("10_2goil")
+
+[node name="NewGameSPlusButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
+visible = false
+custom_minimum_size = Vector2(160, 160)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_disabled_color = Color(0, 1, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0, 1, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 1, 0, 1)
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_focus_color = Color(0, 1, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 1, 0, 1)
+theme_override_fonts/font = ExtResource("3_4da1l")
+text = "new game s+"
+icon = ExtResource("14_k06tx")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
 
 [node name="HSeparator3" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 32)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=124 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=123 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
@@ -80,7 +80,6 @@
 [ext_resource type="Texture2D" uid="uid://0qf5cn5n8vpj" path="res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png" id="62_7m1o1"]
 [ext_resource type="Texture2D" uid="uid://dx0uaosq5f1cp" path="res://Assets/PNGs/UpgradeIcons/PhoenixDawnIcon.png" id="63_55di1"]
 [ext_resource type="Texture2D" uid="uid://c3t1pu6qqnqkv" path="res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png" id="64_7m1o1"]
-[ext_resource type="Texture2D" uid="uid://dic538ovhfvqd" path="res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png" id="65_0pvf3"]
 [ext_resource type="Texture2D" uid="uid://c56jk76c6jbup" path="res://Assets/PNGs/UpgradeIcons/LastStandIcon.png" id="65_2wxcq"]
 [ext_resource type="Texture2D" uid="uid://ux2vmnjwxqi0" path="res://Assets/PNGs/UpgradeIcons/DeathDefiedIcon.png" id="66_2wxcq"]
 [ext_resource type="Texture2D" uid="uid://bg3k00gm4s2s" path="res://Assets/PNGs/UpgradeIcons/MartyrdomIcon.png" id="68_puhfl"]
@@ -234,10 +233,11 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 0
+current_tab = 3
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -893,7 +893,6 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="The Redliner" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -1049,8 +1048,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = 48
-alignment = 1
+theme_override_constants/separation = 32
 
 [node name="LedgerPathAVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox/LedgerPathContainer"]
 layout_mode = 2
@@ -1074,19 +1072,11 @@ icon = ExtResource("63_55di1")
 layout_mode = 2
 icon = ExtResource("64_7m1o1")
 
-[node name="NewGameSPlusNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox/LedgerPathContainer/LedgerPathAVBox" instance=ExtResource("12_hesgk")]
-visible = false
-custom_minimum_size = Vector2(96, 96)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 6
-icon = ExtResource("65_0pvf3")
-
 [node name="LedgerPathBVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox/LedgerPathContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = 16
+theme_override_constants/separation = 8
 
 [node name="LastStandNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/The Redliner/RedlinerMain/SurvivorVbox/LedgerPathContainer/LedgerPathBVBox" instance=ExtResource("12_hesgk")]
 layout_mode = 2

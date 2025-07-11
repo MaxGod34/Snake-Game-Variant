@@ -162,10 +162,23 @@ func on_move_timer_timeout():
 func _on_head_area_area_entered(area):
 	if main.is_game_over:
 		return
+	if area.is_in_group("boss_head"):
+		main._on_boss_head_collided()
+		return	
+	if area.is_in_group("phantom_walls"):
+		main._on_trial_failed("Precision")
+		return
 	if area is Fruit or area is GoldenFruit or area is JumpingBean or area is GhostPepper or area is IronCherry or area is DragonFruit:
 		emit_signal("ate_fruit", area)
 		return
 	if area is SnakeBody:
+		
+		if GameManager.is_ouroboros_fight_active and GameManager.current_trial_key == "Illusion":
+			# 2. If yes, instead of dying, we tell main.gd that a phase happened.
+			main.report_illusion_phase()
+			return
+		
+		
 		# Check all invulnerability states
 		if not GameManager.is_phasing and not juke_and_jive_is_active:
 			if GameManager.autotomy_is_active:
@@ -303,6 +316,7 @@ func handle_juke_and_jive():
 	if juke_inputs >= 4:
 		juke_and_jive_is_active = true
 		juke_duration_timer.start(move_speed * 5)
+		main.report_juke_and_jive_success()
 		get_node("FillSprite").modulate = Color.DEEP_SKY_BLUE
 		juke_timer.stop()
 		juke_inputs = 0

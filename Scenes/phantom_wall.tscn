@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://q8r0agyjiirk"]
+
+[ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="1_xp3jm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aq77v"]
+
+[node name="PhantomWall" type="Area2D" groups=["phantom_walls"]]
+modulate = Color(0.0745098, 0.282353, 1, 0.32549)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_xp3jm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_aq77v")

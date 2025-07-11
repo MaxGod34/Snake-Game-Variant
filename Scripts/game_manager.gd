@@ -85,7 +85,32 @@ var equipped_background_color: Color = Color.DARK_SLATE_GRAY
 #var equipped_SFX: ???
 
 
-
+# --- EASTER EGG TRACKING (for the current run) ---
+var ascension_steps_completed: Dictionary = {}
+var paradox_engine_active: bool = false
+var paradox_engine_is_upgraded: bool = false
+var special_fruit_chance_doubled: bool = false
+# --- OUROBOROS BOSS STATE ---
+var is_ouroboros_fight_active: bool = false
+var ouroboros_phase: int = 1 # Can be 1, 2, or 3
+var current_trial_key: String = ""
+var trial_failed: bool = false
+# --- TRIAL-SPECIFIC TRACKERS ---
+var trial_haste_fruits_eaten: int = 0
+var trial_patience_fruits_eaten: int = 0
+var trial_illusion_phases: int = 0
+var trial_memory_sequence: Array = []
+var trial_memory_progress: int = 0
+# --- SUPER EE TRACKERS --- #
+var super_egg_step_10_complete: bool = false
+var super_egg_step_11_complete: bool = false
+var garden_10_special_fruits_eaten: Array = []
+var garden_11_juke_count: int = 0
+var highest_combo_this_garden: int = 0
+var should_spawn_corrupted_ouroboros: bool = false
+#----------END GAME FLAGS--------#
+var free_upgrades_unlocked: bool = false
+var roll_credits_unlocked: bool = false
 #-----Player Stats--------#
 var player_level = 1
 var juice = 0
@@ -401,19 +426,19 @@ var difficulty_data = {
 	"Cursed Pact 1": {
 		"display_name": "Cursed Pact I: Empty-Handed", "description": "You must earn your power. You start with no ability slots.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
+		"campaign_length": 12, "locked_paths": [], "start_upgrades": {},
 		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
 	},
 	"Cursed Pact 2": {
 		"display_name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["Glutton"], "start_upgrades": {},
+		"campaign_length": 12, "locked_paths": ["Glutton"], "start_upgrades": {},
 		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_2.png",
 	},
 	"Cursed Pact 3": {
 		"display_name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
+		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
 		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png",
 	},
 	"Cursed Pact 4": {
@@ -426,7 +451,7 @@ var difficulty_data = {
 	"Cursed Pact 5": {	#FINAL
 		"display_name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 13, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
+		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
 		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
 	}
 }
@@ -2044,14 +2069,6 @@ var upgrade_data = {
 				"icon_path": "res://Assets/PNGs/UpgradeIcons/MartyrdomIcon.png",
 				"type": "On-Death Ability"
 			},
-			"New Game S Plus": {
-				"display_name": "New Game S+",
-				"description": "PRESTIGE! Beat the game without dying to restart with all your power",
-				"costs": [1], "max_level": 1,
-				"icon_path": "res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png",
-				"type": "???"
-				# The prerequisite for this one will be handled in code, not here.
-			}
 		}
 	},#----------------------------------------------------------------------------------------------#
 #---------------------------------------SSSCALE(ILLUSIONIST, ARCHITECT-------------------------------#
@@ -2524,9 +2541,45 @@ var cosmetic_data = {
 	}
 }
 
+var qol_upgrade_data = {
+	"Faster Tickers": {
+		"display_name": "Faster Tickers", "fang_cost": [50, 100, 150], "max_level": 3,
+		"description": "Increases the scroll speed of the news tickers in the upgrade menu.",
+		"icon_path": "res://Assets/PNGs/snake_chart_logo.png"
+	},
+	"Rock Variety": {
+		"display_name": "Rock Variety", "fang_cost": [75, 75, 75], "max_level": 3,
+		"description": "Unlocks new cosmetic styles for the rocks in the garden.",
+		"icon_path": "res://Assets/PNGs/UpgradeIcons/GeodeCrackerIcon.png"
+	},
+	"The Randomizer": {
+		"display_name": "The Randomizer", "fang_cost": [500], "max_level": 1,
+		"description": "Adds a 'Random Run' button to the selection screen.",
+		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png"
+	}
+}
 
-
-
+var lore_unlock_data = {
+	"Codex of Feats": {"fang_cost": 100, "icon_path": "res://..."},
+	"Ouroboros Cipher 1": {"fang_cost": 1, "icon_path": "res://..."}, #first clue, there is an easter egg
+	"Ouroboros Cipher 2": {"fang_cost": 1000, "icon_path": "res://..."}, #new game s+
+	"Ouroboros Cipher 3": {"fang_cost": 1000, "icon_path": "res://..."}, #only 3 fruits G1
+	"Ouroboros Cipher 4": {"fang_cost": 1000, "icon_path": "res://..."}, #win a coin toss G2
+	"Ouroboros Cipher 5": {"fang_cost": 1000, "icon_path": "res://..."}, #use 1 ability G3
+	"Ouroboros Cipher 6": {"fang_cost": 1000, "icon_path": "res://..."}, #hold 25 mL juice G4
+	"Ouroboros Cipher 7": {"fang_cost": 1000, "icon_path": "res://..."}, #hold 5 mL or less juice G5
+	"Ouroboros Cipher 8": {"fang_cost": 1000, "icon_path": "res://..."}, #win dice roll G6
+	"Ouroboros Cipher 9": {"fang_cost": 1000, "icon_path": "res://..."}, #no upgrades G7
+	"Ouroboros Cipher 10": {"fang_cost": 1000, "icon_path": "res://..."}, #no fruit 60 sec G8
+	"Ouroboros Cipher 11": {"fang_cost": 2000, "icon_path": "res://..."}, #super egg exists
+	"Ouroboros Cipher 12": {"fang_cost": 2000, "icon_path": "res://..."}, # 4 diff fruits G10
+	"Ouroboros Cipher 13": {"fang_cost": 2000, "icon_path": "res://..."}, # JukeNJive + combo 11
+	"Tome of the Splice": {"fang_cost": 250, "icon_path": "res://..."}, #special fruits/fruit
+	"Tome of the Ledger": {"fang_cost": 250, "icon_path": "res://..."}, #block market
+	"Tome of the Atlas": {"fang_cost": 250, "icon_path": "res://..."}, #gardens
+	"Tome of the Pantheon": {"fang_cost": 250, "icon_path": "res://..."}, #classes
+	"Tome of the Compendium": {"fang_cost": 250, "icon_path": "res://..."}, #pacts
+}
 
 
 # --- CORRECTED RECIPE DATA ---
@@ -2699,6 +2752,9 @@ func get_base_special_fruit_chance() -> float:
 		total_chance += 0.10 # Base 10%
 		if exotic_seeds_level >= 5:
 			total_chance += 0.10 # The Lvl 5 bonus adds another 10%
+	
+	if special_fruit_chance_doubled:
+		total_chance *= 2.0
 			
 	return total_chance
 
@@ -2839,194 +2895,33 @@ func get_total_juice_spent_in_path(path_upgrades: Array) -> int:
 			
 	return total_spent
 
-
-	
-func start_game():
-	var diff_data = difficulty_data.get(chosen_difficulty, {})
-	# Reset all stats for a new run
-	player_level = 1
-	juice = 0
-	juice += diff_data.get("start_juice", 0)	# add starting sp
-	pulp = 0
-	score_needed_for_next_level = 5
-	score_at_level_start = 0
+func start_new_game_s_plus():
+	print("Starting New Game S+!")
 	current_garden = 1
-	has_died_this_garden = false
-	run_time = 0.0
-	fruits_eaten_this_run = 0
-	segments_to_restore = 0
-	passive_gps = 0.0
-	#--------Run Stat Tracking----------#
-	total_juice_earned_this_run = 0
-	total_juice_earned_this_run = juice
-	total_pulp_earned_this_run = 0
-	rocks_destroyed_this_run = 0
-	upgrades_purchased_this_run = 0
+	start_game(true)
 	
+func start_game(is_prestige_run: bool = false):
+	if not is_prestige_run:
+		# If it's a totally new run, we reset EVERYTHING.
+		_reset_career_variables()
+	_reset_garden_variables()
+	var diff_data = difficulty_data.get(chosen_difficulty, {})
+	var class_data_chosen = class_data.get(chosen_class, {})
+	# --- 3. Apply Modifiers from the chosen DIFFICULTY ---
+	# We only add starting Juice on a non-prestige run.
+	if not is_prestige_run:
+		juice += diff_data.get("start_juice", 0)
+		max_ability_slots = diff_data.get("start_slots", 0)
 	
-	
-		# --- CLASS & DIFFICULTY MODIFIERS ---
-	juice_on_level_up_disabled = false
-	juice_chance_on_eat = 0.0
-	obstacle_modifier = 1.0
-	geological_survey_multiplies = false
-	all_fruits_special = false
-	speed_on_loss = false
-	speed_increase_on_eat = false
-	disabled_paths = []
-	speed_multiplier_class_mod = 1.0
-	dynamic_max_fruits = false
-	dynamic_fruit_reward = false
-	global_juice_cost_multiplier = 1.0
-	max_esp_level = 20 # The default max level
-	gambling_disabled = false
-	juice_menu_disabled = false
-	pulp_gain_disabled = false
-	juice_tax_rate = 0.0
-	
-	
-	# --- NEW ABILITY SYSTEM RESET ---
-	ability_charges.clear()
-	equipped_abilities.clear()
-	legendary_items_seen_this_run.clear()
-
-
-	juice_spent_this_garden = 0
-	abilities_used_this_garden = 0
-	garden_start_time = 0.0 
-	#----BASE REWARD AND ENGINE---#
-
-	# --- "PULP" META-UPGRADE LEVELS ---
-	max_ability_slots = diff_data.get("start_slots", 0)
-	serpents_coffer_level = 0
-	geode_compass_level = 0
-	four_leaf_clover_level = 0
-	chroma_scales_level = 0
-	harvest_forecast_level = 0
-	
-	#-----------The Core-------------
-	# --- Idle Path ---
-	snake_clicker_level = 0
-	get_rich_quick_unlocked = false
-	custom_aftertaste_unlocked = false
-	arcane_flow_unlocked = false
-	pulp_reactor_unlocked = false
-	unstable_metabolism_unlocked = false
-	#------Reset Planner Upgrades-----#
-	diet_slith_level = 0
-	fruit_foresight_unlocked = false
-	ghost_tail_level = 0
-	geological_survey_unlocked = false
-	sovereign_trail_level = 0
-	garden_weaver_unlocked = false
-	garden_weaver_used_this_garden = false
-	# --- The Ledger Path ---
-	chosen_ledger_path = ""
-	# Path A (Juice Focus)
-	liquid_assets_level = 0
-	fast_track_unlocked = false
-	gluttons_greed_unlocked = false
-	market_crash_level = 0
-	# Path B (Pulp Focus)
-	principal_pulp_level = 0
-	golden_handshake_level = 0
-	juice_press_used_this_garden = false
-	# Juice Press is an active ability, so it will be handled by our hotbar system
-	liquidation_used = false
-	#------------------------///////////////////////////////////////////////-------------------------
-	#-----------The Harvest-------------
-	#-------Reset Glutton Upgrades---
-	es_portions_level = 0
-	more_mice_level = 0
-	golden_seeds_level = 0
-	patient_gardener_level = 0
-	is_bounty_active = false
-	the_satchel_unlocked = false
-	# --- Chef Path ---
-	golden_seed_extract_level = 0
-	exotic_seeds_level = 0
-	the_cookbook_unlocked = false
-	active_recipe = {} 
-	recipe_progress = 0    
-	expanded_palate_unlocked = false
-	golden_glaze_unlocked = false
-	custom_cuisine_unlocked = false
-	iron_cherry_buff_active = false
-	dragon_fruit_buff_active = false
-	mise_en_place_used_this_run = false
-	mise_en_place_unlocked = false
-	# --- Geomancer Path ---
-	fertile_ground_level = 0
-	mineral_rich_soil_level = 0
-	tectonic_shift_level = 0
-	heavy_foundation_level = 0
-	# We need to know which Rockeater upgrade they chose
-	rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
-	calculated_risk_unlocked = false
-	#--------------------------||||||||||||||||||\\\\\\\\\\\\\\\\\\\\\\\\///////////////////////////
-	#-----------The Redline-------------
-		#------Reset Acrobat Upgrades--------#
-	slither_sauce_level = 0 
-	juke_and_jive_unlocked = false
-	afterburner_level = 0
-	pop_rocks_unlocked = false
-	autotomy_unlocked = false
-	autotomy_is_active = false
-	autotomy_used_this_garden = false
-		# --- Frenzy Path ---
-	sugar_rush_unlocked = false
-	chain_reaction_level = 0
-	overdrive_level = 0
-	lingering_rush_level = 0
-	juggernaut_unlocked = false
-	is_zenith_active = false
-	current_combo = 0
-	combo_is_pure = true
-		# SURVIVOR PATH
-	extra_lives = 0
-	phoenix_dawn_unlocked = false
-	last_stand_unlocked = false
-	sacrificial_molt_used_this_run = false
-	sacrificial_molt_unlocked = false
-	death_defied_unlocked = false
-	martyrdom_unlocked = false
-	times_died_this_run = 0
-	new_game_s_plus_active = false
-	#-----------The Ssscale-------------
-		# Architect Path
-	edge_lord_level = 0
-	zoning_ordinance_level = 0
-	border_czar_unlocked = false
-	surveyed_land_unlocked = false
-	active_pocket_garden_rect = null
-	fold_space_unlocked = false
-	masters_blueprint_unlocked = false
-	shatter_reality_unlocked = false
-		# Illusionist Path
-	ghost_tail_level = 0
-	three_card_monty_unlocked = false
-	fractured_self_unlocked = false
-	dazzle_pie_unlocked = false
-	#-----------Snake Eyes-------------
-	#-------Gambler Path--------
-	coin_flip_curious_unlocked = false
-	passive_income_unlocked = false
-	correct_bets_this_run = 0
-	block_market_portfolio = {}
-	block_market_prices = {"Orange Block": {"price": 10, "currency": "Juice"}, "Apple Block":  {"price": 10, "currency": "Juice"}, "Light Block":  {"price": 25, "currency": "Pulp"}, "Extra Block":  {"price": 25, "currency": "Pulp"}}	
-	
-	
-	#------apply difficulty multipliers--------
 	var diff_upgrades = diff_data.get("start_upgrades", {})
 	for upgrade_key in diff_upgrades:
 		_apply_starting_upgrade(upgrade_key, diff_upgrades[upgrade_key])
-
+	
 	# --- 4. Apply Modifiers from the chosen CLASS ---
-	var class_upgrades = class_data.get("start_upgrades", {})
+	var class_upgrades = class_data_chosen.get("start_upgrades", {})
 	for upgrade_key in class_upgrades:
 		_apply_starting_upgrade(upgrade_key, class_upgrades[upgrade_key])
-		
-	var class_stats = class_data.get("start_stats", {})
+	var class_stats = class_data_chosen.get("start_stats", {})
 	for stat_key in class_stats:
 		match stat_key:
 			"extra_lives": extra_lives += class_stats[stat_key]
@@ -3050,14 +2945,218 @@ func start_game():
 			"dynamic_fruit_reward": dynamic_fruit_reward = true
 			"gambling_disabled": gambling_disabled = true
 			"juice_menu_disabled": juice_menu_disabled = true
-			"pulp_gain_disabled": pulp_gain_disabled = true
-	
+			"pulp_gain_disabled": pulp_gain_disabled = true	
+
 	#-------------finally------------
+	new_game_s_plus_active = is_prestige_run
 	reset_for_new_garden()
 	SceneTransition.transition_to("res://Scenes/main.tscn", "spiral")
 	get_tree().paused = false
 
+#per garden reset
+func _reset_garden_variables():
+	print("Resetting stats for new garden.")
+	player_level = 1
+	score_needed_for_next_level = 5
+	score_at_level_start = 0
+	has_died_this_garden = false
+	juice_spent_this_garden = 0
+	abilities_used_this_garden = 0
+	garden_start_time = run_time # Set the start time to the current run time
+	segments_to_restore = 0
+	passive_gps = 0.0
+	
+	
+	# Reset any "once per garden" flags
+	juice_press_used_this_garden = false
+	garden_weaver_used_this_garden = false
+	
+	# --- CLASS & DIFFICULTY MODIFIERS ---
+	juice_on_level_up_disabled = false
+	juice_chance_on_eat = 0.0
+	obstacle_modifier = 1.0
+	geological_survey_multiplies = false
+	all_fruits_special = false
+	speed_on_loss = false
+	speed_increase_on_eat = false
+	disabled_paths = []
+	speed_multiplier_class_mod = 1.0
+	dynamic_max_fruits = false
+	dynamic_fruit_reward = false
+	global_juice_cost_multiplier = 1.0
+	max_esp_level = 20 # The default max level
+	gambling_disabled = false
+	juice_menu_disabled = false
+	pulp_gain_disabled = false
+	juice_tax_rate = 0.0
+	#---EE stuff---#
+	highest_combo_this_garden = 0
+	garden_11_juke_count = 0
+	garden_10_special_fruits_eaten = []
+	
+	# Reset easter egg progress if it's not a prestige run
+	if not new_game_s_plus_active:
+		ascension_steps_completed.clear()
+		paradox_engine_active = false
 
+# Fresh run reset
+func _reset_career_variables():
+	#-----Base Stat Reset------
+	juice = 0
+	pulp = 0
+	current_garden = 1
+	
+	#--------Run Stat Tracking----------#
+	run_time = 0.0
+	total_juice_earned_this_run = 0
+	total_juice_earned_this_run = juice
+	total_pulp_earned_this_run = 0
+	rocks_destroyed_this_run = 0
+	upgrades_purchased_this_run = 0
+	times_died_this_run = 0
+	fruits_eaten_this_run = 0
+	#---EE Tracking for Super EE---#
+	super_egg_step_10_complete = false
+	super_egg_step_11_complete = false
+	#---END GAME FLAGS---------
+	free_upgrades_unlocked = false
+	roll_credits_unlocked = false
+	# --- Reset all upgrade levels and unlocks ---
+		# --- "PULP" META-UPGRADE LEVELS ---
+	serpents_coffer_level = 0
+	geode_compass_level = 0
+	four_leaf_clover_level = 0
+	chroma_scales_level = 0
+	harvest_forecast_level = 0
+	#-----------The Core-------------
+		#Idle
+	snake_clicker_level = 0
+	get_rich_quick_unlocked = false
+	custom_aftertaste_unlocked = false
+	arcane_flow_unlocked = false
+	pulp_reactor_unlocked = false
+	unstable_metabolism_unlocked = false
+		#Planner
+	diet_slith_level = 0
+	fruit_foresight_unlocked = false
+	ghost_tail_level = 0
+	geological_survey_unlocked = false
+	sovereign_trail_level = 0
+	garden_weaver_unlocked = false
+		#Ledger
+	chosen_ledger_path = ""
+			# Path A (Juice Focus)
+	liquid_assets_level = 0
+	fast_track_unlocked = false
+	gluttons_greed_unlocked = false
+	market_crash_level = 0
+			# Path B (Pulp Focus)
+	principal_pulp_level = 0
+	golden_handshake_level = 0
+			# Juice Press is an active ability, so it will be handled by hotbar system
+	liquidation_used = false
+	#-----------The Harvest-------------
+		#Glutton
+	es_portions_level = 0
+	more_mice_level = 0
+	golden_seeds_level = 0
+	patient_gardener_level = 0
+	is_bounty_active = false
+	the_satchel_unlocked = false
+		#Chef
+	golden_seed_extract_level = 0
+	exotic_seeds_level = 0
+	the_cookbook_unlocked = false
+	active_recipe = {} 
+	recipe_progress = 0    
+	expanded_palate_unlocked = false
+	golden_glaze_unlocked = false
+	custom_cuisine_unlocked = false
+	iron_cherry_buff_active = false
+	dragon_fruit_buff_active = false
+	mise_en_place_used_this_run = false
+	mise_en_place_unlocked = false
+		#Geomancer
+	fertile_ground_level = 0
+	mineral_rich_soil_level = 0
+	tectonic_shift_level = 0
+	heavy_foundation_level = 0
+	rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
+	calculated_risk_unlocked = false
+	#-----------The Redline-------------
+		#Acrobat
+	slither_sauce_level = 0 
+	juke_and_jive_unlocked = false
+	afterburner_level = 0
+	pop_rocks_unlocked = false
+	autotomy_unlocked = false
+	autotomy_is_active = false
+	autotomy_used_this_garden = false
+		#Frenzy
+	sugar_rush_unlocked = false
+	chain_reaction_level = 0
+	overdrive_level = 0
+	lingering_rush_level = 0
+	juggernaut_unlocked = false
+	is_zenith_active = false
+	current_combo = 0
+	combo_is_pure = true
+		#SURVIVOR
+	extra_lives = 0
+	phoenix_dawn_unlocked = false
+	last_stand_unlocked = false
+	sacrificial_molt_used_this_run = false
+	sacrificial_molt_unlocked = false
+	death_defied_unlocked = false
+	martyrdom_unlocked = false
+	#-----------The Ssscale-------------
+		#Architect
+	edge_lord_level = 0
+	zoning_ordinance_level = 0
+	border_czar_unlocked = false
+	surveyed_land_unlocked = false
+	active_pocket_garden_rect = null
+	fold_space_unlocked = false
+	masters_blueprint_unlocked = false
+	shatter_reality_unlocked = false
+		#Magician/Illusionist
+	ghost_tail_level = 0
+	three_card_monty_unlocked = false
+	fractured_self_unlocked = false
+	dazzle_pie_unlocked = false
+	#-----------Snake Eyes-------------
+	coin_flip_curious_unlocked = false
+	passive_income_unlocked = false
+	correct_bets_this_run = 0
+	block_market_portfolio.clear()
+	block_market_prices = {
+		"Orange Block": {"price": 10, "currency": "Juice"},
+		"Apple Block":  {"price": 10, "currency": "Juice"},
+		"Light Block":  {"price": 25, "currency": "Pulp"},
+		"Extra Block":  {"price": 25, "currency": "Pulp"}
+	}
+	#-----Clear Abilities-----
+	ability_charges.clear()
+	equipped_abilities.clear()
+	legendary_items_seen_this_run.clear()
+	#----Reset Easter Egg Progress----#
+	paradox_engine_active = false
+	paradox_engine_is_upgraded = false
+	special_fruit_chance_doubled = false
+	ascension_steps_completed.clear()
+	# --- OUROBOROS BOSS STATE ---
+	is_ouroboros_fight_active = false
+	ouroboros_phase = 1 # Can be 1, 2, or 3
+	current_trial_key = ""
+	trial_failed = false
+	# --- TRIAL-SPECIFIC TRACKERS ---
+	trial_haste_fruits_eaten = 0
+	trial_patience_fruits_eaten = 0
+	trial_illusion_phases = 0
+	trial_memory_sequence = []
+	trial_memory_progress = 0
+	# --- Super Egg Boss Flag --- #
+	should_spawn_corrupted_ouroboros = false
 
 func _apply_starting_upgrade(upgrade_key: String, levels_to_add: int):
 	print("Applying starting upgrade: %s, Level: %s" % [upgrade_key, levels_to_add])
