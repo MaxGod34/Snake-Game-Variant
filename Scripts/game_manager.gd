@@ -350,6 +350,8 @@ var block_market_prices: Dictionary = {
 	"Extra Block":  {"price": 25, "currency": "Pulp"}
 }
 
+var juice_spent_per_sub_path: Dictionary = {}
+
 #^^^^^^^^^^^^^^^^--------------------------------------------------------------^^^^^^^^^^^^^^^^#
 #||||||||||||||||--------------------------------------------------------------||||||||||||||||#
 #________________||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||________________#
@@ -3157,6 +3159,9 @@ func _reset_career_variables():
 	trial_memory_progress = 0
 	# --- Super Egg Boss Flag --- #
 	should_spawn_corrupted_ouroboros = false
+	#---Floating ledger for juice per upgrade---#
+	juice_spent_per_sub_path.clear()
+
 
 func _apply_starting_upgrade(upgrade_key: String, levels_to_add: int):
 	print("Applying starting upgrade: %s, Level: %s" % [upgrade_key, levels_to_add])

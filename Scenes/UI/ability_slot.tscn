@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://m05jh0kydp6u"]
 
 [ext_resource type="Script" uid="uid://bcj5kdg31hijm" path="res://Scripts/ability_slot.gd" id="1_xefwj"]
-[ext_resource type="Texture2D" uid="uid://dcv4ik47l7s76" path="res://Assets/PNGs/ghost_pepper_icon.png" id="2_w6sf5"]
+[ext_resource type="Texture2D" uid="uid://bg26sx2nr3f02" path="res://Assets/PNGs/UpgradeIcons/PhaseShiftIcon.png" id="2_xefwj"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_yg333"]
 
 [node name="AbilitySlot" type="Panel"]
@@ -26,7 +26,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_w6sf5")
+texture = ExtResource("2_xefwj")
+expand_mode = 1
 
 [node name="HotkeyLabel" type="Label" parent="."]
 layout_mode = 1

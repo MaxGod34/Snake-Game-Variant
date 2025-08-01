@@ -1,6 +1,5 @@
 extends Button
 
-# This signal tells the parent tab when this node is clicked or hovered.
 #signal node_pressed(upgrade_key)
 #signal node_mouse_entered(upgrade_key)
 #signal node_mouse_exited(upgrade_key)
@@ -75,7 +74,7 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 		
 	for i in range(1, max_level + 1):
 		var block = ColorRect.new()
-		block.custom_minimum_size = Vector2(12, 12)
+		block.custom_minimum_size = Vector2(8, 8)
 		# We now use the theme color for the "empty" blocks.
 		block.color = Color.GOLD if i <= current_level else accent_color.darkened(0.5)
 		block.size_flags_vertical = Control.SIZE_SHRINK_CENTER

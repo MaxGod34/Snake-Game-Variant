@@ -195,7 +195,7 @@ func _process(delta):
 		# 3. If we've accumulated at least one full segment of growth...
 		if growth_progress >= 1.0:
 			# Grow the snake by one segment.
-			grow_snake(1)
+			call_deferred("grow_snake", 1)
 			# Subtract 1 from the progress, leaving the remainder for the next frame.
 			growth_progress -= 1.0
 			#NOW we check for garden completion
@@ -461,7 +461,7 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 	if GameManager.juice_spent_this_garden > 1:
 		var reward = floori(bonus_data["engagement"]["reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward * GameManager.juice_spent_this_garden
-		bonuses.bonus_list.append("Engagement Bonus + %smg" % reward)
+		bonuses.bonus_list.append("Engagement Bonus + %smg" % [reward * GameManager.juice_spent_this_garden])
 	#---------------JUICE BONUSES----------------------
 		#GEOLOGICAL SURVEY
 	if GameManager.geological_survey_unlocked:
@@ -485,8 +485,7 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 			GameManager.juice += floori(bonus_juice)
 			GameManager.total_juice_earned_this_run += floori(bonus_juice)
 			bonuses.bonus_list.append("Geological Survey Bonus +% Juice for leaving %s rocks!" % [bonus_juice, remaining_rocks])
-	
-	GameManager.total_pulp_earned_this_run += bonuses.total_pulp
+	print(bonuses)
 	return bonuses
 
 func show_ghost_fruit():
@@ -716,20 +715,28 @@ func on_snake_head_moved(head_previous_position: Vector2):
 			spawn_trail_piece(head_previous_position)
 		return
 		
+
+		
 	var tail_previous_position = snake_body_segments.back().global_position	
 	
-	# Classic "follow-the-leader" movement logic
+	
+	# --- 2. Now, move the existing body segments ---
 	var target_position = head_previous_position
 	for segment in snake_body_segments:
 		var old_position = segment.global_position
 		segment.global_position = target_position
 		target_position = old_position
-	
+		_update_snake_visuals()
+		
+	# --- 3. Finally, update the visuals for the ENTIRE snake ---
+	# This ensures that as the tail moves, segments correctly transition
+	# from "solid" to "ghost."
+
 	#----------SOVEREIGN TRAIL SHIT----------#
 	if GameManager.sovereign_trail_level > 0:
 		spawn_trail_piece(tail_previous_position)
 
-	update_tail_visuals()
+	_update_snake_visuals()
 	update_camera_quadrant()
 	
 	if fruit_spawn_is_pending:
@@ -952,28 +959,60 @@ func spawn_trail_piece(pos: Vector2):
 func grow_snake(segments_to_add: int):
 	print("Growing snake by %s segments." % segments_to_add)
 	
-	# Loop for the specified number of times
 	for i in range(segments_to_add):
 		var new_segment_position: Vector2
-		
-		# This logic for finding the position is still perfect.
-		if snake_body_segments.is_empty() and i == 0:
+		if snake_body_segments.is_empty():
 			new_segment_position = head.global_position - (head.current_direction * tile_size)
 		else:
-			var current_tail = snake_body_segments.back()
-			new_segment_position = current_tail.global_position
+			new_segment_position = snake_body_segments.back().global_position
 			
-		var new_segment = create_colored_segment(new_segment_position)
-		call_deferred("add_child", new_segment)
+		var new_segment = body_scene.instantiate()
+		new_segment.position = new_segment_position
+		
+		# --- THIS IS THE FIX ---
+		# We now pre-color the segment before it's ever added to the scene.
+		
+		var new_segment_index = snake_body_segments.size()
+		var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
+		var total_segments_after_add = snake_body_segments.size() + 1
+		var ghost_color = Color("AFEEEE60")
+		
+		var fill_sprite = new_segment.get_node_or_null("FillSprite")
+		if is_instance_valid(fill_sprite):
+			# Check if this new segment should be a ghost.
+			if new_segment_index >= total_segments_after_add - ghost_segment_count:
+				fill_sprite.modulate = ghost_color
+			else:
+				# If not, apply the correct Chroma Scales color.
+				var loadout = SaveManager.save_data.equipped_cosmetics
+				var pattern_data = GameManager.cosmetic_data.Patterns.get(loadout.pattern)
+				if GameManager.chroma_scales_level >= 2 and pattern_data:
+					var pattern_sequence = pattern_data.sequence
+					var color_index = pattern_sequence[new_segment_index % pattern_sequence.size()]
+					if color_index < loadout.body_colors.size():
+						var color_key = loadout.body_colors[color_index]
+						if color_key != null:
+							var color_data = GameManager.cosmetic_data.Colors.get(color_key)
+							if color_data:
+								fill_sprite.modulate = Color(color_data.hex_code)
+				else:
+					fill_sprite.modulate = Color.PURPLE # Default body color
+		
+		# 1. Start the segment as invisible.
+		new_segment.visible = false
+		
+		# 2. Add it to the scene and the array.
+		add_child(new_segment)
 		snake_body_segments.append(new_segment)
 		
+		# 3. Use call_deferred to make it visible on the NEXT frame.
+		# This guarantees its color has been processed by the renderer.
+		new_segment.call_deferred("set", "visible", true)
 	
-	growth_history.append({"growth": segments_to_add, "time": GameManager.run_time})	
-	update_tail_visuals()
-	apply_cosmetic_upgrades()
-
-	# We only update the score display once at the very end.
+	growth_history.append({"growth": segments_to_add, "time": GameManager.run_time})
+	# We now correctly update the HUD from here to show the new score.
 	update_hud()
+
 
 func is_position_on_dividing_wall(grid_pos: Vector2i) -> bool:
 	# If Shatter Reality isn't unlocked, there are no dividing walls.
@@ -1069,7 +1108,7 @@ func level_up():
 		GameManager.player_level += 1
 		
 	#EXP/Juice SCALE
-	var step = (floori(float(GameManager.player_level) / 5.0) + 1) * 5
+	var step = (floori(float(GameManager.player_level - 1) / 5.0) + 1) * 5
 	GameManager.score_needed_for_next_level += step
 
 func _on_upgrade_menu_resume_game_pressed():
@@ -1132,6 +1171,10 @@ func _start_end_of_garden_sequence():
 	
 	var score = snake_body_segments.size() + 1
 	var bonus_data = _calculate_garden_bonuses(score)
+	
+	#HOT-FIX: pulp wasn't getting added oops
+	GameManager.pulp += bonus_data.total_pulp
+	
 	GameManager.total_pulp_earned_this_run += bonus_data.total_pulp
 
 	# --- State 2: Transition to Results Screen ---
@@ -1734,7 +1777,7 @@ func on_snake_ate_food(fruit):
 	# 3. Apply rewards
 	GameManager.juice += rewards.juice_reward
 	GameManager.total_juice_earned_this_run = rewards.juice_reward
-	grow_snake(rewards.segments_to_add)
+	call_deferred("grow_snake", rewards.segments_to_add)
 	
 	if GameManager.speed_increase_on_eat:
 		# A small, permanent speed increase for the rest of this garden.
@@ -2173,8 +2216,12 @@ func _start_game_over_sequence():
 	# Check if the player has the martyrdom upgrade.
 	if GameManager.martyrdom_unlocked:
 		print("MARTYRDOM! A final, glorious harvest!")
+		$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.score_label.text = "Score: " + str(final_score)
 		$UI/CountdownLabel.text = "MARTRYDOM! HARVEST OF " + str(get_effective_fruit_reward() * get_effective_max_fruits()) + "!"
 		# Get a list of all fruit currently on the screen.
+		
+		update_hud()
+		
 		var fruits_on_screen = get_tree().get_nodes_in_group("fruits")
 		var segments_to_add = 0
 		
@@ -2212,7 +2259,6 @@ func _start_game_over_sequence():
 			tween.tween_callback(dummy_segment.queue_free)
 
 		# Update the score MANUALLY based on the martyrdom growth
-		$UI/HUDContainer/BottomGrid/ScoreLabel.text = "Score: " + str(final_score)
 		$UI/GameOverScreen.get_node("ScoreLabel").text = "Score: " + str(final_score)
 		# Add a cool visual effect here, like a screen flash!
 		play_screen_flash(Color.CRIMSON)
@@ -2248,8 +2294,7 @@ func game_over():
 		_on_trial_complete()
 		return
 	
-	var munchie_data = GameManager.ability_charges.get("Mulligan Munchie")
-	if munchie_data and munchie_data.current > 0:
+	if GameManager.extra_lives > 0:
 		use_extra_life()
 		GameManager.has_died_this_garden = true
 		return
@@ -2299,13 +2344,10 @@ func use_extra_life():
 	head.move_timer.stop()
 	await SceneTransition.cover_screen("diagonal")
 
-	# 2. While the screen is black, safely reset everything
-	GameManager.ability_charges["Mulligan Munchie"].current -= 1
-	update_hud()
+	GameManager.extra_lives -= 1
 	
-	while snake_body_segments.size() > 0:
-		var segment_to_remove = snake_body_segments.pop_back()
-		segment_to_remove.queue_free()
+	while not snake_body_segments.is_empty():
+		snake_body_segments.pop_back().queue_free()
 	
 	if GameManager.phoenix_dawn_unlocked:
 		var segments_lost = segments_before_death - snake_body_segments.size()
@@ -2314,8 +2356,8 @@ func use_extra_life():
 		print("Phoenix Dawn active! %s segments will be restored." % GameManager.segments_to_restore)
 	
 	
-	var start_grid_pos = Vector2(grid_width / 4.0, grid_height / 4.0)
-	head.position = (start_grid_pos * tile_size) + tile_offset
+	var start_grid_pos = Vector2i(floori(grid_width / 4.0), floori(grid_height / 4.0))
+	head.position = (Vector2(start_grid_pos) * tile_size) + tile_offset
 	on_snake_head_moved(head.position)
 	
 	# After resetting the snake, check if we need to add more fruit
@@ -2331,14 +2373,14 @@ func use_extra_life():
 	
 	
 	# 3. Give a moment of invincibility
-	GameManager.is_phasing = true
-	head.get_node("PhaseTimer").start()
-	head.get_node("FillSprite").modulate = Color.GOLD
+	# Using activate phase shift for invincibility
+	head.activate_phase_shift(3.0)
 	
 	# 4. Now that everything is reset, fade the screen back in
 	await SceneTransition.uncover_screen("diagonal")
 	
 	# 5. Start the countdown
+	update_hud()
 	start_countdown()
 
 func create_colored_segment(next_pos: Vector2) -> Node2D:
@@ -2405,62 +2447,97 @@ func _on_transition_finished():
 	if is_instance_valid(head) and head.move_timer:
 		start_countdown()
 
-func update_tail_visuals():
-	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
-	var total_segments = snake_body_segments.size()
-	var ghost_color = Color("AFEEEE60") # transparent, pale turquoise
-	
-	if GameManager.masters_blueprint_unlocked:
-		var blueprint_glow_color = Color("AFEEEE")
-		for segment in snake_body_segments:
-			segment.get_node("FillSprite").modulate = blueprint_glow_color
-		return # IMPORTANT: Stop here!
-	
-	else:
-		apply_cosmetic_upgrades()
-		# Loop through all segments and set their state
-		for i in range(total_segments):
-			var segment = snake_body_segments[i]
-			# Get references to the nodes we need to change
-			var fill_sprite = segment.get_node_or_null("FillSprite")
-			var collision_shape = segment.get_node_or_null("CollisionShape2D")
 
-			# This check is crucial to prevent crashes if a node is missing
-			if not is_instance_valid(fill_sprite) or not is_instance_valid(collision_shape):
-				continue
-			
-			
-			# --- FRACTURED SELF LOGIC ---
-			# First, we check if we have the ultimate upgrade.
-			if GameManager.fractured_self_unlocked:
-				# "3 solid, 3 blank" idea.
-				# We use integer division and the modulo operator to find the chunk number.
-				var chunk_index = i / 3.0
-				if chunk_index % 2 != 0: # Every other chunk is invisible
-					segment.visible = false
-					collision_shape.disabled = true
-					continue # Skip the rest of the logic for this invisible segment
-				else:
-					# If it's part of a visible chunk, make sure it's enabled.
-					segment.visible = true
-					collision_shape.disabled = false
-			
-			
-			
-			# Check if this segment should be a ghost using the same logic as our collision check
-			var is_ghost = (i >= total_segments - ghost_segment_count)
+func _update_snake_visuals():
+	# --- 1. Handle Keystone Overrides First ---
+	# The master painter decides which "sub-painter" to call.
+	if GameManager.masters_blueprint_unlocked:
+		apply_blueprint_visuals()
+		return
+	elif GameManager.dazzle_pie_unlocked:
+		apply_dazzle_visuals()
+		return
 		
-			if is_ghost:
-				# --- GHOST STATE ---
-				fill_sprite.modulate = ghost_color
-				# Use set_deferred to safely disable the collision shape.
-				collision_shape.set_deferred("disabled", true)
+	# --- 2. If no override, apply the default Chroma Scales visuals ---
+	apply_chroma_scales_visuals()
+
+func apply_dazzle_visuals():
+	# 1. Turn ON the Dazzle overlay for the chromatic aberration.
+	$UI/DazzleOverlay.visible = true
+	
+	# 2. Ensure the background is in its default state (no shader).
+	background_rect.material = null
+	background_rect.color = Color("#222222")
+	
+	# 3. Draw a unique, subtle grid for the Dazzle effect.
+	draw_grid(Color("FFFFFF", 0.1)) # A faint white grid
+	
+	# 4. Crucially, it then calls the NORMAL Chroma Scales function
+	#    to draw the snake itself. The Dazzle effect is just an overlay.
+	apply_chroma_scales_visuals()
+
+
+
+func apply_chroma_scales_visuals():
+	# --- 1. Get Data for Normal Rendering ---
+	var total_segments = snake_body_segments.size()
+	var ghost_segment_count = GameManager.ghost_tail_data[GameManager.ghost_tail_level]
+	var ghost_color = Color("AFEEEE60")
+	var loadout = SaveManager.save_data.equipped_cosmetics
+	var pattern_data = GameManager.cosmetic_data.Patterns.get(loadout.pattern)
+	
+	# --- 2. Update the Head ---
+	var head_sprite = head.get_node_or_null("FillSprite")
+	if is_instance_valid(head_sprite):
+		if GameManager.chroma_scales_level >= 1:
+			var head_color_data = GameManager.cosmetic_data.Colors.get(loadout.head_color)
+			if head_color_data:
+				head_sprite.modulate = Color(head_color_data.hex_code)
+		else:
+			head_sprite.modulate = Color.LIME_GREEN # Default head color
+
+	# --- 3. Loop Through and Update Each Body Segment ONCE ---
+	for i in range(total_segments):
+		var segment = snake_body_segments[i]
+		var fill_sprite = segment.get_node_or_null("FillSprite")
+		var collision_shape = segment.get_node_or_null("CollisionShape2D")
+		fill_sprite.visible = false
+		if not is_instance_valid(fill_sprite) or not is_instance_valid(collision_shape):
+			continue
+			
+		# --- This is the new, correct order of operations ---
+		
+		# Check 1: Is it a Fractured Self segment?
+		if GameManager.fractured_self_unlocked and (i / 3) % 2 != 0:
+			segment.visible = false
+			collision_shape.disabled = true
+			continue # We're done with this segment
+		else:
+			segment.visible = true
+			
+		# Check 2: Is it a Ghost Tail segment?
+		if i >= total_segments - ghost_segment_count:
+			fill_sprite.modulate = ghost_color
+			collision_shape.disabled = true
+		else:
+			# If it's not a special case, it must be a normal, solid segment.
+			# Now we apply the Chroma Scales logic.
+			collision_shape.disabled = false
+			if GameManager.chroma_scales_level >= 2 and pattern_data:
+				var pattern_sequence = pattern_data.sequence
+				var color_index = pattern_sequence[i % pattern_sequence.size()]
+				if color_index < loadout.body_colors.size():
+					var color_key = loadout.body_colors[color_index]
+					if color_key != null:
+						var color_data = GameManager.cosmetic_data.Colors.get(color_key)
+						if color_data:
+							fill_sprite.modulate = Color(color_data.hex_code)
 			else:
-				# --- SOLID STATE ---
-				# Restore original color based on player Chroma Scales settings.
-				apply_cosmetic_upgrades() # Assuming this helper exists and works
-				# HOT PATCH/QUICK FIX: Use set_deferred to safely re-enable the collision shape.
-				collision_shape.set_deferred("disabled", false)
+				# Default body color if patterns aren't unlocked
+				fill_sprite.modulate = Color.PURPLE
+		fill_sprite.visible = true
+
+
 
 func perform_garden_weave():
 	print("GARDEN WEAVER ACTIVATED!")
@@ -2735,7 +2812,7 @@ func perform_blink():
 	for i in range(snake_body_segments.size()):
 		snake_body_segments[i].global_position = old_positions[i]
 		
-	update_tail_visuals()
+	_update_snake_visuals()
 	play_screen_flash(Color.WHITE)
 
 func is_on_border(world_pos: Vector2) -> bool:
@@ -2875,20 +2952,17 @@ func _calculate_passive_gps():
 	
 	# Get Rich Quick (Acrobat)
 	if GameManager.get_rich_quick_unlocked:
-		var acrobat_upgrades = ["Slither Sauce", "Tenderizer", "Juke N Jive", "Afterburner", "Pop Rocks", "Autotomy"]
-		var juice_spent = GameManager.get_total_juice_spent_in_path(acrobat_upgrades)
+		var juice_spent = GameManager.juice_spent_per_sub_path.get("Acrobat", 0)
 		total_gps += juice_spent * 0.1
 		
 	# Custom Aftertaste (Chef)
 	if GameManager.custom_aftertaste_unlocked:
-		var chef_upgrades = ["Golden Seed Extract", "Exotic Seeds", "The Cookbook", "Expanded Palate", "Golden Glaze", "Custom Cuisine", "Mise en Place"]
-		var juice_spent = GameManager.get_total_juice_spent_in_path(chef_upgrades)
+		var juice_spent = GameManager.juice_spent_per_sub_path.get("Chef", 0)
 		total_gps += juice_spent * 0.1
 		
 	# Arcane Flow (Illusionist)
 	if GameManager.arcane_flow_unlocked:
-		var illusionist_upgrades = ["Ghost Tail", "Phase Shift", "Blink", "3 Card Monty", "Fractured Self", "Dazzle Pie"]
-		var juice_spent = GameManager.get_total_juice_spent_in_path(illusionist_upgrades)
+		var juice_spent = GameManager.juice_spent_per_sub_path.get("Illusionist", 0)
 		total_gps += juice_spent * 0.1
 	
 	# --- NEW: Pulp Reactor Logic ---
@@ -2965,15 +3039,28 @@ func handle_upgrade_purchase(upgrade_key: String):
 		# Tell the game to apply the upgrade's effect.
 		_on_upgrade_menu_upgrade_selected(upgrade_key) # This function now ONLY applies the effect
 		
+		
+		
 		if GameManager.paradox_engine_active:
 			var upgrades_to_grant = 2 if GameManager.paradox_engine_is_upgraded else 1
 			
 			for i in range(upgrades_to_grant):
 				_grant_random_paradox_upgrade()
 		
+		
+		var sub_path = rules.get("sub_path", "")
+		if sub_path != "":
+			# 2. We add the cost to the running total for that specific sub-path.
+			var current_spent = GameManager.juice_spent_per_sub_path.get(sub_path, 0)
+			GameManager.juice_spent_per_sub_path[sub_path] = current_spent + cost
+			print("Updated spending for %s. New total: %s" % [sub_path, GameManager.juice_spent_per_sub_path[sub_path]])
+		
+		
+		
 		# After the purchase, refresh the entire upgrade menu UI.
 		# It's important to do this AFTER the effect has been applied.
 		$UI/UpgradeMenu.update_all_displays()
+		$UI/UpgradeMenu._on_description_delay_timer_timeout()
 	else:
 		#--T0-DO-- Add a rejection notification
 		#--			Add a delay on the animation and rejection with a wanh

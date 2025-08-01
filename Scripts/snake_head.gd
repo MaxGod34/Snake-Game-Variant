@@ -162,10 +162,10 @@ func on_move_timer_timeout():
 func _on_head_area_area_entered(area):
 	if main.is_game_over:
 		return
-	if area.is_in_group("boss_head"):
+	if GameManager.is_ouroboros_fight_active and area.is_in_group("boss_head"):
 		main._on_boss_head_collided()
 		return	
-	if area.is_in_group("phantom_walls"):
+	if GameManager.is_ouroboros_fight_active and area.is_in_group("phantom_walls"):
 		main._on_trial_failed("Precision")
 		return
 	if area is Fruit or area is GoldenFruit or area is JumpingBean or area is GhostPepper or area is IronCherry or area is DragonFruit:
