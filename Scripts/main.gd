@@ -969,7 +969,6 @@ func grow_snake(segments_to_add: int):
 		var new_segment = body_scene.instantiate()
 		new_segment.position = new_segment_position
 		
-		# --- THIS IS THE FIX ---
 		# We now pre-color the segment before it's ever added to the scene.
 		
 		var new_segment_index = snake_body_segments.size()
@@ -978,7 +977,10 @@ func grow_snake(segments_to_add: int):
 		var ghost_color = Color("AFEEEE60")
 		
 		var fill_sprite = new_segment.get_node_or_null("FillSprite")
-		if is_instance_valid(fill_sprite):
+		var border_sprite = new_segment.get_node_or_null("BorderSprite")
+		if fill_sprite:
+			fill_sprite.visible = false
+			border_sprite.visible = false
 			# Check if this new segment should be a ghost.
 			if new_segment_index >= total_segments_after_add - ghost_segment_count:
 				fill_sprite.modulate = ghost_color
@@ -998,8 +1000,6 @@ func grow_snake(segments_to_add: int):
 				else:
 					fill_sprite.modulate = Color.PURPLE # Default body color
 		
-		# 1. Start the segment as invisible.
-		new_segment.visible = false
 		
 		# 2. Add it to the scene and the array.
 		add_child(new_segment)
@@ -1008,6 +1008,8 @@ func grow_snake(segments_to_add: int):
 		# 3. Use call_deferred to make it visible on the NEXT frame.
 		# This guarantees its color has been processed by the renderer.
 		new_segment.call_deferred("set", "visible", true)
+		#border_sprite.visible = true
+		
 	
 	growth_history.append({"growth": segments_to_add, "time": GameManager.run_time})
 	# We now correctly update the HUD from here to show the new score.
