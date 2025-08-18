@@ -407,54 +407,54 @@ var difficulty_data = {
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Core", "The Redline", "The Ssscale"],
 		"start_upgrades": {"Edge Lord": 7},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/TrialoftheHarvestIcon.png"
 	},
 	"Trial of the Core": {
 		"display_name": "Seal of the Core", "description": "Back to square one. Only Core path available.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Harvest", "The Redline", "The Ssscale"],
 		"start_upgrades": {"Edge Lord": 7},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/TrialoftheCoreIcon.png",
 	},
 	"Trial of the Redline": {
 		"display_name": "Seal of the Redline", "description": "Go fast for once! Redline path only.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
 		"campaign_length": 9, "locked_paths": ["The Core", "The Harvest", "The Ssscale"],
 		"start_upgrades": {"Edge Lord": 7},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/TrialoftheRedlineIcon.png",
 	},
 
 	# --- TIER 3: The Cursed Pacts ---
 	"Cursed Pact 1": {
-		"display_name": "Cursed Pact I: Empty-Handed", "description": "You must earn your power. You start with no ability slots.",
+		"display_name": "Cursed Pact I: Empty-Handed", "description": "Free Lunch is over. You start with no ability slots.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 12, "locked_paths": [], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact1Icon.png",
 	},
 	"Cursed Pact 2": {
 		"display_name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 12, "locked_paths": ["Glutton"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_2.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact2Icon.png",
 	},
 	"Cursed Pact 3": {
 		"display_name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact3Icon.png",
 	},
 	"Cursed Pact 4": {
-		"display_name": "Cursed Pact IV: Extension Granted", "description": "Win after Garden 12",
+		"display_name": "Cursed Pact IV: Extended Cut", "description": "Win after Garden 12",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact4Icon.png",
 	},
 
 	"Cursed Pact 5": {	#FINAL
 		"display_name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
 		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
 		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
+		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact5Icon.png",
 	}
 }
 #---------CLASS PARAMETERS--------#
@@ -1212,7 +1212,7 @@ var class_data = {
 			"More Mice": 4 # Base 1 + 4 = 5 max fruits
 		},
 		"start_stats": {
-			"disabled_paths": ["Magician"]
+			"disabled_paths": ["Illusionist"]
 		},
 		"cost_modifiers": { #DISCOUNT GLUTTON AND INCREASE FRENZY AND GEODE
 			#--------Idle Modifiers-------#

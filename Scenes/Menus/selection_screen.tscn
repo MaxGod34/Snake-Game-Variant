@@ -254,7 +254,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_jfxvm")
 
 [node name="DifficultyNameLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 96)
+custom_minimum_size = Vector2(256, 112)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 8
@@ -275,7 +275,7 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_jfxvm")
 
 [node name="DifficultyDescriptionLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 192)
+custom_minimum_size = Vector2(256, 196)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 1
@@ -371,15 +371,15 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="Pact1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
 [node name="Pact2Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
 [node name="Pact3Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
@@ -388,13 +388,13 @@ size_flags_horizontal = 4
 theme_override_constants/separation = 48
 
 [node name="Pact4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer3" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 7
 size_flags_vertical = 5
 
 [node name="Pact5Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer3" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 size_flags_horizontal = 7
 size_flags_vertical = 5
@@ -424,15 +424,12 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="TrialoftheHarvestNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 
 [node name="TrialoftheCoreNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 
 [node name="TrialoftheRedlineNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 
 [node name="CursedPactRowLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
@@ -460,15 +457,15 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="CursedPact1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(112, 112)
 layout_mode = 2
 
 [node name="CursedPact2Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(112, 112)
 layout_mode = 2
 
 [node name="CursedPact3Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(112, 112)
 layout_mode = 2
 
 [node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
@@ -478,11 +475,11 @@ theme_override_constants/separation = 48
 alignment = 1
 
 [node name="CursedPact4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(112, 112)
 layout_mode = 2
 
 [node name="CursedPact5Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(112, 112)
 layout_mode = 2
 
 [node name="DebugPanel" type="PanelContainer" parent="."]
