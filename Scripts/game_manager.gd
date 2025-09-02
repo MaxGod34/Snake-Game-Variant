@@ -462,8 +462,8 @@ var class_data = {
 	"Mulligan": {
 		"display_name": "Mulligan",
 		"description": "The balanced, default experience. Starts with an Extra Life and a solid foundation for any build.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
+		"artwork_path": "res://Assets/ClassIcons/MulliganClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/MulliganClassIcon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Phoenix Dawn": 1
@@ -515,8 +515,8 @@ var class_data = {
 	"Purist": {
 		"display_name": "Purist",
 		"description": "A master of the garden with a disdain for the stench of RNG",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
+		"artwork_path": "res://Assets/ClassIcons/PuristClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/PuristClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Patient Gardener": 3, # Starts with this maxed out
@@ -568,8 +568,8 @@ var class_data = {
 	"Larry": {
 		"display_name": "Larry",
 		"description": "The ultimate roguelike challenge. You are at the mercy of fate.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
+		"artwork_path": "res://Assets/ClassIcons/LarryClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/LarryClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
@@ -618,8 +618,8 @@ var class_data = {
 	"Phoenix Coil": {
 		"display_name": "Phoenix Coil",
 		"description": "An immortal being who has traded worldly wealth for eternal life.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_fruit_red.png",
+		"artwork_path": "res://Assets/ClassIcons/PhoenixCoilIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/PhoenixCoilIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Death Defied": 1
@@ -671,8 +671,8 @@ var class_data = {
 	"Tycoon": {
 		"display_name": "Tycoon",
 		"description": "A master of passive income who must spend to succeed.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/TycoonClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/TycoonClassIcon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Snake Clicker": 7
@@ -725,8 +725,8 @@ var class_data = {
 	"Day Trader": { 
 		"display_name": "Day Trader",
 		"description": "A fast-start economist who sacrifices raw power for economic velocity.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/DayTraderClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/DayTraderClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Liquid Assets": 3,
