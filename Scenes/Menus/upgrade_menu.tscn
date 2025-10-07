@@ -2183,14 +2183,19 @@ text = "Block Market"
 vertical_alignment = 1
 text_direction = 1
 
-[node name="DescriptionPanel" parent="." instance=ExtResource("21_lwbsw")]
+[node name="PanelControl" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DescriptionPanel" parent="PanelControl" instance=ExtResource("21_lwbsw")]
 visible = false
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 496.0
+layout_mode = 1
+offset_left = -270.0
+offset_top = -248.0
+offset_right = 270.0
+offset_bottom = 248.0

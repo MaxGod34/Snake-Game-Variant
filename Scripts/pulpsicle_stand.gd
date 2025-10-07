@@ -20,7 +20,7 @@ signal skip_garden_pressed
 @onready var animation_container = $AnimationContainer
 @onready var skip_garden_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
 @onready var new_game_s_plus_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/NewGameSPlusButton
-@onready var description_panel = $AnimationContainer/DescriptionPanel
+@onready var description_panel = $AnimationContainer/MainContainer/DescriptionPanel
 @onready var description_delay_timer = $DescriptionDelayTimer
 # This dictionary will store a reference to every single pillar button.
 var pillar_nodes: Dictionary = {}
@@ -36,6 +36,9 @@ func _ready() -> void:
 	main_game = get_tree().current_scene
 	_build_node_dictionary()
 	_connect_all_signals()
+	await get_tree().process_frame
+	description_panel.show_info({}, 0, 0, "")
+	description_panel.hide()
 
 
 
@@ -336,28 +339,46 @@ func _on_description_delay_timer_timeout():
 	
 	
 	# --- THIS IS THE DYNAMIC POSITIONING LOGIC ---
+	description_panel.show_info(rules, current_level, cost, "mg")
+	description_panel.visible = false
+	await get_tree().process_frame
+	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
+	description_panel.queue_sort()
+	#await get_tree().process_frame
+	description_panel.custom_minimum_size = Vector2(540, 496)
+	description_panel.size = Vector2(540, 496)
+	# --- THIS IS THE NEW POSITIONING LOGIC ---
+	
+	# 3. Get the size of the screen (the viewport) and the mouse position.
 	var viewport_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position()
-	# 4. Create a new Vector2 to hold the panel's final position.
-	var panel_size = description_panel.size
-	var vertical_center = mouse_position.y - panel_size.y / 2
-
+	
 	if mouse_position.x < viewport_size.x / 2.0:
-		# Simulate Center Right (panel appears to the right of cursor)
-		description_panel.position = mouse_position + Vector2(96, 0)
-		description_panel.position.y = vertical_center
+		description_panel.position.x = mouse_position.x + 128
 	else:
-		# Simulate Center Left (panel appears to the left of cursor)
-		description_panel.position = mouse_position - Vector2(panel_size.x + 96, 0)
-		description_panel.position.y = vertical_center
-	#CLAMP
-	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
-	# Now that we have the correct data, we can safely show the info.
-	# We pass the specific item_id_for_icon to the show_info function.
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
+		
+	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
+	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
+	
 	description_panel.size = Vector2(540, 496)
 	description_panel.custom_minimum_size = Vector2(540, 496)
-	await get_tree().process_frame
+	
+	
+
+	
+	# 8. show it with all the correct info.
 	await description_panel.show_info(rules, current_level, cost, currency_unit)
+	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
+	
+	if mouse_position.x < viewport_size.x / 2.0:
+		description_panel.position.x = mouse_position.x + 128
+	else:
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
+		
+	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
+	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
+	description_panel.visible = true
 
 func _on_new_game_s_plus_pressed():
 	# We just need to tell the GameManager to start a prestige run.

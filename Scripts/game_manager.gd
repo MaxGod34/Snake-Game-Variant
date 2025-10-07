@@ -778,8 +778,8 @@ var class_data = {
 	"Manager": {
 		"display_name": "Manager",
 		"description": "A patient investor who leverages Pulp for massive late-game power.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/ManagerClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/ManagerClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Principal Pulp": 5,
@@ -831,12 +831,12 @@ var class_data = {
 	"Calculator": {
 		"display_name": "Calculator",
 		"description": "A strange being whose power is a reflection of its own state.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/golden_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/CalculatorClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/CalculatorClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
-			# These two flags will trigger new logic in our helper functions
+			# These two flags will trigger new logic in helper functions
 			"dynamic_fruit_reward": true, 
 			"dynamic_max_fruits": true
 		},
@@ -877,14 +877,14 @@ var class_data = {
 			"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,
 			# Chef Modifiers
 			"Golden Seed Extract": 0, "Exotic Seeds": 0, "The Cookbook": 0, "Expanded Palate": 0,
-			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0
-		}
+			"Golden Glaze": 0, "Mise en Place": 0, "Custom Cuisine": 0}
+		
 	},
 	"Ghost": {
 		"display_name": "Ghost",
 		"description": "An ethereal being who channels their magical nature into raw power.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/GhostClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/GhostClassIcon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Ghost Tail": 4,
@@ -935,8 +935,8 @@ var class_data = {
 	"Space": {
 		"display_name": "Space",
 		"description": "An absolute master of the garden's layout, with incredible speed to match.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/SpaceClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/SpaceClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Edge Lord": 7,
@@ -989,8 +989,8 @@ var class_data = {
 	"Blinker": {
 		"display_name": "Blinker",
 		"description": "A high-skill class focused on a single, powerful reality-bending mechanic.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/BlinkerClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/BlinkerClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Fractured Self": 1
@@ -1039,8 +1039,8 @@ var class_data = {
 	"Psychic": {
 		"display_name": "Psychic",
 		"description": "A master of foresight whose power creates a dangerous feedback loop.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/ghost_pepper_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/PsychicClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/PsychicClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Fruit Foresight": 1,
@@ -1094,8 +1094,8 @@ var class_data = {
 	"Doubles": {
 		"display_name": "Doubles",
 		"description": "A pure gambler who thrives on risk and gets faster with every failure.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_break.png",
+		"artwork_path": "res://Assets/ClassIcons/DoublesClassIcon.png",
+		"icon_path": "res://Assets/ClassIcons/DoublesClassIcon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Coin Flip Curious": 1,
@@ -1148,8 +1148,8 @@ var class_data = {
 	"Comboisseur": {
 		"display_name": "Comboisseur",
 		"description": "The ultimate combo master, with a unique challenge and a massive payoff.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_break.png",
+		"artwork_path": "res://Assets/ClassIcons/ComboisseurClassIcon.png", #Fix icon path
+		"icon_path": "res://Assets/ClassIcons/ComboisseurClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Sugar Rush": 1,
@@ -1204,8 +1204,8 @@ var class_data = {
 	"Sniper": {
 		"display_name": "Sniper",
 		"description": "A focused predator who lives for the thrill of the hunt.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_break.png",
+		"artwork_path": "res://Assets/ClassIcons/SniperClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/SniperClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Banana Bounty": 2,
@@ -1257,8 +1257,8 @@ var class_data = {
 	"Mineral": {
 		"display_name": "Mineral",
 		"description": "A true master of the earth who sees rocks not as obstacles, but as investments.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/snake_break.png",
+		"artwork_path": "res://Assets/ClassIcons/MineralClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/MineralClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Geological Survey": 1
@@ -1310,8 +1310,8 @@ var class_data = {
 	"Gobble": {
 		"display_name": "Gobble",
 		"description": "A master of ingredients who has learned to harness their very essence.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/GobbleClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/GobbleClassIcon.png",
 		"fang_cost": 0,
 		"start_upgrades": {
 			"Exotic Seeds": 3,
@@ -1362,8 +1362,8 @@ var class_data = {
 	"Gluts": {
 		"display_name": "Gluts",
 		"description": "All-in on growth, but with a major logistical challenge.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/GlutsClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/GlutsClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {
@@ -1413,8 +1413,8 @@ var class_data = {
 	"Groove": {
 		"display_name": "Groove",
 		"description": "A jack-of-all-trades who combines speed and passive income.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/GrooveClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/GrooveClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {
 			"Juke N Jive": 1,
@@ -1466,8 +1466,8 @@ var class_data = {
 	"Alchemist": {
 		"display_name": "Alchemist",
 		"description": "Does not gain Juice from leveling up. Every fruit has a 10% chance to grant 1 Juice instead.",
-		"artwork_path": "res://Assets/PNGs/RotatingItemIcons/handicap_icon.png", #Fix icon path
-		"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png",
+		"artwork_path": "res://Assets/ClassIcons/AlchemistClassIcon.png", 
+		"icon_path": "res://Assets/ClassIcons/AlchemistClassIcon.png",
 		"fang_cost": 100,
 		"start_upgrades": {},
 		"start_stats": {

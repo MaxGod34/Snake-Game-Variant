@@ -403,18 +403,10 @@ layout_mode = 2
 theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
-[node name="DescriptionPanel" parent="AnimationContainer" instance=ExtResource("12_p3c4b")]
+[node name="DescriptionPanel" parent="AnimationContainer/MainContainer" instance=ExtResource("12_p3c4b")]
 visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 496.0
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="DescriptionDelayTimer" type="Timer" parent="."]
 wait_time = 0.1

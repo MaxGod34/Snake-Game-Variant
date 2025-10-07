@@ -118,6 +118,13 @@ func update_class_unlock_grid():
 		var class_data = GameManager.class_data[class_key]
 		var is_unlocked = class_key in SaveManager.save_data.unlocked_classes
 		
+		#icon set
+		var icon_path = class_data.get("icon_path", "")
+		if ResourceLoader.exists(icon_path):
+			node.icon = load(icon_path)
+		else:
+			node.icon = null
+		
 		# We can use our UpgradeNode's update function for this!
 		# We'll pass placeholder values for level, since these are one-time unlocks.
 		node.update_display(class_key, 1 if is_unlocked else 0, 1, true, Color.WHITE, Color.GOLD)

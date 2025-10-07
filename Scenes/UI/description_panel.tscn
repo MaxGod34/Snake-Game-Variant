@@ -29,13 +29,14 @@ offset_bottom = 16.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
-size_flags_vertical = 4
+size_flags_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = ExtResource("1_fnpmw")
 script = ExtResource("1_daodf")
 
 [node name="MarginC" type="MarginContainer" parent="."]
 layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 2
 
 [node name="GridContainer" type="GridContainer" parent="MarginC"]
@@ -78,6 +79,7 @@ Lvl 3: another thing
 Lvl 4: ooooyeah"
 vertical_alignment = 1
 autowrap_mode = 3
+justification_flags = 162
 
 [node name="UpgradeNameLabel" type="Label" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(256, 128)

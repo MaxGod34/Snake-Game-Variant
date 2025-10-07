@@ -22,12 +22,13 @@ func _ready():
 		"icon_path": ""
 	}
 
-	self.visible = true
+	self.custom_minimum_size = Vector2(540, 0)
+
 	self.size = Vector2(540, 496)
-	self.custom_minimum_size = Vector2(540, 496)
 
 	await get_tree().process_frame
 	await show_info(dummy_rules, 0, 0, "fangs")
+	self.visible = true
 
 	# Immediately hide it again until real usage
 	await get_tree().process_frame
@@ -37,8 +38,7 @@ func _ready():
 func show_info(rules: Dictionary, current_level: int, cost: int, currency_unit: String):
 	# --- PREVENT RESIZE FLICKER FIRST ---
 	self.visible = false
-	self.size = Vector2(540, 496)
-	self.custom_minimum_size = Vector2(540, 496)
+	self.size = Vector2(0, 0)
 
 	await get_tree().process_frame # Let layout update first
 
@@ -78,8 +78,11 @@ func show_info(rules: Dictionary, current_level: int, cost: int, currency_unit: 
 		icon_display.texture = null
 		icon_display.modulate = Color.WHITE
 
+	self.size = Vector2(540, 496)
+
 	# Just in case something tried to change the size again
 	await get_tree().process_frame
 	self.size = Vector2(540, 496)
 
+	print("Description size: %s" % self.size)
 	self.visible = true

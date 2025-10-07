@@ -19,7 +19,7 @@ var current_hoard_guess: int = 1
 # -- Top-Level UI --
 @onready var top_tabs = $CenterContainer/PanelContainer/VBoxContainer/TopTabs
 @onready var description_label = $DescriptionText
-@onready var description_panel = $DescriptionPanel
+@onready var description_panel = $PanelControl/DescriptionPanel
 @onready var juice_label = $BottomPanel/BottomRowHBox/BottomJuiceLabel
 @onready var pulp_label = $BottomPanel/BottomRowHBox/BottomPulpLabel
 @onready var resume_button = $BottomPanel/BottomRowHBox/ResumeButton
@@ -118,7 +118,10 @@ var headlines = [
 
 
 
-
+func _ready():
+	await get_tree().process_frame
+	description_panel.show_info({}, 0, 0, "")
+	description_panel.hide()
 
 func initialize(p_main_game):
 	# When the menu first loads, we find and connect everything once.
@@ -135,6 +138,8 @@ func initialize(p_main_game):
 	sell_light_block_button.icon = sell_icon
 	buy_extra_block_button.icon = buy_icon
 	sell_extra_block_button.icon = sell_icon
+	description_panel.custom_minimum_size = Vector2(540, 0)
+
 
 
 func _process(delta):
@@ -287,7 +292,6 @@ func _on_any_node_mouse_entered(upgrade_key: String):
 	description_delay_timer.start()
 
 func _on_any_node_mouse_exited():
-	# If the mouse leaves, we stop the timer and hide the panel.
 	description_delay_timer.stop()
 	description_panel.visible = false
 	hovered_upgrade_key = ""
@@ -298,37 +302,53 @@ func _on_description_delay_timer_timeout():
 	# 2. Get the rules and cost for the hovered upgrade using our helpers in main.gd.
 	var rules = GameManager.get_upgrade_rules(hovered_upgrade_key)
 	if rules.is_empty(): return
-		
+	
+	
 	var cost = GameManager.calculate_upgrade_cost(hovered_upgrade_key)
 	var current_level = GameManager.get_upgrade_level_from_key(hovered_upgrade_key)
 	# We get the display name directly from the rules dictionary.
 	
+
+	description_panel.show_info(rules, current_level, cost, "mL")
+	print("Before:", description_panel.size, description_panel.get_combined_minimum_size())
+	await get_tree().process_frame
+	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
+	description_panel.queue_sort()
+	#await get_tree().process_frame
+	description_panel.custom_minimum_size = Vector2(540, 496)
+	description_panel.size = Vector2(540, 496)
 	# --- THIS IS THE NEW POSITIONING LOGIC ---
 	
 	# 3. Get the size of the screen (the viewport) and the mouse position.
 	var viewport_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position()
-	# 4. Create a new Vector2 to hold the panel's final position.
-	var panel_size = description_panel.size
-	var vertical_center = mouse_position.y - panel_size.y / 2
-
+	
 	if mouse_position.x < viewport_size.x / 2.0:
-		# Simulate Center Right (panel appears to the right of cursor)
-		description_panel.position = mouse_position + Vector2(128, 0)
-		description_panel.position.y = vertical_center
+		description_panel.position.x = mouse_position.x + 128
 	else:
-		# Simulate Center Left (panel appears to the left of cursor)
-		description_panel.position = mouse_position - Vector2(panel_size.x + 128, 0)
-		description_panel.position.y = vertical_center
-	#CLAMP
-	description_panel.position = description_panel.position.clamp(Vector2.ZERO, viewport_size - panel_size)
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
+		
+	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
+	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
 	
 	description_panel.size = Vector2(540, 496)
 	description_panel.custom_minimum_size = Vector2(540, 496)
-	await get_tree().process_frame
+	
+	
+
 	
 	# 8. show it with all the correct info.
 	await description_panel.show_info(rules, current_level, cost, currency_unit)
+	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
+	
+	if mouse_position.x < viewport_size.x / 2.0:
+		description_panel.position.x = mouse_position.x + 128
+	else:
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
+		
+	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
+	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
+
 
 
 # --- INDIVIDUAL UPDATE FUNCTIONS ---
