@@ -87,7 +87,7 @@ func _ready():
 	GameManager.fruits_eaten_this_run = 0
 	initial_snake_length = 1
 	# ---Speed Setup---
-	var start_speed = GameManager.class_data[GameManager.chosen_class].get("start_speed", 0.3)
+	var start_speed = class_data.start_speed
 	#var speed_mod = GameManager.difficulty_data[GameManager.chosen_difficulty].get("speed_multiplier", 1.0)
 	# ---Grid Setup---
 	tile_offset = Vector2(tile_size / 2.0, tile_size / 2.0)
@@ -323,10 +323,11 @@ func toggle_pause():
 func apply_persistent_upgrades():
 	# This function now calculates the final speed from base values every time.
 	# 1. Get the base speed for the current class and difficulty.
-	var base_speed = GameManager.class_data[GameManager.chosen_class].get("start_speed", 0.3)
+	var class_data = GameManager.class_data[GameManager.chosen_class]
+	var base_speed = class_data.start_speed
 
 	# 2. Get the modification values.
-	var speed_up_mod = GameManager.class_data[GameManager.chosen_class].get("speed_upgrade_mod", 0.9)
+	var speed_up_mod = class_data.speed_upgrade_mod
 	var speed_up_level = GameManager.slither_sauce_level
 	var slow_down_level = GameManager.heavy_foundation_level + GameManager.diet_slith_level
 

@@ -117,9 +117,8 @@ func update_class_roster():
 		var is_unlocked = class_key in SaveManager.save_data.unlocked_classes
 
 		# We now get the icon path directly from the data.
-		var icon_path = class_data.get("icon_path", "")
-		if ResourceLoader.exists(icon_path):
-			node.icon = load(icon_path)
+		if ResourceLoader.exists(class_data.icon_path):
+			node.icon = load(class_data.icon_path)
 		# We can use our UpgradeNode's update function for this!
 		# We'll use a special theme color to show selection.
 		var stylebox = StyleBoxFlat.new()
@@ -158,12 +157,9 @@ func update_loadout_display():
 		# If a class IS selected, get its data.
 		var class_data = GameManager.class_data.get(selected_class_key)
 		if class_data:
-			class_name_label.text = class_data.get("display_name", "Unknown Class")
-			class_description_label.text = class_data.get("description", "")
-			if class_data.has("artwork_path") and ResourceLoader.exists(class_data.artwork_path):
-				class_artwork.texture = load(class_data.artwork_path)
-			else:
-				class_artwork.texture = null # Fallback if no art is found
+			class_name_label.text = class_data.display_name
+			class_description_label.text = class_data.description
+			class_artwork.texture = load(class_data.artwork_path)
 
 	# --- Update Difficulty Display ---
 	if selected_difficulty_key == "":

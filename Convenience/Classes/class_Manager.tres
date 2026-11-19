@@ -1,0 +1,99 @@
+[gd_resource type="Resource" script_class="ClassData" load_steps=2 format=3 uid="uid://bjpabe6al6wlp"]
+
+[ext_resource type="Script" uid="uid://76bq2yk84wib" path="res://Scripts/ClassData.gd" id="1_0gksl"]
+
+[resource]
+script = ExtResource("1_0gksl")
+display_name = "Manager"
+description = "The pulp enjoyer!"
+artwork_path = "res://Assets/ClassIcons/ManagerClassIcon.png"
+icon_path = "res://Assets/ClassIcons/ManagerClassIcon.png"
+fang_cost = 100
+start_upgrades = {
+"Juice Press": 1,
+"Principal Pulp": 5
+}
+start_stats = {
+"global_juice_multiplier": 1.2
+}
+cost_modifiers = {
+"3 Card Monty": 0,
+"Afterburner": 0,
+"Arcane Flow": 0,
+"Autotomy": 0,
+"Banana Bounty": 0,
+"Blink": 0,
+"Border Czar": 0,
+"Burrow": 0,
+"Calculated Risk": 0,
+"Chain Reaction": 0,
+"Coin Flip Curious": 0,
+"Custom Aftertaste": 0,
+"Custom Cuisine": 0,
+"Dazzle Pie": 0,
+"Death Defied": 0,
+"Diet Slith": 0,
+"Edge Lord": 0,
+"Elephant Sized Portions": 0,
+"Exotic Seeds": 0,
+"Expanded Palate": 0,
+"Fast Track": 0,
+"Fertile Ground": 0,
+"Fold Space": 0,
+"Fractured Self": 0,
+"Fruit Foresight": 0,
+"Garden Weaver": 0,
+"Geode Cracker": 0,
+"Geological Survey": 0,
+"Get Rich Quick": 0,
+"Ghost Tail": 0,
+"Gluttons Greed": 0,
+"Golden Glaze": 0,
+"Golden Handshake": 0,
+"Golden Seed Extract": 0,
+"Golden Seeds": 0,
+"Heavy Foundation": 0,
+"Juggernaut": 0,
+"Juice Press": 0,
+"Juke N Jive": 0,
+"Kinetic Feast": 0,
+"Last Stand": 0,
+"Lingering Rush": 0,
+"Liquid Assets": 0,
+"Liquidation": 0,
+"Market Crash": 0,
+"Martyrdom": 0,
+"Masters Blueprint": 0,
+"Meditate": 0,
+"Mineral Rich Soil": 0,
+"Mise en Place": 0,
+"More Mice": 0,
+"Mulligan Munchie": 0,
+"New Game S Plus": 0,
+"Overdrive": 0,
+"Passive Income": 0,
+"Patient Gardener": 0,
+"Phase Shift": -1,
+"Phoenix Dawn": 0,
+"Pocket Garden": 0,
+"Pop Rocks": 0,
+"Principal Pulp": 0,
+"Pulp Reactor": 0,
+"Rockmuncher": 0,
+"Sacrificial Molt": 0,
+"Shatter Reality": 0,
+"Slither Sauce": 0,
+"Snake Clicker": 0,
+"Sovereign Trail": 0,
+"Stones Burden": 0,
+"Sugar Rush": 0,
+"Surveyed Land": 0,
+"Tectonic Shift": 0,
+"Tenderizer": 0,
+"The Cookbook": 0,
+"The Satchel": 0,
+"Unstable Metabolism": 0,
+"Zenith": 0,
+"Zoning Ordinance": 0
+}
+metadata/_custom_type_script = "uid://76bq2yk84wib"
