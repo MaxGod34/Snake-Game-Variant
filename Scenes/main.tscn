@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://ypc1vna0wora"]
+[gd_scene load_steps=38 format=3 uid="uid://ypc1vna0wora"]
 
 [ext_resource type="Script" uid="uid://ej1fucvealik" path="res://Scripts/main.gd" id="1_jjgbg"]
 [ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_21xkr"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="11_fdnlq"]
 [ext_resource type="PackedScene" uid="uid://cy78aj0eaeuv2" path="res://Scenes/UI/information_panel.tscn" id="12_jkdf5"]
 [ext_resource type="PackedScene" uid="uid://8jgmx7q20qg5" path="res://Scenes/Menus/pulpsicle_stand.tscn" id="13_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://c5hi465wp8hjp" path="res://Scenes/Menus/end_of_run_screen.tscn" id="14_h1bgf"]
 [ext_resource type="Texture2D" uid="uid://clyqatd0ptcbg" path="res://Assets/PNGs/light.png" id="15_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://e2l8j4grsls7" path="res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png" id="16_k12tt"]
 
@@ -641,6 +642,8 @@ I'm not sure how you cracked it, but you did it.
 Thanks for being the other half of this thing.
 
 -Max"
+
+[node name="EndOfRunScreen" parent="UI" instance=ExtResource("14_h1bgf")]
 
 [node name="PauseMenu" parent="." instance=ExtResource("3_8gbba")]
 

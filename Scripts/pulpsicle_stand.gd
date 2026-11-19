@@ -20,7 +20,7 @@ signal skip_garden_pressed
 @onready var animation_container = $AnimationContainer
 @onready var skip_garden_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
 @onready var new_game_s_plus_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/NewGameSPlusButton
-@onready var description_panel = $AnimationContainer/MainContainer/DescriptionPanel
+@onready var description_panel = $PanelControl/DescriptionPanel
 @onready var description_delay_timer = $DescriptionDelayTimer
 # This dictionary will store a reference to every single pillar button.
 var pillar_nodes: Dictionary = {}

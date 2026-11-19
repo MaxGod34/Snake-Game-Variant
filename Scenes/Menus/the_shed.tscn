@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://312pl5kncw66"]
+[gd_scene load_steps=23 format=3 uid="uid://312pl5kncw66"]
 
 [ext_resource type="Script" uid="uid://bpiqb64asplal" path="res://Scripts/the_shed.gd" id="1_fndh6"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_vq6i6"]
@@ -12,6 +12,7 @@
 [ext_resource type="StyleBox" uid="uid://bs3yrtjleogag" path="res://Assets/Styles/shed_styles/player_banner_shed_button_disabled.tres" id="6_fndh6"]
 [ext_resource type="StyleBox" uid="uid://djqr0ld77jf61" path="res://Assets/Styles/shed_styles/player_banner_shed_button_normal.tres" id="7_tmkkg"]
 [ext_resource type="PackedScene" uid="uid://dkrhbgusv7j3h" path="res://Scenes/UI/upgrade_node.tscn" id="8_ciw3c"]
+[ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="10_tmkkg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tmkkg"]
 content_margin_left = 15.0
@@ -56,6 +57,13 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xhu0t"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ciw3c"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_xhu0t"]
+texture = ExtResource("10_tmkkg")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
 
 [node name="TheShed" type="Control"]
 layout_mode = 3
@@ -120,9 +128,10 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_numoj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_133se")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_t75gs")
 tab_alignment = 1
-current_tab = 0
+current_tab = 2
 
 [node name="Customization" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -871,15 +880,195 @@ size_flags_vertical = 4
 theme_override_constants/h_separation = 16
 columns = 6
 
-[node name="Career Stats" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+[node name="Career Stats" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
 
-[node name="Milestones" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
-visible = false
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats"]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer"]
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+theme_override_constants/separation = 256
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ciw3c")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer"]
+layout_mode = 2
+
+[node name="PlayerRankLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Snake Rank:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HighScoreLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "High Score: "
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TotalDeathsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Total Deaths:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TotalJuiceLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Total Juice (mL):"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TotalPulpLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Total Pulp (mg):"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="RocksDestroyedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Rocks Destroyed:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="PrestigesCompletedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Prestiges Completed:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TotalUpgradesPurchasedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Total Upgrades Purchased:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TotalCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Total Cosmetics Ac		quired:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TotalCombosLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(800, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.555801, 1, 0.623813, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("1_vq6i6")
+theme_override_font_sizes/font_size = 32
+text = "Combos Achieved:"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="VSeparator2" type="VSeparator" parent="MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 128
+theme_override_styles/separator = SubResource("StyleBoxTexture_xhu0t")
+
+[node name="Milestones" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
 layout_mode = 2
 metadata/_tab_index = 2
+
+[node name="MilestoneList" type="GridContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Milestones"]
+layout_mode = 2
+columns = 3
 
 [node name="Dark Slith" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
 visible = false

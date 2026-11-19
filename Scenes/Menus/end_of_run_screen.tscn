@@ -1,0 +1,240 @@
+[gd_scene load_steps=18 format=3 uid="uid://c5hi465wp8hjp"]
+
+[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_iynwa"]
+[ext_resource type="Script" uid="uid://c21l6h32qt6gg" path="res://Scripts/end_of_run_screen.gd" id="1_lrldd"]
+[ext_resource type="Texture2D" uid="uid://c1wp4nsk3r4x4" path="res://Assets/Styles/texturebutton_hovered_placeholder.png" id="2_uqhfh"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_oi6uc"]
+[ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="4_uqhfh"]
+[ext_resource type="StyleBox" uid="uid://bb0mhain5qhs4" path="res://Scenes/Menus/run_complete_hover_back_btn.tres" id="5_rsrko"]
+[ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/block_buttons/yellow_resume_button_hover.tres" id="5_y3lxh"]
+[ext_resource type="StyleBox" uid="uid://uluhcls7apqi" path="res://Scenes/Menus/disabled_btn_grey.tres" id="6_lrldd"]
+[ext_resource type="StyleBox" uid="uid://bopt61ixlb04i" path="res://Assets/Styles/block_buttons/yellow_resume_block_disabled.tres" id="6_opew7"]
+[ext_resource type="StyleBox" uid="uid://ip1dn3lexx4g" path="res://Scenes/Menus/run_completed_normal_back_btn.tres" id="7_savbm"]
+[ext_resource type="StyleBox" uid="uid://3emtmxyay1dr" path="res://Assets/Styles/block_buttons/yellow_resume_block_pressed.tres" id="7_vujvg"]
+[ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="8_rsrko"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_0hwn2"]
+texture = ExtResource("2_uqhfh")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(0.158472, 0.158472, 0.158472, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ald1s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_y3lxh"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_oi6uc"]
+texture = ExtResource("4_uqhfh")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate_color = Color(1, 0, 0, 0.803922)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_ald1s"]
+texture = ExtResource("4_uqhfh")
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate_color = Color(1, 1, 0, 1)
+
+[node name="EndOfRunScreen" type="CanvasLayer"]
+visible = false
+script = ExtResource("1_lrldd")
+
+[node name="Background" type="TextureRect" parent="."]
+modulate = Color(0.133333, 0.133333, 0.133333, 0.784314)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_iynwa")
+stretch_mode = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(1280, 960)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_0hwn2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 48
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ald1s")
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ald1s")
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 32
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 64
+theme_override_styles/normal = SubResource("StyleBoxEmpty_y3lxh")
+text = "Run Completed!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClearGardenLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 32
+text = "123 xp gained"
+vertical_alignment = 1
+text_direction = 1
+
+[node name="TotalPulpLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 28
+text = "Total Scales"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GrandTotalLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 16
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 28
+text = "Grand Total"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="XPDisplayRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="CurrentLevelLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/XPDisplayRow"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 32
+text = "Lvl 69"
+vertical_alignment = 1
+text_direction = 1
+
+[node name="RankProgressBar" type="ProgressBar" parent="CenterContainer/PanelContainer/VBoxContainer/XPDisplayRow"]
+custom_minimum_size = Vector2(384, 64)
+layout_mode = 2
+theme_override_styles/background = SubResource("StyleBoxTexture_oi6uc")
+theme_override_styles/fill = SubResource("StyleBoxTexture_ald1s")
+value = 75.0
+show_percentage = false
+
+[node name="PrestigeRankLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/XPDisplayRow"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 32
+text = "Prestige Rank 20"
+vertical_alignment = 1
+text_direction = 1
+
+[node name="MilestoneTitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 32
+text = "Achievements & Milestones Attained:"
+vertical_alignment = 1
+text_direction = 1
+
+[node name="MilestoneGrid" type="GridContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 32
+columns = 6
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 64
+theme_override_styles/separator = SubResource("StyleBoxEmpty_ald1s")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 128
+alignment = 1
+
+[node name="ExitButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_disabled_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_hover_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_focus_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = ExtResource("5_rsrko")
+theme_override_styles/disabled = ExtResource("6_lrldd")
+theme_override_styles/hover_pressed = ExtResource("5_rsrko")
+theme_override_styles/hover = ExtResource("5_rsrko")
+theme_override_styles/pressed = ExtResource("5_rsrko")
+theme_override_styles/normal = ExtResource("7_savbm")
+text = "Exit to
+Main Menu"
+icon_alignment = 1
+
+[node name="NewRunButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_disabled_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_hover_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_focus_color = Color(0.596078, 1, 0.596078, 1)
+theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_fonts/font = ExtResource("3_oi6uc")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/focus = ExtResource("5_y3lxh")
+theme_override_styles/disabled = ExtResource("6_opew7")
+theme_override_styles/hover_pressed = ExtResource("7_vujvg")
+theme_override_styles/hover = ExtResource("5_y3lxh")
+theme_override_styles/pressed = ExtResource("7_vujvg")
+theme_override_styles/normal = ExtResource("8_rsrko")
+text = "Start New Run"
+icon_alignment = 1

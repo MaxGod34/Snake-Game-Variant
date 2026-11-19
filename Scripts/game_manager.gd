@@ -356,107 +356,24 @@ var juice_spent_per_sub_path: Dictionary = {}
 #||||||||||||||||--------------------------------------------------------------||||||||||||||||#
 #________________||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||________________#
 #________________VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV________________#
-
-#---------Difficulty parameters-------#
 var difficulty_data = {
-	# --- TIER 1: Pacts of Binding ---
-	"Pact 1": {
-		"display_name": "Pact 1: Juice Box Hero",
-		"description": "A gentle start. You begin with a massive head start in resources and power.",
-		"juice_cost_modifier": -1, "speed_multiplier": 1.0, "start_slots": 10, "start_juice": 3200,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
-			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
-		},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
-	},
-	"Pact 2": {
-		"display_name": "Pact 2: Pulp Friction",
-		"description": "The training wheels are off. You start with your power, but no extra Juice.",
-		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 7, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {
-			"Elephant Sized Portions": 3, "More Mice": 2, "Snake Clicker": 3
-		},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_2.png",
-	},
-	"Pact 3": {
-		"display_name": "Pact 3: Sink or Slither",
-		"description": "The pure experience. No starting bonuses. Good luck.",
-		"juice_cost_modifier": 0, "speed_multiplier": 1.0, "start_slots": 5, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_3.png",
-	},
-	"Pact 4": {
-		"display_name": "Pact 4: The Zoomies",
-		"description": "The garden moves at a frantic pace, leaving little room for error.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_4.png",
-	},
-	"Pact 5": {
-		"display_name": "Pact 5: The Blender",
-		"description": "The garden is wild and untamed, choked with obstacles.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": [], "start_upgrades": {},
-		"obstacle_modifier": 1.5,
-		"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_5.png",
-	},
-
-	# --- TIER 2: The Three Trials ---
-	"Trial of the Harvest": {
-		"display_name": "Seal of the Harvest", "description": "Prove your mastery over consumption. Only The Harvest path is available.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["The Core", "The Redline", "The Ssscale"],
-		"start_upgrades": {"Edge Lord": 7},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/TrialoftheHarvestIcon.png"
-	},
-	"Trial of the Core": {
-		"display_name": "Seal of the Core", "description": "Back to square one. Only Core path available.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["The Harvest", "The Redline", "The Ssscale"],
-		"start_upgrades": {"Edge Lord": 7},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/TrialoftheCoreIcon.png",
-	},
-	"Trial of the Redline": {
-		"display_name": "Seal of the Redline", "description": "Go fast for once! Redline path only.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 2, "start_juice": 0,
-		"campaign_length": 9, "locked_paths": ["The Core", "The Harvest", "The Ssscale"],
-		"start_upgrades": {"Edge Lord": 7},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/TrialoftheRedlineIcon.png",
-	},
-
-	# --- TIER 3: The Cursed Pacts ---
-	"Cursed Pact 1": {
-		"display_name": "Cursed Pact I: Empty-Handed", "description": "Free Lunch is over. You start with no ability slots.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 12, "locked_paths": [], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact1Icon.png",
-	},
-	"Cursed Pact 2": {
-		"display_name": "Cursed Pact II: Forced Diet", "description": "The path of gluttony is closed to you.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 12, "locked_paths": ["Glutton"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact2Icon.png",
-	},
-	"Cursed Pact 3": {
-		"display_name": "Cursed Pact III: Thin Margins", "description": "The path of ledger is closed to you.",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact3Icon.png",
-	},
-	"Cursed Pact 4": {
-		"display_name": "Cursed Pact IV: Extended Cut", "description": "Win after Garden 12",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact4Icon.png",
-	},
-
-	"Cursed Pact 5": {	#FINAL
-		"display_name": "Cursed Pact V: Black Mamba", "description": "This is it...this is what they asked for!",
-		"juice_cost_modifier": 0, "speed_multiplier": 0.8, "start_slots": 0, "start_juice": 0,
-		"campaign_length": 12, "locked_paths": ["Glutton", "Ledger"], "start_upgrades": {},
-		"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact5Icon.png",
-	}
-}
+	#=========================== TIER 1: Pacts of Binding =============================
+	"Pact 1": preload("res://Convenience/Difficulty/pact1.tres"),
+	"Pact 2": preload("res://Convenience/Difficulty/pact2.tres"),
+	"Pact 3": preload("res://Convenience/Difficulty/pact3.tres"),
+	"Pact 4": preload("res://Convenience/Difficulty/pact4.tres"),
+	"Pact 5": preload("res://Convenience/Difficulty/pact5.tres"),	
+							  # TIER 2: Three Trials/Seals
+	"Trial of the Harvest": preload("res://Convenience/Difficulty/trial1HARVEST.tres"),
+	"Trial of the Core": preload("res://Convenience/Difficulty/trial2CORE.tres"),
+	"Trial of the Redline": preload("res://Convenience/Difficulty/trial3REDLINE.tres"),
+							  # TIER 3: The Cursed Pacts
+	"Cursed Pact I": preload("res://Convenience/Difficulty/cursedpact1.tres"),
+	"Cursed Pact II": preload("res://Convenience/Difficulty/cursedpact2.tres"),
+	"Cursed Pact III": preload("res://Convenience/Difficulty/cursedpact3.tres"),
+	"Cursed Pact IV": preload("res://Convenience/Difficulty/cursedpact4.tres"),
+	"Cursed Pact V": preload("res://Convenience/Difficulty/cursedpact5.tres")
+}   #===================================================================================
 #---------CLASS PARAMETERS--------#
 var class_data = {
 	"Mulligan": {
@@ -2231,7 +2148,7 @@ var upgrade_data = {
 			"icon_path": "res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png",
 			"type": "Passive"
 		},
-		"Passive Income": {
+			"Passive Income": {
 			"display_name": "Passive Income",
 			"description": "Every bet won results in a +1 to your fruit reward\nYou heard me...get on with it!",
 			"costs": [13],
@@ -2239,7 +2156,7 @@ var upgrade_data = {
 			"icon_path": "res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png",
 			"type": "Passive"
 		}
-	}
+		}
 	}
 
 }
@@ -2583,6 +2500,52 @@ var lore_unlock_data = {
 	"Tome of the Compendium": {"fang_cost": 250, "icon_path": "res://..."}, #pacts
 }
 
+var milestone_data = {
+	"total_deaths": {
+		"display_name": "Fated to Fail",
+		"description": "Reach a total number of deaths across all runs.",
+		"icon_path": "res://Assets/PNGs/MilestoneIcons/DeathsMilestoneIcon.png",
+		"tiers": [
+			{"goal": 5, "reward": 100, "key": "deaths_1"},
+			{"goal": 25, "reward": 300, "key": "deaths_2"},
+			{"goal": 50, "reward": 700, "key": "deaths_3"},
+			{"goal": 100, "reward": 1000, "key": "deaths_4"}
+
+		]
+	},
+	"upgrades_purchased": {
+		"display_name": "Juice Fiend",
+		"description": "Reach a total number of deaths across all runs.",
+		"icon_path": "res://Assets/PNGs/MilestoneIcons/JuiceFiendMilestoneIcon.png",
+		"tiers":[
+			{"goal": 50, "reward": 100, "key": "upgrades_1"},
+			{"goal": 200, "reward": 300, "key": "upgrades_2"},
+			{"goal": 1000, "reward": 700, "key": "upgrades_3"},
+			{"goal": 2500, "reward": 1000, "key": "upgrades_4"}
+		]
+	},
+	"highest_garden_reached": {
+		"display_name": "Explorer",
+		"description": "Successfully conquer higher gardens.",
+		"icon_path": "res://Assets/PNGs/MilestoneIcons/HighestGardenMilestoneIcon.png",
+		"tiers": [
+			{"goal": 9, "reward": 300, "key": "garden_9"},
+			{"goal": 12, "reward": 700, "key": "garden_12"},
+			{"goal": 13, "reward": 2500, "key": "garden_13"}
+		]
+	},
+	"prestiges_completed": {
+		"display_name": "Time Looper",
+		"description": "Enter New Game S+",
+		"icon_path": "res://Assets/PNGs/MilestoneIcons/TimeLooperMilestoneIcon.png",
+		"tiers": [
+			{"goal": 3, "reward": 250, "key": "prestige_1"},
+			{"goal": 5, "reward": 750, "key": "prestige_2"},
+			{"goal": 10, "reward": 1000, "key": "prestige_3"},
+			{"goal": 25, "reward": 2500, "key": "prestige_4"}
+		]
+	}
+}
 
 # --- CORRECTED RECIPE DATA ---
 var basic_recipes = [
@@ -2789,11 +2752,12 @@ func check_prerequisites(upgrade_key: String) -> bool:
 func calculate_upgrade_cost(upgrade_key: String) -> int:
 	var rules = get_upgrade_rules(upgrade_key)
 	var current_level = get_upgrade_level_from_key(upgrade_key)
+	var diff_data = difficulty_data.get(chosen_difficulty)
 	
 	if current_level >= rules.max_level: return 999 # A high number for "unaffordable"
 	
 	var base_cost = rules.costs[current_level]
-	var diff_mod = difficulty_data[GameManager.chosen_difficulty]["juice_cost_modifier"]
+	var diff_mod = diff_data.juice_cost_modifier if diff_data else 0
 	var class_mod = class_data[GameManager.chosen_class]["cost_modifiers"][upgrade_key]
 	var final_cost = base_cost + diff_mod + class_mod
 	
@@ -2907,17 +2871,17 @@ func start_game(is_prestige_run: bool = false):
 		# If it's a totally new run, we reset EVERYTHING.
 		_reset_career_variables()
 	_reset_garden_variables()
-	var diff_data = difficulty_data.get(chosen_difficulty, {})
+	var diff_data = difficulty_data.get(chosen_difficulty)
 	var class_data_chosen = class_data.get(chosen_class, {})
 	# --- 3. Apply Modifiers from the chosen DIFFICULTY ---
 	# We only add starting Juice on a non-prestige run.
-	if not is_prestige_run:
-		juice += diff_data.get("start_juice", 0)
-		max_ability_slots = diff_data.get("start_slots", 0)
-	
-	var diff_upgrades = diff_data.get("start_upgrades", {})
-	for upgrade_key in diff_upgrades:
-		_apply_starting_upgrade(upgrade_key, diff_upgrades[upgrade_key])
+	if diff_data:
+		if not is_prestige_run:
+			juice += diff_data.start_juice
+			max_ability_slots = diff_data.start_slots
+
+		for upgrade_key in diff_data.start_upgrades:
+			_apply_starting_upgrade(upgrade_key, diff_data.start_upgrades[upgrade_key])
 	
 	# --- 4. Apply Modifiers from the chosen CLASS ---
 	var class_upgrades = class_data_chosen.get("start_upgrades", {})

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="DifficultyData" load_steps=2 format=3 uid="uid://b0mhi7e1tx818"]
+
+[ext_resource type="Script" uid="uid://fhivwwke6i6x" path="res://Scripts/difficulty_template.gd" id="1_1kd0g"]
+
+[resource]
+script = ExtResource("1_1kd0g")
+display_name = "Cursed Pact II: Forced Diet"
+description = "Gluttony path restricted."
+icon_path = "res://Assets/PNGs/DifficultyPics/CursedPact2Icon.png"
+juice_cost_modifier = 0
+speed_multiplier = 0.8
+start_slots = 0
+start_juice = 0
+campaign_length = 12
+has_rock_modifier = false
+locked_paths = Array[String](["Glutton"])
+start_upgrades = {}
+xp_multiplier = 3.0
+metadata/_custom_type_script = "uid://fhivwwke6i6x"

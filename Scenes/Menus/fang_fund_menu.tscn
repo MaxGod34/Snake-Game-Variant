@@ -86,9 +86,10 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_rkkxi")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_as4yt")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_84dsh")
 tab_alignment = 1
-current_tab = 0
+current_tab = 1
 
 [node name="Class Acquisitions" type="Control" parent="VBoxContainer/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -190,7 +191,6 @@ layout_mode = 2
 icon = ExtResource("3_84dsh")
 
 [node name="Chroma Lab" type="ScrollContainer" parent="VBoxContainer/TabContainer"]
-visible = false
 clip_contents = false
 layout_mode = 2
 metadata/_tab_index = 1

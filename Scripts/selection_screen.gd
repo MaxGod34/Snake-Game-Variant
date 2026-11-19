@@ -64,9 +64,9 @@ func _build_difficulty_node_dictionary():
 		"Trial of the Harvest": seal_harvest_node,
 		"Trial of the Core": seal_core_node,
 		"Trial of the Redline": seal_redline_node,
-		"Cursed Pact 1": cursed_pact_1_node, "Cursed Pact 2": cursed_pact_2_node,
-		"Cursed Pact 3": cursed_pact_3_node, "Cursed Pact 4": cursed_pact_4_node,
-		"Cursed Pact 5": cursed_pact_5_node
+		"Cursed Pact I": cursed_pact_1_node, "Cursed Pact II": cursed_pact_2_node,
+		"Cursed Pact III": cursed_pact_3_node, "Cursed Pact IV": cursed_pact_4_node,
+		"Cursed Pact V": cursed_pact_5_node
 	}
 	
 func _connect_all_difficulty_nodes():
@@ -172,8 +172,8 @@ func update_loadout_display():
 	else:
 		var diff_data = GameManager.difficulty_data.get(selected_difficulty_key)
 		if diff_data:
-			difficulty_name_label.text = diff_data.get("display_name", "Unknown Pact")
-			difficulty_description_label.text = diff_data.get("description", "")
+			difficulty_name_label.text = diff_data.display_name
+			difficulty_description_label.text = diff_data.description
 	
 func update_difficulty_pacts():
 	var progress = { "highest_pact_completed": -1, "seals_broken": [], "highest_cursed_pact_completed": -1 }
@@ -203,9 +203,8 @@ func update_difficulty_pacts():
 				if cursed_pact_number <= progress.highest_cursed_pact_completed + 1: is_locked = false
 				if cursed_pact_number <= progress.highest_cursed_pact_completed: is_completed = true
 		
-		var icon_path = rules.get("icon_path", "")
-		if ResourceLoader.exists(icon_path):
-			node.icon = load(icon_path)
+		if ResourceLoader.exists(rules.icon_path):
+			node.icon = load(rules.icon_path)
 		# --- Apply Visuals ---
 		var stylebox = StyleBoxFlat.new()
 		stylebox.set_border_width_all(4)

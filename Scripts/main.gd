@@ -37,6 +37,7 @@ var fruit_eaten_in_first_minute: bool = false
 @onready var information_panel = $UI/MarginContainer/HBoxContainer/InformationPanel
 @onready var ee_debug_panel = $UI/EasterEggDebugPanel
 @onready var credits_canvas = $UI/CreditsCanvas
+@onready var end_of_run_screen = $UI/EndOfRunScreen
 
 
 # ---Preload Scenes
@@ -136,7 +137,8 @@ func _ready():
 		# ---UPGRADE MENU---
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 		# ---GAME OVER SCREEN---
-	$UI/GameOverScreen.restart_pressed.connect(_on_restart_pressed)
+	end_of_run_screen.restart_pressed.connect(_on_restart_pressed)
+	end_of_run_screen.quit_pressed.connect(_on_quit_to_menu_pressed)
 		# ---PAUSE MENU---
 	$PauseMenu.resume_game.connect(toggle_pause)
 		# ---SCENE TRANSITION---
@@ -1184,7 +1186,8 @@ func _start_end_of_garden_sequence():
 	
 	var results_screen = $UI/GardenCompleteScreen
 	var garden_id = GameManager.current_garden
-	var campaign_length = GameManager.difficulty_data[GameManager.chosen_difficulty]["campaign_length"]
+	var diff_data = GameManager.difficulty_data.get(GameManager.chosen_difficulty)
+	var campaign_length = diff_data.campaign_length if diff_data else 9
 	var is_final_garden = (garden_id == campaign_length)
 	var is_final_win = (is_final_garden and score >= GameManager.garden_data[garden_id]["score_goal"])
 	
@@ -1195,7 +1198,7 @@ func _start_end_of_garden_sequence():
 		var completed_pact = GameManager.chosen_difficulty
 		var progress = SaveManager.get_progress_for_class(completed_class)
 		
-		if GameManager.chosen_difficulty == "Cursed Pact 5" and not GameManager.should_spawn_corrupted_ouroboros:
+		if GameManager.chosen_difficulty == "Cursed Pact V" and not GameManager.should_spawn_corrupted_ouroboros:
 			print("Victor Lap Unlocked!")
 			_start_garden_13()
 			return
@@ -1203,7 +1206,7 @@ func _start_end_of_garden_sequence():
 		update_difficulty_progression()
 		
 		# Now, process the XP for the winning run.
-		SaveManager.process_end_of_run_xp(score, GameManager.total_pulp_earned_this_run, completed_pact)
+		SaveManager.process_end_of_run(score, GameManager.total_pulp_earned_this_run, GameManager.upgrades_purchased_this_run, completed_pact)
 		
 		# Finally, transition to the main menu.
 		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
@@ -2215,8 +2218,10 @@ func add_body_segment_at(spawn_pos: Vector2):
 
 func _start_game_over_sequence():
 	var final_score = snake_body_segments.size() + 1
+	var start_level = SaveManager.save_data.player_level
+	var start_xp = SaveManager.save_data.player_xp
 	# Check if the player has the martyrdom upgrade.
-	if GameManager.martyrdom_unlocked:
+	if GameManager.martyrdom_unlocked: #Fix this later with the new end of garden sequence
 		print("MARTYRDOM! A final, glorious harvest!")
 		$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.score_label.text = "Score: " + str(final_score)
 		$UI/CountdownLabel.text = "MARTRYDOM! HARVEST OF " + str(get_effective_fruit_reward() * get_effective_max_fruits()) + "!"
@@ -2272,22 +2277,32 @@ func _start_game_over_sequence():
 	print("Game Over!")
 	
 	await SceneTransition.play_cover_animation("spiral")
-	$UI/GameOverScreen.visible = true
 	game_is_over.emit(final_score)
 
 	# --- NEW: Update and Save Persistent Stats ---
 	# We now call our master function in the SaveManager.
-	SaveManager.process_end_of_run_xp(
+	var results = SaveManager.process_end_of_run(
 		final_score,
 		GameManager.total_pulp_earned_this_run,
+		GameManager.upgrades_purchased_this_run,
 		GameManager.chosen_difficulty
 	)
 	
 	# We also update the total deaths count.
-	SaveManager.save_data.total_deaths += 1
+	SaveManager.save_data.milestone_progress.total_deaths += 1
+	
+	if SaveManager.save_data.milestone_progress.highest_garden_reached < GameManager.current_garden:
+		SaveManager.save_data.milestone_progress.highest_garden_reached = GameManager.current_garden
 
 	SaveManager.save_game() # Save this one extra stat)
 	
+	await end_of_run_screen.show_results(
+		start_level,
+		start_xp,
+		results.xp_gained,
+		results.milestones_unlocked
+	)
+	print("xp total: %s" % results.xp_gained)
 	await SceneTransition.uncover_screen("spiral")
 
 func game_over():
@@ -3449,7 +3464,7 @@ func _on_boss_defeated():
 		SaveManager.save_data.unlocked_cosmetics.patterns.append("Ouroboros Scales")
 		SaveManager.save_data.unlocked_cosmetics.frames.append("Corrupted Frame")
 		SaveManager.save_data.pantheon_entries[GameManager.chosen_class] = "Conquered the Final Coil"
-		if GameManager.chosen_difficulty == "Cursed Pact 5":
+		if GameManager.chosen_difficulty == "Cursed Pact V":
 			GameManager.free_upgrades_unlocked = true
 			GameManager.roll_credits_unlocked = true
 			_start_garden_13()
@@ -3670,7 +3685,14 @@ func update_difficulty_progression():
 		var cursed_pact_number = int(completed_pact_key.split(" ")[2])
 		if cursed_pact_number > progress.highest_cursed_pact_completed:
 			progress.highest_cursed_pact_completed = cursed_pact_number
-			
+	
+	if SaveManager.save_data.milestone_progress.highest_garden_reached < 9:
+		SaveManager.save_data.milestone_progress.highest_garden_reached = 9
+	
+	if GameManager.new_game_s_plus_active:
+		SaveManager.save_data.milestone_progress.prestiges_completed += 1
+	
+	
 	SaveManager.save_game()
 
 func _on_debug_complete_super_step_10():

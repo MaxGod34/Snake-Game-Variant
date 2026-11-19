@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="DifficultyData" load_steps=2 format=3 uid="uid://d3wna1o7cn6jl"]
+
+[ext_resource type="Script" uid="uid://fhivwwke6i6x" path="res://Scripts/difficulty_template.gd" id="1_owtc0"]
+
+[resource]
+script = ExtResource("1_owtc0")
+display_name = "Pact 2: Pulp Friction"
+description = "Start with some power, but no extra juice."
+icon_path = "res://Assets/PNGs/Dice/snake_dice_128_dice_2.png"
+juice_cost_modifier = 0
+speed_multiplier = 1.0
+start_slots = 7
+start_juice = 0
+campaign_length = 9
+has_rock_modifier = false
+locked_paths = Array[String]([])
+start_upgrades = {
+"Elephant Sized Portions": 3,
+"More Mice": 2,
+"Snake Clicker": 3
+}
+xp_multiplier = 0.6
+metadata/_custom_type_script = "uid://fhivwwke6i6x"

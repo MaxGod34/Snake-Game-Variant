@@ -1,0 +1,9 @@
+[gd_resource type="StyleBoxTexture" load_steps=2 format=3 uid="uid://uluhcls7apqi"]
+
+[ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="1_12rog"]
+
+[resource]
+texture = ExtResource("1_12rog")
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+modulate_color = Color(0.0885599, 0.0885599, 0.0885599, 0.623529)

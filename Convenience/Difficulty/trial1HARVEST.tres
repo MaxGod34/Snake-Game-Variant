@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="DifficultyData" load_steps=2 format=3 uid="uid://c3udln7fjog0d"]
+
+[ext_resource type="Script" uid="uid://fhivwwke6i6x" path="res://Scripts/difficulty_template.gd" id="1_7m0tq"]
+
+[resource]
+script = ExtResource("1_7m0tq")
+display_name = "Seal of the Harvest"
+description = "Harvest path only. Growth manifest!"
+icon_path = "res://Assets/PNGs/DifficultyPics/TrialoftheHarvestIcon.png"
+juice_cost_modifier = 0
+speed_multiplier = 0.8
+start_slots = 2
+start_juice = 0
+campaign_length = 9
+has_rock_modifier = false
+locked_paths = Array[String](["The Core", "The Redline", "The Sssscale"])
+start_upgrades = {
+"Edge Lord": 7
+}
+xp_multiplier = 1.75
+metadata/_custom_type_script = "uid://fhivwwke6i6x"

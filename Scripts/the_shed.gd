@@ -13,7 +13,19 @@ extends Control
 @onready var frames_page = $MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage
 @onready var banners_page = $MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage
 
-
+# --- Stats Labels --- 
+@onready var high_score_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/HighScoreLabel"
+@onready var total_deaths_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/TotalDeathsLabel"
+@onready var player_rank_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/PlayerRankLabel"
+@onready var total_juice_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/TotalJuiceLabel"
+@onready var total_pulp_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/TotalPulpLabel"
+@onready var rocks_destroyed_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/RocksDestroyedLabel"
+@onready var prestiges_completed_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/PrestigesCompletedLabel"
+@onready var total_upgrades_purchased_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/TotalUpgradesPurchasedLabel"
+@onready var total_cosmetics_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/TotalCosmeticsLabel"
+@onready var total_combos_label = $"MarginContainer/VBoxContainer/ShedTabs/Career Stats/HBoxContainer/VBoxContainer/TotalCombosLabel"
+# --- Milestones Stuff ---
+@onready var milestones_list_container = $MarginContainer/VBoxContainer/ShedTabs/Milestones/MilestoneList
 # This variable will store which category is currently being displayed.
 var current_category: String = "Chroma Palette" # Default to the first category
 
@@ -22,7 +34,12 @@ var active_color_slot_index: int = -1 # -1 for head, 0-4 for body
 func _ready():
 	# When the screen is ready, we connect all the signals.
 	_connect_all_signals()
+	update_career_stats_tab()
+	update_milestones_tab()
 	_on_category_button_pressed("ChromaPalette")
+
+func _enter_tree() -> void:
+	call_deferred("update_all_displays")
 
 func _connect_all_signals():
 	# Connect the back button to go back to the main menu.
@@ -62,6 +79,8 @@ func _on_category_button_pressed(category_name: String):
 	update_all_displays()
 
 func update_all_displays():
+	update_career_stats_tab()
+	update_milestones_tab()
 	match current_category:
 		"ChromaPalette": update_chroma_palette_page()
 		"Backgrounds": update_simple_grid("Backgrounds", backgrounds_page.find_child("BackgroundGrid"))
@@ -231,3 +250,92 @@ func _on_equip_color_pressed(color_key: String):
 		
 	SaveManager.save_game()
 	update_chroma_palette_page()
+
+func update_career_stats_tab():
+	var stats = SaveManager.save_data.milestone_progress
+	var career_stats = SaveManager.save_data
+	
+	player_rank_label.text = "Snake Rank: %s" % career_stats.player_level
+	high_score_label.text = "High Score: %s" % career_stats.high_score
+	total_deaths_label.text = "Total Deaths Accrued: %s" % stats.total_deaths
+	total_juice_label.text = "Total Juice (mL): %s" % career_stats.total_juice_earned
+	total_pulp_label.text = "Total Pulp (mg): %s" % career_stats.total_pulp_earned
+	rocks_destroyed_label.text = "Total Rocks Destroyed: %s" % stats.rocks_destroyed
+	#prestiges_completed_label.text = "Prestiges Attempted: %s" %
+	total_upgrades_purchased_label.text = "Total Upgrades Purchased: %s" % stats.upgrades_purchased
+	#total_cosmetics_label.text = "Total Cosmetics Purchased: %s" % 
+	total_combos_label.text = "Total Combos: %s" % stats.combos_achieved 
+	
+func update_milestones_tab():
+	# 1. Clear out any old milestone nodes.
+	for child in milestones_list_container.get_children():
+		child.queue_free()
+		
+	# 2. Loop through every milestone defined in our GameManager rulebook.
+	for stat_key in GameManager.milestone_data:
+		var milestone_rules = GameManager.milestone_data[stat_key]
+		var player_progress = SaveManager.save_data.milestone_progress.get(stat_key, 0)
+		
+		# 3. Find the next uncompleted tier for this milestone.
+		var next_tier = null
+		for tier in milestone_rules.tiers:
+			if not tier.key in SaveManager.save_data.unlocked_milestones:
+				next_tier = tier
+				break # We found the next goal, so we can stop looking.
+		
+		# --- THIS IS THE NEW LOGIC ---
+		# 4. Create a new, more complex UI element for the milestone.
+		var milestone_node = HBoxContainer.new()
+		milestone_node.alignment = HBoxContainer.ALIGNMENT_CENTER
+		
+		# 4a. Create the Icon
+		var icon = TextureRect.new()
+		icon.custom_minimum_size = Vector2(64, 64)
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var icon_path = milestone_rules.get("icon_path", "")
+		if ResourceLoader.exists(icon_path):
+			icon.texture = load(icon_path)
+			
+		# 4b. Create a VBoxContainer to hold the text and progress bar
+		var text_container = VBoxContainer.new()
+		text_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		var title_label = Label.new()
+		title_label.text = milestone_rules.display_name
+		
+		var progress_label = Label.new()
+		var progress_bar = TextureProgressBar.new() # Using a progress bar for a cleaner look
+		progress_bar.custom_minimum_size = Vector2(0, 16)
+		
+		if next_tier:
+			# If there's still a goal to reach, show the progress.
+			progress_label.text = "%s / %s" % [int(player_progress), next_tier.goal]
+			progress_bar.max_value = next_tier.goal
+			progress_bar.value = player_progress
+		else:
+			# If all tiers are complete, show a "MAX" message.
+			title_label.text += " (COMPLETE!)"
+			progress_label.visible = false
+			progress_bar.value = progress_bar.max_value # Fill the bar
+			
+		# 5. Assemble the final node.
+		text_container.add_child(title_label)
+		text_container.add_child(progress_label)
+		text_container.add_child(progress_bar)
+		
+		milestone_node.add_child(icon)
+		milestone_node.add_child(text_container)
+		
+		milestones_list_container.add_child(milestone_node)
+		print(SaveManager.save_data.milestone_progress)
+
+func _on_tab_container_tab_changed(tab_index: int):
+	var tab_name = $MarginContainer/VBoxContainer/ShedTabs.get_tab_title(tab_index)
+	
+	match tab_name:
+		"Customization":
+			update_all_displays()
+		"Career Stats":
+			update_career_stats_tab()
+		"Milestones":
+			update_milestones_tab()

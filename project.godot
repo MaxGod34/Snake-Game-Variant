@@ -20,6 +20,7 @@ config/icon="res://Assets/icon.svg"
 GameManager="*res://Scripts/game_manager.gd"
 SceneTransition="*res://Scenes/scene_transition.tscn"
 SaveManager="*res://Scripts/SaveManager.gd"
+UpgradeManager="*res://Scripts/upgrade_manager.gd"
 
 [display]
 
