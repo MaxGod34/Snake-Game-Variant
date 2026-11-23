@@ -448,17 +448,7 @@ custom_minimum_size = Vector2(640, 0)
 layout_mode = 1
 
 [node name="DescriptionPanel" parent="." instance=ExtResource("9_rngq6")]
-visible = false
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 496.0
 
 [node name="DescriptionDelayTimer" type="Timer" parent="."]
 wait_time = 0.1

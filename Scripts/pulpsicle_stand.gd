@@ -37,7 +37,6 @@ func _ready() -> void:
 	_build_node_dictionary()
 	_connect_all_signals()
 	await get_tree().process_frame
-	description_panel.show_info({}, 0, 0, "")
 	description_panel.hide()
 
 
@@ -338,46 +337,25 @@ func _on_description_delay_timer_timeout():
 		cost = rules.costs[current_level] if current_level < rules.costs.size() else 999
 	
 	
-	# --- THIS IS THE DYNAMIC POSITIONING LOGIC ---
+
 	description_panel.show_info(rules, current_level, cost, "mg")
-	description_panel.visible = false
-	await get_tree().process_frame
-	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
-	description_panel.queue_sort()
-	#await get_tree().process_frame
-	description_panel.custom_minimum_size = Vector2(540, 496)
-	description_panel.size = Vector2(540, 496)
+
 	# --- THIS IS THE NEW POSITIONING LOGIC ---
 	
 	# 3. Get the size of the screen (the viewport) and the mouse position.
 	var viewport_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position()
-	
-	if mouse_position.x < viewport_size.x / 2.0:
-		description_panel.position.x = mouse_position.x + 128
-	else:
-		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
-		
-	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
-	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
-	
-	description_panel.size = Vector2(540, 496)
-	description_panel.custom_minimum_size = Vector2(540, 496)
-	
-	
 
-	
-	# 8. show it with all the correct info.
-	await description_panel.show_info(rules, current_level, cost, currency_unit)
-	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
-	
 	if mouse_position.x < viewport_size.x / 2.0:
 		description_panel.position.x = mouse_position.x + 128
 	else:
 		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
-		
-	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
-	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
+
+	description_panel.position.y = clamp(
+		mouse_position.y - (description_panel.size.y / 2.0),
+		20,
+		viewport_size.y - description_panel.size.y - 20
+	)
 	description_panel.visible = true
 
 func _on_new_game_s_plus_pressed():

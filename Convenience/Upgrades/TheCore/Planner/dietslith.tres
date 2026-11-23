@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dcjev72thfg01"]
+
+[ext_resource type="Texture2D" uid="uid://qtr742tbof35" path="res://Assets/PNGs/UpgradeIcons/DietSlithIcon.png" id="1_8bhyk"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_fuits"]
+
+[resource]
+script = ExtResource("1_fuits")
+id = "Diet Slith"
+display_name = "Diet Slith"
+description = "Decrease movement speed by 5%.
+Sugar Free!"
+icon = ExtResource("1_8bhyk")
+path = "The Core"
+sub_path = "Planner"
+type = "Passive"
+costs = Array[int]([3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

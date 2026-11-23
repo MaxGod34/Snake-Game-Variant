@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bjyndria6q8df"]
+
+[ext_resource type="Texture2D" uid="uid://bpkn1wr8ua5m8" path="res://Assets/PNGs/UpgradeIcons/LiquidAssetsIcon.png" id="1_2oajm"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_din2g"]
+
+[resource]
+script = ExtResource("1_din2g")
+id = "Liquid Assets"
+display_name = "Liquid Assets"
+description = "+1 juice EVERY time you lvl up"
+icon = ExtResource("1_2oajm")
+path = "The Core"
+sub_path = "Ledger"
+type = "Passive"
+costs = Array[int]([1, 8, 24, 60, 100, 150, 250, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = "Principal Pulp"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="DualStatUpgrade" load_steps=3 format=3 uid="uid://b8vnkli2xcklc"]
+
+[ext_resource type="Texture2D" uid="uid://dvuimk0jrjg06" path="res://Assets/PNGs/UpgradeIcons/GoldenSeedsIcon.png" id="1_7laq3"]
+[ext_resource type="Script" uid="uid://bm5hj3s0jov2n" path="res://Scripts/dual_stat_upgrade.gd" id="1_sqqrx"]
+
+[resource]
+script = ExtResource("1_sqqrx")
+stat_a_name = "chance"
+stat_a_values = Array[float]([0.0, 0.05, 0.1, 0.2, 0.33])
+stat_b_name = "reward"
+stat_b_values = Array[float]([1.0, 2.0, 2.5, 3.0, 4.0])
+id = "Golden Seeds"
+display_name = "Golden Seeds"
+description = "Unlocks Golden Apples!
+They grant juice instead of growth!
+Each lvl increases reward and spawn rate."
+icon = ExtResource("1_7laq3")
+path = "The Harvest"
+sub_path = "Glutton"
+type = "Passive"
+costs = Array[int]([6, 36, 66, 96])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://bm5hj3s0jov2n"

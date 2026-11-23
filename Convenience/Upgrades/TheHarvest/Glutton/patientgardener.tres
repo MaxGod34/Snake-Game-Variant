@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="DualStatUpgrade" load_steps=3 format=3 uid="uid://b7ohgphm4dccb"]
+
+[ext_resource type="Texture2D" uid="uid://bf1cnxj26v7wq" path="res://Assets/PNGs/UpgradeIcons/PatientGardenerIcon.png" id="1_xwrto"]
+[ext_resource type="Script" uid="uid://bm5hj3s0jov2n" path="res://Scripts/dual_stat_upgrade.gd" id="2_l0ysu"]
+
+[resource]
+script = ExtResource("2_l0ysu")
+stat_a_name = "Time:?"
+stat_a_values = Array[float]([10.0, 7.0, 5.0])
+stat_b_name = "Multiplier?"
+stat_b_values = Array[float]([2.0, 2.0, 3.0])
+id = "Patient Gardener"
+display_name = "Patient Gardener"
+description = "Fuirts will ripen over time,
+granting bonus growth.
+Lvl 3 = X3"
+icon = ExtResource("1_xwrto")
+path = "The Harvest"
+sub_path = "Glutton"
+type = "Passive"
+costs = Array[int]([16, 64, 128])
+level_values = Array[float]([])
+prerequisites = {
+"Elephant Sized Portions": 3
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://bm5hj3s0jov2n"

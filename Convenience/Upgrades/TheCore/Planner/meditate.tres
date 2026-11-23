@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bj8yywm6usu1w"]
+
+[ext_resource type="Texture2D" uid="uid://lcu3c05qkgs2" path="res://Assets/PNGs/UpgradeIcons/MeditateIcon.png" id="1_vsgbw"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_if7rq"]
+
+[resource]
+script = ExtResource("2_if7rq")
+id = "Meditate"
+display_name = "Meditate"
+description = "Pause! Need I say more?"
+icon = ExtResource("1_vsgbw")
+path = "The Core"
+sub_path = "Planner"
+type = "Active Ability"
+costs = Array[int]([15, 30, 60, 100, 200, 400, 500, 500, 1])
+level_values = Array[float]([])
+prerequisites = {
+"Diet Slith": 7
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

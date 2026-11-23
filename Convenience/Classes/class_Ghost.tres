@@ -9,6 +9,8 @@ description = "Steer into your ectoplasmic agenda!"
 artwork_path = "res://Assets/ClassIcons/GhostClassIcon.png"
 icon_path = "res://Assets/ClassIcons/GhostClassIcon.png"
 fang_cost = 0
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Arcane Flow": 1,
 "Ghost Tail": 4,

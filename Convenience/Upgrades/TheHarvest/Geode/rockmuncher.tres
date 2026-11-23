@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://b5naocojcj6pt"]
+
+[ext_resource type="Texture2D" uid="uid://dh4u53ovggagq" path="res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png" id="1_ya2nh"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_gi5tt"]
+
+[resource]
+script = ExtResource("2_gi5tt")
+id = "Rockmuncher"
+display_name = "Rockmuncher"
+description = "You can now eat rocks,
+which grant +2 growth."
+icon = ExtResource("1_ya2nh")
+path = "The Harvest"
+sub_path = "Geode"
+type = "Passive"
+costs = Array[int]([16])
+level_values = Array[float]([])
+prerequisites = {
+"Fertile Ground": 4
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

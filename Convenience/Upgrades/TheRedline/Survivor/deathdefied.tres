@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cbjqcb4334hgh"]
+
+[ext_resource type="Texture2D" uid="uid://ux2vmnjwxqi0" path="res://Assets/PNGs/UpgradeIcons/DeathDefiedIcon.png" id="1_vc07b"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_tciai"]
+
+[resource]
+script = ExtResource("2_tciai")
+id = "Death Defied"
+display_name = "Death Defied"
+description = "Every time you use an extra life,
+gain +1 to your fruit reward."
+icon = ExtResource("1_vc07b")
+path = "The Redline"
+sub_path = "Survivor"
+type = "Passive"
+costs = Array[int]([24])
+level_values = Array[float]([])
+prerequisites = {
+"Mulligan Munchie": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

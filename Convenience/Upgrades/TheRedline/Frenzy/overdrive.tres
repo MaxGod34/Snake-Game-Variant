@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dysgmhe4u362g"]
+
+[ext_resource type="Texture2D" uid="uid://dhhfhrpe27u1p" path="res://Assets/PNGs/UpgradeIcons/OverdriveIcon.png" id="1_jglw0"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_wyeok"]
+
+[resource]
+script = ExtResource("2_wyeok")
+id = "Overdrive"
+display_name = "Overdrive"
+description = "While combo is active, hold current
+direction for a speed boost
+2nd is for cosmetics"
+icon = ExtResource("1_jglw0")
+path = "The Redline"
+sub_path = "Frenzy"
+type = "Passive"
+costs = Array[int]([8, 1])
+level_values = Array[float]([])
+prerequisites = {
+"Sugar Rush": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

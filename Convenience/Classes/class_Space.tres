@@ -9,6 +9,8 @@ description = "Master of design and speed."
 artwork_path = "res://Assets/ClassIcons/SpaceClassIcon.png"
 icon_path = "res://Assets/ClassIcons/SpaceClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Edge Lord": 7,
 "Shatter Reality": 1

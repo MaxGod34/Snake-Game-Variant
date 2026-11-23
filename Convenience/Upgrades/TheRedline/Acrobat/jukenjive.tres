@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dul1xfk5rmr40"]
+
+[ext_resource type="Texture2D" uid="uid://b23ywnxli004" path="res://Assets/PNGs/UpgradeIcons/JukeNJiveIcon.png" id="1_7xflh"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_s1wr7"]
+
+[resource]
+script = ExtResource("2_s1wr7")
+id = "Juke N Jive"
+display_name = "Juke N Jive"
+description = "Changing direction 4 times in 1 second
+lets you pass through your body."
+icon = ExtResource("1_7xflh")
+path = "The Redline"
+sub_path = "Acrobat"
+type = "Passive/Ability"
+costs = Array[int]([12])
+level_values = Array[float]([])
+prerequisites = {
+"Slither Sauce": 3
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

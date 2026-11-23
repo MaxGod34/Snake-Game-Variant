@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://c8e8udl7fyitg"]
+
+[ext_resource type="Texture2D" uid="uid://bdd53eb7ltv4q" path="res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png" id="1_dmubc"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_ptu8y"]
+
+[resource]
+script = ExtResource("2_ptu8y")
+id = "Masters Blueprint"
+display_name = "Masters Blueprint"
+description = "Transforms the game's visuals into a clean, glowing blueprint grid."
+icon = ExtResource("1_dmubc")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Keystone"
+costs = Array[int]([13])
+level_values = Array[float]([])
+prerequisites = {
+"Edge Lord": 7
+}
+exlusivity_group = "Dazzle Pie"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

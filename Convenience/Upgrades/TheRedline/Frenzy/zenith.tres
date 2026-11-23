@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://nf67leedfpya"]
+
+[ext_resource type="Texture2D" uid="uid://bprkfkeycl2d3" path="res://Assets/PNGs/UpgradeIcons/ZenithIcon.png" id="1_gcy75"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_ypbnu"]
+
+[resource]
+script = ExtResource("2_ypbnu")
+id = "Zenith"
+display_name = "Zenith"
+description = "Active Ability: Instantly set your combo to 10 and freeze the timer."
+icon = ExtResource("1_gcy75")
+path = "The Redline"
+sub_path = "Frenzy"
+type = "Keystone Ability"
+costs = Array[int]([32])
+level_values = Array[float]([])
+prerequisites = {
+"Lingering Rush": 5
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

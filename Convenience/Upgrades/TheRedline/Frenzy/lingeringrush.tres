@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dtaqergcl8rt6"]
+
+[ext_resource type="Texture2D" uid="uid://ui6n5mmh5eik" path="res://Assets/PNGs/UpgradeIcons/LingeringRushIcon.png" id="1_t87pf"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_4vcok"]
+
+[resource]
+script = ExtResource("2_4vcok")
+id = "Lingering Rush"
+display_name = "Lingering Rush"
+description = "Increases the duration of the combo timer,
+making it easier to chain fruits."
+icon = ExtResource("1_t87pf")
+path = "The Redline"
+sub_path = "Frenzy"
+type = "Passive"
+costs = Array[int]([6, 12, 18, 24, 64])
+level_values = Array[float]([])
+prerequisites = {
+"Sugar Rush": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

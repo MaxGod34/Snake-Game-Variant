@@ -120,7 +120,6 @@ var headlines = [
 
 func _ready():
 	await get_tree().process_frame
-	description_panel.show_info({}, 0, 0, "")
 	description_panel.hide()
 
 func initialize(p_main_game):
@@ -138,7 +137,7 @@ func initialize(p_main_game):
 	sell_light_block_button.icon = sell_icon
 	buy_extra_block_button.icon = buy_icon
 	sell_extra_block_button.icon = sell_icon
-	description_panel.custom_minimum_size = Vector2(540, 0)
+
 
 
 
@@ -154,18 +153,16 @@ func _process(delta):
 func _build_node_dictionary():
 	all_upgrade_nodes.clear() # Clear it out for safety
 	# We loop through our master data source in GameManager.
-	for path_key in GameManager.upgrade_data:
-		# We need to handle the nested structure of our new data.
-		for sub_path_key in GameManager.upgrade_data[path_key]:
-			for upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
-				# We build the node name from the key (e.g., "Liquid Assets" -> "LiquidAssetsNode")
-				var node_name = upgrade_key.replace(" ", "").replace("'", "").to_pascal_case() + "Node"
-				var node = find_child(node_name, true, false)
-				if is_instance_valid(node):
-					all_upgrade_nodes[upgrade_key] = node
-				else:
-					# This warning is very helpful for debugging any naming mismatches!
-					print_debug("Warning: Could not find upgrade node named: ", node_name)
+	for upgrade_key in GameManager.upgrades:
+		# We build the node name from the key (e.g., "Liquid Assets" -> "LiquidAssetsNode")
+		var clean_key = upgrade_key.replace(" ", "").replace("'", "").replace("-", "")
+		var node_name = clean_key.to_pascal_case() + "Node"
+		var node = find_child(node_name, true, false)
+		if is_instance_valid(node):
+			all_upgrade_nodes[upgrade_key] = node
+		else:
+			# This warning is very helpful for debugging any naming mismatches!
+			print_debug("Warning: Could not find node %s for upgrade ID %s" % [node_name, upgrade_key])
 
 
 # This is our master function for setting up all connections.
@@ -230,8 +227,8 @@ func update_all_displays():
 	for upgrade_key in all_upgrade_nodes:
 		var node = all_upgrade_nodes[upgrade_key]
 		var rules = GameManager.get_upgrade_rules(upgrade_key)
-		
-		if rules.is_empty(): continue
+		if not rules: 
+			continue
 
 		var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
 		var prereqs_met = GameManager.check_prerequisites(upgrade_key)
@@ -240,22 +237,22 @@ func update_all_displays():
 		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
 	update_snake_eyes_tab()
 	
-func get_theme_colors(rules: Dictionary) -> Dictionary:
+func get_theme_colors(rules: UpgradeData) -> Dictionary:
 	var colors = {"main": Color.WHITE, "accent": Color.GRAY}
 	# This helper returns a unique color for each skill tree theme.
-	match rules.get("path", ""):
+	match rules.path:
 		"The Core": colors.main = Color("42AEE0")
 		"The Harvest": colors.main = Color("7ED321")
 		"The Redline": colors.main = Color("D0021B")
 		"The Ssscale": colors.main = Color("BD10E2")
 		"Snake Eyes": colors.main = Color("fdf5e6")
 		
-	match rules.get("sub_path", ""):
+	match rules.sub_path:
 		"Idle": colors.accent = Color("69D2A3")
 		"Planner": colors.accent = Color("E5E5E5")
 		"Ledger": colors.accent = Color("F5A623")
 		"Glutton": colors.accent = Color("F37A23")
-		"Chef": colors.accent = Color("F8E71C")
+		"Wrangler": colors.accent = Color("F8E71C")
 		"Geode": colors.accent = Color("8B572A")
 		"Acrobat": colors.accent = Color("F8E71C")
 		"Frenzy": colors.accent = Color("FF00FF")
@@ -298,56 +295,31 @@ func _on_any_node_mouse_exited():
 
 func _on_description_delay_timer_timeout():
 	if hovered_upgrade_key == "": return
-	var currency_unit: String = "mL"
-	# 2. Get the rules and cost for the hovered upgrade using our helpers in main.gd.
+	
 	var rules = GameManager.get_upgrade_rules(hovered_upgrade_key)
-	if rules.is_empty(): return
-	
-	
+	if not rules: 
+		return
+		
 	var cost = GameManager.calculate_upgrade_cost(hovered_upgrade_key)
 	var current_level = GameManager.get_upgrade_level_from_key(hovered_upgrade_key)
-	# We get the display name directly from the rules dictionary.
-	
 
 	description_panel.show_info(rules, current_level, cost, "mL")
-	print("Before:", description_panel.size, description_panel.get_combined_minimum_size())
-	await get_tree().process_frame
-	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
-	description_panel.queue_sort()
-	#await get_tree().process_frame
-	description_panel.custom_minimum_size = Vector2(540, 496)
-	description_panel.size = Vector2(540, 496)
-	# --- THIS IS THE NEW POSITIONING LOGIC ---
 	
-	# 3. Get the size of the screen (the viewport) and the mouse position.
+	#Quadrant spacing
 	var viewport_size = get_viewport().get_visible_rect().size
 	var mouse_position = get_viewport().get_mouse_position()
-	
-	if mouse_position.x < viewport_size.x / 2.0:
-		description_panel.position.x = mouse_position.x + 128
-	else:
-		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
-		
-	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
-	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
-	
-	description_panel.size = Vector2(540, 496)
-	description_panel.custom_minimum_size = Vector2(540, 496)
-	
-	
 
-	
-	# 8. show it with all the correct info.
-	await description_panel.show_info(rules, current_level, cost, currency_unit)
-	print("After:", description_panel.size, description_panel.get_combined_minimum_size())
-	
 	if mouse_position.x < viewport_size.x / 2.0:
 		description_panel.position.x = mouse_position.x + 128
 	else:
 		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
-		
-	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
-	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
+
+	description_panel.position.y = clamp(
+		mouse_position.y - (description_panel.size.y / 2.0),
+		20,
+		viewport_size.y - description_panel.size.y - 20
+	)
+	description_panel.visible = true
 
 
 

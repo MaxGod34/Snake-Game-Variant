@@ -9,6 +9,8 @@ description = "A jack-of-all-trades who combines speed and passive income."
 artwork_path = "res://Assets/ClassIcons/GrooveClassIcon.png"
 icon_path = "res://Assets/ClassIcons/GrooveClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Get Rich Quick": 1,
 "Juke N Jive": 1,

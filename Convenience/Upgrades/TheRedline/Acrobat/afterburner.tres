@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="DualStatUpgrade" load_steps=3 format=3 uid="uid://cc35p23wi0qm1"]
+
+[ext_resource type="Texture2D" uid="uid://cy3ypcp4md1j3" path="res://Assets/PNGs/UpgradeIcons/AfterburnerIcon.png" id="1_j3lpp"]
+[ext_resource type="Script" uid="uid://bm5hj3s0jov2n" path="res://Scripts/dual_stat_upgrade.gd" id="1_muarx"]
+
+[resource]
+script = ExtResource("1_muarx")
+stat_a_name = "boost"
+stat_a_values = Array[float]([0.75, 0.6, 0.5])
+stat_b_name = "duration"
+stat_b_values = Array[float]([2.0, 2.5, 3.0])
+id = "Afterburner"
+display_name = "Afterburner"
+description = "Speed boost after eating a fruit?"
+icon = ExtResource("1_j3lpp")
+path = "The Core"
+sub_path = "Idle"
+type = "Passive"
+costs = Array[int]([6, 12, 24])
+level_values = Array[float]([])
+prerequisites = {
+"Slither Sauce": 3
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://bm5hj3s0jov2n"

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cacxy1vjasoiv"]
+
+[ext_resource type="Texture2D" uid="uid://cyftsapj57gcy" path="res://Assets/PNGs/UpgradeIcons/ZoningOrdinanceIcon.png" id="1_irds1"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_ndy70"]
+
+[resource]
+script = ExtResource("1_ndy70")
+id = "Zoning Ordinance"
+display_name = "Zoning Ordinance"
+description = "Decree a quadrant as a 'safe zone' with fewer obstacles
+Lvl 1: Top Left
+Lvl 2: Top Half
+Lvl 3: Bottom Left not safe
+Lvl 4: Complete control"
+icon = ExtResource("1_irds1")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Passive"
+costs = Array[int]([6, 18, 32, 64])
+level_values = Array[float]([])
+prerequisites = {
+"Edge Lord": 2
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

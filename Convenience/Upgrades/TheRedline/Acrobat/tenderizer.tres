@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://630uswyebyc1"]
+
+[ext_resource type="Texture2D" uid="uid://cwcdfp8qsqu70" path="res://Assets/PNGs/UpgradeIcons/TenderizerIcon.png" id="1_uajus"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_1uiyr"]
+
+[resource]
+script = ExtResource("2_1uiyr")
+id = "Tenderizer"
+display_name = "Tenderizer"
+description = "Destroy a rock on impact.
+Limited charges, no activation necessary."
+icon = ExtResource("1_uajus")
+path = "The Redline"
+sub_path = "Acrobat"
+type = "Active Ability"
+costs = Array[int]([8, 12, 16, 32, 64, 128, 256, 512, 999])
+level_values = Array[float]([])
+prerequisites = {
+"Slither Sauce": 3
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

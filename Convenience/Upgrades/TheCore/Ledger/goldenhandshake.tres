@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://c5k3ywblmkesl"]
+
+[ext_resource type="Texture2D" uid="uid://dhvsn3ntcdvpf" path="res://Assets/PNGs/UpgradeIcons/GoldenHandshakeIcon.png" id="1_4s8wd"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_6tq4k"]
+
+[resource]
+script = ExtResource("2_6tq4k")
+id = "Golden Handshake"
+display_name = "Golden Handshake"
+description = "Multiplies all BONUS Pulp rewards
+(Flawless, Par Time, etc.)
+at the end of each Garden"
+icon = ExtResource("1_4s8wd")
+path = "The Core"
+sub_path = "Ledger"
+type = "Passive"
+costs = Array[int]([3, 4, 5, 15, 25, 40, 65, 90, 120, 200])
+level_values = Array[float]([1.0, 1.25, 1.5, 2.0, 2.5, 4.0, 6.0, 8.0, 10.0, 12.5, 25.0])
+prerequisites = {
+"Principal Pulp": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

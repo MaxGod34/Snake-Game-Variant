@@ -1,6 +1,6 @@
 [gd_scene load_steps=31 format=3 uid="uid://8jgmx7q20qg5"]
 
-[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="1_7n2mm"]
+[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/Templates/basic_square_with_border.png" id="1_7n2mm"]
 [ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scripts/pulpsicle_stand.gd" id="1_i1qs4"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_4da1l"]
 [ext_resource type="StyleBox" uid="uid://cwkxotx0hirlx" path="res://Assets/Styles/block_buttons/block_red_hovered.tres" id="4_4da1l"]
@@ -419,7 +419,10 @@ mouse_filter = 2
 [node name="DescriptionPanel" parent="PanelControl" instance=ExtResource("12_p3c4b")]
 visible = false
 layout_mode = 1
+anchors_preset = 0
 offset_left = -270.0
 offset_top = -248.0
 offset_right = 270.0
 offset_bottom = 248.0
+grow_horizontal = 1
+grow_vertical = 1

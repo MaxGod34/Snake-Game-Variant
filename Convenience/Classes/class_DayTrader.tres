@@ -9,6 +9,8 @@ description = "Pure economic velocity."
 artwork_path = "res://Assets/ClassIcons/DayTraderClassIcon.png"
 icon_path = "res://Assets/ClassIcons/DayTraderClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Fast Track": 1,
 "Liquid Assets": 3

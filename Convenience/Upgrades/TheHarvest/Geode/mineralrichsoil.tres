@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://w2ne0gc56x7d"]
+
+[ext_resource type="Texture2D" uid="uid://bsuvg08eaqq4w" path="res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png" id="1_qvi7y"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_55fnt"]
+
+[resource]
+script = ExtResource("2_55fnt")
+id = "Mineral Rich Soil"
+display_name = "Mineral Rich Soil"
+description = "Each lvl grants a +1 to Fruit Reward,
+but adds +5 rocks to every garden"
+icon = ExtResource("1_qvi7y")
+path = "The Harvest"
+sub_path = "Geode"
+type = "Passive"
+costs = Array[int]([4, 16, 64, 256])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

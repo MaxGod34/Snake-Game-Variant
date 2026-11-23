@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cqeuybo542ufd"]
+
+[ext_resource type="Texture2D" uid="uid://6kaywickcga0" path="res://Assets/PNGs/UpgradeIcons/PopRocksIcon.png" id="1_3qess"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_54owm"]
+
+[resource]
+script = ExtResource("2_54owm")
+id = "Pop Rocks"
+display_name = "Pop Rocks"
+description = "When you destroy a rock with Tenderizer,
+generate a shockwave that destroys
+adjacent rocks."
+icon = ExtResource("1_3qess")
+path = "The Redline"
+sub_path = "Acrobat"
+type = "Passive"
+costs = Array[int]([16])
+level_values = Array[float]([])
+prerequisites = {
+"Tenderizer": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="DualStatUpgrade" load_steps=3 format=3 uid="uid://tlwfomih82vs"]
+
+[ext_resource type="Script" uid="uid://bm5hj3s0jov2n" path="res://Scripts/dual_stat_upgrade.gd" id="1_1cl0v"]
+[ext_resource type="Texture2D" uid="uid://c52jsyl2lykjb" path="res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png" id="1_tdd4j"]
+
+[resource]
+script = ExtResource("1_1cl0v")
+stat_a_name = "cost"
+stat_a_values = Array[float]([10.0, 20.0, 30.0])
+stat_b_name = "duration"
+stat_b_values = Array[float]([20.0, 30.0, 60.0])
+id = "Pocket Garden"
+display_name = "Pocket Garden"
+description = "Active Ability: Sacrifice tail segments to
+create a temporary 5x5 safe zone that spawns fruit.
+Lvl increases duration and segment cost"
+icon = ExtResource("1_tdd4j")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Active Ability"
+costs = Array[int]([16, 32, 64])
+level_values = Array[float]([])
+prerequisites = {
+"Edge Lord": 4
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://bm5hj3s0jov2n"

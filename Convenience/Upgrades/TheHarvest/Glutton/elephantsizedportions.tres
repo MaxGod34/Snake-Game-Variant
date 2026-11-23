@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://d06wpebmob78t"]
+
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_3als3"]
+[ext_resource type="Texture2D" uid="uid://b5hlyar5fa4xp" path="res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png" id="1_ice7i"]
+
+[resource]
+script = ExtResource("1_3als3")
+id = "Elephant Sized Portions"
+display_name = "Elephant Sized Portions"
+description = "Increase Fruit Reward +1"
+icon = ExtResource("1_ice7i")
+path = "The Harvest"
+sub_path = "Glutton"
+type = "Passive"
+costs = Array[int]([3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 25, 30, 35, 40, 45, 50, 60, 70, 80, 99])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

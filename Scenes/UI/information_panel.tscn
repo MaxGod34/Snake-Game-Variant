@@ -1,6 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://cy78aj0eaeuv2"]
 
-[ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/snake_poker_chip_white.png" id="1_ksswb"]
+[ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/GambleSprites/snake_poker_chip_white.png" id="1_ksswb"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_40xf2"]
 [ext_resource type="Script" uid="uid://b6hfbkpju0rb0" path="res://Scripts/information_panel.gd" id="2_dhsml"]
 [ext_resource type="PackedScene" uid="uid://ck50xdb7swx85" path="res://Scenes/UI/harvest_forecast_ui.tscn" id="3_ksswb"]

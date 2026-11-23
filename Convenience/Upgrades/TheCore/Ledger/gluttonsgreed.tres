@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://b23koo3duntva"]
+
+[ext_resource type="Texture2D" uid="uid://dgukh558gm1fi" path="res://Assets/PNGs/UpgradeIcons/GluttonsGreedIcon.png" id="1_atpsq"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_kbuch"]
+
+[resource]
+script = ExtResource("2_kbuch")
+id = "Gluttons Greed"
+display_name = "Glutton's Greed"
+description = "Quantity or Quality, or...
+Increase fruit reward by current max fruits."
+icon = ExtResource("1_atpsq")
+path = "The Core"
+sub_path = "Ledger"
+type = "Boost"
+costs = Array[int]([25])
+level_values = Array[float]([])
+prerequisites = {
+"Liquid Assets": 2
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

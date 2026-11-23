@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bjaafh6s27qft"]
+
+[ext_resource type="Texture2D" uid="uid://e2l8j4grsls7" path="res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png" id="1_ghtsv"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_p0j1j"]
+
+[resource]
+script = ExtResource("2_p0j1j")
+id = "Border Czar"
+display_name = "Border Czar"
+description = "Control the borders, control the world.
+Fruit on the edge is more likely to be special."
+icon = ExtResource("1_ghtsv")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Passive"
+costs = Array[int]([36])
+level_values = Array[float]([])
+prerequisites = {
+"Edge Lord": 4
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://er5p3wgl5egx"]
+
+[ext_resource type="Texture2D" uid="uid://pg1340v7aknm" path="res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png" id="1_5h0kq"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_mmrcv"]
+
+[resource]
+script = ExtResource("2_mmrcv")
+id = "Dazzle Pie"
+display_name = "Dazzle Pie"
+description = "A permanent, purely aesthetic transformation that adds
+a chromatic aberration effect to the game."
+icon = ExtResource("1_5h0kq")
+path = "The Ssscale"
+sub_path = "Illusionist"
+type = "Keystone"
+costs = Array[int]([1])
+level_values = Array[float]([])
+prerequisites = {
+"Ghost Tail": 7
+}
+exlusivity_group = "Masters Blueprint"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

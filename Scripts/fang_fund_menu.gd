@@ -119,7 +119,7 @@ func update_class_unlock_grid():
 		var is_unlocked = class_key in SaveManager.save_data.unlocked_classes
 		
 		#icon set
-		var icon_path = class_data.get("icon_path", "")
+		var icon_path = class_data.icon_path
 		if ResourceLoader.exists(icon_path):
 			node.icon = load(icon_path)
 		else:
@@ -215,16 +215,16 @@ func _on_any_node_mouse_exited(item_key: String):
 func _on_description_delay_timer_timeout():
 	if hovered_item_key == "": return
 
-	var rules: Dictionary
-	var cost: int
-	var current_level: int
+	var rules = null
+	var cost: int = 0
+	var current_level: int = 0
 	var currency_unit: String = "fangs"
 	
 	# We now gather all the data needed by the new show_info function.
 	
 	if hovered_item_key in GameManager.class_data:
 		rules = GameManager.class_data[hovered_item_key]
-		cost = rules.get("fang_cost", 9999)
+		cost = rules.fang_cost
 		current_level = 1 if hovered_item_key in SaveManager.save_data.unlocked_classes else 0
 		
 	else:
@@ -235,8 +235,9 @@ func _on_description_delay_timer_timeout():
 			if hovered_item_key in SaveManager.save_data.unlocked_cosmetics[item_type.to_lower()]:
 				current_level = 1
 	
-	if rules.is_empty(): return
+	if rules == null: return
 
+	description_panel.show_info(rules, current_level, cost, currency_unit)
 	# --- DYNAMIC POSITIONING LOGIC ---
 	var viewport_size = get_viewport_rect().size
 	var mouse_position = get_global_mouse_position()
@@ -248,13 +249,14 @@ func _on_description_delay_timer_timeout():
 		
 	description_panel.position.y = mouse_position.y - (description_panel.size.y / 2.0)
 	description_panel.position.y = clamp(description_panel.position.y, 20, viewport_size.y - description_panel.size.y - 20)
-	description_panel.size = Vector2(540, 496)
-	description_panel.custom_minimum_size = Vector2(540, 496)
-	await get_tree().process_frame
-	# Now that it's in the right place, show it with all the correct info.
-	await description_panel.show_info(rules, current_level, cost, currency_unit)
 	
+	description_panel.position.y = clamp(
+		mouse_position.y - (description_panel.size.y / 2.0),
+		20,
+		viewport_size.y - description_panel.size.y - 20
+	)
 	
+	description_panel.visible = true
 
 
 

@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://doqi35r6jyacb"]
+
+[ext_resource type="Texture2D" uid="uid://dnwwp7najdwbx" path="res://Assets/PNGs/UpgradeIcons/SovereignTrailIcon.png" id="1_bthbk"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_rd0pn"]
+
+[resource]
+script = ExtResource("2_rd0pn")
+id = "Sovereign Trail"
+display_name = "Sovereign Trail"
+description = "Leave your mark.
+Your trail affects where new fruits can spawn.
+Lvl 1: Repel | Lvl 2: Attract"
+icon = ExtResource("1_bthbk")
+path = "The Core"
+sub_path = "Planner"
+type = "Passive"
+costs = Array[int]([16, 48])
+level_values = Array[float]([])
+prerequisites = {
+"Diet Slith": 3
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

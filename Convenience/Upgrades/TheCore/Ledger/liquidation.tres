@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dhevgtbttyis8"]
+
+[ext_resource type="Texture2D" uid="uid://cnb54lf3p1qfq" path="res://Assets/PNGs/UpgradeIcons/LiquidationIcon.png" id="1_dv41h"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_82pyy"]
+
+[resource]
+script = ExtResource("2_82pyy")
+id = "Liquidation"
+display_name = "Liquidation"
+description = "Instantly double your current Juice.
+No strings attached."
+icon = ExtResource("1_dv41h")
+path = "The Core"
+sub_path = "Ledger"
+type = "Keystone"
+costs = Array[int]([1])
+level_values = Array[float]([])
+prerequisites = {
+"Principal Pulp": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

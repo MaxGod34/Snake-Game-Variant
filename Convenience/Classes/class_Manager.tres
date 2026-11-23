@@ -9,6 +9,8 @@ description = "The pulp enjoyer!"
 artwork_path = "res://Assets/ClassIcons/ManagerClassIcon.png"
 icon_path = "res://Assets/ClassIcons/ManagerClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Juice Press": 1,
 "Principal Pulp": 5

@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://d1f62ii7wmk0j"]
+
+[ext_resource type="Texture2D" uid="uid://dx0uaosq5f1cp" path="res://Assets/PNGs/UpgradeIcons/PhoenixDawnIcon.png" id="1_ibiu0"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_8kbcq"]
+
+[resource]
+script = ExtResource("2_8kbcq")
+id = "Phoenix Dawn"
+display_name = "Phoenix Dawn"
+description = "After using an extra life
+the next fruit restores 50% of your lost length."
+icon = ExtResource("1_ibiu0")
+path = "The Redline"
+sub_path = "Survivor"
+type = "Passive"
+costs = Array[int]([24])
+level_values = Array[float]([])
+prerequisites = {
+"Mulligan Munchie": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

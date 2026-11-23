@@ -9,6 +9,8 @@ description = "A master of foresight whose power creates a dangerous feedback lo
 artwork_path = "res://Assets/ClassIcons/PsychicClassIcon.png"
 icon_path = "res://Assets/ClassIcons/PsychicClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Diet Slith": 5,
 "Fruit Foresight": 1,

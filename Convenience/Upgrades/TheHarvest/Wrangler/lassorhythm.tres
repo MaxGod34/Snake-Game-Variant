@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bn8w5fij4lh1t"]
+
+[ext_resource type="Texture2D" uid="uid://qgr0w1o6y0uy" path="res://Assets/PNGs/UpgradeIcons/lassorhythm.png" id="1_rurqg"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_8bidd"]
+
+[resource]
+script = ExtResource("2_8bidd")
+id = "Lasso Rhythm"
+display_name = "Lasso Rhythm"
+description = "Every 4 fruit pick ups, get a lasso charge back"
+icon = ExtResource("1_rurqg")
+path = "The Harvest"
+sub_path = "Wrangler"
+type = "Keystone"
+costs = Array[int]([32])
+level_values = Array[float]([])
+prerequisites = {
+"Lasso Larry": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

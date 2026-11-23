@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://ca03jyhuaawbj"]
+
+[ext_resource type="Texture2D" uid="uid://ietmw6cqcgjl" path="res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png" id="1_q6p3o"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_uxxds"]
+
+[resource]
+script = ExtResource("2_uxxds")
+id = "Garden Weaver"
+display_name = "Garden Weaver"
+description = "Reroll all fruits MUCH closer!"
+icon = ExtResource("1_q6p3o")
+path = "The Core"
+sub_path = "Planner"
+type = "Keystone Ability"
+costs = Array[int]([49])
+level_values = Array[float]([])
+prerequisites = {
+"Diet Slith": 7
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

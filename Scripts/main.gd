@@ -862,9 +862,10 @@ func update_grid_dimensions():
 		grid_height = 60
 	else:
 		# Otherwise, the size is determined by the Edge Lord upgrade level.
-		var current_size = GameManager.edge_lord_data[GameManager.edge_lord_level]
-		grid_width = int(current_size.x)
-		grid_height = int(current_size.y)
+		var edge_lord = GameManager.get_upgrade_rules("Edge Lord") as GridSizeUpgradeData
+		var current_size = edge_lord.get_grid_size(GameManager.get_upgrade_level_from_key("Edge Lord"))
+		grid_width = current_size.x
+		grid_height = current_size.y
 
 func rebuild_world_layout():
 	# The order of these calls is CRITICAL.
@@ -1413,7 +1414,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 			if GameManager.golden_handshake_level < 10:
 				GameManager.golden_handshake_level += 1
 		elif upgrade_name == "Juice Press":
-			GameManager._purchase_or_upgrade_ability("Juice Press")
+			GameManager.purchase_or_upgrade_ability("Juice Press")
 		elif upgrade_name == "Liquidation":
 			if not GameManager.liquidation_used:
 				GameManager.liquidation_used = true
@@ -3066,7 +3067,7 @@ func handle_upgrade_purchase(upgrade_key: String):
 				_grant_random_paradox_upgrade()
 		
 		
-		var sub_path = rules.get("sub_path", "")
+		var sub_path = rules.sub_path
 		if sub_path != "":
 			# 2. We add the cost to the running total for that specific sub-path.
 			var current_spent = GameManager.juice_spent_per_sub_path.get(sub_path, 0)
@@ -3564,17 +3565,15 @@ func report_juke_and_jive_success():
 func _grant_random_paradox_upgrade():
 	print("PARADOX ENGINE RUNNING HOT: FREE UPGRADE COMING...")
 	var valid_upgrade_pool: Array = []
-	for path_key in GameManager.upgrade_data:
-		for sub_path_key in GameManager.upgrade_data[path_key]:
-			for upgrade_key in GameManager.upgrade_data[path_key][sub_path_key]:
-				var rules = GameManager.get_upgrade_rules(upgrade_key)
-				var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
-				
-				if current_level >= rules.max_level:
-					continue
-				if not GameManager.check_prerequisites(upgrade_key):
-					continue
-				valid_upgrade_pool.append(upgrade_key)
+	for upgrade_key in GameManager.upgrades:
+		var upgrade = GameManager.upgrades[upgrade_key]
+		var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
+		if current_level >= upgrade.max_level:
+			continue
+		if not GameManager.check_prerequisites(upgrade_key):
+			continue
+		valid_upgrade_pool.append(upgrade_key)
+		
 	if not valid_upgrade_pool.is_empty():
 		var chosen_upgrade = valid_upgrade_pool.pick_random()
 		print("Paradox Engine chose: ", chosen_upgrade)

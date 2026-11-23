@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="GridSizeUpgradeData" load_steps=3 format=3 uid="uid://d018d0aehc5lk"]
+
+[ext_resource type="Script" uid="uid://cf4wpa261hv3l" path="res://Scripts/grid_size_upgrade_data.gd" id="1_cw7jv"]
+[ext_resource type="Texture2D" uid="uid://83ag8anpnnwd" path="res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png" id="1_ykhx5"]
+
+[resource]
+script = ExtResource("1_cw7jv")
+grid_sizes = Array[Vector2i]([Vector2i(12, 9), Vector2i(16, 12), Vector2i(20, 15), Vector2i(24, 18), Vector2i(28, 21), Vector2i(32, 24), Vector2i(36, 27), Vector2i(40, 30)])
+id = "Edge Lord"
+display_name = "Edge Lord"
+description = "Increase the size of the play area."
+icon = ExtResource("1_ykhx5")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Passive"
+costs = Array[int]([2, 4, 8, 16, 32, 64, 128])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cf4wpa261hv3l"

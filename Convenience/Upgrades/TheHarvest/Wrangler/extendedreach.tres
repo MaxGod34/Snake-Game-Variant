@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dhbh27qo3eyds"]
+
+[ext_resource type="Texture2D" uid="uid://cj231owmlh5xd" path="res://Assets/PNGs/UpgradeIcons/extendedreach.png" id="1_n4ng6"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_gsct6"]
+
+[resource]
+script = ExtResource("2_gsct6")
+id = "Extended Reach"
+display_name = "Extended Reach"
+description = "Grab fruits from further away!"
+icon = ExtResource("1_n4ng6")
+path = "The Harvest"
+sub_path = "Wrangler"
+type = "Passive"
+costs = Array[int]([16, 64, 128])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

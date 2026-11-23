@@ -1,4 +1,4 @@
-extends PanelContainer
+extends Control
 
 # --- NODE REFERENCES ---
 # Make sure these paths are correct for this scene!
@@ -10,52 +10,43 @@ extends PanelContainer
 @onready var tree_label = $MarginC/GridContainer/TreeLabel
 
 func _ready():
-	# Force layout to initialize with dummy content
-	var dummy_rules = {
-		"display_name": "Loading...",
-		"description": "Initializing layout to prevent flicker.",
-		"path": "Dummy",
-		"sub_path": "Test",
-		"type": "DummyType",
-		"max_level": 1,
-		"fang_cost": 0,
-		"icon_path": ""
-	}
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	custom_minimum_size = Vector2(540, 496)
+	size = custom_minimum_size
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	visible = false
+	
 
-	self.custom_minimum_size = Vector2(540, 0)
+func _get_prop(source, prop_name: String, default_val = null):
+	if source == null:
+		return default_val
+	if source is Dictionary:
+		return source.get(prop_name, default_val)
+	var val = source.get(prop_name)
+	return val if val != null else default_val
 
-	self.size = Vector2(540, 496)
-
-	await get_tree().process_frame
-	await show_info(dummy_rules, 0, 0, "fangs")
-	self.visible = true
-
-	# Immediately hide it again until real usage
-	await get_tree().process_frame
-	self.visible = false
 
 # This is the master function that main.gd will call.
-func show_info(rules: Dictionary, current_level: int, cost: int, currency_unit: String):
-	# --- PREVENT RESIZE FLICKER FIRST ---
-	self.visible = false
-	self.size = Vector2(0, 0)
-
-	await get_tree().process_frame # Let layout update first
-
-	# --- Set all the text labels ---
-	name_label.text = rules.get("display_name", rules.get("name", "Unknown Item"))
-	description_label.text = rules.get("description", "No description available.")
-
-	# --- Set the Tree/Type Label ---
-	var path_text = rules.get("path", "")
-	var sub_path_text = rules.get("sub_path", "")
+func show_info(rules, current_level: int, cost: int, currency_unit: String) -> void:
+	if rules == null: return
+	
+	# Text Lbls
+	var title: String = _get_prop(rules, "display_name", "")
+	if title == "":
+		title = _get_prop(rules, "name", _get_prop(rules, "id", "Unknown Item"))
+	name_label.text = title
+	description_label.text = _get_prop(rules, "description", "No description available.")
+	
+	# Tree/Type
+	var path_text: String = _get_prop(rules, "path", "")
+	var sub_path_text: String = _get_prop(rules, "sub_path", "")
 	if path_text != "":
 		tree_label.text = "Tree: %s (%s)" % [path_text, sub_path_text]
 	else:
-		tree_label.text = "Type: %s" % rules.get("type", "Unlockable")
-
-	# --- Set the Level Display ---
-	var max_level = rules.get("max_level", 1)
+		tree_label.text = "Type: %s" % _get_prop(rules, "type", "Unlockable")
+	
+	# Lvl Cost
+	var max_level: int = _get_prop(rules, "max_level", 1)
 	if current_level >= max_level and max_level > 0:
 		level_label.text = "(MAX)"
 		cost_label.text = "---"
@@ -65,24 +56,26 @@ func show_info(rules: Dictionary, current_level: int, cost: int, currency_unit: 
 	else:
 		level_label.text = "(One-Time)"
 		cost_label.text = "Cost: %s %s" % [cost, currency_unit]
-
-	# --- Set the Icon ---
-	var icon_path = rules.get("icon_path", "")
-	if rules.has("hex_code"):
+	
+	# Icon
+	var hex_code: String = _get_prop(rules, "hex_code", "")
+	var icon_tex = _get_prop(rules, "icon", null)
+	var icon_path: String = _get_prop(rules, "icon_path", "")
+	
+	if hex_code != "":
 		icon_display.texture = preload("res://Assets/Icons/white_swatch.png")
-		icon_display.modulate = Color(rules.hex_code)
-	elif ResourceLoader.exists(icon_path):
+		icon_display.modulate = Color(hex_code)
+	elif icon_tex is Texture2D:
+		icon_display.texture = icon_tex
+		icon_display.modulate = Color.WHITE
+	elif icon_path != "" and ResourceLoader.exists(icon_path):
 		icon_display.texture = load(icon_path)
 		icon_display.modulate = Color.WHITE
 	else:
 		icon_display.texture = null
 		icon_display.modulate = Color.WHITE
-
-	self.size = Vector2(540, 496)
-
-	# Just in case something tried to change the size again
-	await get_tree().process_frame
-	self.size = Vector2(540, 496)
-
-	print("Description size: %s" % self.size)
-	self.visible = true
+	
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	reset_size()
+	size = Vector2(max(size.x, 540.0), max(size.y, 496))
+	

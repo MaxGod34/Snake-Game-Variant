@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bnjryet4q7i0c"]
+
+[ext_resource type="Texture2D" uid="uid://csvwuv7j5jqrk" path="res://Assets/PNGs/UpgradeIcons/AutotomyIcon.png" id="1_uc4kv"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_xec82"]
+
+[resource]
+script = ExtResource("2_xec82")
+id = "Autotomy"
+display_name = "Autotomy"
+description = "Active Ability: Sever your own tail on impact
+to survive a fatal crash"
+icon = ExtResource("1_uc4kv")
+path = "The Redline"
+sub_path = "Acrobat"
+type = "Keystone Ability"
+costs = Array[int]([32])
+level_values = Array[float]([])
+prerequisites = {
+"Slither Sauce": 6
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

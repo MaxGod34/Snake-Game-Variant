@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://btraf0afevjbu"]
+
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_en6x5"]
+[ext_resource type="Texture2D" uid="uid://0wxbfj6hkb6c" path="res://Assets/PNGs/UpgradeIcons/3CardMontyIcon.png" id="1_fiqtg"]
+
+[resource]
+script = ExtResource("1_en6x5")
+id = "3 Card Monty"
+display_name = "3 Card Monty"
+description = "Permanently reduces the Juice cost of
+all other upgrades by 1 (to a minimum of 1)."
+icon = ExtResource("1_fiqtg")
+path = "The Ssscale"
+sub_path = "Illusionist"
+type = "Passive"
+costs = Array[int]([3])
+level_values = Array[float]([])
+prerequisites = {
+"Ghost Tail": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

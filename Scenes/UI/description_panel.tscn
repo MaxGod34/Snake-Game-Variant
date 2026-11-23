@@ -1,47 +1,37 @@
-[gd_scene load_steps=7 format=3 uid="uid://bdqnq8u7m75ue"]
+[gd_scene load_steps=5 format=3 uid="uid://bdqnq8u7m75ue"]
 
 [ext_resource type="Script" uid="uid://dt65jjmqd6rtw" path="res://Scripts/description_panel.gd" id="1_daodf"]
-[ext_resource type="StyleBox" uid="uid://bj3hmbgm1065w" path="res://Assets/Styles/panels/description_panel_panel1_test.tres" id="1_fnpmw"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_qmwms"]
 [ext_resource type="Texture2D" uid="uid://cejds41wnjyen" path="res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png" id="3_fnpmw"]
 [ext_resource type="StyleBox" uid="uid://bnd0a33pmn60h" path="res://Scenes/UI/description_panel_border.tres" id="5_fnpmw"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vywvx"]
-bg_color = Color(0.843137, 1, 0.678431, 0.572549)
-border_width_left = 8
-border_width_top = 8
-border_width_right = 8
-border_width_bottom = 8
-border_color = Color(0, 0, 0, 1)
-border_blend = true
-
-[node name="DescriptionPanel" type="PanelContainer"]
+[node name="DescriptionPanel" type="Control"]
 custom_minimum_size = Vector2(540, 496)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -640.0
-offset_top = -480.0
-offset_right = -100.0
-offset_bottom = 16.0
+layout_mode = 3
+anchors_preset = 0
+offset_left = -270.0
+offset_top = -248.0
+offset_right = 270.0
+offset_bottom = 248.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
-size_flags_vertical = 0
+size_flags_vertical = 4
 mouse_filter = 2
-theme_override_styles/panel = ExtResource("1_fnpmw")
 script = ExtResource("1_daodf")
 
 [node name="MarginC" type="MarginContainer" parent="."]
 layout_mode = 2
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 528.0
+offset_bottom = 484.0
 size_flags_vertical = 4
 mouse_filter = 2
 
 [node name="GridContainer" type="GridContainer" parent="MarginC"]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-size_flags_horizontal = 4
 size_flags_vertical = 4
 mouse_filter = 2
 columns = 2
@@ -49,9 +39,9 @@ columns = 2
 [node name="IconPanel" type="Panel" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_vywvx")
+theme_override_styles/panel = ExtResource("5_fnpmw")
 
 [node name="IconDisplay" type="TextureRect" parent="MarginC/GridContainer/IconPanel"]
 custom_minimum_size = Vector2(256, 256)
@@ -67,11 +57,11 @@ texture = ExtResource("3_fnpmw")
 [node name="DescriptionLabel" type="Label" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 8
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Buy 12 upgrades if you feel like it!
 Lvl 1: this thing Lvl 2: that thing
@@ -84,7 +74,7 @@ justification_flags = 162
 [node name="UpgradeNameLabel" type="Label" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(256, 128)
 layout_mode = 2
-size_flags_vertical = 1
+size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
 theme_override_fonts/font = ExtResource("1_qmwms")
@@ -98,6 +88,7 @@ autowrap_mode = 3
 [node name="TreeLabel" type="Label" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(32, 80)
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
@@ -112,8 +103,6 @@ autowrap_mode = 3
 [node name="CurrentLevelLabel" type="Label" parent="MarginC/GridContainer"]
 custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-size_flags_horizontal = 5
-size_flags_vertical = 5
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
 theme_override_fonts/font = ExtResource("1_qmwms")
@@ -124,9 +113,9 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CostLabel" type="Label" parent="MarginC/GridContainer"]
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-size_flags_horizontal = 5
-size_flags_vertical = 5
+size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
 theme_override_constants/line_spacing = 12
 theme_override_fonts/font = ExtResource("1_qmwms")
@@ -135,3 +124,4 @@ theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Cost 12 mL Juice"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 3

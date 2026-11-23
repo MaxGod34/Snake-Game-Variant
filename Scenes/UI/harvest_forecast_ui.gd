@@ -44,14 +44,14 @@ func update_forecast(forecast_list: Array, chance: float, level: int):
 			"GoldenFruit":
 				icon.texture = preload("res://Assets/PNGs/golden_fruit_icon.png")
 			"JumpingBean":
-				icon.texture = preload("res://Assets/PNGs/jumping_bean_icon.png")
+				icon.texture = preload("res://Assets/Templates/jumping_bean_icon.png")
 			"GhostPepper":
-				icon.texture = preload("res://Assets/PNGs/ghost_pepper_icon.png")
+				icon.texture = preload("res://Assets/Templates/ghost_pepper_icon.png")
 			"IronCherry":
-				icon.texture = preload("res://Assets/PNGs/iron_cherry_icon.png")
+				icon.texture = preload("res://Assets/Templates/iron_cherry_icon.png")
 			"DragonFruit":
-				icon.texture = preload("res://Assets/PNGs/dragon_fruit_icon.png")
+				icon.texture = preload("res://Assets/Templates/dragon_fruit_icon.png")
 			"Fruit":
-				icon.texture = preload("res://Assets/PNGs/snake_fruit_red.png")
+				icon.texture = preload("res://Assets/Templates/snake_fruit_red.png")
 			
 		icon_container.add_child(icon)

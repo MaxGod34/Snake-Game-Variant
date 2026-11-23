@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://4dyjyt1cu127"]
+
+[ext_resource type="Texture2D" uid="uid://8ps3c01nt8ia" path="res://Assets/PNGs/UpgradeIcons/PulpReactorIcon.png" id="1_1skmw"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_rah1h"]
+
+[resource]
+script = ExtResource("2_rah1h")
+id = "Pulp Reactor"
+display_name = "Pulp Reactor"
+description = "GPS is increased by
++1 for every 1000 pulp you hold"
+icon = ExtResource("1_1skmw")
+path = "The Core"
+sub_path = "Idle"
+type = "Keystone"
+costs = Array[int]([69])
+level_values = Array[float]([])
+prerequisites = {
+"Snake Clicker": 10
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

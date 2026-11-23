@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dxvv0r0lnpjwv"]
+
+[ext_resource type="Texture2D" uid="uid://bg26sx2nr3f02" path="res://Assets/PNGs/UpgradeIcons/PhaseShiftIcon.png" id="1_4t07r"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_dyr1y"]
+
+[resource]
+script = ExtResource("2_dyr1y")
+id = "Phase Shift"
+display_name = "Phase Shift"
+description = "Active Ability: Become intangible to your own body for a short time.
+Each level grants another charge."
+icon = ExtResource("1_4t07r")
+path = "The Ssscale"
+sub_path = "Illusionist"
+type = "Active Ability"
+costs = Array[int]([4, 8, 12, 16, 20, 64, 128, 256, 512, 69])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = "Blink"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

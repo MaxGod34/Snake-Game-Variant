@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cmm1ahlc2t6gc"]
+
+[ext_resource type="Texture2D" uid="uid://bg3k00gm4s2s" path="res://Assets/PNGs/UpgradeIcons/MartyrdomIcon.png" id="1_vhtpn"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_cwb7y"]
+
+[resource]
+script = ExtResource("2_cwb7y")
+id = "Martyrdom"
+display_name = "Martyrdom"
+description = "Upon final death, your snake explodes,
+harvesting all fruit on screen for a
+final score boost."
+icon = ExtResource("1_vhtpn")
+path = "The Redline"
+sub_path = "Survivor"
+type = "On-Death Ability"
+costs = Array[int]([128])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

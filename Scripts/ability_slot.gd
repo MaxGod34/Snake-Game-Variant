@@ -30,7 +30,7 @@ func get_icon_for_ability(ability_key: String) -> Texture2D:
 		"Sacrificial Molt": return preload("res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png")
 		"Tenderizer": return preload("res://Assets/PNGs/UpgradeIcons/TenderizerIcon.png")
 		"Zenith": return preload("res://Assets/PNGs/UpgradeIcons/ZenithIcon.png")
-		_: return preload("res://Assets/PNGs/snake_fill.png")
+		_: return preload("res://Assets/Templates/snake_fill.png")
 
 # This is the master function that main.gd will call.
 # It takes the ability's data and updates the slot's appearance.

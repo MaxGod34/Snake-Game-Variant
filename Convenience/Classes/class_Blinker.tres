@@ -9,6 +9,8 @@ description = "Highly specialized in one specific facet."
 artwork_path = "res://Assets/ClassIcons/BlinkerClassIcon.png"
 icon_path = "res://Assets/ClassIcons/BlinkerClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Fractured Self": 1
 }

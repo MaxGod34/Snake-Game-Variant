@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://80m2eo7n8x8a"]
+
+[ext_resource type="Texture2D" uid="uid://dttaheokqcher" path="res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png" id="1_wvnpd"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_h8xfp"]
+
+[resource]
+script = ExtResource("2_h8xfp")
+id = "Shatter Reality"
+display_name = "Shatter Reality"
+description = "Stretch out across the border.
+Unlock 3 new playable spaces."
+icon = ExtResource("1_wvnpd")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Keystone"
+costs = Array[int]([128])
+level_values = Array[float]([])
+prerequisites = {
+"Edge Lord": 7
+}
+exlusivity_group = "Fold Space"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

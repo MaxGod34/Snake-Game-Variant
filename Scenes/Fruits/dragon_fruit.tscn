@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://byufsj10r5vr6"]
 
 [ext_resource type="Script" uid="uid://cfyyxegnj84h4" path="res://Scripts/dragon_fruit.gd" id="1_28eyy"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_28eyy"]
-[ext_resource type="Texture2D" uid="uid://psq4jgvn6heq" path="res://Assets/PNGs/snake_border.png" id="3_qg0p5"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/Templates/snake_fill.png" id="2_28eyy"]
+[ext_resource type="Texture2D" uid="uid://psq4jgvn6heq" path="res://Assets/Templates/snake_border.png" id="3_qg0p5"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="4_qg0p5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dajs1"]

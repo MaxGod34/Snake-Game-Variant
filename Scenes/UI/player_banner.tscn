@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=3 uid="uid://u2l27qdcge0g"]
 
-[ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/snake_poker_chip_white.png" id="1_e4hx5"]
+[ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/GambleSprites/snake_poker_chip_white.png" id="1_e4hx5"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_fkyj3"]
 [ext_resource type="Script" uid="uid://colf33pfeqrbf" path="res://Scripts/player_banner.gd" id="2_s6con"]
-[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/PNGs/basic_square_with_border.png" id="3_s6con"]
+[ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/Templates/basic_square_with_border.png" id="3_s6con"]
 [ext_resource type="Texture2D" uid="uid://dqkem6rp8x468" path="res://Assets/PNGs/RotatingItemIcons/handicap_icon.png" id="3_y7w4t"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e4hx5"]

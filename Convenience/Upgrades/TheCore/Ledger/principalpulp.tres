@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://btk5sp7d2g3gk"]
+
+[ext_resource type="Texture2D" uid="uid://bjp5g6vkq5ohd" path="res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png" id="1_mphad"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_brglb"]
+
+[resource]
+script = ExtResource("2_brglb")
+id = "Principal Pulp"
+display_name = "Principal Pulp"
+description = "Multiplies base Pulp reward
+from base score at the end of Garden."
+icon = ExtResource("1_mphad")
+path = "The Core"
+sub_path = "Ledger"
+type = "Passive"
+costs = Array[int]([1, 8, 24, 60, 100, 150, 250, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+level_values = Array[float]([1.0, 1.1, 1.25, 1.5, 1.75, 2.0, 2.5, 3.0, 3.5, 4.2, 5.0, 6.0, 7.0, 8.0, 9.0, 18.0, 180.0])
+prerequisites = {}
+exlusivity_group = "Liquid Assets"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

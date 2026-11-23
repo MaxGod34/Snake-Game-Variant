@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://laf74kubuwcq"]
+
+[ext_resource type="Texture2D" uid="uid://blc6o3rtrrkww" path="res://Assets/PNGs/UpgradeIcons/activegratification.png" id="1_jp1pa"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_w71d1"]
+
+[resource]
+script = ExtResource("2_w71d1")
+id = "Active Gratification"
+display_name = "Active Gratification"
+description = "Increase activity bonus at the end of the garden."
+icon = ExtResource("1_jp1pa")
+path = "The Harvest"
+sub_path = "Wrangler"
+type = "Passive"
+costs = Array[int]([16, 64, 128])
+level_values = Array[float]([2.0, 4.0, 8.0])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

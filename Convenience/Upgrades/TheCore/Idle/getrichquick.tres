@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://c1afl2ieemw58"]
+
+[ext_resource type="Texture2D" uid="uid://dalylrv3nmm1u" path="res://Assets/PNGs/UpgradeIcons/get_rich_quick_icon.png" id="1_n244y"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_73sd6"]
+
+[resource]
+script = ExtResource("2_73sd6")
+id = "Get Rich Quick"
+display_name = "Get Rich Quick"
+description = "Your Speed Hero!
+Gain +0.1 GPS/mL spent in Acrobat tree."
+icon = ExtResource("1_n244y")
+path = "The Core"
+sub_path = "Idle"
+type = "Passive"
+costs = Array[int]([24])
+level_values = Array[float]([])
+prerequisites = {
+"Snake Clicker": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

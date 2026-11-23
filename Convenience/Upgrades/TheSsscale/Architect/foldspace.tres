@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://6laqwbhrb5cr"]
+
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_ibvjr"]
+[ext_resource type="Texture2D" uid="uid://bp6646o0h2u53" path="res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png" id="1_v0w6y"]
+
+[resource]
+script = ExtResource("1_ibvjr")
+id = "Fold Space"
+display_name = "Fold Space"
+description = "Removes all walls,
+making the garden wrap around on itself."
+icon = ExtResource("1_v0w6y")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Keystone"
+costs = Array[int]([128])
+level_values = Array[float]([])
+prerequisites = {
+"Burrow": 3,
+"Edge Lord": 7
+}
+exlusivity_group = "Shatter Reality"
+metadata/_custom_type_script = "uid://cufh03jas3moe"

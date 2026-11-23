@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cgre73omidbye"]
+
+[ext_resource type="Texture2D" uid="uid://be5qn3or4071w" path="res://Assets/PNGs/UpgradeIcons/GoldenSeedExtractIcon.png" id="1_4f1mp"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_pnda6"]
+
+[resource]
+script = ExtResource("2_pnda6")
+id = "Golden Seed Extract"
+display_name = "Golden Seed Extract"
+description = "Increase the spawn chance of Golden Apples."
+icon = ExtResource("1_4f1mp")
+path = "The Harvest"
+sub_path = "Glutton"
+type = "Passive"
+costs = Array[int]([13, 42, 69])
+level_values = Array[float]([0.0, 0.05, 0.1, 0.15])
+prerequisites = {
+"Golden Seeds": 4
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

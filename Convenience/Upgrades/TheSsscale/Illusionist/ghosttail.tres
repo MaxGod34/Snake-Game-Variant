@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cl832ps3v4hc1"]
+
+[ext_resource type="Texture2D" uid="uid://cfnxthqu1am8d" path="res://Assets/PNGs/UpgradeIcons/GhostTailIcon.png" id="1_4t07r"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_dyr1y"]
+
+[resource]
+script = ExtResource("2_dyr1y")
+id = "Ghost Tail"
+display_name = "Ghost Tail"
+description = "Your last few tail segments become intangible.
+Lvl 1: 7, Lvl 10: 300"
+icon = ExtResource("1_4t07r")
+path = "The Ssscale"
+sub_path = "Illusionist"
+type = "Passive"
+costs = Array[int]([2, 4, 8, 16, 32, 50, 100, 100, 100, 100])
+level_values = Array[float]([0.0, 2.0, 4.0, 9.0, 16.0, 25.0, 36.0, 64.0, 100.0, 169.0, 324.0])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

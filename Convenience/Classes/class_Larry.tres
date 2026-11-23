@@ -9,6 +9,8 @@ description = "Rogue. You are at the mercy of fate."
 artwork_path = "res://Assets/ClassIcons/LarryClassIcon.png"
 icon_path = "res://Assets/ClassIcons/LarryClassIcon.png"
 fang_cost = 100
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {}
 start_stats = {
 "juice_menu_disabled": true

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://brudmrob1ffvr"]
+
+[ext_resource type="Texture2D" uid="uid://c6wq26y8pg268" path="res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png" id="1_qbj8n"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_r318p"]
+
+[resource]
+script = ExtResource("2_r318p")
+id = "Fractured Self"
+display_name = "Fractured Self"
+description = "Your body is now rendered in 3-segment chunks"
+icon = ExtResource("1_qbj8n")
+path = "The Ssscale"
+sub_path = "Illusionist"
+type = "Keystone"
+costs = Array[int]([64])
+level_values = Array[float]([])
+prerequisites = {
+"Ghost Tail": 5
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

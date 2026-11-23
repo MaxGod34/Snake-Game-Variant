@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://g42jrunpmbss"]
+
+[ext_resource type="Texture2D" uid="uid://dih0xry8qm6qp" path="res://Assets/PNGs/UpgradeIcons/CustomAfterTasteIcon.png" id="1_hfpnj"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_y5u1l"]
+
+[resource]
+script = ExtResource("2_y5u1l")
+id = "Custom Aftertaste"
+display_name = "Custom Aftertaste"
+description = "Your Rock Hero!
+Gain +0.1 GPS/mL spent in Geode tree.
+Get munchin'!"
+icon = ExtResource("1_hfpnj")
+path = "The Core"
+sub_path = "Idle"
+type = "Passive"
+costs = Array[int]([24])
+level_values = Array[float]([])
+prerequisites = {
+"Snake Clicker": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

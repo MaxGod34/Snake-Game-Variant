@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://kfiveqnyo2h3"]
+
+[ext_resource type="Texture2D" uid="uid://cml7nulp4xgoy" path="res://Assets/PNGs/UpgradeIcons/JuicePressIcon.png" id="1_tp8y1"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_k4ev0"]
+
+[resource]
+script = ExtResource("2_k4ev0")
+id = "Juice Press"
+display_name = "Juice Press"
+description = "Active Ability (Once per Garden):
+Convert all your current Pulp into Juice
+at a 5mg:1mL ratio."
+icon = ExtResource("1_tp8y1")
+path = "The Core"
+sub_path = "Ledger"
+type = "Active Ability"
+costs = Array[int]([64])
+level_values = Array[float]([])
+prerequisites = {
+"Principal Pulp": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

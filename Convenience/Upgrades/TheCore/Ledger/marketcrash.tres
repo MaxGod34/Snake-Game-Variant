@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bq5hj4tema5k1"]
+
+[ext_resource type="Texture2D" uid="uid://c10igihv1lt4f" path="res://Assets/PNGs/UpgradeIcons/MarketCrashIcon.png" id="1_kf0r5"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_m40cx"]
+
+[resource]
+script = ExtResource("2_m40cx")
+id = "Market Crash"
+display_name = "Market Crash"
+description = "Permanently reduce the cost of all upgrades.
+lvl 1: -1mL
+lvl 2: -2mL
+lvl 10: -10mL"
+icon = ExtResource("1_kf0r5")
+path = "The Core"
+sub_path = "Ledger"
+type = "Keystone"
+costs = Array[int]([1, 8, 15, 30, 50, 75, 100, 150, 200, 500])
+level_values = Array[float]([])
+prerequisites = {
+"Liquid Assets": 3
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

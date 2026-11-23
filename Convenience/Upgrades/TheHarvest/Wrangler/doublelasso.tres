@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cc4hgtjxsg6gf"]
+
+[ext_resource type="Texture2D" uid="uid://8qkyj6p6jwr4" path="res://Assets/PNGs/UpgradeIcons/doublelasso.png" id="1_8dbna"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_br5gn"]
+
+[resource]
+script = ExtResource("2_br5gn")
+id = "Double Lasso"
+display_name = "Double Lasso"
+description = "Gain double growth while using the Lasso!"
+icon = ExtResource("1_8dbna")
+path = "The Harvest"
+sub_path = "Wrangler"
+type = "Passive"
+costs = Array[int]([32])
+level_values = Array[float]([])
+prerequisites = {
+"Lasso Larry": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

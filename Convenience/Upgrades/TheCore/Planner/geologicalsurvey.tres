@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dtrsneosc4jvd"]
+
+[ext_resource type="Texture2D" uid="uid://0fvl3yt5opeq" path="res://Assets/PNGs/UpgradeIcons/GeologicalSurveyIcon.png" id="1_ar62y"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_n0raw"]
+
+[resource]
+script = ExtResource("2_n0raw")
+id = "Geological Survey"
+display_name = "Geological Survey"
+description = "Gain bonus Juice at the end of each Garden.
+More rocks = More Juice"
+icon = ExtResource("1_ar62y")
+path = "The Core"
+sub_path = "Planner"
+type = "Passive"
+costs = Array[int]([16])
+level_values = Array[float]([])
+prerequisites = {
+"Diet Slith": 5
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

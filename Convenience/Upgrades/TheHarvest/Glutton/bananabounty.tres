@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bhbb01g30vpi7"]
+
+[ext_resource type="Texture2D" uid="uid://pmqen11x20x2" path="res://Assets/PNGs/UpgradeIcons/BananaBountyIcon.png" id="1_kjvfl"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_mr4wp"]
+
+[resource]
+script = ExtResource("2_mr4wp")
+id = "Banana Bounty"
+display_name = "Banana Bounty"
+description = "Active Ability: Marks a frauit as a
+high-value bounty for massive growth."
+icon = ExtResource("1_kjvfl")
+path = "The Harvest"
+sub_path = "Glutton"
+type = "Active Ability"
+costs = Array[int]([8, 16, 32, 48, 64, 100, 250, 500, 999])
+level_values = Array[float]([])
+prerequisites = {
+"Elephant Sized Portions": 5
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

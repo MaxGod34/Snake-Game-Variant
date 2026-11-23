@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://4frm083o1rjo"]
+
+[ext_resource type="Texture2D" uid="uid://b3geswlr1r31j" path="res://Assets/PNGs/UpgradeIcons/SlitherSauceIcon.png" id="1_jbtht"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_ojo6a"]
+
+[resource]
+script = ExtResource("1_ojo6a")
+id = "Slither Sauce"
+display_name = "Slither Sauce"
+description = "Increase movement speed.
+If you can handle it..."
+icon = ExtResource("1_jbtht")
+path = "The Redline"
+sub_path = "Acrobat"
+type = "Passive"
+costs = Array[int]([1, 1, 1, 1, 10, 20, 40, 60, 80, 100])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

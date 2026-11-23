@@ -9,6 +9,8 @@ description = "A master of passive income."
 artwork_path = "res://Assets/ClassIcons/TycoonClassIcon.png"
 icon_path = "res://Assets/ClassIcons/TycoonClassIcon.png"
 fang_cost = 0
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {
 "Snake Clicker": 7
 }

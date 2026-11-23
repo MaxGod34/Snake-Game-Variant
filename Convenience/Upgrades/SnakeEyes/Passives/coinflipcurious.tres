@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cx5h2pdgbtspp"]
+
+[ext_resource type="Texture2D" uid="uid://b4bt0q6fc4lii" path="res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png" id="1_etxfx"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_kamcs"]
+
+[resource]
+script = ExtResource("1_kamcs")
+id = "Coin Flip Curious"
+display_name = "Coin Flip Curious"
+description = "A 50/50 chance.
+Every fruit grants double growth or zero.
+Gamble responsibly."
+icon = ExtResource("1_etxfx")
+path = "Snake Eyes"
+sub_path = "Passive"
+type = "Passive"
+costs = Array[int]([6])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dsm6ph605tnsm"]
+
+[ext_resource type="Texture2D" uid="uid://fdtv3jgmg1b3" path="res://Assets/ClassIcons/MulliganClassIcon.png" id="1_blgxa"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_dqalr"]
+
+[resource]
+script = ExtResource("1_dqalr")
+id = "Mulligan Munchie"
+display_name = "Mulligan Munchie"
+description = "Grants Extra Lives!
+You totally got this though!"
+icon = ExtResource("1_blgxa")
+path = "The Redline"
+sub_path = "Survivor"
+type = "Passive"
+costs = Array[int]([10, 20, 100, 200, 300, 400, 500, 600, 750, 999])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

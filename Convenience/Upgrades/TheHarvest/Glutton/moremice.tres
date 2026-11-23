@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://caepxe7hei8la"]
+
+[ext_resource type="Texture2D" uid="uid://i5ymowtdvdif" path="res://Assets/PNGs/UpgradeIcons/MoreMiceIcon.png" id="1_w8f6r"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_cc0br"]
+
+[resource]
+script = ExtResource("2_cc0br")
+id = "More Mice"
+display_name = "More Mice"
+description = "Increase Fruit Reward +1"
+icon = ExtResource("1_w8f6r")
+path = "The Harvest"
+sub_path = "Glutton"
+type = "Passive"
+costs = Array[int]([3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 25, 30, 35, 40, 45, 50, 60, 70, 80, 99])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://drcbegwnoxiby"]
+
+[ext_resource type="Texture2D" uid="uid://uegfg4f1so4s" path="res://Assets/PNGs/UpgradeIcons/ChainReactionIcon.png" id="1_mfi8n"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_cjws2"]
+
+[resource]
+script = ExtResource("2_cjws2")
+id = "Chain Reaction"
+display_name = "Chain Reaction"
+description = "Make the combo meter do something!
+Each level increases the max combo by 5
+Lvl 1: 5
+Lvl 5: 25"
+icon = ExtResource("1_mfi8n")
+path = "The Redline"
+sub_path = "Frenzy"
+type = "Passive"
+costs = Array[int]([5, 10, 15, 20, 32])
+level_values = Array[float]([])
+prerequisites = {
+"Sugar Rush": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

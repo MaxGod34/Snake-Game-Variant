@@ -17,7 +17,7 @@ func _ready() -> void:
 	quit_button.pressed.connect(func(): emit_signal("quit_pressed"))
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func show_results(start_level: int, start_xp: int, xp_gained: int, milestones_unlocked: Array):

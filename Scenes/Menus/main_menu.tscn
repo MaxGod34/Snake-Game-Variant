@@ -1,12 +1,12 @@
 [gd_scene load_steps=16 format=3 uid="uid://c1b0eh8evirnx"]
 
 [ext_resource type="Script" uid="uid://beoi5cxhq4jhd" path="res://Scripts/main_menu.gd" id="1_neey8"]
-[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/PNGs/snake_fill.png" id="2_4fgt5"]
+[ext_resource type="Texture2D" uid="uid://dfc0pa2sc2vn0" path="res://Assets/Templates/snake_fill.png" id="2_4fgt5"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_j4kqa"]
 [ext_resource type="StyleBox" uid="uid://cs5ipigyjur86" path="res://Assets/Styles/block_buttons/block_button_hovered.tres" id="4_anmaw"]
 [ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_buttons/block_button_disabled.tres" id="5_ftsii"]
 [ext_resource type="StyleBox" uid="uid://dmyxme3q4m0ok" path="res://Assets/Styles/block_buttons/block_button_normal.tres" id="6_lg1h6"]
-[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/PNGs/snake_chart_logo.png" id="7_80s4p"]
+[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/Icons/snake_chart_logo.png" id="7_80s4p"]
 [ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="8_j4kqa"]
 [ext_resource type="Texture2D" uid="uid://c2jptdppwcwwj" path="res://Assets/ClassIcons/SniperClassIcon.png" id="9_anmaw"]
 

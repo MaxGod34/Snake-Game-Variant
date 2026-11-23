@@ -9,6 +9,8 @@ description = "Does not gain Juice from leveling up. Every fruit has a 25% chanc
 artwork_path = "res://Assets/ClassIcons/AlchemistClassIcon.png"
 icon_path = "res://Assets/ClassIcons/AlchemistClassIcon.png"
 fang_cost = 1000
+start_speed = 0.3
+speed_upgrade_mod = 0.9
 start_upgrades = {}
 start_stats = {
 "juice_chance_on_eat": 0.25,

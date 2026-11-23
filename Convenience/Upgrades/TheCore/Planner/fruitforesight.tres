@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bwug2q1li2jht"]
+
+[ext_resource type="Texture2D" uid="uid://c0oh7q2d5pxl0" path="res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png" id="1_iwo3u"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_mjvab"]
+
+[resource]
+script = ExtResource("2_mjvab")
+id = "Fruit Foresight"
+display_name = "Fruit Foresight"
+description = "See the next fruit!
+Use responsibly."
+icon = ExtResource("1_iwo3u")
+path = "The Core"
+sub_path = "Planner"
+type = "Passive"
+costs = Array[int]([12])
+level_values = Array[float]([])
+prerequisites = {
+"Diet Slith": 5
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

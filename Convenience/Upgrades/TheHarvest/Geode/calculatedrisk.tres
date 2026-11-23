@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://d4cgu2btambg3"]
+
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_1fyjh"]
+[ext_resource type="Texture2D" uid="uid://cnffb62xwudvy" path="res://Assets/PNGs/UpgradeIcons/CalculatedRiskIcon.png" id="1_c34i4"]
+
+[resource]
+script = ExtResource("1_1fyjh")
+id = "Calculated Risk"
+display_name = "Calculated Risk"
+description = "Doubles the Juice bonus from Geological Survey."
+icon = ExtResource("1_c34i4")
+path = "The Harvest"
+sub_path = "Geode"
+type = "Keystone"
+costs = Array[int]([64])
+level_values = Array[float]([])
+prerequisites = {
+"Geological Survey": 1
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

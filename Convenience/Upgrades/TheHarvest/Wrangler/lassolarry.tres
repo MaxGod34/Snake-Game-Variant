@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://dtflgr3p7kh5h"]
+
+[ext_resource type="Texture2D" uid="uid://cejds41wnjyen" path="res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png" id="1_48b6p"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_a1geh"]
+
+[resource]
+script = ExtResource("1_a1geh")
+id = "Lasso Larry"
+display_name = "Lasso Larry"
+description = "Reel in a fruit from afar!
+Each lvl grants a charge."
+icon = ExtResource("1_48b6p")
+path = "The Harvest"
+sub_path = "Wrangler"
+type = "Active Ability"
+costs = Array[int]([1, 2, 3, 4, 5, 6, 7, 8, 9])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

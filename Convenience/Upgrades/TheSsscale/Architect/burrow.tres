@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://i1p4hafg6jds"]
+
+[ext_resource type="Texture2D" uid="uid://r4xd40p83pn" path="res://Assets/PNGs/UpgradeIcons/BurrowIcon.png" id="1_q0jni"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_y15in"]
+
+[resource]
+script = ExtResource("2_y15in")
+id = "Burrow"
+display_name = "Burrow"
+description = "Active Ability: Pass through one wall\\nand emerge on the opposite side.
+Ability lasts until next wall hit!"
+icon = ExtResource("1_q0jni")
+path = "The Ssscale"
+sub_path = "Architect"
+type = "Active Ability"
+costs = Array[int]([5, 8, 16, 24, 32, 64, 128, 256, 512])
+level_values = Array[float]([])
+prerequisites = {
+"Edge Lord": 4
+}
+exlusivity_group = ""
+metadata/_custom_type_script = "uid://cufh03jas3moe"

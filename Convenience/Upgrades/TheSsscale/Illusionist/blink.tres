@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://bupry3lr6sums"]
+
+[ext_resource type="Texture2D" uid="uid://03lwa27d63br" path="res://Assets/ClassIcons/BlinkerClassIcon.png" id="1_6loab"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_l7d3j"]
+
+[resource]
+script = ExtResource("2_l7d3j")
+id = "Blink"
+display_name = "Blink"
+description = "Active Ability: Instantly teleport forward 3 tiles.
+Pass through your old hole!"
+icon = ExtResource("1_6loab")
+path = "The Ssscale"
+sub_path = "Illusionist"
+type = "Active Ability"
+costs = Array[int]([2, 4, 8, 16, 32, 50, 100, 100, 100, 100])
+level_values = Array[float]([])
+prerequisites = {}
+exlusivity_group = "Phase Shift"
+metadata/_custom_type_script = "uid://cufh03jas3moe"
