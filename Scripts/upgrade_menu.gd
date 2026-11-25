@@ -47,10 +47,6 @@ var current_hoard_guess: int = 1
 @onready var dice_roll_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RollDiceButton
 @onready var dice_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/GuessLabel
 
-# -- Hoard Count --
-@onready var hoard_count_slider = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/HouseSpecialRow/HoardCountSlider
-@onready var hoard_count_button = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/StartHoardCountButton
-@onready var hoard_count_guess_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/GuessLabel
 
 
 # === Block Market UI ===
@@ -87,7 +83,7 @@ var die_faces: Array = [
 	preload("res://Assets/PNGs/Dice/snake_dice_128_dice_6.png")
 ]
 # === FLAVOR TEXT ===
-var headlines = [
+var headlines = [ # Add pools for defcon 1-5 with 5 being base
 	"BREAKING: Local snake discovers 'left' turn, revolutionizes movement.",
 	"The Pulp-sicle Stand reports record profits for the third garden in a row.",
 	"OP-ED: Are 'Extra Lives' making our snakes soft? Overpaid blogger says so...",
@@ -185,8 +181,6 @@ func _connect_all_signals():
 	snake_coin_tails_button.pressed.connect(_on_snake_coin_flip_pressed.bind("Tails"))
 	dice_wager_slider.value_changed.connect(_on_dice_slider_changed)
 	dice_roll_button.pressed.connect(_on_roll_dice_button_pressed)
-	hoard_count_button.pressed.connect(_on_start_hoard_count_pressed)
-	hoard_count_slider.value_changed.connect(_on_hoard_count_slider_changed)
 	#---CONNECT ALL BLOCK/STOCK MARKET BUTTONS
 	buy_apple_block_button.pressed.connect(_on_buy_stock_pressed.bind("Apple Block"))
 	buy_extra_block_button.pressed.connect(_on_buy_stock_pressed.bind("Extra Block"))
@@ -200,9 +194,7 @@ func _connect_all_signals():
 	# --- Connect Dice Stepper Buttons ---
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/LeftArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(-1))
 	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HouseSpecialContainer/GuessRow/RightArrowButton.pressed.connect(_on_dice_arrow_pressed.bind(1))
-	# --- Connect Hoard Count Arrow Buttons
-	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/LeftArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(-1))
-	$CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/LeftColumn/HoardCountContainer/GuessRow/RightArrowButton.pressed.connect(_on_hoard_count_arrow_pressed.bind(1))
+
 
 # This function is called from main.gd right before the menu appears.
 func set_initial_state_and_update():
@@ -310,12 +302,12 @@ func _on_description_delay_timer_timeout():
 	var mouse_position = get_viewport().get_mouse_position()
 
 	if mouse_position.x < viewport_size.x / 2.0:
-		description_panel.position.x = mouse_position.x + 128
+		description_panel.position.x = mouse_position.x + 64
 	else:
-		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 64
 
 	description_panel.position.y = clamp(
-		mouse_position.y - (description_panel.size.y / 2.0),
+		mouse_position.y - (description_panel.size.y),
 		20,
 		viewport_size.y - description_panel.size.y - 20
 	)
@@ -351,13 +343,13 @@ func update_snake_eyes_tab():
 	# Update the max value of the sliders
 	snake_coin_wager_slider.max_value = GameManager.juice
 	dice_wager_slider.max_value = GameManager.juice
-	hoard_count_slider.max_value = GameManager.pulp
+
 
 	
 	# Reset the sliders
 	snake_coin_wager_slider.value = 0
 	dice_wager_slider.value = 0
-	hoard_count_slider.value = 0
+
 	
 	# --- THIS IS THE NEW PART ---
 	# Reset the button text to its default state
@@ -433,7 +425,11 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 	main_game.update_hud()
 	update_juice_and_pulp_label()
 	
-	var outcome = "Heads" if randf() < 0.5 else "Tails"
+	# --- Gambit Modifier ---
+	var gambit = GameManager.meta_upgrades.get("The Gambit") as MetaUpgradeData
+	var heads_chance = gambit.get_value_at_level(GameManager.the_gambit_level, 0.5) if gambit else 0.5
+	
+	var outcome = "Heads" if randf() < heads_chance else "Tails"
 	print("The result is... ", outcome)
 
 	# 4. Play the coin flip animation.
@@ -546,71 +542,8 @@ func _on_roll_dice_button_pressed():
 	main_game.update_hud()
 	update_juice_and_pulp_label()
 	set_gambling_ui_disabled(false)
-	
-func _on_hoard_count_slider_changed(value: float):
-	var wager = floori(value)
-	hoard_count_button.text = "Guess the Hoard!\n(%s Pulp)" % wager
 
-func _on_hoard_count_arrow_pressed(direction: int):
-	
-	if current_hoard_guess == 1 and direction == -1:
-		current_hoard_guess = 20
-	elif current_hoard_guess == 20 and direction == 1:
-		current_hoard_guess = 1
-	else:
-		current_hoard_guess += direction
-		# Clamp the guess between 1 and 20
-		current_hoard_guess = clamp(current_hoard_guess, 1, 20)
-	hoard_count_guess_label.text = str(current_hoard_guess)
 
-func _on_start_hoard_count_pressed():
-	var wager = floori(hoard_count_slider.value)
-
-	# 1. Check if the bet is valid.
-	if wager <= 0 or wager > GameManager.pulp: return
-
-	print("Player bets %s Pulp on the number %s" % [wager, current_hoard_guess])
-
-	# 2. Disable UI and take the wager.
-	set_gambling_ui_disabled(true)
-	GameManager.pulp -= wager
-	main_game.update_hud() # Assumes you have this connection
-	update_juice_and_pulp_label()
-	# 3. Play the animation (we'll need a new sprite for this)
-	var basket_sprite = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/BasketSprite
-	basket_sprite.visible = true
-	for i in range(6):
-		
-		var tween = create_tween()
-		tween.tween_property(basket_sprite, "scale", Vector2(1.2, 0.8), 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		tween.tween_property(basket_sprite, "scale", Vector2(1.0, 1.0), 0.05).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
-		await tween.finished
-
-	# 4. Determine the outcome.
-	var outcome = randi() % 20 + 1 # A random number from 1 to 20
-	print("The winning number is... ", outcome)
-	# We could add a label to the basket sprite to show the winning number
-
-	# 5. Check for a win and distribute rewards.
-	if current_hoard_guess == outcome:
-		print("JACKPOT! 20x PAYOUT!")
-		GameManager.pulp += (wager * 20)
-		if GameManager.passive_income_unlocked:
-			GameManager.correct_bets_this_run += 1
-			GameManager.fruit_reward += 1
-			await play_result_animation(true, "Impossible!\nYou called it! +%s mg" % [wager * 20])
-		else:
-			await play_result_animation(true, "Impossible!\nYou called it! +%s mg" % [wager * 20])
-	else:
-		print("You lose.")
-		await play_result_animation(false, "Sorry! You lost %s mg\nThe result was: %s" % [wager, outcome])
-
-	# 6. Clean up and re-enable UI.
-	await get_tree().create_timer(1.0).timeout
-	basket_sprite.visible = false
-	update_snake_eyes_tab()
-	main_game.update_hud()
-	set_gambling_ui_disabled(false)
 
 func play_result_animation(is_win: bool, custom_message: String = ""):
 	var result_label = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/SnakeEyes/MainContent/PanelContainer/ResultControl/ResultLabel

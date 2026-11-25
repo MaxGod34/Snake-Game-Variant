@@ -74,7 +74,7 @@ func _connect_all_difficulty_nodes():
 		var node = difficulty_nodes[pact_key]
 		if is_instance_valid(node):
 			node.pressed.connect(_on_difficulty_node_pressed.bind(pact_key))
-			print("%s node connected - selection_screen.gd" % node)
+			#print("%s node connected - selection_screen.gd" % node)
 
 func _build_class_node_dictionary():
 	# This powerful loop finds every single class node in the scene.

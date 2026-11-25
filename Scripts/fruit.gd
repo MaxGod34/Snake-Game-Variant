@@ -17,8 +17,8 @@ func _ready():
 	fill_sprite.modulate = fill_color
 	var gardener_level = GameManager.patient_gardener_level
 	if gardener_level > 0:
-		# If yes, set the time left based on our data.
-		time_left_to_ripen = GameManager.patient_gardener_data[gardener_level]["time"]
+		var pg_rules = GameManager.get_upgrade_rules("Patient Gardener") as DualStatUpgrade
+		time_left_to_ripen = pg_rules.get_stat_a(gardener_level, 10.0) if pg_rules else 10.0
 	if GameManager.masters_blueprint_unlocked:
 		fill_sprite.modulate = Color("AFEEEE")
 
@@ -58,8 +58,4 @@ func reset_from_bounty():
 	# Reset the scale and color back to normal
 	scale = Vector2.ONE
 	# Check what type of fruit this is to apply the correct color
-	if self is Fruit:
-		get_node("FillSprite").modulate = Color.GOLD
-	else:
-		# This assumes normal fruit is red. Change if needed!
-		get_node("FillSprite").modulate = Color.RED 
+	fill_sprite.modulate = fill_color

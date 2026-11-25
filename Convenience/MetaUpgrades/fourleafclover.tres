@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MetaUpgradeData" load_steps=3 format=3 uid="uid://nt2orv6hqmd0"]
+
+[ext_resource type="Texture2D" uid="uid://dmj6ta0j3erh6" path="res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png" id="1_a5c1j"]
+[ext_resource type="Script" uid="uid://clsq0vy65pfyx" path="res://Scripts/MetaUpgradeData.gd" id="1_fi567"]
+
+[resource]
+script = ExtResource("1_fi567")
+enabled = true
+id = "Four Leaf Clover"
+display_name = "Four Leaf Clover"
+description = "Better loot from the rotating section"
+icon = ExtResource("1_a5c1j")
+type = "Luck"
+costs = Array[int]([1000, 5000, 10000, 25000])
+level_values = Array[float]([0.0, 0.05, 0.1, 0.2, 0.33])
+metadata/_custom_type_script = "uid://clsq0vy65pfyx"

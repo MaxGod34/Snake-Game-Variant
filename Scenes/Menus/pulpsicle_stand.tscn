@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://8jgmx7q20qg5"]
+[gd_scene load_steps=32 format=3 uid="uid://8jgmx7q20qg5"]
 
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/Templates/basic_square_with_border.png" id="1_7n2mm"]
 [ext_resource type="Script" uid="uid://5fvyox6vh06u" path="res://Scripts/pulpsicle_stand.gd" id="1_i1qs4"]
@@ -18,12 +18,14 @@
 [ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="8_b641q"]
 [ext_resource type="Texture2D" uid="uid://bjt05u0h5m60x" path="res://Assets/PNGs/RotatingItemIcons/elephant_devoured_icon.png" id="10_2goil"]
 [ext_resource type="Texture2D" uid="uid://efutdgxah07c" path="res://Assets/PNGs/UpgradeIcons/SerpentsCofferIcon.png" id="11_6na3d"]
+[ext_resource type="Texture2D" uid="uid://bsuvg08eaqq4w" path="res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png" id="12_k06tx"]
 [ext_resource type="PackedScene" uid="uid://bdqnq8u7m75ue" path="res://Scenes/UI/description_panel.tscn" id="12_p3c4b"]
-[ext_resource type="Texture2D" uid="uid://jpnu2y5giqfk" path="res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png" id="12_rc0gc"]
+[ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/GambleSprites/snake_poker_chip_white.png" id="13_cmugl"]
 [ext_resource type="Texture2D" uid="uid://dmj6ta0j3erh6" path="res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png" id="14_6na3d"]
 [ext_resource type="Texture2D" uid="uid://dic538ovhfvqd" path="res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png" id="14_k06tx"]
-[ext_resource type="Texture2D" uid="uid://7lnf3ukolxsh" path="res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png" id="15_rc0gc"]
-[ext_resource type="Texture2D" uid="uid://cejds41wnjyen" path="res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png" id="16_5s2i6"]
+[ext_resource type="Texture2D" uid="uid://bh8oa7fr2w80f" path="res://Assets/PNGs/RotatingItemIcons/rerollicon.png" id="16_ycri4"]
+[ext_resource type="Texture2D" uid="uid://caeckwq0ybiql" path="res://Assets/PulpIconv2.png" id="21_hr8up"]
+[ext_resource type="Texture2D" uid="uid://ds4o12rm0f8qv" path="res://Assets/JuiceIcon.png" id="25_qwxgx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_830n4"]
 bg_color = Color(0.976471, 0, 0, 0.909804)
@@ -47,8 +49,6 @@ content_margin_bottom = 4.0
 bg_color = Color(0.6, 1, 0.0470588, 1)
 draw_center = false
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ky7o8"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6na3d"]
 bg_color = Color(0.933333, 0.933333, 0.933333, 0.317647)
 border_width_top = 8
@@ -57,7 +57,7 @@ corner_radius_bottom_right = 75
 corner_radius_bottom_left = 75
 expand_margin_bottom = 16.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p3c4b"]
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_hr8up"]
 
 [node name="PulpsicleStand" type="CanvasLayer"]
 visible = false
@@ -120,19 +120,16 @@ theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
 [node name="TitleLabel" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.890196, 0.780392, 0.65098, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 0.936798, 0.865842, 1)
+theme_override_colors/font_outline_color = Color(0.974751, 0, 0.0724231, 1)
 theme_override_constants/outline_size = 32
 theme_override_fonts/font = ExtResource("3_4da1l")
 theme_override_font_sizes/font_size = 64
-text = "The Pulp-sicle Stand!"
+text = "The Pulpsicle Stand"
 horizontal_alignment = 1
-
-[node name="HSeparator7" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+vertical_alignment = 1
 
 [node name="SynapseRow" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
@@ -141,9 +138,10 @@ theme_override_constants/separation = 32
 alignment = 1
 
 [node name="SynapseSlotNode" parent="AnimationContainer/MainContainer/VBoxContainer/SynapseRow" instance=ExtResource("4_ky7o8")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
 size_flags_horizontal = 6
-size_flags_vertical = 4
+size_flags_vertical = 6
 theme_override_styles/focus = ExtResource("5_ycri4")
 theme_override_styles/disabled = ExtResource("6_k06tx")
 theme_override_styles/hover_pressed = ExtResource("5_ycri4")
@@ -151,6 +149,8 @@ theme_override_styles/hover = ExtResource("5_ycri4")
 theme_override_styles/pressed = ExtResource("5_ycri4")
 theme_override_styles/normal = ExtResource("7_cmugl")
 icon = ExtResource("5_1juo5")
+autowrap_mode = 0
+vertical_icon_alignment = 1
 
 [node name="ColorRect" type="TextureRect" parent="AnimationContainer/MainContainer/VBoxContainer/SynapseRow"]
 custom_minimum_size = Vector2(640, 160)
@@ -163,17 +163,111 @@ layout_mode = 2
 theme_override_constants/separation = 32
 theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
 
+[node name="PillarsContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
+custom_minimum_size = Vector2(1080, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
+
+[node name="ChromaScalesNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/focus = ExtResource("5_ycri4")
+theme_override_styles/disabled = ExtResource("6_k06tx")
+theme_override_styles/hover_pressed = ExtResource("5_ycri4")
+theme_override_styles/hover = ExtResource("5_ycri4")
+theme_override_styles/pressed = ExtResource("5_ycri4")
+theme_override_styles/normal = ExtResource("7_cmugl")
+icon = ExtResource("6_6w6tv")
+autowrap_mode = 0
+vertical_icon_alignment = 1
+
+[node name="ThemedTickersNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/focus = ExtResource("5_ycri4")
+theme_override_styles/disabled = ExtResource("6_k06tx")
+theme_override_styles/hover_pressed = ExtResource("5_ycri4")
+theme_override_styles/hover = ExtResource("5_ycri4")
+theme_override_styles/pressed = ExtResource("5_ycri4")
+theme_override_styles/normal = ExtResource("7_cmugl")
+icon = ExtResource("11_6na3d")
+autowrap_mode = 0
+vertical_icon_alignment = 1
+
+[node name="TheGambitNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/focus = ExtResource("5_ycri4")
+theme_override_styles/disabled = ExtResource("6_k06tx")
+theme_override_styles/hover_pressed = ExtResource("5_ycri4")
+theme_override_styles/hover = ExtResource("5_ycri4")
+theme_override_styles/pressed = ExtResource("5_ycri4")
+theme_override_styles/normal = ExtResource("7_cmugl")
+text = "change"
+icon = ExtResource("13_cmugl")
+autowrap_mode = 0
+vertical_icon_alignment = 1
+
+[node name="FourLeafCloverNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/focus = ExtResource("5_ycri4")
+theme_override_styles/disabled = ExtResource("6_k06tx")
+theme_override_styles/hover_pressed = ExtResource("5_ycri4")
+theme_override_styles/hover = ExtResource("5_ycri4")
+theme_override_styles/pressed = ExtResource("5_ycri4")
+theme_override_styles/normal = ExtResource("7_cmugl")
+icon = ExtResource("14_6na3d")
+autowrap_mode = 0
+vertical_icon_alignment = 1
+
+[node name="CompoundInterestNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme_override_styles/focus = ExtResource("5_ycri4")
+theme_override_styles/disabled = ExtResource("6_k06tx")
+theme_override_styles/hover_pressed = ExtResource("5_ycri4")
+theme_override_styles/hover = ExtResource("5_ycri4")
+theme_override_styles/pressed = ExtResource("5_ycri4")
+theme_override_styles/normal = ExtResource("7_cmugl")
+icon = ExtResource("12_k06tx")
+autowrap_mode = 0
+vertical_icon_alignment = 1
+
+[node name="HSeparator4" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
+[node name="HSeparator9" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+
 [node name="RouletteContainer" type="VBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/separation = 16
 
 [node name="RouletteTitle" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.992157, 0.960784, 0.901961, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 32
+theme_override_colors/font_outline_color = Color(1, 0.298098, 0.253889, 1)
+theme_override_constants/outline_size = 16
 theme_override_fonts/font = ExtResource("3_4da1l")
-theme_override_font_sizes/font_size = 36
+theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("StyleBoxFlat_igv10")
 text = "Today's Special:"
 horizontal_alignment = 1
@@ -185,32 +279,6 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 theme_override_constants/separation = 32
 alignment = 1
-
-[node name="SkipGardenButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
-visible = false
-custom_minimum_size = Vector2(192, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_disabled_color = Color(1.39579e-06, 0.453443, 0.594383, 1)
-theme_override_colors/font_hover_pressed_color = Color(0.223529, 0.788235, 1, 1)
-theme_override_colors/font_hover_color = Color(0.223529, 0.788235, 1, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(0.225337, 0.789171, 1, 1)
-theme_override_colors/font_focus_color = Color(0.223529, 0.788235, 1, 1)
-theme_override_colors/font_pressed_color = Color(0.223529, 0.788235, 1, 1)
-theme_override_constants/outline_size = 12
-theme_override_constants/line_spacing = 6
-theme_override_fonts/font = ExtResource("3_4da1l")
-theme_override_font_sizes/font_size = 24
-theme_override_styles/focus = ExtResource("4_4da1l")
-theme_override_styles/disabled = ExtResource("5_7hsrk")
-theme_override_styles/hover_pressed = ExtResource("4_4da1l")
-theme_override_styles/hover = ExtResource("4_4da1l")
-theme_override_styles/pressed = ExtResource("4_4da1l")
-theme_override_styles/normal = ExtResource("6_7gmkh")
-text = "Fast
-Track
-Skip"
 
 [node name="RotatingItemNode" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow" instance=ExtResource("4_ky7o8")]
 custom_minimum_size = Vector2(160, 160)
@@ -238,89 +306,73 @@ icon_alignment = 1
 vertical_icon_alignment = 0
 expand_icon = true
 
-[node name="HSeparator3" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 32)
+[node name="ReRollHbox" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
 layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxFlat_ky7o8")
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 8
+alignment = 2
 
-[node name="PillarsContainer" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer"]
-custom_minimum_size = Vector2(1080, 0)
+[node name="ReRollButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/ReRollHbox"]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-alignment = 1
+theme_override_colors/font_disabled_color = Color(1.39579e-06, 0.453443, 0.594383, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_hover_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.225337, 0.789171, 1, 1)
+theme_override_colors/font_focus_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/line_spacing = 6
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 16
+icon = ExtResource("16_ycri4")
+icon_alignment = 1
+vertical_icon_alignment = 0
+expand_icon = true
+text_direction = 1
 
-[node name="ChromaScalesNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+[node name="ReRoll_Lbl" type="RichTextLabel" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/ReRollHbox"]
+custom_minimum_size = Vector2(128, 64)
 layout_mode = 2
-size_flags_horizontal = 6
-theme_override_styles/focus = ExtResource("5_ycri4")
-theme_override_styles/disabled = ExtResource("6_k06tx")
-theme_override_styles/hover_pressed = ExtResource("5_ycri4")
-theme_override_styles/hover = ExtResource("5_ycri4")
-theme_override_styles/pressed = ExtResource("5_ycri4")
-theme_override_styles/normal = ExtResource("7_cmugl")
-icon = ExtResource("6_6w6tv")
+size_flags_vertical = 4
+theme_override_colors/default_color = Color(0.992157, 0.960784, 0.901961, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/normal_font = ExtResource("3_4da1l")
+theme_override_font_sizes/normal_font_size = 18
+text = "1000 mg"
+fit_content = true
+vertical_alignment = 1
 
-[node name="SerpentsCofferNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
+[node name="SkipGardenButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow"]
+visible = false
+custom_minimum_size = Vector2(192, 0)
 layout_mode = 2
-size_flags_horizontal = 6
-theme_override_styles/focus = ExtResource("5_ycri4")
-theme_override_styles/disabled = ExtResource("6_k06tx")
-theme_override_styles/hover_pressed = ExtResource("5_ycri4")
-theme_override_styles/hover = ExtResource("5_ycri4")
-theme_override_styles/pressed = ExtResource("5_ycri4")
-theme_override_styles/normal = ExtResource("7_cmugl")
-icon = ExtResource("11_6na3d")
-
-[node name="GeodeCompassNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
-layout_mode = 2
-size_flags_horizontal = 6
-theme_override_styles/focus = ExtResource("5_ycri4")
-theme_override_styles/disabled = ExtResource("6_k06tx")
-theme_override_styles/hover_pressed = ExtResource("5_ycri4")
-theme_override_styles/hover = ExtResource("5_ycri4")
-theme_override_styles/pressed = ExtResource("5_ycri4")
-theme_override_styles/normal = ExtResource("7_cmugl")
-icon = ExtResource("12_rc0gc")
-
-[node name="FourLeafCloverNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
-layout_mode = 2
-size_flags_horizontal = 6
-theme_override_styles/focus = ExtResource("5_ycri4")
-theme_override_styles/disabled = ExtResource("6_k06tx")
-theme_override_styles/hover_pressed = ExtResource("5_ycri4")
-theme_override_styles/hover = ExtResource("5_ycri4")
-theme_override_styles/pressed = ExtResource("5_ycri4")
-theme_override_styles/normal = ExtResource("7_cmugl")
-icon = ExtResource("14_6na3d")
-
-[node name="HarvestForecastNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
-layout_mode = 2
-size_flags_horizontal = 6
-theme_override_styles/focus = ExtResource("5_ycri4")
-theme_override_styles/disabled = ExtResource("6_k06tx")
-theme_override_styles/hover_pressed = ExtResource("5_ycri4")
-theme_override_styles/hover = ExtResource("5_ycri4")
-theme_override_styles/pressed = ExtResource("5_ycri4")
-theme_override_styles/normal = ExtResource("7_cmugl")
-icon = ExtResource("15_rc0gc")
-
-[node name="LassoLarryNode" parent="AnimationContainer/MainContainer/VBoxContainer/PillarsContainer" instance=ExtResource("4_ky7o8")]
-layout_mode = 2
-size_flags_horizontal = 6
-theme_override_styles/focus = ExtResource("5_ycri4")
-theme_override_styles/disabled = ExtResource("6_k06tx")
-theme_override_styles/hover_pressed = ExtResource("5_ycri4")
-theme_override_styles/hover = ExtResource("5_ycri4")
-theme_override_styles/pressed = ExtResource("5_ycri4")
-theme_override_styles/normal = ExtResource("7_cmugl")
-icon = ExtResource("16_5s2i6")
-
-[node name="HSeparator4" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 32
-theme_override_styles/separator = SubResource("StyleBoxEmpty_4qtpl")
+size_flags_horizontal = 4
+theme_override_colors/font_disabled_color = Color(1.39579e-06, 0.453443, 0.594383, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_hover_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.225337, 0.789171, 1, 1)
+theme_override_colors/font_focus_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.223529, 0.788235, 1, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/line_spacing = 6
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("4_4da1l")
+theme_override_styles/disabled = ExtResource("5_7hsrk")
+theme_override_styles/hover_pressed = ExtResource("4_4da1l")
+theme_override_styles/hover = ExtResource("4_4da1l")
+theme_override_styles/pressed = ExtResource("4_4da1l")
+theme_override_styles/normal = ExtResource("6_7gmkh")
+text = "Fast
+Track
+Skip"
 
 [node name="HSeparator5" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
@@ -333,29 +385,45 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_6na3d")
 
 [node name="BottomHBox" type="HBoxContainer" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel"]
 layout_mode = 2
-theme_override_constants/separation = 48
+alignment = 1
+
+[node name="PulpIconL" type="TextureRect" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("21_hr8up")
+expand_mode = 1
+
+[node name="CurrentPulpLabel" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
+custom_minimum_size = Vector2(160, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0.909804, 0.745098, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 6
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("3_4da1l")
+theme_override_font_sizes/font_size = 36
+text = "15000 mg"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="PulpIconR" type="TextureRect" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("21_hr8up")
+expand_mode = 1
 
 [node name="VSeparator" type="VSeparator" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
 layout_mode = 2
-theme_override_constants/separation = 64
-theme_override_styles/separator = SubResource("StyleBoxEmpty_p3c4b")
-
-[node name="CurrentPulpLabel" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
-custom_minimum_size = Vector2(256, 0)
-layout_mode = 2
-size_flags_vertical = 5
-theme_override_colors/font_color = Color(0.992157, 0.960784, 0.901961, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 32
-theme_override_constants/shadow_outline_size = 4
-theme_override_fonts/font = ExtResource("3_4da1l")
-theme_override_font_sizes/font_size = 32
-text = "Pulp: 150mg"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_constants/separation = 48
+theme_override_styles/separator = SubResource("StyleBoxEmpty_hr8up")
 
 [node name="ContinueButton" type="Button" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
 custom_minimum_size = Vector2(256, 104)
@@ -381,22 +449,43 @@ theme_override_styles/normal = ExtResource("8_b641q")
 text = "Continue
 "
 
-[node name="CurrentJuiceLabel" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
-custom_minimum_size = Vector2(256, 0)
+[node name="VSeparator2" type="VSeparator" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
 layout_mode = 2
-size_flags_vertical = 5
-theme_override_colors/font_color = Color(0.992157, 0.960784, 0.901961, 1)
+theme_override_constants/separation = 48
+theme_override_styles/separator = SubResource("StyleBoxEmpty_hr8up")
+
+[node name="JuiceIconL" type="TextureRect" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("25_qwxgx")
+expand_mode = 1
+
+[node name="CurrentJuiceLabel" type="Label" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
+custom_minimum_size = Vector2(160, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.960784, 0.603922, 0.25098, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_x = 6
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 32
-theme_override_constants/shadow_outline_size = 4
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("3_4da1l")
-theme_override_font_sizes/font_size = 32
-text = "Juice: 20000mL"
+theme_override_font_sizes/font_size = 36
+text = "200 L"
 horizontal_alignment = 1
-vertical_alignment = 1
+vertical_alignment = 2
+
+[node name="JuiceIconR" type="TextureRect" parent="AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("25_qwxgx")
+expand_mode = 1
 
 [node name="HSeparator6" type="HSeparator" parent="AnimationContainer/MainContainer/VBoxContainer"]
 layout_mode = 2
@@ -419,7 +508,6 @@ mouse_filter = 2
 [node name="DescriptionPanel" parent="PanelControl" instance=ExtResource("12_p3c4b")]
 visible = false
 layout_mode = 1
-anchors_preset = 0
 offset_left = -270.0
 offset_top = -248.0
 offset_right = 270.0

@@ -167,7 +167,7 @@ func cover_screen_spiral():
 				var pos = spiral[i + j]
 				tile_map.set_cell(0, pos, 0, Vector2i(0, 0))
 		await get_tree().process_frame
-		print(transition_speed, "Current Wait time")
+		#print(transition_speed, "Current Wait time")
 
 func uncover_screen_spiral():
 	transition_speed = 0.2

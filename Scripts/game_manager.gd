@@ -132,16 +132,16 @@ var fruit_reward = 1
 var max_fruits_on_screen = 1
 
 # --- "PULP" META-UPGRADE LEVELS ---
-var serpents_coffer_level: int = 0
-var serpents_coffer_data = [0.0, 0.05, 0.10, 0.15, 0.20]
-var geode_compass_level: int = 0
-var geode_compass_data = [1.0, 0.9, 0.8, 0.7, 0.6] # % of rocks left
-var four_leaf_clover_level: int = 0
-var four_leaf_clover_data = [0.0, 0.02, 0.04, 0.07, 0.10] # + % on all luck
-var chroma_scales_level: int = 0
-var harvest_forecast_level: int = 0
-var full_spawn_queue: Array = []
+const META_UPGRADES_DIR = "res://Convenience/MetaUpgrades/"
+var meta_upgrades: Dictionary = {}
 
+var chroma_scales_level: int = 0
+var four_leaf_clover_level: int = 0
+var themed_tickers_level: int = 0
+var the_gambit_level: int = 0
+var compound_interest_level: int = 0
+
+# --- UPGRADES ---
 const UPGRADES_DIR = "res://Convenience/Upgrades/"
 var upgrades: Dictionary = {}
 
@@ -168,7 +168,6 @@ var diet_slith_level = 0
 var fruit_foresight_unlocked = false
 var geological_survey_unlocked = false
 var sovereign_trail_level = 0
-var meditate_data = [0.0, 2.0, 3.0, 5.0]
 var garden_weaver_unlocked = false
 var garden_weaver_used_this_garden = false
 
@@ -181,30 +180,13 @@ var gluttons_greed_unlocked = false
 var market_crash_level = 0
 # Path B (Pulp Focus)
 var principal_pulp_level = 0
-var principal_pulp_data = [
-	1.0, 1.1, 1.25, 1.5, 1.75, # 0-4
-	2.0, 2.5, 3.0, 3.5, 4.2, # 5-9
-	5.0, 6.0, 7.0, 8.0, 9.0, # 10-14
-	10.0, 12.0, 14.0, 16.0, 18.0, #15-19
-	100.0
-	] # Lvl 0, 1, 2, 3
 var golden_handshake_level = 0
-var golden_handshake_data = [1.0,
-	1.25, 1.5, 2.0, 2.5, 4.0,
-	6.0, 8.0, 10.0, 12.5, 25.0
-	]
 var juice_press_used_this_garden: bool = false
 # Juice Press is an active ability, so it will be handled by our hotbar system
 var liquidation_used = false
 
 # --- Idle Path ---
 var snake_clicker_level = 0
-var snake_clicker_data = [
-	0.0, 0.1, 0.2, 0.35, 0.5, 0.7, 0.95, 1.0, 1.25, 1.5, #Levels 0-9
-	1.75, 2.0, 2.4, 2.8, 3.0, 3.5, 4.0, 4.75, 5.5, 6.25, #Levels 10-19
-	7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 16.0, 18.0, 20.0, #Levels 20-29
-	50.0 #Level 30
-	]
 var get_rich_quick_unlocked = false
 var custom_aftertaste_unlocked = false
 var arcane_flow_unlocked = false
@@ -218,43 +200,15 @@ var passive_gps = 0.0
 var es_portions_level = 0
 var more_mice_level = 0
 var golden_seeds_level = 0
-var golden_seeds_data = [
-	{"chance": 0.0, "reward": 0},
-	{"chance": 0.05, "reward": 1},
-	{"chance": 0.1, "reward": 1},
-	{"chance": 0.2, "reward": 3},
-	{"chance": 0.33, "reward": 3}
-]
 var patient_gardener_level = 0
-var patient_gardener_data = [
-	{}, # Level 0
-	{"time": 10.0, "multiplier": 2}, # Level 1
-	{"time": 7.0, "multiplier": 2},  # Level 2
-	{"time": 5.0, "multiplier": 3}   # Level 3
-]
-var the_satchel_unlocked = false
-
-# --- Chef Path ---
 var golden_seed_extract_level = 0
-var golden_seed_extract_data = [0.0, 0.05, 0.10, 0.15]
-var exotic_seeds_level = 0
-var exotic_seeds_data = [
-	"", # Level 0 - Nothing
-	"jumping_bean", # Level 1
-	"ghost_pepper", # Level 2
-	"iron_cherry",  # Level 3
-	"dragon_fruit", # Level 4
-	"boost_chance"  # Level 5
-]
-var the_cookbook_unlocked = false
-var active_recipe: Dictionary = {} # Will hold the current recipe's data
-var recipe_progress: int = 0      # Tracks which step of the recipe we're on
-var expanded_palate_unlocked = false
-var golden_glaze_unlocked = false
-var custom_cuisine_unlocked = false
-var mise_en_place_used_this_run = false
-var mise_en_place_unlocked = false
 
+# --- Wrangler Path ---
+var extended_reach_level: int = 0
+var active_gratification_level: int = 0
+var double_lasso_unlocked: bool = false
+var lasso_rhythm_unlocked: bool = false
+var lasso_rhythm_counter: int = 0
 # --- Geomancer Path ---
 var fertile_ground_level = 0
 var mineral_rich_soil_level = 0
@@ -269,12 +223,6 @@ var calculated_risk_unlocked = false
 var slither_sauce_level = 0 
 var juke_and_jive_unlocked = false
 var afterburner_level = 0
-var afterburner_data = [
-	{}, # Level 0 does nothing
-	{"boost": 0.75, "duration": 2.0}, # Level 1: 25% faster for 2s
-	{"boost": 0.60, "duration": 2.5}, # Level 2: 40% faster for 2.5s
-	{"boost": 0.50, "duration": 3.0}  # Level 3: 50% faster for 3s
-]
 var pop_rocks_unlocked = false
 var autotomy_unlocked = false
 var autotomy_used_this_garden = false
@@ -282,10 +230,8 @@ var autotomy_used_this_garden = false
 # --- Frenzy Path ---
 var sugar_rush_unlocked = false
 var chain_reaction_level = 0
-var chain_reaction_data = [1, 5, 10, 15, 20, 999] # Lvl 0, 1, 2, 3, 4, 5
 var overdrive_level = 0
 var lingering_rush_level = 0
-var lingering_rush_data = [5.0, 5.5, 6.0, 6.5, 7.0, 10.0]
 var juggernaut_unlocked = false
 # track the combo itself
 var current_combo = 0
@@ -305,25 +251,9 @@ var new_game_s_plus_active = false
 #------------------------------the ssscale(Architect, Illusionist/Magician)------------------------#
 #------------THE ARCHITECT-----------#
 var edge_lord_level = 0
-var edge_lord_data = [
-	Vector2(12, 9),  # Level 0
-	Vector2(16, 12), # Level 1
-	Vector2(20, 15), # Level 2
-	Vector2(24, 18), # Level 3
-	Vector2(28, 21), # Level 4
-	Vector2(32, 24), # Level 5
-	Vector2(36, 27), # Level 6
-	Vector2(40, 30)  # Level 7
-]
 var zoning_ordinance_level = 0
 var border_czar_unlocked = false
 var surveyed_land_unlocked = false
-var pocket_garden_data = [
-	{}, # Level 0
-	{"cost": 10, "duration": 20.0}, # Level 1
-	{"cost": 20, "duration": 30.0}, # Level 2
-	{"cost": 30, "duration": 60.0}  # Level 3
-]
 var active_pocket_garden_rect = null
 # Ultimate Keystones
 var fold_space_unlocked = false
@@ -333,7 +263,6 @@ var shatter_reality_unlocked = false
 
 #-----------#illusionist------------#
 var ghost_tail_level = 0
-var ghost_tail_data = [0, 7, 10, 15, 20, 34, 50, 100, 150, 200, 300] # Lvl 0-10
 var three_card_monty_unlocked = false
 var fractured_self_unlocked = false
 var dazzle_pie_unlocked = false
@@ -421,61 +350,6 @@ var class_data = {#~1000 lines saved
 # Dictionary for upgrades costs and rules
 
 
-
-var meta_upgrade_data = {
-	"Synapse Slot": {
-		"description": "Unlocks one additional active ability slot.\nA crucial investment for any build.",
-		"costs": [200, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 9999], # Costs for slots 1 through 10
-		"max_level": 10,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/SynapseSlotIcon.png",
-		"type": "Slot"
-	},
-	"Serpents Coffer": {
-		"description": "Gain 'interest' on your unspent\nPulp at the end of each Garden.",
-		"costs": [50, 200, 500, 1000],
-		"max_level": 4,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/SerpentsCofferIcon.png",
-		"type": "Passive"
-	},
-	"Geode Compass": {
-		"description": "Permanently removes a percentage of\nobstacles from all subsequent gardens.",
-		"costs": [75, 200, 600, 1250],
-		"max_level": 4,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png",
-		"type": "Passive"
-		
-	},
-	"Four Leaf Clover": {
-		"description": "Permanently increases your 'luck,'\nboosting the chance of all random events.",
-		"costs": [42, 69, 340, 1000],
-		"max_level": 4,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png",
-		"type": "Passive"
-	},
-	"Chroma Scales": {
-		"description": "Activate the cosmetic options\nyou've permanently unlocked in the Fang Fund.",
-		"costs": [1, 1, 1, 1, 1, 1],
-		"max_level": 6,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png",
-		"type": "Aesthetic"
-	},
-	"Lasso Larry": {
-		"display_name": "Lasso Larry",
-		"description": "Active Ability: Randomly rerolls a fruit!\nLvl 1: Pulls 1 fruit.\nLvl 2: Pulls 2 fruits.\nLvl 3: Pulls 3 fruits.",
-		"costs": [125, 500, 1000],
-		"max_level": 3,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/LassoLarryIcon.png",
-		"type": "Active Ability"
-	},
-	"Harvest Forecast": {
-		"display_name": "Harvest Forecast",
-		"description": "Adds a UI element showing the next\nspecial fruits in the spawn queue.\nLvl 1-3: Shows 1-3 special fruit.\nLvl 4: Shows the next 5 fruits",
-		"costs": [100, 200, 300, 1000],
-		"max_level": 4,
-		"icon_path": "res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png",
-		"type": "QoL"
-	}
-}
 
 var cosmetic_data = {
 	"Colors": {
@@ -807,34 +681,6 @@ var milestone_data = {
 	}
 }
 
-# --- CORRECTED RECIPE DATA ---
-var basic_recipes = [
-	{
-		"name": "Simple Skewer",
-		"sequence": [ {"type": "Fruit"}, {"type": "Fruit"} ],
-		"buff": {"type": "speed_boost", "value": 0.8, "duration": 5.0}
-	},
-	{
-		"name": "Golden Snack",
-		"sequence": [ {"type": "Fruit"}, {"type": "GoldenFruit"} ],
-		"buff": {"type": "juice_boost", "value": 1, "duration": 0}
-	}
-]
-var exotic_recipes = [
-	{
-		"name": "Spicy Surprise",
-		"sequence": [ {"type": "Fruit"}, {"type": "GhostPepper"}, {"type": "Fruit"} ],
-		"buff": {"type": "full_recharge", "duration": 0}
-	},
-	{
-		"name": "Bountiful Harvest",
-		"sequence": [ 
-			{"type": "Fruit", "properties": {"is_ripe": true}}, 
-			{"type": "IronCherry"} 
-		],
-		"buff": {"type": "fruit_flood", "duration": 10.0}
-	}
-]
 
 # --- ROTATING SHOP ITEM POOLS ---
 
@@ -876,6 +722,7 @@ var legendary_items = [
 
 func _ready():
 	_load_all_upgrades(UPGRADES_DIR)
+	_load_all_meta_upgrades(META_UPGRADES_DIR)
 	
 func _load_all_upgrades(dir_path: String):
 	var dir = DirAccess.open(dir_path)
@@ -903,7 +750,30 @@ func _load_all_upgrades(dir_path: String):
 		
 	dir.list_dir_end()
 
-
+func _load_all_meta_upgrades(dir_path: String):
+	var dir = DirAccess.open(dir_path)
+	if not dir:
+		push_error("Could not find meta upgrades folder: " + dir_path)
+		return
+	
+	dir.list_dir_begin()
+	var file_name = dir.get_next()
+	while file_name != "":
+		if file_name.begins_with("."):
+			file_name = dir.get_next()
+			continue
+		
+		var full_path = dir_path.path_join(file_name)
+		if dir.current_is_dir():
+			_load_all_meta_upgrades(full_path)
+		elif file_name.ends_with(".tres") or file_name.ends_with(".tres.remap"):
+			var res = load(full_path.trim_suffix(".remap"))
+			if res is MetaUpgradeData and res.enabled:
+				var key = res.id if res.id != "" else res.display_name
+				meta_upgrades[key] = res
+		
+		file_name = dir.get_next()
+	dir.list_dir_end()
 
 
 func apply_meta_upgrade(item_id: String):
@@ -939,81 +809,28 @@ func reset_for_new_garden():
 func go_to_scene(scene_path):
 	get_tree().change_scene_to_file(scene_path)
 	
-func get_modified_chance(base_chance: float) -> float:
-	var final_chance = base_chance
-	# Four Leaf Clover --------
-	final_chance += four_leaf_clover_data[four_leaf_clover_level]
-	
-	return clamp(final_chance, 0.0, 1.0)
 
-func generate_full_spawn_queue():
-	# This function now just creates a shuffled deck based on base probabilities.
-	# It does NOT handle situational bonuses like Last Stand.
-	full_spawn_queue.clear()
-	var fruit_deck: Array = []
-	
-	# 1. Get the final chance, including the Four-Leaf Clover bonus.
-	var final_special_chance = get_modified_chance(get_base_special_fruit_chance())
-	var num_special_fruits = roundi(100 * final_special_chance)
-	
-	# 2. Get the list of unlocked special fruits.
-	var unlocked_specials = get_unlocked_special_fruits()
-	
+
+
+func get_golden_fruit_chance() -> float:
 	if all_fruits_special:
-		if not unlocked_specials.is_empty():
-			for i in range(100):
-				fruit_deck.append(unlocked_specials.pick_random())
-	else:
-		# 3. Build and shuffle the deck.
-		if unlocked_specials.is_empty():
-			for i in range(100): fruit_deck.append("Fruit")
-		else:
-			for i in range(num_special_fruits):
-				fruit_deck.append(unlocked_specials.pick_random())
-			for i in range(100 - num_special_fruits):
-				fruit_deck.append("Fruit")
-			
-	fruit_deck.shuffle()
-	full_spawn_queue = fruit_deck
-	print("New full spawn queue generated!")
+		return 1.0
 
-
-func get_unlocked_special_fruits() -> Array:
-	# This function dynamically builds a list of all unlocked special fruits.
-	var unlocked_specials = []
+	var total_chance: float = 0.0
 	
-	if golden_seed_extract_level > 0 or golden_seeds_level > 0:
-		unlocked_specials.append("GoldenFruit")
-	if exotic_seeds_level >= 1:
-		unlocked_specials.append("JumpingBean")
-	if exotic_seeds_level >= 2:
-		unlocked_specials.append("GhostPepper")
-	if exotic_seeds_level >= 3:
-		unlocked_specials.append("IronCherry")
-	if exotic_seeds_level >= 4:
-		unlocked_specials.append("DragonFruit")
-		
-	return unlocked_specials
-
-func get_base_special_fruit_chance() -> float:
-	# This function now calculates the BASE chance for ANY special fruit.
-	# We will add Golden Apple chance and Exotic Seeds chance together.
-	var total_chance = 0.0
+	var gs_rules = get_upgrade_rules("Golden Seeds") as DualStatUpgrade
+	if gs_rules:
+		total_chance += gs_rules.get_stat_a(golden_seeds_level, 0.0)
 	
-	# Add chance from Golden Seed Extract
 	if golden_seed_extract_level > 0:
-		total_chance += golden_seed_extract_data[golden_seed_extract_level]
-		
-	# Add base chance from Exotic Seeds
-	if exotic_seeds_level > 0:
-		total_chance += 0.10 # Base 10%
-		if exotic_seeds_level >= 5:
-			total_chance += 0.10 # The Lvl 5 bonus adds another 10%
+		var gse_rules = get_upgrade_rules("Golden Seed Extract")
+		if gse_rules:
+			total_chance += gse_rules.get_value_at_level(golden_seed_extract_level, 0.0)
 	
 	if special_fruit_chance_doubled:
 		total_chance *= 2.0
-			
-	return total_chance
+	
+	return clampf(total_chance, 0.0, 1.0)
 
 
 func get_upgrade_rules(upgrade_key: String) -> UpgradeData:
@@ -1277,11 +1094,11 @@ func _reset_career_variables():
 	roll_credits_unlocked = false
 	# --- Reset all upgrade levels and unlocks ---
 		# --- "PULP" META-UPGRADE LEVELS ---
-	serpents_coffer_level = 0
-	geode_compass_level = 0
 	four_leaf_clover_level = 0
 	chroma_scales_level = 0
-	harvest_forecast_level = 0
+	themed_tickers_level = 0
+	compound_interest_level = 0
+	the_gambit_level = 0
 	#-----------The Core-------------
 		#Idle
 	snake_clicker_level = 0
@@ -1316,20 +1133,13 @@ func _reset_career_variables():
 	golden_seeds_level = 0
 	patient_gardener_level = 0
 	is_bounty_active = false
-	the_satchel_unlocked = false
-		#Chef
 	golden_seed_extract_level = 0
-	exotic_seeds_level = 0
-	the_cookbook_unlocked = false
-	active_recipe = {} 
-	recipe_progress = 0    
-	expanded_palate_unlocked = false
-	golden_glaze_unlocked = false
-	custom_cuisine_unlocked = false
-	iron_cherry_buff_active = false
-	dragon_fruit_buff_active = false
-	mise_en_place_used_this_run = false
-	mise_en_place_unlocked = false
+		#Wrangler
+	extended_reach_level = 0
+	active_gratification_level = 0
+	double_lasso_unlocked = false
+	lasso_rhythm_unlocked = false
+	lasso_rhythm_counter = 0
 		#Geomancer
 	fertile_ground_level = 0
 	mineral_rich_soil_level = 0
@@ -1421,8 +1231,7 @@ func _apply_starting_upgrade(upgrade_key: String, levels_to_add: int):
 	# Define a list of all possible active abilities.
 	var active_abilities = [
 		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty", 
-		"Sacrificial Molt", "Meditate", "Mise en Place", "Zenith", "Autotomy", 
-		"Tenderizer", "Juice Press"
+ 		"Meditate", "Zenith", "Autotomy", "Tenderizer", "Juice Press", "Lasso Larry"
 	]
 
 	for i in range(levels_to_add):
@@ -1456,3 +1265,10 @@ func purchase_or_upgrade_ability(ability_key: String):
 		# If we already own it, just add to both current and total charges.
 		ability_charges[ability_key].current += 1
 		ability_charges[ability_key].total += 1
+
+func get_length_for_level(target_level: int) -> int:
+	if target_level <= 1:
+		return 1
+	var ci_data = meta_upgrades.get("Compound Interest") as MetaUpgradeData
+	var discount = int(ci_data.get_value_at_level(compound_interest_level, 0.0)) if ci_data else 0
+	return max(2, (target_level * target_level) - discount)

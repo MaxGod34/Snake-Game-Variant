@@ -2,16 +2,16 @@ extends Control
 
 # --- NODE REFERENCES ---
 # Make sure these paths are correct for this scene!
-@onready var icon_display = $MarginC/GridContainer/IconPanel/IconDisplay
-@onready var name_label = $MarginC/GridContainer/UpgradeNameLabel
-@onready var description_label = $MarginC/GridContainer/DescriptionLabel
-@onready var cost_label = $MarginC/GridContainer/CostLabel
-@onready var level_label = $MarginC/GridContainer/CurrentLevelLabel
-@onready var tree_label = $MarginC/GridContainer/TreeLabel
+@onready var icon_display = $MarginC/PanelContainer/VboxMain/TopRow/IconPanel/IconDisplay
+@onready var name_label = $MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer/UpgradeNameLabel
+@onready var tree_label = $MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer/TreeLabel
+@onready var level_label = $MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer/CurrentLevelLabel
+@onready var cost_label = $MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer/CostLabel
+@onready var description_label = $MarginC/PanelContainer/VboxMain/BottomRow/DescriptionLabel
 
 func _ready():
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
-	custom_minimum_size = Vector2(540, 496)
+	custom_minimum_size = Vector2(448, 320)
 	size = custom_minimum_size
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
@@ -34,14 +34,17 @@ func show_info(rules, current_level: int, cost: int, currency_unit: String) -> v
 	var title: String = _get_prop(rules, "display_name", "")
 	if title == "":
 		title = _get_prop(rules, "name", _get_prop(rules, "id", "Unknown Item"))
-	name_label.text = title
+		
+		
+	# Cool text modifiers for name
+	name_label.text = "[center][pulse freq=1.5 color=#00ff00 ease=-2.0][wave amp=3.0 freq=2.0 connected=1]%s[/wave][/pulse][/center]" % title
 	description_label.text = _get_prop(rules, "description", "No description available.")
 	
 	# Tree/Type
 	var path_text: String = _get_prop(rules, "path", "")
 	var sub_path_text: String = _get_prop(rules, "sub_path", "")
 	if path_text != "":
-		tree_label.text = "Tree: %s (%s)" % [path_text, sub_path_text]
+		tree_label.text = "Tree: %s" % [sub_path_text]
 	else:
 		tree_label.text = "Type: %s" % _get_prop(rules, "type", "Unlockable")
 	
@@ -52,10 +55,10 @@ func show_info(rules, current_level: int, cost: int, currency_unit: String) -> v
 		cost_label.text = "---"
 	elif max_level > 1:
 		level_label.text = "(Lvl %s/%s)" % [current_level, max_level]
-		cost_label.text = "Cost: %s %s" % [cost, currency_unit]
+		cost_label.text = "Cost: [tornado radius=5.0 freq=3.0 connected=1]%s %s[/tornado]" % [cost, currency_unit]
 	else:
 		level_label.text = "(One-Time)"
-		cost_label.text = "Cost: %s %s" % [cost, currency_unit]
+		cost_label.text = "Cost: [tornado radius=5.0 freq=3.0 connected=1]%s %s[/tornado]" % [cost, currency_unit]
 	
 	# Icon
 	var hex_code: String = _get_prop(rules, "hex_code", "")
@@ -77,5 +80,5 @@ func show_info(rules, current_level: int, cost: int, currency_unit: String) -> v
 	
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	reset_size()
-	size = Vector2(max(size.x, 540.0), max(size.y, 496))
+	size = Vector2(max(size.x, 448.0), max(size.y, 320))
 	

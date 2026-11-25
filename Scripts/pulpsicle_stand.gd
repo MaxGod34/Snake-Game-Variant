@@ -8,21 +8,24 @@ signal skip_garden_pressed
 # Get references to all the UI elements we need to update.
 @onready var current_pulp_label = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/CurrentPulpLabel
 @onready var current_juice_label = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/CurrentJuiceLabel
+
 @onready var synapse_node = $AnimationContainer/MainContainer/VBoxContainer/SynapseRow/SynapseSlotNode
 @onready var chroma_scales_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/ChromaScalesNode
-@onready var serpents_coffer_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/SerpentsCofferNode
-@onready var geode_compass_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/GeodeCompassNode
+@onready var themed_tickers_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/ThemedTickersNode
+@onready var the_gambit_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/TheGambitNode
 @onready var four_leaf_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/FourLeafCloverNode
+@onready var compound_interest_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/CompoundInterestNode
 @onready var rotating_item_node = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/RotatingItemNode
-@onready var lasso_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/LassoLarryNode
-@onready var harvest_forecast_node = $AnimationContainer/MainContainer/VBoxContainer/PillarsContainer/HarvestForecastNode
+
 @onready var continue_button = $AnimationContainer/MainContainer/VBoxContainer/BottomPanel/BottomHBox/ContinueButton
-@onready var animation_container = $AnimationContainer
 @onready var skip_garden_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/SkipGardenButton
 @onready var new_game_s_plus_button = $AnimationContainer/MainContainer/VBoxContainer/RouletteContainer/RotatingItemRow/NewGameSPlusButton
+
+@onready var animation_container = $AnimationContainer
+
 @onready var description_panel = $PanelControl/DescriptionPanel
 @onready var description_delay_timer = $DescriptionDelayTimer
-# This dictionary will store a reference to every single pillar button.
+
 var pillar_nodes: Dictionary = {}
 var hovered_item_key: String = ""
 
@@ -46,12 +49,11 @@ func _build_node_dictionary():
 	# OLD FIX: The keys now perfectly match the keys in GameManager.meta_upgrade_data.
 	pillar_nodes = {
 		"Synapse Slot": synapse_node,
-		"Serpents Coffer": serpents_coffer_node,
-		"Geode Compass": geode_compass_node,
-		"Four Leaf Clover": four_leaf_node,
 		"Chroma Scales": chroma_scales_node,
-		"Lasso Larry": lasso_node,
-		"Harvest Forecast": harvest_forecast_node
+		"Themed Tickers": themed_tickers_node,
+		"The Gambit": the_gambit_node,
+		"Four Leaf Clover": four_leaf_node,
+		"Compound Interest": compound_interest_node
 	}
 
 	
@@ -105,20 +107,29 @@ func update_all_displays():
 # --- UPDATE FUNCTIONS ---
 
 func update_pulp_label():
-	current_pulp_label.text = "Pulp: %smg" % GameManager.pulp
-	current_juice_label.text = "Juice: %smL" % GameManager.juice
+	current_pulp_label.text = "%smg" % GameManager.pulp
+	current_juice_label.text = "%smL" % GameManager.juice
 
 
 # This is our new, reusable helper function. It can update ANY pillar button.
 func _update_pillar_node(upgrade_key: String):
 	var node = pillar_nodes.get(upgrade_key)
-	if not is_instance_valid(node): return
+	var rules = GameManager.meta_upgrades.get(upgrade_key) as MetaUpgradeData
+	if not is_instance_valid(node): 
+		return
 
-	var rules = GameManager.meta_upgrade_data[upgrade_key]
 	var current_level = main_game.get_meta_upgrade_level(upgrade_key)
-	
+
 	# Pass all the data to the node's own update function.
-	node.update_display(upgrade_key, current_level, rules.max_level, true, Color("a3d5ff"), Color.GOLD, "Frosty")
+	node.update_display(
+		upgrade_key, 
+		current_level, 
+		rules.max_level, 
+		true, 
+		Color("a3d5ff"), 
+		Color.GOLD, 
+		"Frosty"
+	)
 
 
 
@@ -126,12 +137,14 @@ func _update_pillar_node(upgrade_key: String):
 
 func pick_new_rotating_item():
 	# This is where the magic happens baby
+	var clover = GameManager.meta_upgrades.get("Four Leaf Clover") as MetaUpgradeData
+	var luck_bonus = clover.get_value_at_level(GameManager.four_leaf_clover_level, 0.0) if clover else 0.0
 	
 	var potential_pool = []
 	var roll = randf()
-	if roll < 0.05:
+	if roll < (0.05 + luck_bonus * 0.5):
 		potential_pool = GameManager.legendary_items
-	elif roll < 0.30:
+	elif roll < (0.30 + luck_bonus):
 		potential_pool = GameManager.rare_items
 	else:
 		potential_pool = GameManager.common_items
@@ -249,16 +262,16 @@ func _on_rotating_item_pressed():
 
 
 func _on_pillar_node_pressed(upgrade_key: String):
-	# It gets all the info it needs from the helper function.
+	var rules = GameManager.meta_upgrades.get(upgrade_key) as MetaUpgradeData
+	if not rules:
+		return
+
 	var current_level = main_game.get_meta_upgrade_level(upgrade_key)
-	var rules = GameManager.meta_upgrade_data[upgrade_key]
-
-	if current_level < rules["max_level"]:
-		var cost_index = current_level
-		if upgrade_key == "Synapse Slot":
-			cost_index = GameManager.max_ability_slots
-
-		var cost = rules["costs"][cost_index]
+	if current_level < rules.max_level:
+		var cost_index = GameManager.max_ability_slots if upgrade_key == "Synapse Slot" else current_level
+		if cost_index >= rules.costs.size():
+			return
+		var cost = rules.costs[cost_index]
 		if GameManager.pulp >= cost:
 			GameManager.pulp -= cost
 			main_game.handle_meta_upgrade_purchase(upgrade_key)
@@ -317,28 +330,31 @@ func _on_skip_garden_button_pressed():
 func _on_description_delay_timer_timeout():
 	if hovered_item_key == "": return
 
-	var rules: Dictionary
+	var rules
 	var cost: int
 	var current_level: int
 	var currency_unit: String = "mg"
 	
+	
 	if hovered_item_key == "rotating_item":
 		rules = current_rotating_item
-		if rules.is_empty(): return
+		if not rules or rules.is_empty(): 
+			return
 		cost = rules.get("cost", 0)
 		current_level = 0 # Rotating items are always single-purchase
 	else:
 		# It's a pillar upgrade.
-		rules = GameManager.meta_upgrade_data.get(hovered_item_key)
-		if rules.is_empty(): return
-		
+		rules = GameManager.meta_upgrades.get(hovered_item_key)
+		if not rules: 
+			return
 
 		current_level = main_game.get_meta_upgrade_level(hovered_item_key)
-		cost = rules.costs[current_level] if current_level < rules.costs.size() else 999
+		var cost_index = GameManager.max_ability_slots if hovered_item_key == "Synapse Slot" else current_level
+		cost = rules.costs[cost_index] if cost_index < rules.costs.size() else 999
 	
 	
 
-	description_panel.show_info(rules, current_level, cost, "mg")
+	description_panel.show_info(rules, current_level, cost, currency_unit)
 
 	# --- THIS IS THE NEW POSITIONING LOGIC ---
 	

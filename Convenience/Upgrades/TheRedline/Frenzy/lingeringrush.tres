@@ -14,7 +14,7 @@ path = "The Redline"
 sub_path = "Frenzy"
 type = "Passive"
 costs = Array[int]([6, 12, 18, 24, 64])
-level_values = Array[float]([])
+level_values = Array[float]([5.0, 5.5, 6.0, 7.5, 10.0])
 prerequisites = {
 "Sugar Rush": 1
 }

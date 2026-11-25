@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MetaUpgradeData" load_steps=3 format=3 uid="uid://cv5bslbrqtmiv"]
+
+[ext_resource type="Script" uid="uid://clsq0vy65pfyx" path="res://Scripts/MetaUpgradeData.gd" id="1_u87sl"]
+[ext_resource type="Texture2D" uid="uid://c10igihv1lt4f" path="res://Assets/PNGs/UpgradeIcons/MarketCrashIcon.png" id="1_vdtnm"]
+
+[resource]
+script = ExtResource("1_u87sl")
+enabled = true
+id = "Themed Tickers"
+display_name = "Themed Tickers"
+description = "Escalates DEFCON propoganda on the news tickers"
+icon = ExtResource("1_vdtnm")
+type = "Tickers"
+costs = Array[int]([1000, 2000, 3000, 4000])
+level_values = Array[float]([0.0, 1.0, 2.0, 3.0, 4.0])
+metadata/_custom_type_script = "uid://clsq0vy65pfyx"

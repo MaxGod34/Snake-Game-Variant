@@ -4,16 +4,36 @@ extends PanelContainer
 @onready var player_name_label = $HBox/StatsContainer/HBoxContainer/PlayerNameLabel
 @onready var level_label = $HBox/StatsContainer/HBoxContainer/LevelLabel
 @onready var xp_bar = $HBox/StatsContainer/XPProgressBar
-@onready var score_label = $HBox/StatsContainer/ScoreRow/ScoreLabel
-@onready var juice_label = $HBox/StatsContainer/ScoreRow/JuiceLabel
+@onready var score_label = $HBox/StatsContainer/ScoreRow/HBoxContainer/ScoreLabel
+@onready var juice_label = $HBox/StatsContainer/ScoreRow/HBoxContainer/JuiceLabel
 @onready var upgrade_prompt_label = $HBox/StatsContainer/HBoxContainer2/UpgradePromptLabel
 @onready var pulp_label = $HBox/StatsContainer/HBoxContainer2/PulpLabel
 
 @onready var avatar_texture_rect = $HBox/Panel/ProfilePicture
 @onready var frame_panel = $HBox/Panel
 
-var current_displayed_score = 0
+var actual_score: int = 0
+var displayed_score_float: float = 0.0
 var floating_text_container: Node
+const POPUP_FONT = preload("res://Assets/Fonts/easvhs.ttf")
+var pending_popup_score: int = 0
+var popup_cooldown: float = 0.0
+
+func _process(delta: float) -> void:
+	# 1. Batch and spawn floating "+X" popups
+	if popup_cooldown > 0.0:
+		popup_cooldown -= delta
+	elif pending_popup_score > 0:
+		_spawn_batched_popup(pending_popup_score)
+		pending_popup_score = 0
+		popup_cooldown = 0.15
+
+	# 2. Smoothly roll the main Score label up to actual_score
+	if roundi(displayed_score_float) < actual_score:
+		var roll_speed = max(20.0, (actual_score - displayed_score_float) * 8.0)
+		displayed_score_float = move_toward(displayed_score_float, float(actual_score), roll_speed * delta)
+		score_label.text = "Score: %d" % roundi(displayed_score_float)
+
 
 
 func update_cosmetics(loadout: Dictionary):
@@ -55,9 +75,9 @@ func update_display(data: Dictionary):
 	# Update all the simple text labels
 	player_name_label.text = data["player_name"]
 	level_label.text = "Level: " + str(data["level"])
-	juice_label.text = "Juice: %smL" % data["juice"]
-	pulp_label.text = "Pulp: %smg" % data["pulp"]
-	upgrade_prompt_label.visible = (data["juice"] > 0)
+	juice_label.text = "%sL" % data["juice"]
+	pulp_label.text = "%smg" % data["pulp"]
+	upgrade_prompt_label.visible = true
 	
 	# Update the XP Bar's properties
 	xp_bar.max_value = data["xp_max"]
@@ -65,45 +85,43 @@ func update_display(data: Dictionary):
 	xp_bar.value = data["xp_value"]
 	
 	# --- Animated Score Counter ---
-	var new_score = data["xp_value"]
-	if current_displayed_score == 0:
-		score_label.text = "Score: " + str(new_score)
-		current_displayed_score = new_score
+	var new_score: int = data["xp_value"]
+	if actual_score == 0:
+		actual_score = new_score
+		displayed_score_float = float(new_score)
+		score_label.text = "Score: %d" % new_score
 	
-	elif new_score > current_displayed_score:
-		animate_score_change(new_score)
-	else:
-		# If score hasn't changed, just make sure the label is correct
-		score_label.text = "Score: " + str(new_score)
+	elif new_score > actual_score:
+		pending_popup_score += (new_score - actual_score)
+		actual_score = new_score
+	elif new_score < actual_score:
+		actual_score = new_score
+		displayed_score_float = float(new_score)
+		score_label.text = "Score: %d" % new_score
 
-func animate_score_change(target_score: int):
-	var score_to_add = target_score - current_displayed_score
-	score_label.text = "Score: " + str(target_score)
-	current_displayed_score = target_score
+
+
+func _spawn_batched_popup(amount:int):
+	if not is_instance_valid(floating_text_container): return
 	
-	var spawn_position = score_label.get_global_position()
-	
+	var point_label = Label.new()
+	point_label.text = "+%d" % amount
+	point_label.z_index = 10
+	point_label.top_level = true
+	point_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	point_label.add_theme_color_override("font_color", Color.GOLD)
+	point_label.add_theme_font_size_override("font_size", 48)
+	point_label.add_theme_font_override("font", POPUP_FONT)
+	floating_text_container.add_child(point_label)
 
-	for i in range(score_to_add):
-		var point_label = Label.new()
-		point_label.text = "+1"
-		point_label.add_theme_color_override("font_color", Color.GOLD)
-		point_label.add_theme_font_size_override("font_size", 32)
-		point_label.add_theme_font_override("font", load("res://Assets/Fonts/easvhs.ttf"))
-		if is_instance_valid(floating_text_container):
-			floating_text_container.add_child(point_label)
-		
-		# We still position it relative to the score label
-		point_label.global_position = spawn_position + Vector2(randf_range(-10, 10), 10) + Vector2(128, 0)
-		
-		# Animate its movement and fade
-		var tween = create_tween()
-		var end_pos = point_label.global_position + Vector2(randf_range(-30, 30), -70)
-		tween.tween_property(point_label, "global_position", end_pos, 0.9).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-		tween.parallel().tween_property(point_label, "modulate:a", 0.0, 0.9).set_delay(0.2)
-		tween.tween_callback(point_label.queue_free)
+	# Spawn just to the right of ScoreLabel and drift slightly down/out into open space
+	var base_pos = score_label.get_global_position() + Vector2(128.0, 0.0)
+	point_label.global_position = base_pos + Vector2(randf_range(-6.0, 6.0), randf_range(-4.0, 4.0))
 
-		# Add a tiny delay between each "+1" to create the "ticking" effect
-		await get_tree().create_timer(0.05).timeout
+	var tween = create_tween()
+	var end_pos = point_label.global_position + Vector2(randf_range(10.0, 25.0), -256.0)
+	tween.tween_property(point_label, "global_position", end_pos, 1.7).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.parallel().tween_property(point_label, "modulate:a", 0.0, 1.7).set_delay(0.15)
+	tween.tween_callback(point_label.queue_free)
 
 	

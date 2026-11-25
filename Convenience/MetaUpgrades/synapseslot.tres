@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MetaUpgradeData" load_steps=3 format=3 uid="uid://ceer8wy560bon"]
+
+[ext_resource type="Script" uid="uid://clsq0vy65pfyx" path="res://Scripts/MetaUpgradeData.gd" id="1_aolid"]
+[ext_resource type="Texture2D" uid="uid://lvepmx5d05jl" path="res://Assets/PNGs/UpgradeIcons/SynapseSlotIcon.png" id="1_wdair"]
+
+[resource]
+script = ExtResource("1_aolid")
+enabled = true
+id = "Synapse Slot"
+display_name = "Synapse Slot"
+description = "Unlock ability slots"
+icon = ExtResource("1_wdair")
+type = "Slot"
+costs = Array[int]([2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000])
+level_values = Array[float]([])
+metadata/_custom_type_script = "uid://clsq0vy65pfyx"

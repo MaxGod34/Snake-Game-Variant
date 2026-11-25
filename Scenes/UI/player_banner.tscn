@@ -1,10 +1,12 @@
-[gd_scene load_steps=11 format=3 uid="uid://u2l27qdcge0g"]
+[gd_scene load_steps=14 format=3 uid="uid://u2l27qdcge0g"]
 
-[ext_resource type="Texture2D" uid="uid://dxmuhmy4wk4uh" path="res://Assets/PNGs/GambleSprites/snake_poker_chip_white.png" id="1_e4hx5"]
+[ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="1_e4hx5"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_fkyj3"]
 [ext_resource type="Script" uid="uid://colf33pfeqrbf" path="res://Scripts/player_banner.gd" id="2_s6con"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/Templates/basic_square_with_border.png" id="3_s6con"]
 [ext_resource type="Texture2D" uid="uid://dqkem6rp8x468" path="res://Assets/PNGs/RotatingItemIcons/handicap_icon.png" id="3_y7w4t"]
+[ext_resource type="Texture2D" uid="uid://ds4o12rm0f8qv" path="res://Assets/JuiceIcon.png" id="6_i4xlm"]
+[ext_resource type="Texture2D" uid="uid://caeckwq0ybiql" path="res://Assets/PulpIconv2.png" id="7_k0rpk"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_e4hx5"]
 texture = ExtResource("1_e4hx5")
@@ -19,9 +21,11 @@ bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_32yff"]
 texture = ExtResource("3_s6con")
-axis_stretch_horizontal = 2
+axis_stretch_horizontal = 1
 axis_stretch_vertical = 2
 modulate_color = Color(0.94902, 0.972549, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_i4xlm"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_s6con"]
 
@@ -74,52 +78,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 alignment = 1
 
-[node name="ScoreRow" type="Control" parent="HBox/StatsContainer"]
-custom_minimum_size = Vector2(128, 48)
-layout_direction = 2
-layout_mode = 2
-size_flags_vertical = 4
-
-[node name="ScoreLabel" type="Label" parent="HBox/StatsContainer/ScoreRow"]
-custom_minimum_size = Vector2(320, 48)
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 49.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
-theme_override_constants/shadow_outline_size = 6
-theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 28
-text = "Score: 12"
-vertical_alignment = 1
-
-[node name="JuiceLabel" type="Label" parent="HBox/StatsContainer/ScoreRow"]
-custom_minimum_size = Vector2(0, 35)
-layout_mode = 2
-offset_right = 480.0
-offset_bottom = 44.0
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 16
-theme_override_constants/shadow_outline_size = 6
-theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 28
-text = "Juice: 3 mL"
-horizontal_alignment = 2
-vertical_alignment = 1
-
 [node name="HSeparator3" type="HSeparator" parent="HBox/StatsContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_fkyj3")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBox/StatsContainer"]
@@ -129,12 +90,12 @@ size_flags_horizontal = 4
 [node name="PlayerNameLabel" type="Label" parent="HBox/StatsContainer/HBoxContainer"]
 custom_minimum_size = Vector2(304, 35)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.950706, 0.972166, 0.950434, 1)
+theme_override_colors/font_color = Color(0, 0.937255, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 6
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
 theme_override_font_sizes/font_size = 28
@@ -144,12 +105,12 @@ vertical_alignment = 1
 [node name="LevelLabel" type="Label" parent="HBox/StatsContainer/HBoxContainer"]
 custom_minimum_size = Vector2(160, 35)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.950706, 0.972166, 0.950434, 1)
+theme_override_colors/font_color = Color(0, 0.972549, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 6
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
 theme_override_font_sizes/font_size = 28
@@ -165,19 +126,77 @@ step = 0.067
 value = 87.033
 show_percentage = false
 
-[node name="HSeparator4" type="HSeparator" parent="HBox/StatsContainer"]
+[node name="ScoreRow" type="Control" parent="HBox/StatsContainer"]
+custom_minimum_size = Vector2(128, 48)
+layout_direction = 2
 layout_mode = 2
-theme_override_constants/separation = 8
-theme_override_styles/separator = SubResource("StyleBoxEmpty_fkyj3")
+size_flags_vertical = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBox/StatsContainer/ScoreRow"]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -32.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="ScoreLabel" type="Label" parent="HBox/StatsContainer/ScoreRow/HBoxContainer"]
+custom_minimum_size = Vector2(320, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 6
+theme_override_fonts/font = ExtResource("2_fkyj3")
+theme_override_font_sizes/font_size = 24
+text = "Score: 12"
+vertical_alignment = 2
+
+[node name="JuiceLabel" type="Label" parent="HBox/StatsContainer/ScoreRow/HBoxContainer"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.960784, 0.603922, 0.25098, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 16
+theme_override_constants/shadow_outline_size = 6
+theme_override_fonts/font = ExtResource("2_fkyj3")
+theme_override_font_sizes/font_size = 24
+text = "3 L"
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="VSeparator" type="VSeparator" parent="HBox/StatsContainer/ScoreRow/HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_i4xlm")
+
+[node name="JuiceIcon" type="TextureRect" parent="HBox/StatsContainer/ScoreRow/HBoxContainer"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("6_i4xlm")
+expand_mode = 1
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="HBox/StatsContainer"]
 layout_mode = 2
+theme_override_constants/separation = 34
 
 [node name="UpgradePromptLabel" type="Label" parent="HBox/StatsContainer/HBoxContainer2"]
-custom_minimum_size = Vector2(0, 35)
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
 size_flags_horizontal = 2
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_color = Color(0.94902, 0.972549, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
@@ -185,14 +204,15 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 16
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 24
-text = "Press [U] to upgrade"
+theme_override_font_sizes/font_size = 20
+text = "Press [SPACE] to upgrade"
 horizontal_alignment = 2
-vertical_alignment = 1
+vertical_alignment = 2
 
 [node name="PulpLabel" type="Label" parent="HBox/StatsContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(0, 48)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.94902, 0.972549, 0.94902, 1)
+theme_override_colors/font_color = Color(1, 0.909804, 0.745098, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/shadow_offset_x = 4
@@ -200,11 +220,19 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 16
 theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("2_fkyj3")
-theme_override_font_sizes/font_size = 24
-text = "Pulp: 9999mg"
-vertical_alignment = 1
+theme_override_font_sizes/font_size = 20
+text = "9999 mg"
+vertical_alignment = 2
 
-[node name="HSeparator5" type="HSeparator" parent="HBox/StatsContainer"]
+[node name="PulpIcon" type="TextureRect" parent="HBox/StatsContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+texture = ExtResource("7_k0rpk")
+expand_mode = 1
+
+[node name="HSeparator6" type="HSeparator" parent="HBox/StatsContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
 theme_override_styles/separator = SubResource("StyleBoxEmpty_fkyj3")

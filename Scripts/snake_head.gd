@@ -33,9 +33,7 @@ var juke_and_jive_is_active: bool = false
 #------Overdrive--------
 @onready var overdrive_particles = $OverdriveParticles
 var is_overdrive_active = false
-#--------THE ROCKEATERS--------#
-@onready var kinetic_feast_timer: Timer = $KineticFeastTimer
-@onready var stones_burden_timer: Timer = $StonesBurdenTimer
+
 
 @onready var temp_speed_boost_timer: Timer = $TempSpeedBoostTimer
 
@@ -51,13 +49,19 @@ func _ready():
 	phase_timer.timeout.connect(_on_phase_timer_timeout)
 	meditate_timer.timeout.connect(_on_meditate_timer_timeout)
 	autotomy_timer.timeout.connect(_on_autotomy_timer_timeout)
-	kinetic_feast_timer.timeout.connect(_on_kinetic_feast_timer_timeout)
-	stones_burden_timer.timeout.connect(_on_stones_burden_timer_timeout)
 	temp_speed_boost_timer.timeout.connect(_on_temp_speed_boost_timer_timeout)
 
 func _process(_delta):
-	reset_head_color()
 	# This ability only works if the player has unlocked it and has an active combo.
+	# --- Unstable Metabolism Glitch Effect ---
+	if GameManager.unstable_metabolism_unlocked:
+		fill_sprite.position = Vector2(randf_range(-2.0, 2.0), randf_range(-2.0, 2.0))
+	else:
+		fill_sprite.position = Vector2.ZERO
+	
+	
+	reset_head_color()
+	
 	if GameManager.overdrive_level == 0 or GameManager.current_combo == 0:
 		# If the conditions aren't met, make sure Overdrive is turned off.
 		if is_overdrive_active:
@@ -73,16 +77,7 @@ func _process(_delta):
 	elif not is_holding_key and is_overdrive_active:
 		# If they release the key and the boost is active, turn it off.
 		deactivate_overdrive()
-		
-	# --- NEW: Unstable Metabolism Glitch Effect ---
-	if GameManager.unstable_metabolism_unlocked:
-		# Add a small, random "jitter" to the head's position every frame.
-		# This makes it look like it's vibrating with unstable energy.
-		var jitter_amount = 2.0
-		self.position.x += randf_range(-jitter_amount, jitter_amount)
-		self.position.y += randf_range(-jitter_amount, jitter_amount)
-		
-	reset_head_color()
+
 	
 
 
@@ -116,8 +111,6 @@ func _unhandled_input(event: InputEvent):
 		can_change_direction = false
 		handle_juke_and_jive()
 		
-	if event.is_action_pressed("activate_lasso"):
-		main.perform_lasso_larry()
 
 
 # --- GAME LOGIC & MOVEMENT ---
@@ -139,7 +132,7 @@ func on_move_timer_timeout():
 			next_position = (grid_pos * tile_size) + main.tile_offset
 		
 		elif GameManager.burrow_is_active:
-			var grid_pos = (next_position / tile_size).round()
+			var grid_pos = (next_position - main.tile_offset) / main.tile_size
 			if grid_pos.x < 0: grid_pos.x = main.grid_width - 1
 			if grid_pos.x >= main.grid_width: grid_pos.x = 0
 			if grid_pos.y < 0: grid_pos.y = main.grid_height - 1
@@ -168,7 +161,7 @@ func _on_head_area_area_entered(area):
 	if GameManager.is_ouroboros_fight_active and area.is_in_group("phantom_walls"):
 		main._on_trial_failed("Precision")
 		return
-	if area is Fruit or area is GoldenFruit or area is JumpingBean or area is GhostPepper or area is IronCherry or area is DragonFruit:
+	if area is Fruit or area.is_in_group("fruits"):
 		emit_signal("ate_fruit", area)
 		return
 	if area is SnakeBody:
@@ -190,7 +183,7 @@ func _on_head_area_area_entered(area):
 			else:
 				emit_signal("hit_self")
 				return
-	if area.is_in_group("dividng_walls"):
+	if area.is_in_group("dividing_walls"):
 		emit_signal("hit_self")
 		return
 	if area is Rock:
@@ -202,11 +195,12 @@ func _on_head_area_area_entered(area):
 					print("ROCKMUNCHER! Gained +2 growth")
 					main.grow_snake(2)
 				"Geode Cracker":
+					GameManager.juice += 1
+					GameManager.total_juice_earned_this_run += 1
+					main.update_hud()
 					print("GEODE CRACKER! Gained + 1 SP")
-				"Kinetic Feast":
-					activate_kinetic_feast()
-				"Stones Burden":
-					activate_stones_burden()
+			return
+
 		
 		var tenderizer_data = GameManager.ability_charges.get("Tenderizer")
 		if tenderizer_data and tenderizer_data.current > 0:
@@ -217,25 +211,10 @@ func _on_head_area_area_entered(area):
 			emit_signal("hit_self")
 		return
 
-func activate_stones_burden():
-	print("STONE'S BURDEN! Slow down and phase activated.")
-	GameManager.is_phasing = true # Become intangible to self
-	$FillSprite.modulate = Color.DARK_SLATE_GRAY
-	# Temporarily make the move timer much slower.
-	move_timer.wait_time *= 1.5 # 50% slower
-	# Start a timer to turn it off.
-	$StonesBurdenTimer.start(4.0)
-
-func activate_kinetic_feast():
-	print("KINETIC FEAST! Speed boost activated.")
-	# Temporarily make the move timer faster.
-	move_timer.wait_time *= 0.5 # 50% faster
-	# Start a timer to turn it off.
-	$KineticFeastTimer.start(3.0)
 
 func activate_meditate():
 	move_timer.stop()
-	var duration = GameManager.meditate_data[GameManager.meditate_level]
+	var duration = 3.0
 	$MeditateTimer.wait_time = duration
 	$MeditateTimer.start()
 
@@ -291,18 +270,19 @@ func activate_afterburner():
 	
 	# Get the rules for our current level
 	var current_level = GameManager.afterburner_level
-	var rules = GameManager.afterburner_data[current_level]
+	var ab_rules = GameManager.get_upgrade_rules("Afterburner") as DualStatUpgrade
 	
 	# Apply the correct boost and duration
-	var boosted_speed = normal_move_speed * rules["boost"]
-	move_timer.wait_time = boosted_speed
-	afterburner_timer.start(rules["duration"])
+	var boost_mult = ab_rules.get_stat_a(current_level, 0.75) if ab_rules else 0.0
+	var duration = ab_rules.get_stat_b(current_level, 2.0) if ab_rules else 2.0
+	move_timer.wait_time = normal_move_speed * boost_mult
+	afterburner_timer.start(duration)
 
 # This function runs when the AfterburnerTimer finishes.
 func _on_afterburner_timer_timeout():
 	print("Afterburner finished.")
 	# Restore the snake's speed to what it was before the boost.
-	move_timer.wait_time = normal_move_speed
+	main.apply_persistent_upgrades()
 # --- JUKE & JIVE ---
 func handle_juke_and_jive():
 	if not GameManager.juke_and_jive_unlocked or juke_and_jive_is_active:
@@ -357,19 +337,11 @@ func reset_head_color():
 	elif GameManager.burrow_is_active:
 		fill_sprite.modulate = Color.WHITE
 	elif GameManager.is_zenith_active:
-		fill_sprite.moduleate = Color.MAGENTA
+		fill_sprite.modulate = Color.MAGENTA
 	else:
 		# If no other state is active, use the default color.
 		fill_sprite.modulate = head_color
 
-func _on_kinetic_feast_timer_timeout() -> void:
-	print("Kinetic Feast has ended")
-	main.apply_persistent_upgrades()
-
-func _on_stones_burden_timer_timeout() -> void:
-	GameManager.is_phasing = false
-	reset_head_color()
-	main.apply_persistent_upgrades()
 	
 func activate_temporary_speed_boost(speed_multiplier: float, duration: float):
 	print("Recipe buff: SPEED BOOST for %s seconds!" % duration)

@@ -4,11 +4,11 @@ func _ready() -> void:
 	var rank_label = $PlayerProfilePanel/HBoxContainer/XPDisplayRow/CurrentLevelLabel
 	var avatar_rect = $PlayerProfilePanel/HBoxContainer/XPDisplayRow/ProfilePicture
 	
-	var level = SaveManager.save_data.player_level
+	var level = int(SaveManager.save_data.player_level)
 	var gm_rank = SaveManager.save_data.garden_master_rank
 	var avatar_key = SaveManager.save_data.equipped_cosmetics.avatar
 	
-	rank_label.text = "Rank: %s" % level
+	rank_label.text = "Lvl: %s" % level
 	if gm_rank > 0:
 		rank_label.text += " (GM %s)" % gm_rank
 	

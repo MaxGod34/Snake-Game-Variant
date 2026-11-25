@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MetaUpgradeData" load_steps=3 format=3 uid="uid://cbnqq354o7n5j"]
+
+[ext_resource type="Script" uid="uid://clsq0vy65pfyx" path="res://Scripts/MetaUpgradeData.gd" id="1_5k7wf"]
+[ext_resource type="Texture2D" uid="uid://cygu0rxug00pc" path="res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png" id="1_uf1ud"]
+
+[resource]
+script = ExtResource("1_5k7wf")
+enabled = true
+id = "Chroma Scales"
+display_name = "Chroma Scales"
+description = "Unlocks equipped cosmetics from The Shed"
+icon = ExtResource("1_uf1ud")
+type = "Aesthetic"
+costs = Array[int]([1, 4, 9, 16, 25])
+level_values = Array[float]([])
+metadata/_custom_type_script = "uid://clsq0vy65pfyx"

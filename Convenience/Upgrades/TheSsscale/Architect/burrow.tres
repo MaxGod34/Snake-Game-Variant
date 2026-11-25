@@ -13,7 +13,7 @@ icon = ExtResource("1_q0jni")
 path = "The Ssscale"
 sub_path = "Architect"
 type = "Active Ability"
-costs = Array[int]([5, 8, 16, 24, 32, 64, 128, 256, 512])
+costs = Array[int]([1, 1, 1, 1, 1, 1, 1])
 level_values = Array[float]([])
 prerequisites = {
 "Edge Lord": 4

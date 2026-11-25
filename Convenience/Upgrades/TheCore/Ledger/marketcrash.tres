@@ -10,12 +10,12 @@ display_name = "Market Crash"
 description = "Permanently reduce the cost of all upgrades.
 lvl 1: -1mL
 lvl 2: -2mL
-lvl 10: -10mL"
+etc"
 icon = ExtResource("1_kf0r5")
 path = "The Core"
 sub_path = "Ledger"
 type = "Keystone"
-costs = Array[int]([1, 8, 15, 30, 50, 75, 100, 150, 200, 500])
+costs = Array[int]([1, 4, 9, 16, 25, 36, 49, 64, 81])
 level_values = Array[float]([])
 prerequisites = {
 "Liquid Assets": 3
