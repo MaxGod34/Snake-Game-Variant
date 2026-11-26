@@ -106,54 +106,65 @@ func get_progress_for_class(class_key: String) -> Dictionary:
 		}
 	return save_data.class_progression[class_key]
 
-func process_end_of_run(final_score: int, total_pulp: int, upgrades_bought: int, difficulty_key: String) -> Dictionary:
-	var xp_gained = 0
-	var milestones_unlocked = [] # We'll use this later
-	
-	# 1. Calculate base XP from score
-	xp_gained += final_score
-	print("Total Pulp from SaveM: %s" % total_pulp)
-	# 2. Calculate bonus XP from Pulp (capped at the base score)
-	var pulp_bonus = min(final_score, floori(total_pulp * 0.5))
-	print("Pulp bonus: %s" % pulp_bonus)
-	xp_gained += pulp_bonus
-	
-	var garden_bonus = _get_garden_completion_bonus()
-	xp_gained += garden_bonus
-	print("Garden Completion Bonus: +%s XP for reaching Garden %s" % [garden_bonus, GameManager.current_garden])
-	
-	
-	var multiplier = get_difficulty_xp_multiplier(difficulty_key)
-	print("Difficulty modifier: %s" % multiplier)
-	xp_gained = floori(xp_gained * multiplier)
-	
-	# 4. Add the new XP to the player's total
-	save_data.player_xp += xp_gained
-	
-	# 5. Check for level ups
-	while save_data.player_xp >= get_xp_for_level(save_data.player_level + 1):
-		save_data.player_xp -= get_xp_for_level(save_data.player_level + 1)
-		save_data.player_level += 1
-		if save_data.player_level > 100:
-			save_data.garden_master_rank += 1
-			save_data.serpent_fangs += 500
-		else:
-			save_data.serpent_fangs += 100
-			
-	# 6. Check for new milestones (logic to be added later)
-	# milestones_unlocked = _check_for_new_milestones()
-	
-	# 7. Update other career stats
-	save_data.total_pulp_earned += total_pulp
-	if final_score > save_data.high_score:
+func record_end_of_run(did_win: bool, final_score: int, total_pulp: int, upgrades_bought: int) -> Dictionary:
+	var class_key = GameManager.chosen_class
+	var diff_key = GameManager.chosen_difficulty
+	var fangs_earned: int = 0
+	var is_new_high_score: bool = final_score > save_data.high_score
+
+	if is_new_high_score:
 		save_data.high_score = final_score
-		
+
+	if did_win:
+		var progress = get_progress_for_class(class_key)
+		var is_first_clear := false
+
+		if diff_key.begins_with("Pact"):
+			var pact_num = int(diff_key.split(" ")[1])
+			if pact_num > progress.highest_pact_completed:
+				progress.highest_pact_completed = pact_num
+				is_first_clear = true
+		elif diff_key.begins_with("Trial"):
+			if not diff_key in progress.seals_broken:
+				progress.seals_broken.append(diff_key)
+				is_first_clear = true
+		elif diff_key.begins_with("Cursed"):
+			var roman_map = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
+			var cursed_num = roman_map.get(diff_key.split(" ")[2], 0)
+			if cursed_num > progress.highest_cursed_pact_completed:
+				progress.highest_cursed_pact_completed = cursed_num
+				is_first_clear = true
+
+		if is_first_clear:
+			fangs_earned = get_first_clear_fang_reward(diff_key)
+			save_data.serpent_fangs += fangs_earned
+
+		if GameManager.new_game_s_plus_active:
+			save_data.milestone_progress.prestiges_completed += 1
+	else:
+		save_data.milestone_progress.total_deaths += 1
+
+	# Quietly keep career stats updated for The Shed
+	save_data.total_pulp_earned += total_pulp
+	save_data.total_juice_earned += GameManager.total_juice_earned_this_run
 	save_data.milestone_progress.upgrades_purchased += upgrades_bought
-	
+	save_data.milestone_progress.rocks_destroyed += GameManager.rocks_destroyed_this_run
+	if GameManager.current_garden > save_data.milestone_progress.highest_garden_reached:
+		save_data.milestone_progress.highest_garden_reached = GameManager.current_garden
+
 	save_game()
-	# 8. We now correctly return a dictionary with the results of our calculations.
-	print("XP gained from SaveM: %s" % xp_gained)
-	return {"xp_gained": xp_gained, "milestones_unlocked": milestones_unlocked}
+
+	return {
+		"did_win": did_win,
+		"class_key": class_key,
+		"difficulty_key": diff_key,
+		"garden_reached": GameManager.current_garden,
+		"garden_name": GameManager.garden_data[GameManager.current_garden]["name"],
+		"final_score": final_score,
+		"run_time": GameManager.run_time,
+		"fangs_earned": fangs_earned,
+		"is_new_high_score": is_new_high_score
+	}
 
 
 
@@ -213,27 +224,25 @@ func get_xp_for_level(p_level: int) -> int:
 		# After level 100, the cost gets much higher for prestige "Garden Master" ranks.
 		return 2600 + ((p_level - 100) * 100)
 
-func check_for_level_up():
-	var xp_needed = get_xp_for_level(save_data.player_level)
-	
-	# We use a while loop in case the player gained enough XP for multiple levels.
-	while save_data.player_xp >= xp_needed:
-		# Subtract the XP cost for the level.
-		save_data.player_xp -= xp_needed
-		
-		if save_data.player_level < 100:
-			save_data.player_level += 1
-			save_data.serpent_fangs += 10 # Reward for a normal level
-			print("LEVEL UP! Reached Level %s." % save_data.player_level)
-		else:
-			# We've hit the prestige ranks!
-			save_data.garden_master_rank += 1
-			save_data.serpent_fangs += 100 # A much bigger reward for a Master rank
-			print("GARDEN MASTER! Reached Master Rank %s." % save_data.garden_master_rank)
-			
-		# Recalculate the XP needed for the *next* level.
-		xp_needed = get_xp_for_level(save_data.player_level)
 
 func get_difficulty_xp_multiplier(difficulty_key: String) -> float:
 	var diff_data = GameManager.difficulty_data.get(difficulty_key)
 	return diff_data.xp_multiplier if diff_data else 1.0
+
+func get_first_clear_fang_reward(difficulty_key: String) -> int:
+	var rewards = {
+		"Pact 1": 100,
+		"Pact 2": 150,
+		"Pact 3": 200,
+		"Pact 4": 250,
+		"Pact 5": 300,
+		"Trial of the Harvest": 350,
+		"Trial of the Core": 350,
+		"Trial of the Redline": 350,
+		"Cursed Pact I": 400,
+		"Cursed Pact II": 425,
+		"Cursed Pact III": 450,
+		"Cursed Pact IV": 475,
+		"Cursed Pact V": 500
+	}
+	return rewards.get(difficulty_key, 100)

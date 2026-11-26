@@ -107,8 +107,8 @@ func update_all_displays():
 # --- UPDATE FUNCTIONS ---
 
 func update_pulp_label():
-	current_pulp_label.text = "%smg" % GameManager.pulp
-	current_juice_label.text = "%smL" % GameManager.juice
+	current_pulp_label.text = "%s mg" % GameManager.pulp
+	current_juice_label.text = "%s L" % GameManager.juice
 
 
 # This is our new, reusable helper function. It can update ANY pillar button.

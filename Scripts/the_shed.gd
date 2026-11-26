@@ -55,6 +55,7 @@ func _connect_all_signals():
 	_connect_equipped_nodes(backgrounds_page)
 	_connect_equipped_nodes(avatars_page)
 	_connect_equipped_nodes(frames_page)
+	_connect_equipped_nodes(banners_page)
 
 func _connect_equipped_nodes(page_node: Control):
 	var row1 = page_node.find_child("EquippedCosmeticsRow")
@@ -63,9 +64,11 @@ func _connect_equipped_nodes(page_node: Control):
 	
 	# Connect the color swatches
 	row2.get_node("EquippedHeadColorNode").pressed.connect(_on_color_slot_selected.bind(-1))
+	row2.get_node("EquippedHeadColorNode").get_child(0).visible = false
 	for i in range(5):
 		var node = row2.get_node("EquippedBodyColor" + str(i + 1) + "Node")
 		node.pressed.connect(_on_color_slot_selected.bind(i))
+		node.get_node("IndicatorContainer").visible = false
 
 func _on_category_button_pressed(category_name: String):
 	current_category = category_name
@@ -203,7 +206,8 @@ func update_equipped_display(row1: HBoxContainer, row2: HBoxContainer):
 func _update_equipped_color_node(node: Button, color_key, slot_index: int):
 	if not is_instance_valid(node): return
 	if color_key == null:
-		node.visible = false # Hide unused body color slots
+		node.icon = preload("res://Assets/Icons/white_swatch.png") # Hide unused body color slots
+		node.disabled = true
 		return
 		
 	node.visible = true
@@ -234,6 +238,7 @@ func _update_equipped_item_node(node: Button, category_key: String, item_key: St
 		node.icon = load(icon_path)
 		print("icon path loaded: ", icon_path)
 	node.modulate = Color.WHITE
+	node.get_child(0).visible = false
 	node.update_minimum_size()
 
 func _on_color_slot_selected(slot_index: int):
@@ -304,7 +309,7 @@ func update_milestones_tab():
 		title_label.text = milestone_rules.display_name
 		
 		var progress_label = Label.new()
-		var progress_bar = TextureProgressBar.new() # Using a progress bar for a cleaner look
+		var progress_bar = ProgressBar.new() # Using a progress bar for a cleaner look
 		progress_bar.custom_minimum_size = Vector2(0, 16)
 		
 		if next_tier:

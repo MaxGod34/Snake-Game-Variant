@@ -273,7 +273,7 @@ func activate_afterburner():
 	var ab_rules = GameManager.get_upgrade_rules("Afterburner") as DualStatUpgrade
 	
 	# Apply the correct boost and duration
-	var boost_mult = ab_rules.get_stat_a(current_level, 0.75) if ab_rules else 0.0
+	var boost_mult = ab_rules.get_stat_a(current_level, 0.75) if ab_rules else 0.75
 	var duration = ab_rules.get_stat_b(current_level, 2.0) if ab_rules else 2.0
 	move_timer.wait_time = normal_move_speed * boost_mult
 	afterburner_timer.start(duration)

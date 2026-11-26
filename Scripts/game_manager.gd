@@ -33,33 +33,33 @@ var has_died_this_garden = false
 var current_garden = 1
 var garden_data = {
 	# --- The Early Game ---
-	1: {"name": "The First Coil", "score_goal": 15, "obstacle_count": 0},
-	2: {"name": "The Juice Box", "score_goal": 35, "obstacle_count": 3},
-	3: {"name": "The Danger Noodle Den", "score_goal": 60, "obstacle_count": 5},
+	1: {"name": "The First Coil", "score_goal": 30, "obstacle_count": 0},
+	2: {"name": "The Juice Box", "score_goal": 50, "obstacle_count": 3},
+	3: {"name": "The Danger Noodle Den", "score_goal": 80, "obstacle_count": 5},
 	
 	# --- The Mid-Game ---
-	4: {"name": "The Forked Tongue Bistro", "score_goal": 100, "obstacle_count": 8},
-	5: {"name": "Rhythm & Haste", "score_goal": 150, "obstacle_count": 12},
-	6: {"name": "The Architect's Grid", "score_goal": 222, "obstacle_count": 18},
+	4: {"name": "The Forked Tongue Bistro", "score_goal": 125, "obstacle_count": 8},
+	5: {"name": "Rhythm & Haste", "score_goal": 200, "obstacle_count": 12},
+	6: {"name": "The Architect's Grid", "score_goal": 300, "obstacle_count": 18},
 
 	# --- The Endgame ---
-	7: {"name": "The Basilisk's Lair", "score_goal": 333, "obstacle_count": 25},
-	8: {"name": "The Kill Screen Quarry", "score_goal": 420, "obstacle_count": 35},
-	9: {"name": "The Garden of Eatin'", "score_goal": 666, "obstacle_count": 50},
+	7: {"name": "The Basilisk's Lair", "score_goal": 444, "obstacle_count": 25},
+	8: {"name": "The Kill Screen Quarry", "score_goal": 690, "obstacle_count": 35},
+	9: {"name": "The Garden of Eatin'", "score_goal": 999, "obstacle_count": 50},
 	# --- The END ---
-	10: {"name": "Revelations", "score_goal": 777, "obstacle_count": 66},
-	11: {"name": "The End", "socre_goal": 1000, "obstacle_count": 150},
-	12: {"name": "Genesis", "score_goal": 1200, "obstacle_count": 100},
+	10: {"name": "Revelations", "score_goal": 2500, "obstacle_count": 66},
+	11: {"name": "The End", "score_goal": 10000, "obstacle_count": 150},
+	12: {"name": "Genesis", "score_goal": 30000, "obstacle_count": 100},
 	# --- Endless ---
-	13: {"name": "Victory Lap", "score_goal": 99999, "obstacle_count": 0}
+	13: {"name": "Victory Lap", "score_goal": 999999, "obstacle_count": 0}
 }
 
 var garden_bonus_data = {
-	"par_time": {"base_reward": 50, "time_limit": 60.0}, # 50 Scales if garden is beaten in under 60s
-	"no_death": {"reward": 25}, # 25 Scales for a flawless, no-death garden
-	"ascetic": {"reward": 50}, # 100 Scales if no upgrades were purchased this garden
-	"pacifist": {"reward": 15}, # 15 Scales if no active abilities were used
-	"engagement": {"reward": 2} # +2 Scales for every SP spent on upgrades this garden
+	"par_time": {"base_reward": 500, "time_limit": 60.0}, # 50 mg if garden is beaten in under 60s
+	"no_death": {"reward": 250}, # 25 mg for a flawless, no-death garden
+	"ascetic": {"reward": 100}, # 100 mg if no upgrades were purchased this garden
+	"pacifist": {"reward": 100}, # 15 mg if no active abilities were used
+	"engagement": {"reward": 2} # +2 mg for every L spent on upgrades this garden
 }
 
 
@@ -380,44 +380,44 @@ var cosmetic_data = {
 		"Default": {
 			"name": "Default Pattern", "fang_cost": 0, 
 			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png",
-			"description": "Default Pattern", 
+			"description": "Default Pattern.\nSlot 1 only.", 
 			"sequence": [0]
 		},
 		"Tiger Stripes": {
 			"name": "Tiger Stripes Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", 
-			"description": "Add a nice pattern to your snake!",
+			"description": "Add a nice stripe to your snake!\nAlternate Slot 1 & 2.",
 			"sequence": [0,1]
 		},
 		"Dimer": {
 			"name": "Dimer Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/GambleSprites/PlusOne.png", 
-			"description": "Add a nice pattern to your snake!",
+			"description": "Every 10 segments, alternate colors!\nAlternate Slot 1 & 2",
 			"sequence": [0,0,0,0,0,0,0,0,0,0,
 						1,1,1,1,1,1,1,1,1,1]
 		},
 		"Simple Spread": {
 			"name": "Simple Spread Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
-			"description": "Add a nice pattern to your snake!",
+			"description": "1, 2, 2, 2, 1\nAlternate Slot 1 & 2",
 			"sequence": [0,1,1,1,0]
 		},
 		"Slith Spread": {
 			"name": "Slith Spread Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
-			"description": "Add a nice pattern to your snake!",
+			"description": "1, 2, 3, 4, 3, 2, 1\nUtilize Slot 1,2,3,4",
 			"sequence": [0,1,2,3,2,1]
 		},
 		"MAX AURA": {
 			"name": "MAX AURA Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
-			"description": "Add a nice pattern to your snake!",
+			"description": "1, 2, 3, 4, 5\nUtilize all slots!",
 			"sequence": [0,1,2,3,4]
 		},
 		"Fading Fast": {
 			"name": "Fading Fast Pattern","fang_cost": 75, 
 			"icon_path": "res://Assets/PNGs/Dice/snake_dice_128_dice_1.png", 
-			"description": "Add a nice pattern to your snake!",
+			"description": "Dev Custom #1",
 			"sequence": [4,4,4,4,4,3,2,1,0,1,2,3,]
 		},
 		
@@ -452,7 +452,7 @@ var cosmetic_data = {
 	"Avatars": {
 		"Default": {"name": "Snake break", "fang_cost": 0, "icon_path": "res://Assets/PNGs/snake_break.png", "description": "Default Avatar"},
 		#Class Icons/Avatars
-		"Mulligan Icon": {"name": "Mulligan Icon", "fang_cost": 50, "icon_path": "", "descripton": "unlock the mulligan class icon as a pfp!"},
+		"Mulligan Icon": {"name": "Mulligan Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png", "description": "unlock the mulligan class icon as a pfp!"},
 		#Upgrade Icons/Avatars
 		"3 Card Monty Icon": {"name": "3-Card Monty Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/3CardMontyIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Afterburner Icon": {"name": "Afterburner Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/AfterburnerIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
@@ -464,21 +464,21 @@ var cosmetic_data = {
 		"Burrow Icon": {"name": "Burrow Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/BurrowIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Calculated Risk Icon": {"name": "Calculated Risk Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CalculatedRiskIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Chain Reaction Icon": {"name": "Chain Reaction Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ChainReactionIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
-		"Chorma Scaled Icon": {"name": "Chroma Scales Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Chroma Scales Icon": {"name": "Chroma Scales Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ChromaScalesIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Coin Flip Curious Icon": {"name": "Coin Flip Curious Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CoinFlipCuriousIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Custom Aftertaste Icon": {"name": "Custom Aftertaste Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CustomAfterTasteIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Custom Cuisine Icon": {"name": "Custom Cuisine Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/CustomCuisineIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Dazzle Pie Icon": {"name": "Dazzle Pie Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/DazzlePieIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Death Defied Icon": {"name": "Death Defied Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/DeathDefiedIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Diet Slith Icon": {"name": "Diet Slith Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/DietSlithIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
-		"Edge Lord Icon": {"name": "Edge Lord Icon", "fang_cost": 50, " icon_path": "res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Edge Lord Icon": {"name": "Edge Lord Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/EdgeLordIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Elephant Sized Portions Icon": {"name": "Elephant Sized Portions Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ESPortionsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Exotic Seeds Icon": {"name": "Exotic Seeds Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ExoticSeedsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Expanded Palate Icon": {"name": "Expanded Palate Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ExpandedPalateIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Fertile Ground Icon": {"name": "Fertile Ground Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FertileGroundIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Fold Space Icon": {"name": "Fold Space Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Four Leaf Clover Icon": {"name": "Four Leaf Clover Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FourLeafCloverIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
-		"Fractured Self Icon": {"name": "Four Leaf Clover Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
+		"Fractured Self Icon": {"name": "Fractured Self Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FracturedSelfIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Fruit Foresight Icon": {"name": "Fruit Foresight Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/FruitForesightIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Garden Weaver Icon": {"name": "Garden Weaver Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GardenWeaverIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Geode Compass Icon": {"name": "Geode Compass Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GeodeCompassIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
@@ -580,7 +580,7 @@ var cosmetic_data = {
 	},
 	"Frames": {
 		"Default": {
-			"name": "Default Frame", "fang_cost": 0,"type": "flat", "color": "#FFFFFF",
+			"name": "Default Frame", "fang_cost": 0,"type": "flat", "color": "#282828",
 			"icon_path": "res://Assets/PNGs/snake_border.png", "description": "Default Frame"
 		},
 		"Golden Frame": {
@@ -588,7 +588,7 @@ var cosmetic_data = {
 			"icon_path": "res://Assets/PNGs/snake_border.png", "description": "Golden Frame"
 		},
 		"Cursed Frame": {
-			"name": "Cursed Frame", "fang_cost": 75,"type": "texture", "texture_path": "#FFFFFF",
+			"name": "Cursed Frame", "fang_cost": 75,"type": "flat", "texture_path": "#FFFFFF",
 			"icon_path": "res://Assets/PNGs/snake_border.png", "description": "Cursed Frame"
 		},
 	}
@@ -649,7 +649,7 @@ var milestone_data = {
 	},
 	"upgrades_purchased": {
 		"display_name": "Juice Fiend",
-		"description": "Reach a total number of deaths across all runs.",
+		"description": "Buy upgrades. Plain and simple.",
 		"icon_path": "res://Assets/PNGs/MilestoneIcons/JuiceFiendMilestoneIcon.png",
 		"tiers":[
 			{"goal": 50, "reward": 100, "key": "upgrades_1"},
@@ -797,8 +797,8 @@ func reset_for_new_garden():
 	player_level = 1
 	
 	# Reset the XP and goals back to their starting values.
-	score_at_level_start = 0
-	score_needed_for_next_level = 5 # Or initial starting value
+	score_at_level_start = 1
+	score_needed_for_next_level = get_length_for_level(2)
 	
 	# Crucially, we do NOT reset juice, pulp, or any purchased upgrades.
 

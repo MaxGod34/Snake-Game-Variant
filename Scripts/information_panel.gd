@@ -14,8 +14,13 @@ extends PanelContainer
 @onready var harvest_forecast_ui = $HBoxContainer/GardenDataContainer/HarvestForecastUI
 
 
+var gps_history: Array[float] = []
+var graph_points: PackedVector2Array = PackedVector2Array()
+var smoothed_gps: float = 0.0
+var wave_phase: float = 0.0
 
-var gps_history: Array = []
+const MAX_POINTS: int = 50
+const MAX_GRAPH_HEIGHT: float = 50.0
 var previous_gps: float = 0.0
 var gps_trend: float = 0.0
 
@@ -24,7 +29,27 @@ func _ready():
 	mat.shader = preload("res://Shaders/gps_line.gdshader")
 	gps_graph.material = mat
 
+func _process(delta: float) -> void:
+	if gps_history.is_empty():
+		return
 	
+	var slither_speed: float = clampf(3.0 + smoothed_gps * 0.2, 3.0, 14.0)
+	wave_phase = fmod(wave_phase + delta * slither_speed, TAU)
+	
+	var count := gps_history.size()
+	if graph_points.size() != count:
+		graph_points.resize(count)
+	
+	for i in range(count):
+		var g: float = gps_history[i]
+		var normalized_h: float = clampf(log(1.0 + g) / log(101.0), 0.0, 1.0)
+		var base_y: float = -normalized_h * MAX_GRAPH_HEIGHT
+	
+		var wiggle_amp: float = clampf(log(1.0 + g) * 2.2, 0.0, 8.0)
+		var wiggle: float = sin(i * 0.35 - wave_phase) * wiggle_amp
+		graph_points[i] = Vector2(i * 6.0, base_y + wiggle)
+	
+	gps_graph.points = graph_points
 
 # This is the master function that main.gd will call every frame.
 # It takes all the current game data in one single dictionary.
@@ -58,47 +83,16 @@ func update_display(data: Dictionary):
 	
 	
 	
-	# --- NEW: Update Harvest Forecast ---
-	# We check if the forecast data exists, and if so, pass it to our child UI
-	if data.has("forecast_list") and GameManager.harvest_forecast_level > 0:
-		harvest_forecast_ui.visible = true
-		harvest_forecast_ui.update_forecast(
-			data["forecast_list"],
-			data["special_fruit_chance"],
-			data["harvest_forecast_level"]
-			)
-	else:
-		harvest_forecast_ui.visible = false
 	
-	
-	
-	# --- NEW: Update GPS Graph ---
-	var current_gps: float = data["current_gps"]
-	gps_label.text = "%s / sec <- GPS" % current_gps
-	# --- THIS IS THE NEW LOGIC ---
-	# 1. Determine the immediate direction of change (up, down, or stable).
-	var intensity = clamp(current_gps / 10.0, 0.0, 1.0) # Max intensity at 10 GPS
-	
-	# 2. Pass the intensity AND the player's chosen color to the shader.
-	# This is where the future customization will happen!
+	# --- Update GPS Data & Shader ---
+	var raw_gps: float = data["current_gps"]
+	smoothed_gps = lerpf(smoothed_gps, raw_gps, 0.25)
+	gps_label.text = "%.1f / sec <- GPS" % smoothed_gps
+
+	var intensity: float = clampf(smoothed_gps / 10.0, 0.0, 1.0)
 	gps_graph.material.set_shader_parameter("intensity", intensity)
-	gps_graph.material.set_shader_parameter("base_color", Color.GREEN) # We can change this later
-	
-	# 4. Add the new GPS value to our history.
-	gps_history.append(current_gps)
-	if gps_history.size() > 100:
+	gps_graph.material.set_shader_parameter("base_color", Color.GREEN)
+
+	gps_history.append(smoothed_gps)
+	if gps_history.size() > MAX_POINTS:
 		gps_history.pop_front()
-
-	# Auto-scale Y-axis so the line never shoots out of the box (min ceiling of 10 GPS)
-	var peak_gps: float = max(10.0, gps_history.max())
-	var max_graph_height: float = 50.0 # Adjust to match your GPSTracker container height
-	var capped_wobble_amp: float = min(current_gps * 1.2, 10.0) # Never thrash more than 10px
-
-	gps_graph.clear_points()
-	for i in range(gps_history.size()):
-		var normalized = gps_history[i] / peak_gps
-		var y_pos = -normalized * max_graph_height
-		var wobble = sin(i * 0.5 + Time.get_ticks_msec() * 0.01) * capped_wobble_amp
-		gps_graph.add_point(Vector2(i * 3, y_pos + wobble))
-
-	previous_gps = current_gps

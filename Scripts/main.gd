@@ -174,7 +174,6 @@ func _ready():
 	cursed_fruit_timer.timeout.connect(_on_cursed_fruit_spawn_timer_timeout)
 	# --- post-Init ---
 	update_hud()
-	update_upgrade_prompt()
 	apply_persistent_upgrades() # Removed head_timer.start() here
 	apply_cosmetic_upgrades()
 	#-----Garden 8 Easter Egg Step-----#
@@ -332,6 +331,8 @@ func apply_persistent_upgrades():
 	# 3. Calculate the final speed using the power function for both speed-ups and slow-downs.
 	var final_speed = base_speed * pow(speed_up_mod, speed_up_level) * pow(1.1, slow_down_level)
 	
+	final_speed *= GameManager.speed_multiplier_class_mod
+	
 	if GameManager.speed_increase_on_eat:
 		# We can apply a small multiplier for each fruit eaten.
 		final_speed *= pow(0.99, GameManager.fruits_eaten_this_run)
@@ -400,18 +401,22 @@ func check_for_garden_completion():
 	if garden_complete_is_pending:
 		return
 
+	# Garden Completion Check
 	var current_score = snake_body_segments.size() + 1
 	var current_garden_id = GameManager.current_garden
 	var current_goal = GameManager.garden_data[current_garden_id]["score_goal"]
-	
 	if current_score >= current_goal:
+		#Beat the garden
 		print("Garden ", current_garden_id, " complete! Pending screen.")
+		#Show garden function coming soon
 		garden_complete_is_pending = true
 		
-		# Play our cool "!" animation
 		var exclamation = exclamation_scene.instantiate()
+		# Position it right on top of the snake's head
 		exclamation.global_position = head.global_position
+		# Add it to the game world
 		add_child(exclamation)
+
 
 func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 	if GameManager.pulp_gain_disabled:
@@ -421,14 +426,14 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 	var bonus_data = GameManager.garden_bonus_data
 	
 	var principal_rules = GameManager.get_upgrade_rules("Principal Pulp") as UpgradeData
-	var pulp_multiplier = principal_rules.get_value_at_level(GameManager.principal_pulp_level, 0.0)
+	var pulp_multiplier = principal_rules.get_value_at_level(GameManager.principal_pulp_level, 1.0)
 	var final_score_pulp = floori(p_score * pulp_multiplier)
 	# Base Score Bonus
 	bonuses.total_pulp += final_score_pulp
 	bonuses.bonus_list.append("Base Score: +%smg" % final_score_pulp)
 	
 	var handshake_rules = GameManager.get_upgrade_rules("Golden Handshake") as UpgradeData
-	var bonus_multiplier = handshake_rules.get_value_at_level(GameManager.golden_handshake_level, 0.0)
+	var bonus_multiplier = handshake_rules.get_value_at_level(GameManager.golden_handshake_level, 1.0)
 #----------------------------	   extra bonuses		-----------------------------------------------
 	# Par Time Bonus
 	var garden_time = GameManager.run_time - GameManager.garden_start_time
@@ -484,7 +489,7 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 			print("GEOLOGICAL SURVEY BONUS! +%s SP for leaving %s rocks." % [bonus_juice, remaining_rocks])
 			GameManager.juice += floori(bonus_juice)
 			GameManager.total_juice_earned_this_run += floori(bonus_juice)
-			bonuses.bonus_list.append("Geological Survey Bonus +% Juice for leaving %s rocks!" % [bonus_juice, remaining_rocks])
+			bonuses.bonus_list.append("Geological Survey Bonus +%s Juice for leaving %s rocks!" % [bonus_juice, remaining_rocks])
 	print(bonuses)
 	return bonuses
 
@@ -915,7 +920,6 @@ func spawn_trail_piece(pos: Vector2):
 	trail_pieces.append({"node": trail_piece, "time_left": 5.0})
 
 func grow_snake(segments_to_add: int):
-	print("Growing snake by %s segments." % segments_to_add)
 	
 	for i in range(segments_to_add):
 		var new_segment_position: Vector2
@@ -935,10 +939,10 @@ func grow_snake(segments_to_add: int):
 		var ghost_color = Color("AFEEEE60")
 		
 		var fill_sprite = new_segment.get_node_or_null("FillSprite")
-		var border_sprite = new_segment.get_node_or_null("BorderSprite")
+
 		if fill_sprite:
-			fill_sprite.visible = false
-			border_sprite.visible = false
+			#fill_sprite.visible = false
+			#border_sprite.visible = false
 			# Check if this new segment should be a ghost.
 			if new_segment_index >= total_segments_after_add - ghost_segment_count:
 				fill_sprite.modulate = ghost_color
@@ -972,7 +976,7 @@ func grow_snake(segments_to_add: int):
 	growth_history.append({"growth": segments_to_add, "time": GameManager.run_time})
 	# We now correctly update the HUD from here to show the new score.
 	update_progression()
-	update_hud()
+
 
 
 func is_position_on_dividing_wall(grid_pos: Vector2i) -> bool:
@@ -1010,11 +1014,6 @@ func _update_snake_after_teleport(new_position: Vector2):
 	# Now that the head has moved, we can safely update the body's position to follow it.
 	on_snake_head_moved(new_position)
 
-func update_upgrade_prompt():
-	# Show the prompt only if the player has SP to spend.
-	var prompt = $UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.get_node("HBox/StatsContainer/HBoxContainer2/UpgradePromptLabel")
-	var has_juice = GameManager.juice > 0
-	prompt.visible = has_juice
 
 func update_progression():
 	var current_score = snake_body_segments.size() + 1
@@ -1025,20 +1024,6 @@ func update_progression():
 
 	check_for_garden_completion()
 
-	# Garden Completion Check
-	var current_garden_id = GameManager.current_garden
-	var current_goal = GameManager.garden_data[current_garden_id]["score_goal"]
-	if current_score >= current_goal:
-		#Beat the garden
-		print("Garden ", current_garden_id, " complete! Pending screen.")
-		#Show garden function coming soon
-		garden_complete_is_pending = true
-		
-		var exclamation = exclamation_scene.instantiate()
-		# Position it right on top of the snake's head
-		exclamation.global_position = head.global_position
-		# Add it to the game world
-		add_child(exclamation)
 
 func level_up():
 	print("Level up!")
@@ -1119,14 +1104,10 @@ func _start_end_of_garden_sequence():
 	
 	var score = snake_body_segments.size() + 1
 	var bonus_data = _calculate_garden_bonuses(score)
-	
-	#HOT-FIX: pulp wasn't getting added oops
 	GameManager.pulp += bonus_data.total_pulp
-	
 	GameManager.total_pulp_earned_this_run += bonus_data.total_pulp
 
-	# --- State 2: Transition to Results Screen ---
-	await SceneTransition.play_cover_animation("flakes")
+
 	
 	var results_screen = $UI/GardenCompleteScreen
 	var garden_id = GameManager.current_garden
@@ -1137,25 +1118,26 @@ func _start_end_of_garden_sequence():
 	
 	if is_final_garden:
 		print("Campaign Complete! Updating Progression")
-		# --- NEW: Update Difficulty Progression ---
-		var completed_class = GameManager.chosen_class
-		var completed_pact = GameManager.chosen_difficulty
-		var progress = SaveManager.get_progress_for_class(completed_class)
-		
 		if GameManager.chosen_difficulty == "Cursed Pact V" and not GameManager.should_spawn_corrupted_ouroboros:
-			print("Victor Lap Unlocked!")
 			_start_garden_13()
 			return
-		
-		update_difficulty_progression()
-		
-		# Now, process the XP for the winning run.
-		SaveManager.process_end_of_run(score, GameManager.total_pulp_earned_this_run, GameManager.upgrades_purchased_this_run, completed_pact)
-		
-		# Finally, transition to the main menu.
-		SceneTransition.transition_to("res://Scenes/Menus/main_menu.tscn")
+		is_game_over = true
+		head.head_area.set_deferred("monitoring", false)
+		await _play_victory_snake_ritual()
+		await SceneTransition.play_cover_animation("flakes")
+
+		var summary = SaveManager.record_end_of_run(
+			true,
+			score,
+			GameManager.total_pulp_earned_this_run,
+			GameManager.upgrades_purchased_this_run
+		)
+		await end_of_run_screen.show_results(summary)
+		await SceneTransition.uncover_screen("curtains")
 		return
 	
+	
+	await SceneTransition.play_cover_animation("flakes")
 	
 	
 	
@@ -1170,8 +1152,7 @@ func _start_end_of_garden_sequence():
 	
 	await SceneTransition.uncover_screen("curtains")
 
-	# --- State 3: Wait for Player Input ---
-	# The game now pauses here indefinitely until the player clicks "Continue".
+
 	await results_screen.continue_pressed
 	_transition_to_shop()
 
@@ -1731,7 +1712,7 @@ func on_snake_ate_food(fruit, is_lasso_grab: bool = false):
 	var rewards = calculate_fruit_rewards(fruit, is_lasso_grab)
 	# 3. Apply rewards
 	GameManager.juice += rewards.juice_reward
-	GameManager.total_juice_earned_this_run = rewards.juice_reward
+	GameManager.total_juice_earned_this_run += rewards.juice_reward
 	call_deferred("grow_snake", rewards.segments_to_add)
 	
 	if not is_lasso_grab and GameManager.lasso_rhythm_unlocked and "Lasso Larry" in GameManager.ability_charges:
@@ -1757,7 +1738,6 @@ func on_snake_ate_food(fruit, is_lasso_grab: bool = false):
 	update_fruit_prediction()
 	update_progression()
 	update_hud()
-	update_upgrade_prompt()
 	
 	if head.can_reverse:
 		head.can_reverse = false
@@ -2026,7 +2006,10 @@ func apply_cosmetic_upgrades():
 		background_rect.color = Color("#222222")
 		
 	# --- Apply Avatar & Frame (Unlocked at Level 3 & 5) ---
-	apply_banner_style()
+	if chroma_level >= 3:
+		apply_banner_style()
+	if chroma_level >= 5: # Add frame application
+		apply_banner_style()
 	# We pass the loadout data to the player banner, and it handles its own visuals.
 	player_banner.update_cosmetics(loadout)
 
@@ -2136,63 +2119,6 @@ func add_body_segment_at(spawn_pos: Vector2):
 
 func _start_game_over_sequence():
 	var final_score = snake_body_segments.size() + 1
-	var start_level = SaveManager.save_data.player_level
-	var start_xp = SaveManager.save_data.player_xp
-	# Check if the player has the martyrdom upgrade.
-	if GameManager.martyrdom_unlocked: #Fix this later with the new end of garden sequence
-		print("MARTYRDOM! A final, glorious harvest!")
-		$UI/MarginContainer/HBoxContainer/VBoxContainer/PlayerBanner.score_label.text = "Score: " + str(final_score)
-		$UI/CountdownLabel.text = "MARTRYDOM! HARVEST OF " + str(get_effective_fruit_reward() * get_effective_max_fruits()) + "!"
-		# Get a list of all fruit currently on the screen.
-		
-		update_hud()
-		
-		var fruits_on_screen = get_tree().get_nodes_in_group("fruits")
-		var segments_to_add = 0
-		
-		# For each fruit, calculate its value and add it to a total.
-		for fruit in fruits_on_screen:
-			if fruit is GoldenFruit:
-				segments_to_add += 2
-			elif fruit.has_method("ripen") and fruit.is_ripe:
-				var pg_rules = GameManager.get_upgrade_rules("Patient Gardener") as DualStatUpgrade
-				var multiplier = pg_rules.get_stat_b(GameManager.patient_gardener_level, 2.0) if pg_rules else 2.0
-				segments_to_add += get_effective_fruit_reward() * multiplier
-			else:
-				segments_to_add += get_effective_fruit_reward()
-			
-		final_score += segments_to_add
-		
-		var last_pos = head.global_position
-		if not snake_body_segments.is_empty():
-			last_pos = snake_body_segments.back().global_position
-			
-		# Create a visual explosion of dummy segments
-		for i in range(segments_to_add):
-			var dummy_segment = body_scene.instantiate()
-			# We don't add these to the main snake_body_segments array.
-			# They are purely for show.
-			dummy_segment.position = last_pos
-			# Disable their collision so they don't cause issues
-			dummy_segment.get_node("CollisionShape2D").disabled = true
-			add_child(dummy_segment)
-			
-			# Create a tween to make them fly outwards and fade away
-			var tween = create_tween()
-			var end_pos = last_pos + Vector2(randf_range(-100, 100), randf_range(-100, 100))
-			tween.tween_property(dummy_segment, "position", end_pos, 0.5)
-			tween.parallel().tween_property(dummy_segment, "modulate:a", 0.0, 0.5)
-			tween.tween_callback(dummy_segment.queue_free)
-
-		# Update the score MANUALLY based on the martyrdom growth
-		$UI/GameOverScreen.get_node("ScoreLabel").text = "Score: " + str(final_score)
-		# Add a cool visual effect here, like a screen flash!
-		play_screen_flash(Color.CRIMSON)
-		
-		# Wait for the visual effect to play out
-		await get_tree().create_timer(0.7).timeout
-
-	# Now, proceed with the normal game over sequence.
 	print("Game Over!")
 	
 	await SceneTransition.play_cover_animation("spiral")
@@ -2200,28 +2126,15 @@ func _start_game_over_sequence():
 
 	# --- NEW: Update and Save Persistent Stats ---
 	# We now call our master function in the SaveManager.
-	var results = SaveManager.process_end_of_run(
+	var summary = SaveManager.record_end_of_run(
+		false,
 		final_score,
 		GameManager.total_pulp_earned_this_run,
 		GameManager.upgrades_purchased_this_run,
-		GameManager.chosen_difficulty
 	)
 	
-	# We also update the total deaths count.
-	SaveManager.save_data.milestone_progress.total_deaths += 1
 	
-	if SaveManager.save_data.milestone_progress.highest_garden_reached < GameManager.current_garden:
-		SaveManager.save_data.milestone_progress.highest_garden_reached = GameManager.current_garden
-
-	SaveManager.save_game() # Save this one extra stat)
-	
-	await end_of_run_screen.show_results(
-		start_level,
-		start_xp,
-		results.xp_gained,
-		results.milestones_unlocked
-	)
-	print("xp total: %s" % results.xp_gained)
+	await end_of_run_screen.show_results(summary)
 	await SceneTransition.uncover_screen("spiral")
 
 func game_over():
@@ -2437,28 +2350,25 @@ func apply_chroma_scales_visuals():
 		var segment = snake_body_segments[i]
 		var fill_sprite = segment.get_node_or_null("FillSprite")
 		var collision_shape = segment.get_node_or_null("CollisionShape2D")
-		fill_sprite.visible = false
 		if not is_instance_valid(fill_sprite) or not is_instance_valid(collision_shape):
 			continue
-			
-		# --- This is the new, correct order of operations ---
-		
-		# Check 1: Is it a Fractured Self segment?
-		if GameManager.fractured_self_unlocked and (i / 3) % 2 != 0:
-			segment.visible = false
-			collision_shape.disabled = true
-			continue # We're done with this segment
-		else:
+
+		# Check 1: Fractured Self
+		if GameManager.fractured_self_unlocked and (i % 6) >= 3:
+			if segment.visible: segment.visible = false
+			if not collision_shape.disabled: collision_shape.disabled = true
+			continue
+		elif not segment.visible:
 			segment.visible = true
-			
-		# Check 2: Is it a Ghost Tail segment?
-		if i >= total_segments - ghost_segment_count:
+
+		# Check 2: Ghost Tail vs Solid
+		var is_ghost = i >= total_segments - ghost_segment_count
+		if collision_shape.disabled != is_ghost:
+			collision_shape.disabled = is_ghost
+
+		if is_ghost:
 			fill_sprite.modulate = ghost_color
-			collision_shape.disabled = true
 		else:
-			# If it's not a special case, it must be a normal, solid segment.
-			# Now we apply the Chroma Scales logic.
-			collision_shape.disabled = false
 			if GameManager.chroma_scales_level >= 2 and pattern_data:
 				var pattern_sequence = pattern_data.sequence
 				var color_index = pattern_sequence[i % pattern_sequence.size()]
@@ -2469,9 +2379,7 @@ func apply_chroma_scales_visuals():
 						if color_data:
 							fill_sprite.modulate = Color(color_data.hex_code)
 			else:
-				# Default body color if patterns aren't unlocked
 				fill_sprite.modulate = Color.PURPLE
-		fill_sprite.visible = true
 
 
 
@@ -2617,8 +2525,8 @@ func perform_autotomy(collided_segment):
 
 func create_pocket_garden():
 	var level = GameManager.pocket_garden_level
-	var rules = GameManager.pocket_garden_data[level]
-	var segment_cost = rules["cost"]
+	var pg_rules = GameManager.get_upgrade_rules("Pocket Garden") as DualStatUpgrade
+	var segment_cost = int(pg_rules.get_stat_a(level, 10.0)) if pg_rules else 10
 	
 	if snake_body_segments.size() < segment_cost:
 		print("Not enough segments!")
@@ -2650,7 +2558,7 @@ func create_pocket_garden():
 	$PocketGardenContainer.add_child(garden_vis)
 	
 	GameManager.active_pocket_garden_rect = garden_rect
-	$PocketGardenTimer.start(rules["duration"])
+	$PocketGardenTimer.start(pg_rules.get_stat_b(level, 20.0) if pg_rules else 20.0)
 
 func _on_pocket_garden_timer_timeout():
 	print("Pocket Garden has faded.")
@@ -2735,7 +2643,7 @@ func perform_blink():
 		if is_position_out_of_bounds(pos) or is_position_on_dividing_wall(grid_pos) or is_position_occupied(pos):
 			print("Blink failed: Path is blocked.")
 			# Give the charge back because the ability failed.
-			GameManager.ability_charges["Blink"] += 1
+			GameManager.ability_charges["Blink"].current += 1
 			return
 
 	# If the path is clear, perform the teleport.
@@ -3535,7 +3443,8 @@ func update_difficulty_progression():
 			progress.seals_broken.append(completed_pact_key)
 			
 	elif completed_pact_key.begins_with("Cursed"):
-		var cursed_pact_number = int(completed_pact_key.split(" ")[2])
+		var roman_map = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
+		var cursed_pact_number = roman_map.get(completed_pact_key.split(" ")[2], 0)
 		if cursed_pact_number > progress.highest_cursed_pact_completed:
 			progress.highest_cursed_pact_completed = cursed_pact_number
 	
@@ -3582,3 +3491,39 @@ func get_ghost_segment_count() -> int:
 	var ghost_rules = GameManager.get_upgrade_rules("Ghost Tail") as UpgradeData
 	if not ghost_rules: return 0
 	return int(ghost_rules.get_value_at_level(GameManager.ghost_tail_level, 0.0))
+
+
+func _play_victory_snake_ritual() -> void:
+	boundary_indicator.visible = false
+	dividing_wall_tilemap.clear()
+	if is_instance_valid(ghost_fruit_instance):
+		ghost_fruit_instance.queue_free()
+		
+	for fruit in get_tree().get_nodes_in_group("fruits"):
+		var t = create_tween()
+		t.tween_property(fruit, "scale", Vector2.ZERO, 0.25)
+		t.tween_callback(fruit.queue_free)
+	
+	for rock in spawned_obstacles:
+		if is_instance_valid(rock):
+			var t = create_tween()
+			t.tween_property(rock, "scale", Vector2.ZERO, 0.25)
+			t.tween_callback(rock.queue_free)
+	spawned_obstacles.clear()
+	
+	var cam_tween = create_tween()
+	cam_tween.tween_property(camera, "zoom", Vector2(0.8, 0.8), 2.2).set_trans(Tween.TRANS_SINE)
+	
+	for step in range(20):
+		var prev_pos = head.global_position
+		head.global_position += head.current_direction * tile_size
+		
+		var target_pos = prev_pos
+		for segment in snake_body_segments:
+			var old_pos = segment.global_position
+			segment.global_position = target_pos
+			target_pos = old_pos
+		
+		spawn_trail_piece(target_pos)
+		await get_tree().create_timer(0.05).timeout
+	

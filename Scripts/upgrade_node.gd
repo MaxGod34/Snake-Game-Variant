@@ -6,6 +6,7 @@ extends Button
 
 var upgrade_key: String = ""
 
+
 func _ready():
 	pass
 
@@ -74,7 +75,7 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 		
 	for i in range(1, max_level + 1):
 		var block = ColorRect.new()
-		block.custom_minimum_size = Vector2(8, 8)
+		block.custom_minimum_size = Vector2(4, 4)
 		# We now use the theme color for the "empty" blocks.
 		block.color = Color.GOLD if i <= current_level else accent_color.darkened(0.5)
 		block.size_flags_vertical = Control.SIZE_SHRINK_CENTER

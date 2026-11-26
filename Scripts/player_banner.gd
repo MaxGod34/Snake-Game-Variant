@@ -75,8 +75,8 @@ func update_display(data: Dictionary):
 	# Update all the simple text labels
 	player_name_label.text = data["player_name"]
 	level_label.text = "Level: " + str(data["level"])
-	juice_label.text = "%sL" % data["juice"]
-	pulp_label.text = "%smg" % data["pulp"]
+	juice_label.text = "%s L" % data["juice"]
+	pulp_label.text = "%s mg" % data["pulp"]
 	upgrade_prompt_label.visible = true
 	
 	# Update the XP Bar's properties

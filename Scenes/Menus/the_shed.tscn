@@ -128,10 +128,9 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_numoj")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_133se")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_t75gs")
 tab_alignment = 1
-current_tab = 2
+current_tab = 0
 
 [node name="Customization" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
-visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -168,6 +167,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_xhu0t")
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+focus_mode = 0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -190,6 +190,7 @@ text = "Chroma Palette"
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+focus_mode = 0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -228,6 +229,7 @@ autowrap_mode = 3
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+focus_mode = 0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -248,6 +250,7 @@ text = "Avatars"
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+focus_mode = 0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -268,6 +271,7 @@ text = "Frames"
 custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
 size_flags_horizontal = 4
+focus_mode = 0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -293,7 +297,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="ChromaPalettePage" type="Control" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel"]
-visible = false
 layout_mode = 2
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage"]
@@ -308,7 +311,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 64
 
 [node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -329,32 +332,62 @@ autowrap_mode = 3
 [node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "HEAD"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "1"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "4"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "5"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -364,22 +397,32 @@ alignment = 1
 
 [node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Pattern"
 icon = null
 
 [node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Background"
 icon = null
 
 [node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Avatar"
 icon = null
 
 [node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Frame"
 icon = null
 
 [node name="EquippedBannerNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Banner"
 icon = null
 
 [node name="PatternLibraryLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/ChromaPalettePage/ScrollContainer/VBoxContainer"]
@@ -444,7 +487,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 64
 
 [node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -465,32 +508,62 @@ autowrap_mode = 3
 [node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "HEAD"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "1"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "4"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "5"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -500,22 +573,32 @@ alignment = 1
 
 [node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Pattern"
 icon = null
 
 [node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Background"
 icon = null
 
 [node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Avatar"
 icon = null
 
 [node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Frame"
 icon = null
 
 [node name="EquippedBannerNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Banner"
 icon = null
 
 [node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BackgroundsPage/ScrollContainer/VBoxContainer"]
@@ -529,7 +612,7 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("1_vq6i6")
 theme_override_font_sizes/font_size = 32
-text = "Unlocked Cosmetics"
+text = "Unlocked Backgrounds"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -557,7 +640,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 64
 
 [node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -578,32 +661,62 @@ autowrap_mode = 3
 [node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "HEAD"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "1"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "4"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "5"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -613,22 +726,32 @@ alignment = 1
 
 [node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Pattern"
 icon = null
 
 [node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Background"
 icon = null
 
 [node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Avatar"
 icon = null
 
 [node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Frame"
 icon = null
 
 [node name="EquippedBannerNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Banner"
 icon = null
 
 [node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/AvatarsPage/ScrollContainer/VBoxContainer"]
@@ -642,7 +765,7 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("1_vq6i6")
 theme_override_font_sizes/font_size = 32
-text = "Unlocked Cosmetics"
+text = "Unlocked Avatars"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -670,7 +793,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 64
 
 [node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -691,32 +814,62 @@ autowrap_mode = 3
 [node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "HEAD"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "1"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "4"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "5"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -726,22 +879,32 @@ alignment = 1
 
 [node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Pattern"
 icon = null
 
 [node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Background"
 icon = null
 
 [node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Avatar"
 icon = null
 
 [node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Frame"
 icon = null
 
 [node name="EquippedBannerNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Banner"
 icon = null
 
 [node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/FramesPage/ScrollContainer/VBoxContainer"]
@@ -755,7 +918,7 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("1_vq6i6")
 theme_override_font_sizes/font_size = 32
-text = "Unlocked Cosmetics"
+text = "Unlocked Frames"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -783,7 +946,7 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 8
+theme_override_constants/separation = 64
 
 [node name="EquippedCosmeticsLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 64)
@@ -804,32 +967,62 @@ autowrap_mode = 3
 [node name="EquippedCosmeticsRow2" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_constants/separation = 8
+theme_override_constants/separation = 32
 alignment = 1
 
 [node name="EquippedHeadColorNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "HEAD"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor1Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "1"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor2Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "2"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor3Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "3"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor4Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "4"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedBodyColor5Node" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow2" instance=ExtResource("8_ciw3c")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.529067, 0.529067, 0.529067, 1)
+theme_override_font_sizes/font_size = 24
+text = "5"
 icon = null
+vertical_icon_alignment = 1
 
 [node name="EquippedCosmeticsRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -839,22 +1032,32 @@ alignment = 1
 
 [node name="EquippedPatternNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Pattern"
 icon = null
 
 [node name="EquippedBackgroundNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Background"
 icon = null
 
 [node name="EquippedAvatarNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Avatar"
 icon = null
 
 [node name="EquippedFrameNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Frame"
 icon = null
 
 [node name="EquippedBannerNode" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer/EquippedCosmeticsRow" instance=ExtResource("8_ciw3c")]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.505344, 0.505344, 0.505344, 1)
+text = "Banner"
 icon = null
 
 [node name="UnlockedLabel" type="Label" parent="MarginContainer/VBoxContainer/ShedTabs/Customization/SelectionPanel/BannersPage/ScrollContainer/VBoxContainer"]
@@ -868,7 +1071,7 @@ theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("1_vq6i6")
 theme_override_font_sizes/font_size = 32
-text = "Unlocked Cosmetics"
+text = "Unlocked Banners"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
@@ -1063,6 +1266,7 @@ theme_override_constants/separation = 128
 theme_override_styles/separator = SubResource("StyleBoxTexture_xhu0t")
 
 [node name="Milestones" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ShedTabs"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 2
 
@@ -1085,6 +1289,7 @@ custom_minimum_size = Vector2(128, 64)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+focus_mode = 0
 theme_override_colors/font_disabled_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)

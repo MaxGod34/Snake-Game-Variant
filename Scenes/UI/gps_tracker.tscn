@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://tvxrdks8jhqx"]
+[gd_scene load_steps=3 format=3 uid="uid://tvxrdks8jhqx"]
 
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_gfrfm"]
+
+[sub_resource type="Curve" id="Curve_102oy"]
+_limits = [0.3, 1.0, 0.0, 1.0]
+_data = [Vector2(0, 0.3), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
 
 [node name="GPSTracker" type="Control"]
 custom_minimum_size = Vector2(0, 96)
@@ -16,6 +21,10 @@ size_flags_vertical = 4
 position = Vector2(32, 24)
 points = PackedVector2Array(-158, 58)
 width = 16.0
+width_curve = SubResource("Curve_102oy")
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
 
 [node name="GPS" type="Label" parent="."]
 custom_minimum_size = Vector2(0, 64)

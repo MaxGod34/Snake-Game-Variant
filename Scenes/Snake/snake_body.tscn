@@ -7,6 +7,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fwjnq"]
 
 [node name="SnakeBody" type="Area2D"]
+collision_mask = 0
+monitoring = false
 script = ExtResource("1_elit1")
 
 [node name="FillSprite" type="Sprite2D" parent="."]

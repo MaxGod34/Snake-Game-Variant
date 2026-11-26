@@ -302,12 +302,12 @@ func _on_description_delay_timer_timeout():
 	var mouse_position = get_viewport().get_mouse_position()
 
 	if mouse_position.x < viewport_size.x / 2.0:
-		description_panel.position.x = mouse_position.x + 64
+		description_panel.position.x = mouse_position.x + 32
 	else:
-		description_panel.position.x = mouse_position.x - description_panel.size.x - 64
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 32
 
 	description_panel.position.y = clamp(
-		mouse_position.y - (description_panel.size.y),
+		mouse_position.y - (description_panel.size.y) + 32,
 		20,
 		viewport_size.y - description_panel.size.y - 20
 	)
