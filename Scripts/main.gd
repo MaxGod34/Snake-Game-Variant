@@ -45,10 +45,6 @@ var hud_refresh_timer: float = 0.0
 var head_scene = preload("res://Scenes/Snake/snake_head.tscn")
 var body_scene = preload("res://Scenes/Snake/snake_body.tscn")
 var fruit_scene = preload("res://Scenes/Fruits/fruit.tscn")
-var jumping_bean_scene = preload("res://Scenes/Fruits/jumping_bean.tscn")
-var ghost_pepper_scene = preload("res://Scenes/Fruits/ghost_pepper.tscn")
-var iron_cherry_scene = preload("res://Scenes/Fruits/iron_cherry.tscn")
-var dragon_fruit_scene = preload("res://Scenes/Fruits/dragon_fruit.tscn")
 var rock_scene = preload("res://Scenes/rock.tscn")
 var pause_scene = preload("res://Scenes/Menus/pause_menu.tscn")
 var exclamation_scene = preload("res://Scenes/Snake/exclamation.tscn")
@@ -59,8 +55,6 @@ var trippy_grid_shader = preload("res://Shaders/trippy_grid.gdshader")
 
 # ---Timers and Effects---
 @onready var combo_timer = $ComboTimer
-@onready var iron_cherry_buff_timer = $IronCherryBuffTimer
-@onready var dragon_fruit_buff_timer = $DragonFruitBuffTimer
 @onready var fruit_flood_tick_timer = $FruitFloodTickTimer
 @onready var fruit_flood_duration_timer = $FruitFloodDurationTimer
 @onready var zenith_timer = $ZenithTimer
@@ -134,6 +128,7 @@ func _ready():
 		# ---PULP STAND---
 	$UI/PulpsicleStand.skip_garden_pressed.connect(_on_skip_garden_pressed)
 	$UI/PulpsicleStand.continue_to_next_garden.connect(_on_pulpsicle_stand_continue_pressed)
+	GameManager.go_back_garden_requested.connect(_on_go_back_garden_requested)
 		# ---UPGRADE MENU---
 	$UI/UpgradeMenu.resume_game_pressed.connect(_on_upgrade_menu_resume_game_pressed)
 		# ---GAME OVER SCREEN---
@@ -165,8 +160,6 @@ func _ready():
 	time_since_last_fruit = 0.0
 	# ---Timer Signals---
 	combo_timer.timeout.connect(_on_combo_timer_timeout)
-	iron_cherry_buff_timer.timeout.connect(_on_iron_cherry_buff_timer_timeout)
-	dragon_fruit_buff_timer.timeout.connect(_on_dragon_fruit_buff_timer_timeout)
 	zenith_timer.timeout.connect(_on_zenith_timer_timeout)
 	fruit_flood_tick_timer.timeout.connect(_on_fruit_flood_tick_timer_timeout)
 	fruit_flood_duration_timer.timeout.connect(_on_fruit_flood_duration_timer_timeout)
@@ -204,6 +197,12 @@ func _process(delta):
 
 		# If either of those is true, the clock runs.
 		GameManager.run_time += delta
+		if GameManager.is_tier_active(9) and not garden_complete_is_pending:
+			var garden_elapsed: float = GameManager.run_time - GameManager.garden_start_time
+			if garden_elapsed >= GameManager.get_effective_par_time():
+				game_over()
+				return
+		
 		time_since_last_fruit += delta
 		
 		hud_refresh_timer += delta
@@ -273,26 +272,21 @@ func _on_ability_slot_activated(slot_index: int):
 	var ability_key = GameManager.equipped_abilities[slot_index]
 	var ability_data = GameManager.ability_charges.get(ability_key)
 	
-	# Check if we have charges for this ability
+	# Ability charge check
 	if ability_data and ability_data.current > 0:
-		# Check the "current" charge count
 		if ability_data.current > 0:
 			if ability_key == "Tenderizer":
 				ability_data.current = ability_data.total
 			else:
 				GameManager.abilities_used_this_garden += 1
-				# Subtract from the "current" charge count
 				ability_data.current -= 1
-		
-		# match statement to call the correct helper function
+
 		match ability_key:
 			"Burrow": activate_burrow()
 			"Phase Shift": head.activate_phase_shift(2.0) # Standard 2s duration
 			"Blink": perform_blink()
 			"Meditate": head.activate_meditate()
 			"Banana Bounty": activate_banana_bounty()
-			"Sacrificial Molt": perform_sacrificial_molt()
-			"Mise en Place": perform_mise_en_place()
 			"Tenderizer": activate_tenderizer()
 			"Garden Weaver": perform_garden_weave()
 			"Autotomy": head.activate_autotomy()
@@ -326,12 +320,15 @@ func apply_persistent_upgrades():
 	# 2. Get the modification values.
 	var speed_up_mod = class_data.speed_upgrade_mod
 	var speed_up_level = GameManager.slither_sauce_level
-	var slow_down_level = GameManager.heavy_foundation_level + GameManager.diet_slith_level
+	var slow_down_level = GameManager.diet_slith_level
 
 	# 3. Calculate the final speed using the power function for both speed-ups and slow-downs.
 	var final_speed = base_speed * pow(speed_up_mod, speed_up_level) * pow(1.1, slow_down_level)
 	
 	final_speed *= GameManager.speed_multiplier_class_mod
+	
+	if GameManager.is_tier_active(1):
+		final_speed *= 0.85
 	
 	if GameManager.speed_increase_on_eat:
 		# We can apply a small multiplier for each fruit eaten.
@@ -404,7 +401,7 @@ func check_for_garden_completion():
 	# Garden Completion Check
 	var current_score = snake_body_segments.size() + 1
 	var current_garden_id = GameManager.current_garden
-	var current_goal = GameManager.garden_data[current_garden_id]["score_goal"]
+	var current_goal = GameManager.get_effective_garden_goal(GameManager.current_garden)
 	if current_score >= current_goal:
 		#Beat the garden
 		print("Garden ", current_garden_id, " complete! Pending screen.")
@@ -438,20 +435,20 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 	# Par Time Bonus
 	var garden_time = GameManager.run_time - GameManager.garden_start_time
 	var par_time_rules = GameManager.garden_bonus_data["par_time"]
-	if garden_time < par_time_rules["time_limit"]:
+	if garden_time < GameManager.get_effective_par_time():
 		var reward = floori(par_time_rules["base_reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("Par Time: +%smg" % reward)
+		bonuses.bonus_list.append("Par Time: +%s mg" % reward)
 	# No upgrade Bonus
 	if GameManager.juice_spent_this_garden == 0:
 		var reward = floori(bonus_data["ascetic"]["reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("No Upgrade Bonus: + %smg" % reward)
+		bonuses.bonus_list.append("No Upgrade Bonus: + %s mg" % reward)
 	# No ability Bonus
 	if GameManager.abilities_used_this_garden == 0:
 		var reward = floori(bonus_data["pacifist"]["reward"] * bonus_multiplier)
 		bonuses.total_pulp += reward
-		bonuses.bonus_list.append("No Ability Bonus: + %smg" % reward)
+		bonuses.bonus_list.append("No Ability Bonus: + %s mg" % reward)
 	# Wrangler End-of-Garden Fruit Grab
 
 	# Juice Spent This Garden
@@ -466,7 +463,7 @@ func _calculate_garden_bonuses(p_score: int) -> Dictionary:
 		var total_engagement_pulp = floori(reward_per_litre * GameManager.juice_spent_this_garden)
 
 		bonuses.total_pulp += total_engagement_pulp
-		bonuses.bonus_list.append("Engagement Bonus + %smg" % total_engagement_pulp)
+		bonuses.bonus_list.append("Engagement Bonus + %s mg" % total_engagement_pulp)
 	#---------------JUICE BONUSES----------------------
 		#GEOLOGICAL SURVEY
 	if GameManager.geological_survey_unlocked:
@@ -615,7 +612,7 @@ func update_hud():
 	data["garden_name"] = GameManager.garden_data[GameManager.current_garden]["name"]
 	data["garden_number"] = GameManager.current_garden
 	data["current_score"] = snake_body_segments.size() + 1
-	data["garden_goal"] = GameManager.garden_data[GameManager.current_garden]["score_goal"]
+	data["garden_goal"] = GameManager.get_effective_garden_goal(GameManager.current_garden)
 	# --- Calculate GPS ---
 	var five_seconds_ago = GameManager.run_time - 5.0
 	var growth_in_last_5s = 0.0
@@ -825,6 +822,9 @@ func update_grid_dimensions():
 		# If shattered, the world is a fixed super-grid.
 		grid_width = 80
 		grid_height = 60
+	elif GameManager.edge_lord_level == 0 and GameManager.is_tier_active(5):
+		grid_width = 8
+		grid_height = 6
 	else:
 		# Otherwise, the size is determined by the Edge Lord upgrade level.
 		var edge_lord = GameManager.get_upgrade_rules("Edge Lord") as GridSizeUpgradeData
@@ -859,7 +859,8 @@ func setup_initial_obstacles():
 	var total_rocks_before_reduction = base_obstacle_count + geomancer_penalty
 	
 	total_rocks_before_reduction *= GameManager.obstacle_modifier
-
+	if GameManager.is_tier_active(2):
+		total_rocks_before_reduction *= 2.0
 	
 	# 4. Calculate the final number of rocks to spawn, rounding to the nearest whole number.
 	var final_obstacle_count = round(total_rocks_before_reduction)
@@ -1043,6 +1044,25 @@ func level_up():
 	GameManager.score_at_level_start = GameManager.get_length_for_level(GameManager.player_level)
 	GameManager.score_needed_for_next_level = GameManager.get_length_for_level(GameManager.player_level + 1)
 	
+	if GameManager.is_tier_active(8):
+		call_deferred("spawn_level_up_rock")
+
+func spawn_level_up_rock():
+	if spawned_obstacles.size() >= floori(grid_width * grid_height * 0.40):
+		return
+	var danger_zone: Array = []
+	for step in range(1,4):
+		danger_zone.append(head.global_position + (head.current_direction * tile_size * step))
+	var safe_pos = calculate_safe_spawn_position(danger_zone)
+	if safe_pos == Vector2(-100, -100):
+		return
+	var rock = rock_scene.instantiate()
+	var gray_value = randf_range(0.4, 0.7)
+	rock.get_node("FillSprite").modulate = Color(gray_value, gray_value, gray_value)
+	rock.position = safe_pos
+	spawned_obstacles.append(rock)
+	add_child(rock)
+	
 
 func _on_upgrade_menu_resume_game_pressed():
 	# Block input for the transition out
@@ -1114,11 +1134,11 @@ func _start_end_of_garden_sequence():
 	var diff_data = GameManager.difficulty_data.get(GameManager.chosen_difficulty)
 	var campaign_length = diff_data.campaign_length if diff_data else 9
 	var is_final_garden = (garden_id == campaign_length)
-	var is_final_win = (is_final_garden and score >= GameManager.garden_data[garden_id]["score_goal"])
+	var is_final_win = (is_final_garden and score >= GameManager.get_effective_garden_goal(GameManager.current_garden))
 	
 	if is_final_garden:
 		print("Campaign Complete! Updating Progression")
-		if GameManager.chosen_difficulty == "Cursed Pact V" and not GameManager.should_spawn_corrupted_ouroboros:
+		if GameManager.current_difficulty_tier == 9 and not GameManager.should_spawn_corrupted_ouroboros:
 			_start_garden_13()
 			return
 		is_game_over = true
@@ -1173,33 +1193,7 @@ func _transition_to_shop():
 	
 	await shop_screen.animate_in() # Play the shop's slide-in animation
 
-func _go_to_next_garden():
 
-	
-	var shop_screen = $UI/PulpsicleStand
-	await shop_screen.animate_out() # Animate the shop sliding away
-	await SceneTransition.play_cover_animation("random")
-	
-	# Now that the screen is covered, it is safe to reset stats.
-	GameManager.has_died_this_garden = false
-	GameManager.juice_spent_this_garden = 0
-	GameManager.abilities_used_this_garden = 0
-	GameManager.garden_start_time = GameManager.run_time
-	GameManager.juice_press_used_this_garden = false
-	GameManager.reset_for_new_garden()
-	_recharge_all_abilities()
-	GameManager.update_block_market()
-	
-	#tycoon
-	if GameManager.juice_tax_rate > 0:
-		var tax_amount = floori(GameManager.juice * GameManager.juice_tax_rate)
-		GameManager.juice -= tax_amount
-		GameManager.total_juice_earned_this_run -= tax_amount
-		print("TYCOON TAX! Lost %s Juice between gardens." % tax_amount)
-	
-	# Finally, tell the main SceneTransition to go to the next level.
-	GameManager.current_garden += 1
-	SceneTransition.transition_to("res://Scenes/main.tscn", "random")
 
 
 func _on_garden_complete_continue_pressed():
@@ -1214,8 +1208,10 @@ func _recharge_all_abilities():
 	# Loop through every ability the player owns.
 	for ability_key in GameManager.ability_charges:
 		var ability_data = GameManager.ability_charges[ability_key]
-		# Set the current charges equal to the total purchased charges.
-		ability_data.current = ability_data.total
+		if GameManager.is_tier_active(3):
+			ability_data.current = mini(ability_data.current + 1, ability_data.total)
+		else:
+			ability_data.current = ability_data.total
 
 func recharge_random_ability():
 	print("CUSTOM CUISINE: Attempting to recharge a random ability...")
@@ -1247,9 +1243,8 @@ func activate_tenderizer():
 
 func _on_upgrade_menu_upgrade_selected(upgrade_name):
 	var active_abilities = [
-		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty", "Molt",\
-		"Meditate", "Zenith", "Autotomy",\
-		"Tenderizer", "Lasso Larry"
+		"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty",\
+		"Meditate", "Zenith", "Autotomy", "Tenderizer", "Lasso Larry"
 	]
 	print("Player chose upgrade: ", upgrade_name)
 	
@@ -1338,13 +1333,14 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 				GameManager.golden_handshake_level += 1
 		elif upgrade_name == "Juice Press":
 			GameManager.purchase_or_upgrade_ability("Juice Press")
-		elif upgrade_name == "Liquidation":
-			if not GameManager.liquidation_used:
-				GameManager.liquidation_used = true
+		elif upgrade_name == "Liquidation": #FIXED FINALLY HOLY FK
+			if not GameManager.liquidation_unlocked:
+				GameManager.liquidation_unlocked = true
 				var diff1 = GameManager.juice
 				GameManager.juice *= 2
 				var diff2 = GameManager.juice
 				GameManager.total_juice_earned_this_run += diff2 - diff1
+
 				# Need to add a cool effect
 #----------------------------Glutton-------------------------#
 			#---ESP---#
@@ -1391,7 +1387,7 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Golden Seed Extract":
 			if GameManager.golden_seed_extract_level < 3:
 				GameManager.golden_seed_extract_level += 1
-#------------------CHEF PATH------------------#
+#------------------Wrangler PATH------------------#
 		elif upgrade_name == "Extended Reach":
 			if GameManager.extended_reach_level < 3:
 				GameManager.extended_reach_level += 1
@@ -1417,42 +1413,13 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Mineral Rich Soil":
 			if GameManager.mineral_rich_soil_level < 3:
 				GameManager.mineral_rich_soil_level += 1
-		elif upgrade_name == "Tectonic Shift":
-			if GameManager.tectonic_shift_level < 3:
-				GameManager.tectonic_shift_level += 1
-				apply_persistent_upgrades()
-		elif upgrade_name == "Heavy Foundation":
-			if GameManager.heavy_foundation_level < 3:
-				GameManager.heavy_foundation_level += 1
-				apply_persistent_upgrades()
-		# --- Rockeater Specialization ---
-		# check if a type has already been chosen.
-		elif upgrade_name in ["Rockmuncher", "Geode Cracker", "Kinetic Feast", "Stones Burden"]:
-		# Check if a path has already been chosen. This is a safety check.
-			if GameManager.rockeater_type == "":
-				print("Geode path chosen: ", upgrade_name)
-				# Set the chosen path in our global manager
-				GameManager.rockeater_type = upgrade_name
+
 		elif upgrade_name == "Rockmuncher":
-			if GameManager.rockeater_type == "":
-				GameManager.rockeater_type = "Rockmuncher"
-			else:
-				print("You have already chosen a Rockeater path!")
+			GameManager.rockmuncher_unlocked = true
+
 		elif upgrade_name == "Geode Cracker":
-			if GameManager.rockeater_type == "":
-				GameManager.rockeater_type = "Geode Cracker"
-			else:
-				print("You have already chosen a Rockeater path!")
-		elif upgrade_name == "Kinetic Feast":
-			if GameManager.rockeater_type == "":
-				GameManager.rockeater_type = "Kinetic Feast"
-			else:
-				print("You have already chosen a Rockeater path!")
-		elif upgrade_name == "Stones Burden":
-			if GameManager.rockeater_type == "":
-				GameManager.rockeater_type = "Stones Burden"
-			else:
-				print("You have already chosen a Rockeater path!")
+			GameManager.geode_cracker_unlocked = true
+
 		elif upgrade_name == "Calculated Risk":
 			if not GameManager.calculated_risk_unlocked:
 				GameManager.calculated_risk_unlocked = true		
@@ -1509,9 +1476,6 @@ func _on_upgrade_menu_upgrade_selected(upgrade_name):
 		elif upgrade_name == "Border Czar":
 			if not GameManager.border_czar_unlocked:
 				GameManager.border_czar_unlocked = true
-		elif upgrade_name == "Surveyed Land":
-			if not GameManager.surveyed_land_unlocked:
-				GameManager.surveyed_land_unlocked = true
 		elif upgrade_name == "Fold Space":
 			if not GameManager.fold_space_unlocked:
 				GameManager.fold_space_unlocked = true
@@ -1567,35 +1531,7 @@ func _on_zenith_timer_timeout():
 	head.reset_head_color() # A helper to safely reset the head's color
 	update_hud()
 
-func apply_recipe_buff(buff_data: Dictionary):
-	match buff_data["type"]:
-		"speed_boost":
-			# This requires a new helper function in snake_head.gd
-			head.activate_temporary_speed_boost(buff_data["value"], buff_data["duration"])
-		"juice_boost":
-			GameManager.juice += buff_data["value"]
-			GameManager.total_juice_earned_this_run += buff_data["value"]
-			update_hud()
-		"full_recharge":
-			print("ABILITIES RECHARGED")
-			#RECHARGE ABILITIES IF UNLOCKED
-			if GameManager.burrow_level > 0:
-				GameManager.burrow_charges = GameManager.burrow_level
-			if GameManager.phase_shift_level > 0:
-				GameManager.phase_shift_charges = GameManager.phase_shift_level
-			if GameManager.meditate_level > 0:
-				GameManager.meditate_charges = GameManager.meditate_level
-			if GameManager.banana_bounty_level > 0:
-				GameManager.banana_bounty_charges = GameManager.banana_bounty_level
-			if GameManager.tenderizer_level > 0:
-				GameManager.tenderizer_charges = GameManager.tenderizer_level
-			if GameManager.pocket_garden_level > 0:
-				GameManager.pocket_garden_charges = GameManager.pocket_garden_level
-			if GameManager.blink_level > 0:
-				GameManager.blink_charges = GameManager.blink_level
-		"fruit_flood":
-			# This requires a new timer and logic to spawn fruit rapidly
-			start_fruit_flood(buff_data["duration"])
+
 
 func update_combo_meter():
 	# If the player hasn't unlocked the combo system, do nothing.
@@ -2162,9 +2098,7 @@ func get_effective_fruit_reward() -> int:
 	# If we have the upgrade, add the bonus from our death counter
 	if GameManager.death_defied_unlocked:
 		reward += GameManager.times_died_this_run
-		
-	if GameManager.dragon_fruit_buff_active:
-		reward *= 3
+
 		
 	return reward
 
@@ -2176,9 +2110,7 @@ func get_effective_max_fruits() -> int:
 	# If we have the upgrade, add the bonus from our death counter
 	if GameManager.death_defied_unlocked:
 		max_fruits += GameManager.times_died_this_run
-		
-	if GameManager.iron_cherry_buff_active:
-		max_fruits += 5 # Add a flat bonus	
+
 		
 	return max_fruits
 
@@ -2425,7 +2357,7 @@ func activate_zenith():
 	# 4. Give some awesome visual feedback
 	play_screen_flash(Color.MAGENTA)
 	
-	if snake_body_segments.size() + 1 >= GameManager.garden_data[GameManager.current_garden]["score_goal"]:
+	if snake_body_segments.size() + 1 >= GameManager.get_effective_garden_goal(GameManager.current_garden):
 		$ZenithTimer.stop()
 
 func activate_banana_bounty():
@@ -2453,57 +2385,7 @@ func activate_banana_bounty():
 	# Store a reference to this new tween
 	target_fruit.active_tween = tween
 
-func perform_mise_en_place():
-	print("MISE EN PLACE! The garden transforms!")
-	
-	# Set the flag so it can't be used again this run
-	GameManager.mise_en_place_used_this_run = true
-	update_hud() # Update any UI that might show the ability is used
 
-	# 1. First, build a list of all normal fruits and their positions.
-	var normal_fruits_to_replace = []
-	for fruit in get_tree().get_nodes_in_group("fruits"):
-		# We only want to transform the basic "Fruit" type
-		if fruit is Fruit:
-			normal_fruits_to_replace.append(fruit)
-			
-	# 2. Build a "loot table" of all the special fruits the player has unlocked.
-	var unlocked_special_fruits = []
-	# Add Golden Apple if unlocked
-	if GameManager.golden_seed_extract_level > 0:
-		unlocked_special_fruits.append("golden_fruit")
-	# Add all unlocked Exotic Seeds
-	for i in range(1, GameManager.exotic_seeds_level + 1):
-		unlocked_special_fruits.append(GameManager.exotic_seeds_data[i])
-		
-	# If there are no special fruits unlocked, we can't do anything.
-	if unlocked_special_fruits.is_empty():
-		return
-
-	# 3. Now, loop through the fruits we need to replace.
-	for old_fruit in normal_fruits_to_replace:
-		var new_fruit_key = unlocked_special_fruits.pick_random()
-		var new_fruit_instance = null
-		
-		# Instantiate the correct new fruit scene
-		match new_fruit_key:
-			"golden_fruit": new_fruit_instance = preload("res://Scenes/Fruits/golden_fruit.tscn").instantiate()
-			"jumping_bean": new_fruit_instance = jumping_bean_scene.instantiate()
-			"ghost_pepper": new_fruit_instance = ghost_pepper_scene.instantiate()
-			"iron_cherry": new_fruit_instance = iron_cherry_scene.instantiate()
-			"dragon_fruit": new_fruit_instance = dragon_fruit_scene.instantiate()
-			
-		if new_fruit_instance != null:
-			# Position the new fruit exactly where the old one was
-			new_fruit_instance.position = old_fruit.position
-			new_fruit_instance.add_to_group("fruits")
-			add_child(new_fruit_instance)
-			
-			# Destroy the old fruit
-			old_fruit.queue_free()
-			
-	# Add a cool screen flash to signify the transformation!
-	play_screen_flash(Color.WHITE)
 
 func perform_autotomy(collided_segment):
 	print("SEVERING TAIL!")
@@ -2524,7 +2406,7 @@ func perform_autotomy(collided_segment):
 	update_hud()
 
 func create_pocket_garden():
-	var level = GameManager.pocket_garden_level
+	var level = GameManager.get_upgrade_level_from_key("Pocket Garden")
 	var pg_rules = GameManager.get_upgrade_rules("Pocket Garden") as DualStatUpgrade
 	var segment_cost = int(pg_rules.get_stat_a(level, 10.0)) if pg_rules else 10
 	
@@ -2588,44 +2470,6 @@ func perform_juice_press():
 
 	play_screen_flash(Color.ORANGE)
 
-func perform_sacrificial_molt():
-	var current_body_length = snake_body_segments.size()
-	
-	# We need at least 2 body segments to be able to halve it.
-	if current_body_length < 2:
-		print("Molt failed: Snake is too short!")
-		return
-
-	print("SACRIFICIAL MOLT ACTIVATED!")
-	
-	# Set the flag so it can't be used again this run
-	GameManager.sacrificial_molt_used_this_run = true
-	
-	# 1. Calculate how many segments to remove
-	var segments_to_remove = floor(current_body_length / 2.0)
-	
-	# 2. Loop that many times, destroying the tail
-	for i in range(segments_to_remove):
-		# Make sure we don't try to remove from an empty array
-		if not snake_body_segments.is_empty():
-			snake_body_segments.pop_back().queue_free()
-
-	# 3. Grant the reward
-	GameManager.extra_lives += 1
-	
-	# 4. Update all UI to reflect the changes
-	update_hud()
-	
-	# Optional: Add a cool visual/sound effect here!
-	# --- NEW VISUAL FEEDBACK ---
-	# Play our new screen flash effect
-	play_screen_flash(Color.GOLD)
-	
-	# Also make the snake's head pulse with golden light
-	var head_tween = create_tween()
-	head_tween.tween_property(head, "modulate", Color.ORANGE_RED, 0.2)
-	# After a short delay, fade it back to its normal color
-	head_tween.tween_property(head, "modulate", head.head_color, 0.3).set_delay(0.2)
 
 func activate_burrow():
 	# This toggles the burrow state on and off
@@ -2724,13 +2568,7 @@ func _on_fruit_flood_duration_timer_timeout():
 	# Stop the ticking timer
 	$FruitFloodTickTimer.stop()
 
-func _on_iron_cherry_buff_timer_timeout():
-	GameManager.iron_cherry_buff_active = false
-	print("Iron Cherry buff has expired.")
 
-func _on_dragon_fruit_buff_timer_timeout():
-	GameManager.dragon_fruit_buff_active = false
-	print("Dragon Fruit buff has expired.")
 
 func perform_lasso_larry():
 	var all_fruits = get_tree().get_nodes_in_group("fruits").filter(
@@ -3227,7 +3065,7 @@ func _on_boss_defeated():
 		SaveManager.save_data.unlocked_cosmetics.patterns.append("Ouroboros Scales")
 		SaveManager.save_data.unlocked_cosmetics.frames.append("Corrupted Frame")
 		SaveManager.save_data.pantheon_entries[GameManager.chosen_class] = "Conquered the Final Coil"
-		if GameManager.chosen_difficulty == "Cursed Pact V":
+		if  GameManager.current_difficulty_tier == 9:
 			GameManager.free_upgrades_unlocked = true
 			GameManager.roll_credits_unlocked = true
 			_start_garden_13()
@@ -3425,37 +3263,7 @@ func _animate_credits():
 	var tween = create_tween()
 	tween.tween_property(credits_container, "position:y", end_pos, 60.0).set_ease(Tween.EASE_IN_OUT)
 
-func update_difficulty_progression():
-	var completed_class_key = GameManager.chosen_class
-	var completed_pact_key = GameManager.chosen_difficulty
-	
-	var progress = SaveManager.get_progress_for_class(completed_class_key)
-	
-	print("Updating progression for %s on difficulty %s" % [completed_class_key, completed_pact_key])
-	
-	if completed_pact_key.begins_with("Pact"):
-		var pact_number = int(completed_pact_key.split(" ")[1])
-		if pact_number > progress.highest_pact_completed:
-			progress.highest_pact_completed = pact_number
-			
-	elif completed_pact_key.begins_with("Trial"):
-		if not completed_pact_key in progress.seals_broken:
-			progress.seals_broken.append(completed_pact_key)
-			
-	elif completed_pact_key.begins_with("Cursed"):
-		var roman_map = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
-		var cursed_pact_number = roman_map.get(completed_pact_key.split(" ")[2], 0)
-		if cursed_pact_number > progress.highest_cursed_pact_completed:
-			progress.highest_cursed_pact_completed = cursed_pact_number
-	
-	if SaveManager.save_data.milestone_progress.highest_garden_reached < 9:
-		SaveManager.save_data.milestone_progress.highest_garden_reached = 9
-	
-	if GameManager.new_game_s_plus_active:
-		SaveManager.save_data.milestone_progress.prestiges_completed += 1
-	
-	
-	SaveManager.save_game()
+
 
 func _on_debug_complete_super_step_10():
 	# This simulates completing the Trial of the Harvest/Step 10
@@ -3503,7 +3311,7 @@ func _play_victory_snake_ritual() -> void:
 		var t = create_tween()
 		t.tween_property(fruit, "scale", Vector2.ZERO, 0.25)
 		t.tween_callback(fruit.queue_free)
-	
+	# say hi to youtube Leo
 	for rock in spawned_obstacles:
 		if is_instance_valid(rock):
 			var t = create_tween()
@@ -3512,7 +3320,12 @@ func _play_victory_snake_ritual() -> void:
 	spawned_obstacles.clear()
 	
 	var cam_tween = create_tween()
-	cam_tween.tween_property(camera, "zoom", Vector2(0.8, 0.8), 2.2).set_trans(Tween.TRANS_SINE)
+	cam_tween.tween_property(# well isn't that fancy pal
+							camera, 
+							"zoom", 
+							Vector2(0.8, 0.8), 
+							2.2
+							).set_trans(Tween.TRANS_SINE)
 	
 	for step in range(20):
 		var prev_pos = head.global_position
@@ -3526,4 +3339,34 @@ func _play_victory_snake_ritual() -> void:
 		
 		spawn_trail_piece(target_pos)
 		await get_tree().create_timer(0.05).timeout
+
+
+func _on_go_back_garden_requested():
+	_transition_garden(-1)
+func _go_to_next_garden():
+	_transition_garden(1)
+func _transition_garden(garden_delta: int):
+	var shop_screen = $UI/PulpsicleStand
+	await shop_screen.animate_out() # Animate the shop sliding away
+	await SceneTransition.play_cover_animation("random")
 	
+	# Now that the screen is covered, it is safe to reset stats.
+	GameManager.has_died_this_garden = false
+	GameManager.juice_spent_this_garden = 0
+	GameManager.abilities_used_this_garden = 0
+	GameManager.garden_start_time = GameManager.run_time
+	GameManager.juice_press_used_this_garden = false
+	GameManager.reset_for_new_garden()
+	_recharge_all_abilities()
+	GameManager.update_block_market()
+	
+	#tycoon
+	if GameManager.juice_tax_rate > 0:
+		var tax_amount = floori(GameManager.juice * GameManager.juice_tax_rate)
+		GameManager.juice -= tax_amount
+		GameManager.total_juice_earned_this_run -= tax_amount
+		print("TYCOON TAX! Lost %s Juice between gardens." % tax_amount)
+	
+	# Finally, tell the main SceneTransition to go to the next level.
+	GameManager.current_garden = maxi(1, GameManager.current_garden + garden_delta)
+	SceneTransition.transition_to("res://Scenes/main.tscn", "random")

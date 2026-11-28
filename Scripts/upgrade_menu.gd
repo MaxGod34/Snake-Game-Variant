@@ -7,6 +7,7 @@ signal resume_game_pressed
 # === Core References ===
 var main_game
 var hovered_upgrade_key: String = ""
+var hovered_pulp_bundle: PulpBundleData = null
 var is_switching_tabs: bool = false
 
 
@@ -26,8 +27,9 @@ var current_hoard_guess: int = 1
 @onready var description_delay_timer = $DescriptionDelayTimer
 
 # -- Stats Panel --
-@onready var stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox
-@onready var side_stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer
+@onready var stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox
+@onready var side_stats_panel = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats
+@onready var pulp_loot_grid: GridContainer = $CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/ScrollContainer/PulpLootGrid
 
 # -- Ticker Labels --
 @onready var headline_label_a = $TickerPanel/TickerContainer/HeadlineStage/TopTickerLabelA
@@ -73,6 +75,7 @@ var tab_controllers: Dictionary = {}  # Tab logic
 var player_stats_for_ticker = []
 
 
+
 # === Assets ===
 var die_faces: Array = [
 	preload("res://Assets/PNGs/Dice/snake_dice_128_dice_1.png"),
@@ -110,7 +113,13 @@ var headlines = [ # Add pools for defcon 1-5 with 5 being base
 	"How many apples does it take to feed a snake? Put your guess in the comments below and don't forget to LIKE and SUBSCRIBE!",
 	"Snake McDoogle has passed away at 95 weeks of age. He was a good one, but...oh...nvm he's still good. BUY SOMETHING"
 ]
-
+## Pulp Container Stuff
+const PULP_TIER_BORDERS: Dictionary = {
+	PulpBundleData.Tier.COMMON: Color("#b0b0b0"),
+	PulpBundleData.Tier.RARE: Color("#4da6ff"),
+	PulpBundleData.Tier.LEGENDARY: Color("#ffd700"),
+	PulpBundleData.Tier.CURSE: Color("#ff4d4d"),
+}
 
 
 
@@ -278,24 +287,29 @@ func _on_any_node_pressed(upgrade_key: String):
 func _on_any_node_mouse_entered(upgrade_key: String):
 	# Instead of showing the panel, we store the key and start the timer.
 	hovered_upgrade_key = upgrade_key
+	hovered_pulp_bundle = null
 	description_delay_timer.start()
 
 func _on_any_node_mouse_exited():
 	description_delay_timer.stop()
 	description_panel.visible = false
 	hovered_upgrade_key = ""
+	hovered_pulp_bundle = null
 
 func _on_description_delay_timer_timeout():
-	if hovered_upgrade_key == "": return
-	
-	var rules = GameManager.get_upgrade_rules(hovered_upgrade_key)
-	if not rules: 
+	if hovered_pulp_bundle != null:
+		var count: int = GameManager.claimed_pulp_bundles.get(hovered_pulp_bundle.id, 1)
+		var status: String = "Owned (x%d)" % count if count > 1 else "Owned"
+		description_panel.show_pulp_bundle(hovered_pulp_bundle, status)
+	elif hovered_upgrade_key != "":
+		var rules = GameManager.get_upgrade_rules(hovered_upgrade_key)
+		if not rules:
+			return
+		var cost = GameManager.calculate_upgrade_cost(hovered_upgrade_key)
+		var current_level = GameManager.get_upgrade_level_from_key(hovered_upgrade_key)
+		description_panel.show_info(rules, current_level, cost, "L")
+	else:
 		return
-		
-	var cost = GameManager.calculate_upgrade_cost(hovered_upgrade_key)
-	var current_level = GameManager.get_upgrade_level_from_key(hovered_upgrade_key)
-
-	description_panel.show_info(rules, current_level, cost, "mL")
 	
 	#Quadrant spacing
 	var viewport_size = get_viewport().get_visible_rect().size
@@ -323,21 +337,17 @@ func update_stats_tab():
 		stats_panel.get_node("ClassLabel").text = "Class: " + GameManager.chosen_class.capitalize()
 		stats_panel.get_node("DifficultyLabel").text = "Difficulty: " + GameManager.chosen_difficulty.capitalize()
 		stats_panel.get_node("LevelLabel").text = "Level: " + str(GameManager.player_level)
-		stats_panel.get_node("JuiceLabel").text = "JUICE: " + str(GameManager.juice) + " mL"
 	#Check our other stats panel on the side
 	if is_instance_valid(side_stats_panel):
-		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(GameManager.fruit_reward)
+		side_stats_panel.get_node("FruitRewardStatsLabel").text = "Growth/fruit: " + str(main_game.get_effective_fruit_reward())
 		side_stats_panel.get_node("MaxFruitsStatsLabel").text = "Max Fruits: " + str(GameManager.max_fruits_on_screen)
-		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [12 + 4 * GameManager.edge_lord_level, 9 + 3 * GameManager.edge_lord_level]
-		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Total Fruits this run: " + str(GameManager.fruits_eaten_this_run)
-		side_stats_panel.get_node("TotalJuiceStatsLabel").text = "Total Juice this run: " + str(GameManager.total_juice_earned_this_run) + " mL"
-		side_stats_panel.get_node("AbilityIncrementStatsLabel").text = "Ability Activations this run: (fill) 0"
-
-		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.garden_data[min(GameManager.current_garden + 1, 5)]["score_goal"])
-		side_stats_panel.get_node("NextGardenObstacles#Label").text = "# of obstacles next garden: " + str(GameManager.garden_data[min(GameManager.current_garden + 1, 5)]["obstacle_count"])
-		if GameManager.current_garden == 5:
-			side_stats_panel.get_node("NextGardenGoalLabel").visible = false
-			side_stats_panel.get_node("NextGardenObstacles#Label").visible = false
+		side_stats_panel.get_node("GridSizeStatsLabel").text = "%s X %s tiles (l X h)" % [main_game.grid_width, main_game.grid_height]
+		side_stats_panel.get_node("TotalFruitsStatsLabel").text = "Fruits eaten this run: " + str(GameManager.fruits_eaten_this_run)
+		side_stats_panel.get_node("TotalJuiceStatsLabel").text = "Juice squeezed this run: " + str(GameManager.total_juice_earned_this_run) + " L"
+		side_stats_panel.get_node("TotalPulpStatsLabel").text = "Pulp gathered this run: " + str(GameManager.total_pulp_earned_this_run) + " mg"
+		side_stats_panel.get_node("NextGardenGoalLabel").text = "Next Garden Goal: " + str(GameManager.get_effective_garden_goal(min(GameManager.current_garden + 1, 9)))
+	
+	_refresh_pulp_loot_grid()
 
 func update_snake_eyes_tab():
 	# Update the max value of the sliders
@@ -353,17 +363,17 @@ func update_snake_eyes_tab():
 	
 	# --- THIS IS THE NEW PART ---
 	# Reset the button text to its default state
-	snake_coin_heads_button.text = "Call Heads\n(XXmL)"
-	snake_coin_tails_button.text = "Call Tails\n(XXmL)"
-	dice_roll_button.text = "Roll for Glory!\n(XXmg)"
+	snake_coin_heads_button.text = "Call Heads\n(XXL)"
+	snake_coin_tails_button.text = "Call Tails\n(XXL)"
+	dice_roll_button.text = "Roll for Glory!\n(XXL)"
 	
 	main_game.update_ability_hotbar()
 	update_juice_and_pulp_label()
 	update_block_market_display()
 
 func update_juice_and_pulp_label():
-	juice_label.text = "Juice: " + str(GameManager.juice) + " mL"
-	pulp_label.text = "Pulp: " + str(GameManager.pulp) + "mg"
+	juice_label.text = "Juice: " + str(GameManager.juice) + " L"
+	pulp_label.text = "Pulp: " + str(GameManager.pulp) + " mg"
 
 
 # --- SIGNAL HANDLER FUNCTIONS ---
@@ -465,12 +475,12 @@ func _on_snake_coin_flip_pressed(player_choice: String):
 		if GameManager.passive_income_unlocked:
 			GameManager.correct_bets_this_run += 1
 			GameManager.fruit_reward += 1
-			await play_result_animation(true, "Correct!\nYou win +%smL" % [wager * 2])
+			await play_result_animation(true, "Correct!\nYou win +%sL" % [wager * 2])
 		else:
-			await play_result_animation(true, "Cash in!\n+%smL" % [wager * 2])
+			await play_result_animation(true, "Cash in!\n+%sL" % [wager * 2])
 	else:
 		print("You lose.")
-		await play_result_animation(false, "Better luck next time!\nYou lose %smL" % [wager])
+		await play_result_animation(false, "Better luck next time!\nYou lose %sL" % [wager])
 	# 7. Update all UI and re-enable everything.
 	# Extra delay -> await get_tree().create_timer(1.5).timeout
 	coin.visible = false
@@ -528,12 +538,12 @@ func _on_roll_dice_button_pressed():
 		if GameManager.passive_income_unlocked:
 			GameManager.correct_bets_this_run += 1
 			GameManager.fruit_reward += 1
-			await play_result_animation(true, "How did you do it?!\n+%smL" % [wager * 6])
+			await play_result_animation(true, "How did you do it?!\n+%sL" % [wager * 6])
 		else:
-			await play_result_animation(true, "YOU CALLED IT!\n+%smL" % [wager * 6])
+			await play_result_animation(true, "YOU CALLED IT!\n+%sL" % [wager * 6])
 	else:
 		print("You lose.")
-		await play_result_animation(false, "Next time, sorry!\n-%smL" % [wager])
+		await play_result_animation(false, "Next time, sorry!\n-%sL" % [wager])
 		
 	# 7. Update all UI and re-enable everything.
 	# Extra pause await get_tree().create_timer(1.5).timeout # A longer dramatic pause
@@ -706,7 +716,7 @@ func _scroll_ticker(label_a: Label, label_b: Label, text_pool: Array, speed: flo
 func _get_new_ticker_text(text_pool: Array) -> String:
 	if text_pool.is_empty(): # This is our stats ticker
 		var stats = [
-			"JUICE: %s mL" % GameManager.juice,
+			"JUICE: %s L" % GameManager.juice,
 			"PULP: %s mg" % GameManager.pulp,
 			"LENGTH: %s" % (main_game.snake_body_segments.size() + 1),
 			"LEVEL: %s" % GameManager.player_level,
@@ -717,9 +727,9 @@ func _get_new_ticker_text(text_pool: Array) -> String:
 			"FRUIT REWARD: %s" % main_game.get_effective_fruit_reward(),
 			"MAX FRUITS: %s" % GameManager.max_fruits_on_screen,
 			"ABILITY SLOTS STILL LOCKED: %s" % [(10 - GameManager.max_ability_slots)],
-			"NUMBER OF OBSTACLES NEXT GARDEN: %s" % [(GameManager.garden_data[max(9, GameManager.current_garden + 1)])["obstacle_count"]],
-			"ORANGE BLOCK: %s mL/share" % GameManager.block_market_prices["Orange Block"]["price"],
-			"APPLE BLOCK: %s mL/share" % GameManager.block_market_prices["Apple Block"]["price"],
+			"NUMBER OF OBSTACLES NEXT GARDEN: %s" % [(GameManager.garden_data[min(9, GameManager.current_garden + 1)])["obstacle_count"]],
+			"ORANGE BLOCK: %s L/share" % GameManager.block_market_prices["Orange Block"]["price"],
+			"APPLE BLOCK: %s L/share" % GameManager.block_market_prices["Apple Block"]["price"],
 			"LIGHT BLOCK: %s mg/share" % GameManager.block_market_prices["Light Block"]["price"],
 			"EXTRA BLOCK: %s mg/share" % GameManager.block_market_prices["Extra Block"]["price"]
 		]
@@ -727,3 +737,60 @@ func _get_new_ticker_text(text_pool: Array) -> String:
 		return "  •••  ".join(stats)
 	else: # This is our headline ticker
 		return text_pool.pick_random()
+
+
+func _refresh_pulp_loot_grid() -> void:
+	if not is_instance_valid(pulp_loot_grid):
+		return
+
+	for child in pulp_loot_grid.get_children():
+		child.queue_free()
+
+	# Preserve order of first acquisition while stacking repeats (e.g., multiple One Bites)
+	var seen_ids: Dictionary = {}
+	for bundle: PulpBundleData in GameManager.pulp_bundle_history:
+		if seen_ids.has(bundle.id):
+			continue
+		seen_ids[bundle.id] = true
+
+		var count: int = GameManager.claimed_pulp_bundles.get(bundle.id, 1)
+		pulp_loot_grid.add_child(_create_pulp_loot_tile(bundle, count))
+
+func _create_pulp_loot_tile(bundle: PulpBundleData, count: int) -> PanelContainer:
+	var tile := PanelContainer.new()
+	tile.custom_minimum_size = Vector2(56, 56)
+	tile.mouse_filter = Control.MOUSE_FILTER_STOP
+	tile.mouse_entered.connect(_on_pulp_loot_mouse_entered.bind(bundle))
+	tile.mouse_exited.connect(_on_any_node_mouse_exited)
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#1e1e1e")
+	style.border_color = PULP_TIER_BORDERS.get(bundle.tier, Color.WHITE)
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(4)
+	style.set_content_margin_all(4)
+	tile.add_theme_stylebox_override("panel", style)
+
+	var tex := TextureRect.new()
+	tex.texture = bundle.icon
+	tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tile.add_child(tex)
+
+	if count > 1:
+		var badge := Label.new()
+		badge.text = "x%d" % count
+		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		badge.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM
+		badge.add_theme_font_size_override("font_size", 12)
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tile.add_child(badge)
+
+	return tile
+
+
+func _on_pulp_loot_mouse_entered(bundle: PulpBundleData) -> void:
+	hovered_upgrade_key = ""
+	hovered_pulp_bundle = bundle
+	description_delay_timer.start()

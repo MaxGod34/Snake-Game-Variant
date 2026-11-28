@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="MetaUpgradeData" load_steps=3 format=3 uid="uid://cco4n24kmb7as"]
+
+[ext_resource type="Script" uid="uid://clsq0vy65pfyx" path="res://Scripts/MetaUpgradeData.gd" id="1_g70ot"]
+[ext_resource type="Texture2D" uid="uid://dic538ovhfvqd" path="res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png" id="1_l4dxl"]
+
+[resource]
+script = ExtResource("1_g70ot")
+enabled = false
+id = "New Game S+"
+display_name = "New Game S+"
+description = "Sure you could go do that last garden...
+Or go back to square 1!"
+icon = ExtResource("1_l4dxl")
+type = "Loop"
+costs = Array[int]([0])
+level_values = Array[float]([])
+metadata/_custom_type_script = "uid://clsq0vy65pfyx"

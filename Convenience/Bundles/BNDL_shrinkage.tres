@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://3i2u5ct5auxq"]
+
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="1_pnblj"]
+[ext_resource type="Texture2D" uid="uid://ctwsitpd7idyq" path="res://Assets/PNGs/RotatingItemIcons/shrinkageicon.png" id="1_woynq"]
+
+[resource]
+script = ExtResource("1_pnblj")
+id = &"Shrinkage"
+display_name = "Shrinkage"
+description = "-1 fruit reward
+muahahahahaha"
+icon = ExtResource("1_woynq")
+tier = 3
+upgrade_deltas = {
+"Elephant Sized Portions": -1
+}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 0
+exclude_larry = false
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

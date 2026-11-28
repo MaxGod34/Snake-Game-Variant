@@ -187,6 +187,15 @@ func _on_head_area_area_entered(area):
 		emit_signal("hit_self")
 		return
 	if area is Rock:
+		if GameManager.rockmuncher_unlocked or GameManager.geode_cracker_unlocked:
+			main.destroy_obstacle(area)
+			if GameManager.rockmuncher_unlocked:
+				main.grow_snake(2)
+			if GameManager.geode_cracker_unlocked:
+				GameManager.juice += 1
+				GameManager.total_juice_earned_this_run += 1
+		
+		
 		var chosen_path = GameManager.rockeater_type
 		if chosen_path != "":
 			main.destroy_obstacle(area)
@@ -344,12 +353,8 @@ func reset_head_color():
 
 	
 func activate_temporary_speed_boost(speed_multiplier: float, duration: float):
-	print("Recipe buff: SPEED BOOST for %s seconds!" % duration)
-	
-	# We apply the multiplier directly to the current wait_time
+	print("SPEED BOOST for %s seconds!" % duration)
 	move_timer.wait_time *= speed_multiplier
-	
-	# Start the timer to turn the effect off
 	temp_speed_boost_timer.start(duration)
 
 func _on_temp_speed_boost_timer_timeout():

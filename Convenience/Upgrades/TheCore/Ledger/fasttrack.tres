@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://duie71rllgx21"]
 
+[ext_resource type="Texture2D" uid="uid://bjj8mfy8tlflw" path="res://Assets/PNGs/UpgradeIcons/WormholeIcon.png" id="1_7mdso"]
 [ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="1_45d5p"]
-[ext_resource type="Texture2D" uid="uid://dcr5ilybltivx" path="res://Assets/PNGs/UpgradeIcons/fasttrack.png" id="1_remk8"]
 
 [resource]
 script = ExtResource("1_45d5p")
@@ -9,7 +9,7 @@ id = "Fast Track"
 display_name = "Fast Track"
 description = "Unlocks the 'Skip Garden' button in the Pulp stand.
 On skip, +5 mL juice."
-icon = ExtResource("1_remk8")
+icon = ExtResource("1_7mdso")
 path = "The Core"
 sub_path = "Ledger"
 type = "In-Active Ability"

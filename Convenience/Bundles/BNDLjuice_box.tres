@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://bg0rnq81slltv"]
+
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="1_8uyxc"]
+[ext_resource type="Texture2D" uid="uid://c6w1o6h64vmci" path="res://Assets/PNGs/RotatingItemIcons/juice_box_icon.png" id="1_ktpsg"]
+
+[resource]
+script = ExtResource("1_8uyxc")
+id = &"Juice Box"
+display_name = "Juice Box"
+description = "Grants juice = Garden Number"
+icon = ExtResource("1_ktpsg")
+tier = 0
+upgrade_deltas = {}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 1
+exclude_larry = true
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

@@ -4,6 +4,7 @@ class_name DifficultyData extends Resource
 @export var display_name: String = "blank ERROR"
 @export var description: String = "shootin' blanks ERROR"
 @export var icon_path: String = "" #res://whatever/whenever
+@export var tier: int = 0
 
 @export_category("Modifiers")
 @export var juice_cost_modifier: int = 0		# Find scale somewhere

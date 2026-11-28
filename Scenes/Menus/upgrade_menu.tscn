@@ -1,9 +1,8 @@
-[gd_scene load_steps=122 format=3 uid="uid://c4g22t44wwwae"]
+[gd_scene load_steps=124 format=3 uid="uid://c4g22t44wwwae"]
 
 [ext_resource type="Script" uid="uid://brr6y1tuydbhc" path="res://Scripts/upgrade_menu.gd" id="1_ltp0x"]
 [ext_resource type="StyleBox" uid="uid://byx0xroldfrqj" path="res://Assets/Styles/tab_styles/tab_unselected.tres" id="3_2hr16"]
 [ext_resource type="StyleBox" uid="uid://bvvxp1nruai3g" path="res://Assets/Styles/tab_styles/tab_hovered.tres" id="3_mpwqm"]
-[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/Icons/snake_chart_logo.png" id="4_lpopj"]
 [ext_resource type="StyleBox" uid="uid://cgram6fp0uqbv" path="res://Assets/Styles/panels/panel_bg.tres" id="5_m70ya"]
 [ext_resource type="StyleBox" uid="uid://ygku2kux81fn" path="res://Assets/Styles/panels/panel_shadow_temp.tres" id="7_60tjm"]
 [ext_resource type="Texture2D" uid="uid://dalylrv3nmm1u" path="res://Assets/PNGs/UpgradeIcons/get_rich_quick_icon.png" id="9_0x031"]
@@ -83,7 +82,7 @@
 [ext_resource type="Texture2D" uid="uid://e2l8j4grsls7" path="res://Assets/PNGs/UpgradeIcons/BorderCzarIcon.png" id="76_uxp3x"]
 [ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="76_ymci1"]
 [ext_resource type="Texture2D" uid="uid://ka46hsl82hlp" path="res://Assets/Templates/ShopTransitionTileSet.png" id="77_sc3ha"]
-[ext_resource type="StyleBox" uid="uid://dro1n1la3mlvb" path="res://Convenience/MetaUpgrades/casinobutton_style.tres" id="78_6plnu"]
+[ext_resource type="StyleBox" uid="uid://dro1n1la3mlvb" path="res://Assets/Styles/block_buttons/casinobutton_style.tres" id="78_6plnu"]
 [ext_resource type="Texture2D" uid="uid://r4xd40p83pn" path="res://Assets/PNGs/UpgradeIcons/BurrowIcon.png" id="78_8ybj1"]
 [ext_resource type="Texture2D" uid="uid://c52jsyl2lykjb" path="res://Assets/PNGs/UpgradeIcons/PocketGardenIcon.png" id="80_v6u0p"]
 [ext_resource type="Texture2D" uid="uid://bp6646o0h2u53" path="res://Assets/PNGs/UpgradeIcons/FoldSpaceIcon.png" id="81_8ybj1"]
@@ -130,6 +129,41 @@ expand_margin_left = 20.0
 expand_margin_top = 20.0
 expand_margin_right = 20.0
 expand_margin_bottom = 20.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_v6u0p"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 16
+border_width_top = 16
+border_width_right = 16
+border_width_bottom = 16
+border_color = Color(1, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ymci1"]
+bg_color = Color(0, 0, 0, 0.196078)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(1, 1, 0, 1)
+border_blend = true
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+corner_detail = 16
+expand_margin_left = 8.0
+expand_margin_top = 8.0
+expand_margin_right = 8.0
+expand_margin_bottom = 8.0
+shadow_color = Color(0.133333, 0.133333, 0.133333, 0.447059)
+shadow_size = 1
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sc3ha"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1goc"]
 
@@ -240,6 +274,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_6dxpo")
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
 layout_mode = 2
 theme_override_constants/separation = -2
+alignment = 2
 
 [node name="TopTabs" type="TabContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 56)
@@ -258,26 +293,31 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 5
+current_tab = 0
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
 metadata/_tab_index = 0
 
-[node name="StatsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats"]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_bottom = 85.0
+anchor_bottom = 1.0
 grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+alignment = 1
+
+[node name="StatsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
+layout_mode = 2
 theme_override_constants/separation = 12
 alignment = 1
 
-[node name="ClassLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox"]
+[node name="ClassLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -291,7 +331,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Class:"
 horizontal_alignment = 1
 
-[node name="DifficultyLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox"]
+[node name="DifficultyLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -305,7 +345,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Difficulty:"
 horizontal_alignment = 1
 
-[node name="LevelLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox"]
+[node name="LevelLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -319,163 +359,132 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
 text = "Level:"
 horizontal_alignment = 1
 
-[node name="JuiceLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/StatsHBox"]
+[node name="MainRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/separation = 128
+alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_v6u0p")
+horizontal_scroll_mode = 0
+
+[node name="PulpLootGrid" type="GridContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/ScrollContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 5
+
+[node name="LevelUpStatsContainer" type="PanelContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow"]
+custom_minimum_size = Vector2(480, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ymci1")
+
+[node name="VBoxStats" type="VBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="FruitRewardStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 5
-theme_override_constants/shadow_offset_y = 5
-theme_override_constants/outline_size = 16
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
-theme_override_styles/normal = SubResource("StyleBoxFlat_le8vw")
-text = "Skill Points: 0"
-horizontal_alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.05
-anchor_top = 0.334
-anchor_right = 0.525
-anchor_bottom = 0.67
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("4_lpopj")
-
-[node name="LevelUpStatsContainer" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats"]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.6
-anchor_top = 0.15
-anchor_right = 0.925
-anchor_bottom = 0.75
-offset_bottom = 44.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = ExtResource("7_60tjm")
-
-[node name="FruitRewardStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
-layout_mode = 2
-offset_right = 486.0
-offset_bottom = 34.0
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
 text = "Growth / fruit = "
 
-[node name="MaxFruitsStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="MaxFruitsStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
 layout_mode = 2
-offset_top = 46.0
-offset_right = 486.0
-offset_bottom = 80.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
 text = "Max fruits = "
 
-[node name="GridSizeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="GridSizeStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
 layout_mode = 2
-offset_top = 92.0
-offset_right = 486.0
-offset_bottom = 163.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
-text = "Grid Size = 
-"
+theme_override_font_sizes/font_size = 28
+text = "Grid Size = "
 
-[node name="TotalFruitsStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
 layout_mode = 2
-offset_top = 175.0
-offset_right = 486.0
-offset_bottom = 209.0
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
-text = "Total Fruits Grabbed This Run:"
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sc3ha")
 
-[node name="TotalJuiceStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="TotalFruitsStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
 layout_mode = 2
-offset_top = 221.0
-offset_right = 486.0
-offset_bottom = 255.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
-text = "SP earned this Run:"
+theme_override_font_sizes/font_size = 28
+text = "Fruits eaten this run:"
 
-[node name="AbilityIncrementStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="TotalJuiceStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
 layout_mode = 2
-offset_top = 267.0
-offset_right = 486.0
-offset_bottom = 338.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
-text = "Abiities Used This Run:
-"
+theme_override_font_sizes/font_size = 28
+text = "Juice earned this Run:"
 
-[node name="NextGardenGoalLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
+[node name="TotalPulpStatsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
 layout_mode = 2
-offset_top = 350.0
-offset_right = 486.0
-offset_bottom = 384.0
 theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
+theme_override_font_sizes/font_size = 28
+text = "Pulp earned this Run:"
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sc3ha")
+
+[node name="NextGardenGoalLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/MainRow/LevelUpStatsContainer/VBoxStats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 28
 text = "Next Garden at:"
-
-[node name="NextGardenObstacles#Label" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/LevelUpStatsContainer"]
-layout_mode = 2
-offset_top = 396.0
-offset_right = 486.0
-offset_bottom = 430.0
-theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_colors/font_outline_color = Color(0.152941, 0, 0.176471, 1)
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("13_ojj7b")
-theme_override_font_sizes/font_size = 24
-text = "# of obstacles next Garden:"
 
 [node name="The Core" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
@@ -1325,6 +1334,7 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="SnakeEyes" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")

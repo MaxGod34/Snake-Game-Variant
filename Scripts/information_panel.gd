@@ -11,7 +11,7 @@ extends PanelContainer
 @onready var garden_goal_label = $HBoxContainer/GardenDataContainer/GardenStatus/GardenGoalLabel
 @onready var gps_graph = $HBoxContainer/GardenDataContainer/GPSTracker/GraphLine
 @onready var gps_label = $HBoxContainer/GardenDataContainer/GPSTracker/GPS
-@onready var harvest_forecast_ui = $HBoxContainer/GardenDataContainer/HarvestForecastUI
+
 
 
 var gps_history: Array[float] = []

@@ -263,7 +263,7 @@ func update_career_stats_tab():
 	player_rank_label.text = "Snake Rank: %s" % career_stats.player_level
 	high_score_label.text = "High Score: %s" % career_stats.high_score
 	total_deaths_label.text = "Total Deaths Accrued: %s" % stats.total_deaths
-	total_juice_label.text = "Total Juice (mL): %s" % career_stats.total_juice_earned
+	total_juice_label.text = "Total Juice (L): %s" % career_stats.total_juice_earned
 	total_pulp_label.text = "Total Pulp (mg): %s" % career_stats.total_pulp_earned
 	rocks_destroyed_label.text = "Total Rocks Destroyed: %s" % stats.rocks_destroyed
 	#prestiges_completed_label.text = "Prestiges Attempted: %s" %

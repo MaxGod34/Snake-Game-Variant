@@ -21,7 +21,7 @@ func _get_default_save_data() -> Dictionary:
 		"serpent_fangs": 0,
 		"unlocked_classes": ["Mulligan", "Ghost", "Tycoon", "Doubles", "Gobble"],
 		"unlocked_cosmetics": {
-			"colors": ["Default White", "Default Purple"],
+			"colors": ["Default White", "Default Purple", "Default Lime"],
 			"patterns": ["Default"],
 			"backgrounds": ["Default"],
 			"avatars": ["Default"],
@@ -29,7 +29,7 @@ func _get_default_save_data() -> Dictionary:
 			"banners": ["Default"]
 		},
 		"equipped_cosmetics": {
-			"head_color": "Default White",
+			"head_color": "Default Lime",
 			"body_colors": ["Default Purple", null, null, null, null],
 			"pattern": "Default",
 			"background": "Default",
@@ -96,14 +96,12 @@ func reset_save_data():
 	print("Save data has been reset to default.")
 
 func get_progress_for_class(class_key: String) -> Dictionary:
-	# Check if we already have a save entry for this class.
 	if not save_data.class_progression.has(class_key):
-		# If not, create a new, default entry for it.
 		save_data.class_progression[class_key] = {
-			"highest_pact_completed": 0,
-			"seals_broken": [],
-			"highest_cursed_pact_completed": 0
+			"cleared_tiers": []
 		}
+	elif not save_data.class_progression[class_key].has("cleared_tiers"):
+		save_data.class_progression[class_key]["cleared_tiers"] = []
 	return save_data.class_progression[class_key]
 
 func record_end_of_run(did_win: bool, final_score: int, total_pulp: int, upgrades_bought: int) -> Dictionary:
@@ -117,26 +115,12 @@ func record_end_of_run(did_win: bool, final_score: int, total_pulp: int, upgrade
 
 	if did_win:
 		var progress = get_progress_for_class(class_key)
-		var is_first_clear := false
+		var tier: int = GameManager.current_difficulty_tier
+		var cleared_tiers: Array = progress["cleared_tiers"]
 
-		if diff_key.begins_with("Pact"):
-			var pact_num = int(diff_key.split(" ")[1])
-			if pact_num > progress.highest_pact_completed:
-				progress.highest_pact_completed = pact_num
-				is_first_clear = true
-		elif diff_key.begins_with("Trial"):
-			if not diff_key in progress.seals_broken:
-				progress.seals_broken.append(diff_key)
-				is_first_clear = true
-		elif diff_key.begins_with("Cursed"):
-			var roman_map = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5}
-			var cursed_num = roman_map.get(diff_key.split(" ")[2], 0)
-			if cursed_num > progress.highest_cursed_pact_completed:
-				progress.highest_cursed_pact_completed = cursed_num
-				is_first_clear = true
-
-		if is_first_clear:
-			fangs_earned = get_first_clear_fang_reward(diff_key)
+		if not (tier in cleared_tiers):
+			cleared_tiers.append(tier)
+			fangs_earned = get_first_clear_fang_reward(tier)
 			save_data.serpent_fangs += fangs_earned
 
 		if GameManager.new_game_s_plus_active:
@@ -229,20 +213,6 @@ func get_difficulty_xp_multiplier(difficulty_key: String) -> float:
 	var diff_data = GameManager.difficulty_data.get(difficulty_key)
 	return diff_data.xp_multiplier if diff_data else 1.0
 
-func get_first_clear_fang_reward(difficulty_key: String) -> int:
-	var rewards = {
-		"Pact 1": 100,
-		"Pact 2": 150,
-		"Pact 3": 200,
-		"Pact 4": 250,
-		"Pact 5": 300,
-		"Trial of the Harvest": 350,
-		"Trial of the Core": 350,
-		"Trial of the Redline": 350,
-		"Cursed Pact I": 400,
-		"Cursed Pact II": 425,
-		"Cursed Pact III": 450,
-		"Cursed Pact IV": 475,
-		"Cursed Pact V": 500
-	}
-	return rewards.get(difficulty_key, 100)
+
+func get_first_clear_fang_reward(tier: int) -> int:
+	return clampi(50 + (tier * 50), 50, 500)

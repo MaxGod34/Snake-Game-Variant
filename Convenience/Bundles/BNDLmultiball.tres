@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://wka0ypsche5n"]
+
+[ext_resource type="Texture2D" uid="uid://jyx0p8nggkf7" path="res://Assets/PNGs/RotatingItemIcons/multiballicon.png" id="1_85agd"]
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="1_syf0v"]
+
+[resource]
+script = ExtResource("1_syf0v")
+id = &"Multiball"
+display_name = "Multiball"
+description = "+1 lvl More Mice"
+icon = ExtResource("1_85agd")
+tier = 0
+upgrade_deltas = {
+"More Mice": 1
+}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 0
+exclude_larry = false
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

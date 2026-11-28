@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://exioeub7fxp6"]
+
+[ext_resource type="Texture2D" uid="uid://bohcck558stc" path="res://Assets/PNGs/RotatingItemIcons/onebiteicon.png" id="1_7lhpj"]
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="1_c421w"]
+
+[resource]
+script = ExtResource("1_c421w")
+id = &"One Bite"
+display_name = "One Bite"
+description = "+1 lvl Elephant-Sized Portions"
+icon = ExtResource("1_7lhpj")
+tier = 0
+upgrade_deltas = {
+"Elephant Sized Portions": 1
+}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 0
+exclude_larry = false
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

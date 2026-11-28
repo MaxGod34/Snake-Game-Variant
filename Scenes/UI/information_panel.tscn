@@ -1,9 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://cy78aj0eaeuv2"]
+[gd_scene load_steps=8 format=3 uid="uid://cy78aj0eaeuv2"]
 
 [ext_resource type="Texture2D" uid="uid://c7s4ogavu7gfs" path="res://Assets/Icons/white_swatch.png" id="1_ksswb"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="2_40xf2"]
 [ext_resource type="Script" uid="uid://b6hfbkpju0rb0" path="res://Scripts/information_panel.gd" id="2_dhsml"]
-[ext_resource type="PackedScene" uid="uid://ck50xdb7swx85" path="res://Scenes/UI/harvest_forecast_ui.tscn" id="3_ksswb"]
 [ext_resource type="PackedScene" uid="uid://tvxrdks8jhqx" path="res://Scenes/UI/gps_tracker.tscn" id="4_dhsml"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_k7x66"]
@@ -46,10 +45,6 @@ visible = false
 layout_mode = 2
 theme_override_constants/separation = 32
 theme_override_styles/separator = SubResource("StyleBoxEmpty_ksswb")
-
-[node name="HarvestForecastUI" parent="HBoxContainer/GardenDataContainer" instance=ExtResource("3_ksswb")]
-visible = false
-layout_mode = 2
 
 [node name="FrenzyMeter" type="VBoxContainer" parent="HBoxContainer/GardenDataContainer"]
 visible = false

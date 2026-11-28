@@ -7,8 +7,8 @@
 script = ExtResource("2_dyr1y")
 id = "Phase Shift"
 display_name = "Phase Shift"
-description = "Active Ability: Become intangible to your own body for a short time.
-Each level grants another charge."
+description = "Active Ability: Become intangible to your own body.
+At lvl 3, activates automatically"
 icon = ExtResource("1_4t07r")
 path = "The Ssscale"
 sub_path = "Illusionist"

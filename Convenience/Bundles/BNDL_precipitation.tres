@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://b1mfobi34jxrh"]
+
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="1_3f13k"]
+[ext_resource type="Texture2D" uid="uid://e8vjv52jjsm8" path="res://Assets/PNGs/RotatingItemIcons/PrecipitationIcon.png" id="1_oao6v"]
+
+[resource]
+script = ExtResource("1_3f13k")
+id = &"Precipitation"
+display_name = "Precipitation"
+description = "Double current juice"
+icon = ExtResource("1_oao6v")
+tier = 2
+upgrade_deltas = {}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 3
+exclude_larry = true
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

@@ -1,7 +1,25 @@
 extends Node
 
+
+signal pulp_changed(new_amount: int)
+signal pulp_bundle_recorded(bundle: PulpBundleData)
+signal ability_slots_changed(new_slots: int)
+signal market_recession_changed(is_active: bool)
+signal go_back_garden_requested
+
+
+# --- Pulp Stand State Machine ---
+var claimed_pulp_bundles: Dictionary = {}
+var pulp_bundle_history: Array[PulpBundleData] = []
+## Curse / special-effect flags
+var controls_reversed: bool = false
+var market_in_recession: bool = false
+var chroma_scales_enabled: bool = true
+
+
 #------Session State---------#
 var chosen_difficulty = "viper"
+var current_difficulty_tier: int = 0
 var chosen_class = "speedster"
 var run_time: float = 0.0
 # --- RUN-SPECIFIC TRACKING ---
@@ -33,19 +51,19 @@ var has_died_this_garden = false
 var current_garden = 1
 var garden_data = {
 	# --- The Early Game ---
-	1: {"name": "The First Coil", "score_goal": 30, "obstacle_count": 0},
-	2: {"name": "The Juice Box", "score_goal": 50, "obstacle_count": 3},
-	3: {"name": "The Danger Noodle Den", "score_goal": 80, "obstacle_count": 5},
+	1: {"name": "The First Coil", "score_goal": 15, "obstacle_count": 0},
+	2: {"name": "The Juice Box", "score_goal": 60, "obstacle_count": 3},
+	3: {"name": "The Danger Noodle Den", "score_goal": 95, "obstacle_count": 5},
 	
 	# --- The Mid-Game ---
-	4: {"name": "The Forked Tongue Bistro", "score_goal": 125, "obstacle_count": 8},
-	5: {"name": "Rhythm & Haste", "score_goal": 200, "obstacle_count": 12},
-	6: {"name": "The Architect's Grid", "score_goal": 300, "obstacle_count": 18},
+	4: {"name": "The Forked Tongue Bistro", "score_goal": 140, "obstacle_count": 8},
+	5: {"name": "Rhythm & Haste", "score_goal": 180, "obstacle_count": 12},
+	6: {"name": "The Architect's Grid", "score_goal": 225, "obstacle_count": 18},
 
 	# --- The Endgame ---
-	7: {"name": "The Basilisk's Lair", "score_goal": 444, "obstacle_count": 25},
-	8: {"name": "The Kill Screen Quarry", "score_goal": 690, "obstacle_count": 35},
-	9: {"name": "The Garden of Eatin'", "score_goal": 999, "obstacle_count": 50},
+	7: {"name": "The Basilisk's Lair", "score_goal": 275, "obstacle_count": 25},
+	8: {"name": "The Kill Screen Quarry", "score_goal": 340, "obstacle_count": 35},
+	9: {"name": "The Garden of Eatin'", "score_goal": 420, "obstacle_count": 50},
 	# --- The END ---
 	10: {"name": "Revelations", "score_goal": 2500, "obstacle_count": 66},
 	11: {"name": "The End", "score_goal": 10000, "obstacle_count": 150},
@@ -112,9 +130,9 @@ var should_spawn_corrupted_ouroboros: bool = false
 var free_upgrades_unlocked: bool = false
 var roll_credits_unlocked: bool = false
 #-----Player Stats--------#
-var player_level = 1
-var juice = 0
-var pulp = 0
+var player_level: int = 1
+var juice: int = 0
+var pulp: int = 0
 var score_needed_for_next_level = 5
 var score_at_level_start = 0
 
@@ -123,13 +141,13 @@ var total_juice_this_run: int = 0
 var segments_to_restore = 0
 
 # --- BONUS TRACKING VARS ---
-var juice_spent_this_garden = 0
-var abilities_used_this_garden = 0
-var garden_start_time = 0.0
+var juice_spent_this_garden: int = 0
+var abilities_used_this_garden: int = 0
+var garden_start_time: float = 0.0
 
 #----Upgrade Data Tracking----#
 var fruit_reward = 1
-var max_fruits_on_screen = 1
+var max_fruits_on_screen: int = 1
 
 # --- "PULP" META-UPGRADE LEVELS ---
 const META_UPGRADES_DIR = "res://Convenience/MetaUpgrades/"
@@ -148,6 +166,10 @@ var upgrades: Dictionary = {}
 var ability_charges = {}
 var equipped_abilities: Array = []
 var max_ability_slots: int = 0
+const ACTIVE_ABILITIES: Array[String] = [
+	"Burrow", "Phase Shift", "Blink", "Pocket Garden", "Banana Bounty",
+	"Meditate", "Zenith", "Autotomy", "Tenderizer", "Juice Press", "Lasso Larry"
+]
 
 #--------Rotating Item Stuff------#
 var extra_lives_are_capped: bool = false
@@ -159,8 +181,7 @@ var is_phasing = false
 var is_bounty_active = false
 var autotomy_is_active = false
 var is_zenith_active = false
-var iron_cherry_buff_active = false
-var dragon_fruit_buff_active = false
+
 
 #------------------------------the core(Idle, Planner, Ledger-------------------------------------------------------#
 #------The Planner-------#
@@ -183,7 +204,7 @@ var principal_pulp_level = 0
 var golden_handshake_level = 0
 var juice_press_used_this_garden: bool = false
 # Juice Press is an active ability, so it will be handled by our hotbar system
-var liquidation_used = false
+var liquidation_unlocked = false
 
 # --- Idle Path ---
 var snake_clicker_level = 0
@@ -193,12 +214,12 @@ var arcane_flow_unlocked = false
 var pulp_reactor_unlocked = false
 var unstable_metabolism_unlocked = false
 # track the total passive GPS
-var passive_gps = 0.0
+var passive_gps: float = 0.0
 
 #-------------------------------the harvest(Glutton, Chef, Geomancer)------------------------------#
 #-----------THE GLUTTON----------------#
-var es_portions_level = 0
-var more_mice_level = 0
+var es_portions_level: int = 0
+var more_mice_level: int = 0
 var golden_seeds_level = 0
 var patient_gardener_level = 0
 var golden_seed_extract_level = 0
@@ -210,29 +231,26 @@ var double_lasso_unlocked: bool = false
 var lasso_rhythm_unlocked: bool = false
 var lasso_rhythm_counter: int = 0
 # --- Geomancer Path ---
-var fertile_ground_level = 0
-var mineral_rich_soil_level = 0
-var tectonic_shift_level = 0
-var heavy_foundation_level = 0
-# We need to know which Rockeater upgrade they chose
-var rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
-var calculated_risk_unlocked = false
+var fertile_ground_level: int = 0
+var mineral_rich_soil_level: int = 0
+var rockmuncher_unlocked: bool = false
+var geode_cracker_unlocked: bool = false
+var calculated_risk_unlocked: bool = false
 
 #-------------------------------the redline(Acrobat, Frenzy, Survivor)-----------------------------#
 #----------ACROBAT PATH-----#
-var slither_sauce_level = 0 
-var juke_and_jive_unlocked = false
-var afterburner_level = 0
-var pop_rocks_unlocked = false
-var autotomy_unlocked = false
-var autotomy_used_this_garden = false
+var slither_sauce_level: int = 0 
+var juke_and_jive_unlocked: bool = false
+var afterburner_level: int = 0
+var pop_rocks_unlocked: bool = false
+var autotomy_unlocked: bool = false
+var autotomy_used_this_garden: bool = false
 
 # --- Frenzy Path ---
 var sugar_rush_unlocked = false
 var chain_reaction_level = 0
 var overdrive_level = 0
 var lingering_rush_level = 0
-var juggernaut_unlocked = false
 # track the combo itself
 var current_combo = 0
 var combo_is_pure = true
@@ -241,8 +259,6 @@ var combo_is_pure = true
 var extra_lives = 0
 var phoenix_dawn_unlocked = false
 var last_stand_unlocked = false
-var sacrificial_molt_used_this_run = false
-var sacrificial_molt_unlocked = false
 var death_defied_unlocked = false
 var martyrdom_unlocked = false
 var times_died_this_run = 0
@@ -253,7 +269,6 @@ var new_game_s_plus_active = false
 var edge_lord_level = 0
 var zoning_ordinance_level = 0
 var border_czar_unlocked = false
-var surveyed_land_unlocked = false
 var active_pocket_garden_rect = null
 # Ultimate Keystones
 var fold_space_unlocked = false
@@ -277,8 +292,8 @@ var block_market_portfolio: Dictionary = {} # Format: {"stock_name": shares_owne
 var block_market_prices: Dictionary = {
 	"Orange Block": {"price": 10, "currency": "Juice"},
 	"Apple Block":  {"price": 10, "currency": "Juice"},
-	"Light Block":  {"price": 25, "currency": "Pulp"},
-	"Extra Block":  {"price": 25, "currency": "Pulp"}
+	"Light Block":  {"price": 100, "currency": "Pulp"},
+	"Extra Block":  {"price": 100, "currency": "Pulp"}
 }
 
 var juice_spent_per_sub_path: Dictionary = {}
@@ -288,22 +303,16 @@ var juice_spent_per_sub_path: Dictionary = {}
 #________________||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||________________#
 #________________VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV________________#
 var difficulty_data = {
-	#=========================== TIER 1: Pacts of Binding =============================
-	"Pact 1": preload("res://Convenience/Difficulty/pact1.tres"),
-	"Pact 2": preload("res://Convenience/Difficulty/pact2.tres"),
-	"Pact 3": preload("res://Convenience/Difficulty/pact3.tres"),
-	"Pact 4": preload("res://Convenience/Difficulty/pact4.tres"),
-	"Pact 5": preload("res://Convenience/Difficulty/pact5.tres"),	
-							  # TIER 2: Three Trials/Seals
-	"Trial of the Harvest": preload("res://Convenience/Difficulty/trial1HARVEST.tres"),
-	"Trial of the Core": preload("res://Convenience/Difficulty/trial2CORE.tres"),
-	"Trial of the Redline": preload("res://Convenience/Difficulty/trial3REDLINE.tres"),
-							  # TIER 3: The Cursed Pacts
-	"Cursed Pact I": preload("res://Convenience/Difficulty/cursedpact1.tres"),
-	"Cursed Pact II": preload("res://Convenience/Difficulty/cursedpact2.tres"),
-	"Cursed Pact III": preload("res://Convenience/Difficulty/cursedpact3.tres"),
-	"Cursed Pact IV": preload("res://Convenience/Difficulty/cursedpact4.tres"),
-	"Cursed Pact V": preload("res://Convenience/Difficulty/cursedpact5.tres")
+	"Tier 0": preload("res://Convenience/Difficulty/diff_tier0.tres"),
+	"Tier 1": preload("res://Convenience/Difficulty/diff_tier1.tres"),
+	"Tier 2": preload("res://Convenience/Difficulty/diff_tier2.tres"),
+	"Tier 3": preload("res://Convenience/Difficulty/diff_tier3.tres"),
+	"Tier 4": preload("res://Convenience/Difficulty/diff_tier4.tres"),
+	"Tier 5": preload("res://Convenience/Difficulty/diff_tier5.tres"),
+	"Tier 6": preload("res://Convenience/Difficulty/diff_tier6.tres"),
+	"Tier 7": preload("res://Convenience/Difficulty/diff_tier7.tres"),
+	"Tier 8": preload("res://Convenience/Difficulty/diff_tier8.tres"),
+	"Tier 9": preload("res://Convenience/Difficulty/diff_tier9.tres"),
 }   #===================================================================================
 #---------CLASS PARAMETERS--------#
 var class_data = {#~1000 lines saved
@@ -429,7 +438,7 @@ var cosmetic_data = {
 		},
 		"The Void": {
 			"name": "The Void", "fang_cost": 200, "type": "particles", "effect_name": "Void",
-			"icon_path": "res://Assets/PNGs/dragon_fruit_icon.png", "description": "The Void..."
+			"icon_path": "res://Assets/PNGs/DifficultyPics/CursedPact4Icon.png", "description": "The Void..."
 		},
 		"The Undergrowth": {
 			"name": "The Undergrowth", "fang_cost": 200, "type": "particles", "effect_name": "Undergrowth",
@@ -437,7 +446,7 @@ var cosmetic_data = {
 		},
 		"The Digital Stream": {
 			"name": "The Digital Stream", "fang_cost": 250, "type": "shader", "shader_name": "DigitalStream",
-			"icon_path": "res://Assets/PNGs/iron_cherry_icon.png", "description": "Let's Get Digital, Digital"
+			"icon_path": "res://Assets/PNGs/UpgradeIcons/WormholeIcon.png", "description": "Let's Get Digital, Digital"
 		},
 		"The Blueprint": {
 			"name": "The Blueprint", "fang_cost": 150, "type": "shader", "shader_name": "Blueprint",
@@ -493,7 +502,6 @@ var cosmetic_data = {
 		"Golden Seeds Icon": {"name": "Golden Seeds Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/GoldenSeedsIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Harvest Forecast Icon": {"name": "Harvest Forecast Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/HarvestForecastIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Heavy Foundation Icon": {"name": "Heavy Foundation Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/HeavyFoundationIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
-		"Juggernaut Icon": {"name": "Juggernaut Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/JuggernautIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Juice Press Icon": {"name": "Juice Press Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/JuicePressIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Juke N Jive Icon": {"name": "Juke 'N Jive Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/JukeNJiveIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Kinetic Feast Icon": {"name": "Kinetc Feast Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/KineticFeastIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
@@ -507,7 +515,6 @@ var cosmetic_data = {
 		"Masters Blueprint Icon": {"name": "Master's Blueprint Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MastersBlueprintIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Meditate Icon": {"name": "Meditate Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MeditateIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Mineral Rich Soil Icon": {"name": "Mineral-Rich Soil Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MineralRichSoilIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
-		"Mise en Place Icon": {"name": "Mise en Place Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MiseenPlaceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"More Mice Icon": {"name": "More Mice Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MoreMiceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Mulligan Munchie Icon": {"name": "Mulligan Munchie Icon","fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/MulliganMunchieIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"New Game S Plus Icon": {"name": "New Game S Plus Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/NewGameSPlusIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
@@ -521,7 +528,6 @@ var cosmetic_data = {
 		"Principal Pulp Icon": {"name": "Principal Pulp Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Pulp Reactor Icon": {"name": "Pulp Reactor Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/PulpReactorIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Rockmuncher Icon": {"name": "Rockmuncher Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/RockmuncherIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
-		"Sacrifical Molt Icon": {"name": "Sacrificial Molt Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SacrificialMoltIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Serpents Coffer Icon": {"name": "Serpent's Coffer Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SerpentsCofferIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Shatter Reality Icon": {"name": "Shatter Reality Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/ShatterRealityIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
 		"Slither Sauce Icon": {"name": "Slither Sauce Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/UpgradeIcons/SlitherSauceIcon.png", "description": "Get this exclusive upgrade icon as a pfp!"},
@@ -542,10 +548,6 @@ var cosmetic_data = {
 		#Fruit Avatars
 		"OG Fruit Icon": {"name": "OG Fruit Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/snake_fruit_red.png", "description": "Get this exclusive fruit icon as a pfp!"},
 		"Golden Fruit Icon": {"name": "Golden Fruit Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/golden_fruit_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
-		"Jumping Bean Icon": {"name": "Jumping Bean Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/jumping_bean_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
-		"Ghost Pepper Icon": {"name": "Ghost Pepper Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/ghost_pepper_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
-		"Iron Cherry Icon": {"name": "Iron Cherry Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/iron_cherry_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
-		"Dragon Fruit Icon": {"name": "Dragon Fruit Icon", "fang_cost": 50, "icon_path": "res://Assets/PNGs/dragon_fruit_icon.png", "description": "Get this exclusive fruit icon as a pfp!"},
 		#Rock Avatars
 		#Snake Avatars
 		#Misc Avatars
@@ -563,7 +565,7 @@ var cosmetic_data = {
 		"Gilded": {
 			"fang_cost": 500,
 			"name": "Gilded Banner",
-			"icon_path": "res://Assets/PNGs/jumping_bean_icon.png",
+			"icon_path": "res://Assets/Templates/snake_lime.png",
 			"description": "A touch of class for the discerning serpent.",
 			"type": "flat",
 			"bg_color": "#4a4a4a",
@@ -691,7 +693,8 @@ var common_items = [
 		"description": "A refreshing treat!\nInstantly grants Juice equal to the current Garden number.",
 		"cost": 30,
 		"rarity": "Common",
-		"max_level": 1
+		"max_level": 1,
+		"icon_path": "res://Assets/PNGs/RotatingItemIcons/juice_box_icon.png"
 	}
 ]	# ... (add more common items here later)
 
@@ -715,10 +718,24 @@ var legendary_items = [
 		"cost": 150,
 		"rarity": "Legendary",
 		"max_level": 1,
-		"targets_upgrade": "Elephant Sized Portions"
+		"targets_upgrade": "Elephant Sized Portions",
+		"icon_path": "res://Assets/PNGs/RotatingItemIcons/elephant_devoured_icon.png"
 	},
 	# ... (add more legendary items here later)
 ]
+
+var cursed_items = [
+	{
+		"id": "handicap",
+		"name": "Handicap",
+		"description": "A deal with the devil.\nInstantly unlock a new Ability Slot,\nbut your maximum Extra Lives is now permanently capped at 0.",
+		"cost": 0,
+		"rarity": "Cursed",
+		"max_level": 1
+	},
+	# ... (add more rare items here later)
+]
+
 
 func _ready():
 	_load_all_upgrades(UPGRADES_DIR)
@@ -880,22 +897,23 @@ func calculate_upgrade_cost(upgrade_key: String) -> int:
 	return max(1, final_cost)
 
 func get_upgrade_level_from_key(upgrade_key: String) -> int:
-	if upgrade_key == "Elephant Sized Portions":
-		return es_portions_level
-	
-	if upgrade_key == "Mulligan Munchie":
-		return extra_lives
-	
+	match upgrade_key:
+		"Elephant Sized Portions": return es_portions_level
+		"Mulligan Munchie": return extra_lives
+		"3 Card Monty": return 1 if three_card_monty_unlocked else 0
+		"Juke N Jive": return 1 if juke_and_jive_unlocked else 0
+
 	if upgrade_key in ability_charges:
 		return ability_charges[upgrade_key].total
-	
-	var var_name_level = upgrade_key.to_snake_case().replace(" ", "") + "_level"
-	if var_name_level in GameManager:
-		return GameManager.get(var_name_level)
-		
-	var var_name_unlocked = upgrade_key.to_snake_case().replace(" ", "") + "_unlocked"
-	if var_name_unlocked in GameManager:
-		return 1 if GameManager.get(var_name_unlocked) else 0
+
+	var clean_name = upgrade_key.to_snake_case().replace("'", "").replace("-", "_")
+	var var_name_level = clean_name + "_level"
+	if var_name_level in self:
+		return get(var_name_level)
+
+	var var_name_unlocked = clean_name + "_unlocked"
+	if var_name_unlocked in self:
+		return 1 if get(var_name_unlocked) else 0
 
 	return 0
 
@@ -980,9 +998,10 @@ func start_game(is_prestige_run: bool = false):
 	# --- 3. Apply Modifiers from the chosen DIFFICULTY ---
 	# We only add starting Juice on a non-prestige run.
 	if diff_data:
+		current_difficulty_tier = diff_data.tier
 		if not is_prestige_run:
 			juice += diff_data.start_juice
-			max_ability_slots = diff_data.start_slots
+			max_ability_slots = 0 if is_tier_active(3) else diff_data.start_slots
 
 		for upgrade_key in diff_data.start_upgrades:
 			_apply_starting_upgrade(upgrade_key, diff_data.start_upgrades[upgrade_key])
@@ -1125,7 +1144,7 @@ func _reset_career_variables():
 	principal_pulp_level = 0
 	golden_handshake_level = 0
 			# Juice Press is an active ability, so it will be handled by hotbar system
-	liquidation_used = false
+	liquidation_unlocked = false
 	#-----------The Harvest-------------
 		#Glutton
 	es_portions_level = 0
@@ -1143,9 +1162,8 @@ func _reset_career_variables():
 		#Geomancer
 	fertile_ground_level = 0
 	mineral_rich_soil_level = 0
-	tectonic_shift_level = 0
-	heavy_foundation_level = 0
-	rockeater_type = "" # e.g., "Rockmuncher", "Geode Cracker", etc.
+	rockmuncher_unlocked = false
+	geode_cracker_unlocked = false
 	calculated_risk_unlocked = false
 	#-----------The Redline-------------
 		#Acrobat
@@ -1161,7 +1179,6 @@ func _reset_career_variables():
 	chain_reaction_level = 0
 	overdrive_level = 0
 	lingering_rush_level = 0
-	juggernaut_unlocked = false
 	is_zenith_active = false
 	current_combo = 0
 	combo_is_pure = true
@@ -1169,8 +1186,6 @@ func _reset_career_variables():
 	extra_lives = 0
 	phoenix_dawn_unlocked = false
 	last_stand_unlocked = false
-	sacrificial_molt_used_this_run = false
-	sacrificial_molt_unlocked = false
 	death_defied_unlocked = false
 	martyrdom_unlocked = false
 	#-----------The Ssscale-------------
@@ -1178,7 +1193,6 @@ func _reset_career_variables():
 	edge_lord_level = 0
 	zoning_ordinance_level = 0
 	border_czar_unlocked = false
-	surveyed_land_unlocked = false
 	active_pocket_garden_rect = null
 	fold_space_unlocked = false
 	masters_blueprint_unlocked = false
@@ -1223,6 +1237,8 @@ func _reset_career_variables():
 	should_spawn_corrupted_ouroboros = false
 	#---Floating ledger for juice per upgrade---#
 	juice_spent_per_sub_path.clear()
+	
+	reset_pulp_stand_run_state()
 
 
 func _apply_starting_upgrade(upgrade_key: String, levels_to_add: int):
@@ -1272,3 +1288,134 @@ func get_length_for_level(target_level: int) -> int:
 	var ci_data = meta_upgrades.get("Compound Interest") as MetaUpgradeData
 	var discount = int(ci_data.get_value_at_level(compound_interest_level, 0.0)) if ci_data else 0
 	return max(2, (target_level * target_level) - discount)
+
+func is_tier_active(tier_num: int) -> bool:
+	return current_difficulty_tier >= tier_num
+
+func get_effective_par_time() -> float:
+	var base_time: float = garden_bonus_data["par_time"]["time_limit"]
+	if is_tier_active(6):
+		return base_time * 0.5 # 30s
+	return base_time
+
+func get_effective_garden_goal(garden_id: int) -> int:
+	var base_goal: int = garden_data[garden_id]["score_goal"]
+	if is_tier_active(7):
+		return ceili(base_goal * 1.5)
+	return base_goal
+
+func reset_pulp_stand_run_state() -> void:
+	claimed_pulp_bundles.clear()
+	pulp_bundle_history.clear()
+	controls_reversed = false
+	market_in_recession = false
+	chroma_scales_enabled = true
+
+func is_larry_class() -> bool:
+	return chosen_class == "Larry"
+
+func is_upgrade_unlocked(upgrade_key: String) -> bool:
+	return get_upgrade_level_from_key(upgrade_key) > 0
+
+func get_upgrade_max_level(upgrade_key: String) -> int:
+	var upg: UpgradeData = upgrades.get(upgrade_key)
+	if upg == null:
+		return 0
+	if upgrade_key == "Elephant Sized Portions":
+		return mini(upg.max_level, max_esp_level)
+	return upg.max_level
+
+func can_receive_active_ability(ability_key: String) -> bool:
+	if ability_key in ability_charges:
+		return ability_charges[ability_key].total < get_upgrade_max_level(ability_key)
+	return equipped_abilities.size() < max_ability_slots
+
+func spend_pulp(amount: int) -> bool:
+	if pulp < amount:
+		return false
+	pulp -= amount
+	pulp_changed.emit(pulp)
+	return true
+
+func record_pulp_bundle_for_stats_tab(bundle: PulpBundleData) -> void:
+	claimed_pulp_bundles[bundle.id] = claimed_pulp_bundles.get(bundle.id, 0) + 1
+	pulp_bundle_history.append(bundle)
+	pulp_bundle_recorded.emit(bundle)
+
+func add_upgrade_level(upgrade_key: String, delta: int) -> void:
+	if delta == 0:
+		return
+	var max_lvl := get_upgrade_max_level(upgrade_key)
+
+	if upgrade_key in ACTIVE_ABILITIES:
+		if delta > 0:
+			var current := get_upgrade_level_from_key(upgrade_key)
+			var steps := mini(delta, max_lvl - current)
+			for i in range(steps):
+				purchase_or_upgrade_ability(upgrade_key)
+		elif upgrade_key in ability_charges:
+			var new_total := maxi(0, ability_charges[upgrade_key].total + delta)
+			ability_charges[upgrade_key].total = new_total
+			ability_charges[upgrade_key].current = mini(ability_charges[upgrade_key].current, new_total)
+		return
+
+	match upgrade_key:
+		"Elephant Sized Portions":
+			es_portions_level = clampi(es_portions_level + delta, 0, max_lvl)
+			return
+		"Mulligan Munchie":
+			if delta > 0 and extra_lives_are_capped:
+				return
+			extra_lives = maxi(0, extra_lives + delta)
+			return
+		"More Mice":
+			var old_lvl := more_mice_level
+			more_mice_level = clampi(more_mice_level + delta, 0, max_lvl)
+			max_fruits_on_screen = maxi(1, max_fruits_on_screen + (more_mice_level - old_lvl))
+			return
+		"3 Card Monty":
+			three_card_monty_unlocked = delta > 0
+			return
+		"Juke N Jive":
+			juke_and_jive_unlocked = delta > 0
+			return
+
+	var clean_name = upgrade_key.to_snake_case().replace("'", "").replace("-", "_")
+	var var_name_level = clean_name + "_level"
+	var var_name_unlocked = clean_name + "_unlocked"
+
+	if var_name_level in self:
+		set(var_name_level, clampi(get(var_name_level) + delta, 0, max_lvl))
+	elif var_name_unlocked in self:
+		set(var_name_unlocked, delta > 0)
+	else:
+		push_warning("GameManager: Unknown upgrade key '%s'" % upgrade_key)
+
+func unlock_upgrade(upgrade_key: String) -> void:
+	if not is_upgrade_unlocked(upgrade_key):
+		add_upgrade_level(upgrade_key, 1)
+
+func max_out_upgrade(upgrade_key: String) -> void:
+	var max_lvl := get_upgrade_max_level(upgrade_key)
+	var current := get_upgrade_level_from_key(upgrade_key)
+	if max_lvl > current:
+		add_upgrade_level(upgrade_key, max_lvl - current)
+
+func modify_ability_slots(delta: int) -> void:
+	max_ability_slots = maxi(0, max_ability_slots + delta)
+	ability_slots_changed.emit(max_ability_slots)
+
+func add_juice(amount: int) -> void:
+	juice += amount
+	if amount > 0:
+		total_juice_earned_this_run += amount
+
+func travel_back_one_garden_immediately() -> void:
+	go_back_garden_requested.emit()
+
+func apply_reverse_controls() -> void:
+	controls_reversed = true
+
+func trigger_market_recession() -> void:
+	market_in_recession = true
+	market_recession_changed.emit(true)

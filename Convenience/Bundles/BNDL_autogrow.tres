@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://cyibiu15miwh6"]
+
+[ext_resource type="Texture2D" uid="uid://duxkbch3sygjh" path="res://Assets/PNGs/RotatingItemIcons/autogrowIcon.png" id="1_l4ods"]
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="2_3m43a"]
+
+[resource]
+script = ExtResource("2_3m43a")
+id = &"Auto Grow"
+display_name = "Auto-Grow"
+description = "Unlocks Get Rich Quick, Aracne Flow, Custom AFtertaste
+Passively grow as you spend!"
+icon = ExtResource("1_l4ods")
+tier = 1
+upgrade_deltas = {}
+unlocks = Array[String](["Get Rich Quick", "Arcane Flow", "Custom Aftertaste"])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 0
+exclude_larry = false
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

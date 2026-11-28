@@ -28,18 +28,16 @@ class_name ClassData extends Resource
 	"Elephant Sized Portions": 0, "More Mice": 0, "Golden Seeds": 0,
 	"Patient Gardener": 0, "Banana Bounty": 0, "Golden Seed Extract": 0,
 	# Wrangler Modifiers
-	"Extended Reach": 0, "Active Gratification": 0, "Lasso Larry": 0,
+	"Extended Reach": 0, "Active Gratification": 0, "Lasso Larry": 0, 
 	"Double Lasso": 0, "Lasso Rhythm": 0,
 		#-----GEODE Modifiers-----#
-	"Fertile Ground": 0, "Mineral Rich Soil": 0, "Tectonic Shift": 0,
-	"Heavy Foundation": 0, "Rockmuncher": 0, "Geode Cracker": 0, 
-	"Kinetic Feast": 0, "Stones Burden": 0, "Calculated Risk": 0,
+	"Fertile Ground": 0, "Mineral Rich Soil": 0, 
+	"Rockmuncher": 0, "Geode Cracker": 0,  "Calculated Risk": 0,
 	# Acrobat Modifiers
 	"Slither Sauce": 0, "Tenderizer": 0, "Juke N Jive": 0,
 	"Afterburner": 0, "Pop Rocks": 0, "Autotomy": 0,
 	#Frenzy Modifiers
-	"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0,
-	"Juggernaut": 0, "Zenith": 0,
+	"Sugar Rush": 0, "Chain Reaction": 0, "Overdrive": 0, "Lingering Rush": 0, "Zenith": 0,
 	# Survivor Modifiers
 	"Mulligan Munchie": 0, "Phoenix Dawn": 0, "Last Stand": 0,
 	"Death Defied": 0, "Martyrdom": 0, "New Game S Plus": 0,

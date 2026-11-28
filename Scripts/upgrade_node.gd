@@ -16,7 +16,7 @@ func _ready():
 # This is the master function that the tab controller will call.
 func update_display(p_upgrade_key: String, current_level: int, max_level: int, is_unlocked: bool, theme_color: Color, accent_color: Color, theme_name: String = "Default"):
 	self.upgrade_key = p_upgrade_key
-	
+	$IndicatorContainer.visible = true
 
 	# We now create a unique StyleBox for each of the button's states.
 
@@ -93,4 +93,31 @@ func update_display(p_upgrade_key: String, current_level: int, max_level: int, i
 		modulate = Color.WHITE
 		disabled = (current_level >= max_level)
 
-	
+func display_pulp_item(icon_tex: Texture2D, main_color: Color, _accent_color: Color, _style_name: String = "Frosty"):
+	icon = icon_tex
+	$IndicatorContainer.visible = false
+
+	var style_normal = StyleBoxFlat.new()
+	style_normal.bg_color = Color(0, 0, 0, 0.4)
+	style_normal.border_color = main_color
+	style_normal.set_border_width_all(16)
+	style_normal.set_corner_radius_all(16)
+
+	var style_hovered = style_normal.duplicate()
+	style_hovered.border_color = Color(main_color.r, main_color.g, main_color.b, max(main_color.a - 0.3, 0.0))
+
+	var style_pressed = style_normal.duplicate()
+	var pressed_color = main_color.lightened(0.3)
+	pressed_color.a = min(main_color.a + 0.2, 1.0)
+	style_pressed.border_color = pressed_color
+
+	# Keep a muted version of main_color on disabled so Curses stay visibly red
+	# while Claimed items still dim via node.modulate = Color.GRAY
+	var style_disabled = style_normal.duplicate()
+	style_disabled.border_color = main_color.darkened(0.25)
+
+	add_theme_stylebox_override("normal", style_normal)
+	add_theme_stylebox_override("hover", style_hovered)
+	add_theme_stylebox_override("focus", style_hovered)
+	add_theme_stylebox_override("pressed", style_pressed)
+	add_theme_stylebox_override("disabled", style_disabled)

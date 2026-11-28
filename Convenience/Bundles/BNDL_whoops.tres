@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://dul7jwme2kaj2"]
+
+[ext_resource type="Texture2D" uid="uid://cdmfvqvu35gjb" path="res://Assets/PNGs/RotatingItemIcons/WhoopsIcon.png" id="1_kakgg"]
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="1_ntswm"]
+
+[resource]
+script = ExtResource("1_ntswm")
+id = &"Whoops"
+display_name = "Whoops"
+description = "Go back one garden..."
+icon = ExtResource("1_kakgg")
+tier = 1
+upgrade_deltas = {}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String]([])
+ability_slot_delta = 0
+special_effect = 2
+exclude_larry = false
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

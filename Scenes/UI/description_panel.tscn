@@ -50,15 +50,13 @@ corner_radius_bottom_left = 2
 expand_margin_left = 8.0
 expand_margin_right = 8.0
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a0khq"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_colbl"]
 content_margin_bottom = 4.0
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
-border_width_bottom = 8
 border_color = Color(0.960784, 0.937255, 0.901961, 1)
 border_blend = true
-expand_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a0khq"]
 
 [node name="DescriptionPanel" type="Control"]
 custom_minimum_size = Vector2(448, 320)
@@ -83,6 +81,7 @@ mouse_filter = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="MarginC"]
 layout_mode = 2
+mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_vywvx")
 
 [node name="VboxMain" type="VBoxContainer" parent="MarginC/PanelContainer"]
@@ -127,7 +126,7 @@ theme_override_styles/separator = SubResource("StyleBoxEmpty_knrs3")
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
-theme_override_constants/separation = 15
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
@@ -135,12 +134,16 @@ layout_mode = 2
 theme_override_styles/separator = SubResource("StyleBoxEmpty_vywvx")
 
 [node name="UpgradeNameLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
-custom_minimum_size = Vector2(128, 32)
+custom_minimum_size = Vector2(128, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/default_color = Color(0.960784, 0.937255, 0.901961, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_outline_size = 8
 theme_override_fonts/normal_font = ExtResource("1_qmwms")
 theme_override_fonts/mono_font = ExtResource("1_qmwms")
 theme_override_fonts/italics_font = ExtResource("1_qmwms")
@@ -150,32 +153,44 @@ theme_override_font_sizes/normal_font_size = 20
 theme_override_styles/normal = ExtResource("5_fnpmw")
 bbcode_enabled = true
 text = "Elephant-Sized Portions"
+horizontal_alignment = 1
 
-[node name="TreeLabel" type="Label" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
+[node name="TreeLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
 custom_minimum_size = Vector2(128, 32)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.960784, 0.937255, 0.901961, 1)
+theme_override_colors/default_color = Color(0.960784, 0.937255, 0.901961, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 12
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
-theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 20
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_outline_size = 4
+theme_override_fonts/normal_font = ExtResource("1_qmwms")
+theme_override_font_sizes/normal_font_size = 18
 theme_override_styles/normal = ExtResource("5_fnpmw")
+bbcode_enabled = true
 text = "Tree: Glutton"
-autowrap_mode = 3
 
 [node name="CurrentLevelLabel" type="Label" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
 custom_minimum_size = Vector2(128, 32)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.960784, 0.937255, 0.901961, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 4
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Lvl 0 / 10"
+
+[node name="HSeparator2" type="HSeparator" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_vywvx")
 
 [node name="CostLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
 custom_minimum_size = Vector2(128, 32)
@@ -183,7 +198,10 @@ layout_mode = 2
 theme_override_colors/default_color = Color(1, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 8
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_outline_size = 4
 theme_override_fonts/normal_font = ExtResource("1_qmwms")
 theme_override_fonts/mono_font = ExtResource("1_qmwms")
 theme_override_fonts/italics_font = ExtResource("1_qmwms")
@@ -192,13 +210,44 @@ theme_override_fonts/bold_font = ExtResource("4_fnpmw")
 theme_override_font_sizes/normal_font_size = 20
 theme_override_styles/normal = ExtResource("5_fnpmw")
 bbcode_enabled = true
-text = "Cost: 12 mL Juice"
+text = "Cost: 12 L Juice"
+horizontal_alignment = 1
 vertical_alignment = 2
 
 [node name="HSeparator" type="HSeparator" parent="MarginC/PanelContainer/VboxMain"]
 layout_mode = 2
 theme_override_constants/separation = 6
 theme_override_styles/separator = SubResource("StyleBoxFlat_knrs3")
+
+[node name="PrereqSection" type="HBoxContainer" parent="MarginC/PanelContainer/VboxMain"]
+visible = false
+layout_mode = 2
+
+[node name="PrereqLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/PrereqSection"]
+custom_minimum_size = Vector2(256, 128)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.902855, 0.902855, 7.70092e-07, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_offset_x = -3
+theme_override_constants/shadow_outline_size = 4
+theme_override_constants/line_separation = 8
+theme_override_fonts/normal_font = ExtResource("1_qmwms")
+theme_override_font_sizes/normal_font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_colbl")
+bbcode_enabled = true
+text = "Requires:
+Diet Slith: lvl 8
+Meditate: lvl 1"
+fit_content = true
+scroll_active = false
+horizontal_alignment = 1
+vertical_alignment = 1
+justification_flags = 162
 
 [node name="BottomRow" type="HBoxContainer" parent="MarginC/PanelContainer/VboxMain"]
 layout_mode = 2
@@ -209,20 +258,25 @@ theme_override_constants/separation = 4
 theme_override_styles/separator = SubResource("StyleBoxEmpty_a0khq")
 
 [node name="DescriptionLabel" type="Label" parent="MarginC/PanelContainer/VboxMain/BottomRow"]
-custom_minimum_size = Vector2(256, 160)
+custom_minimum_size = Vector2(256, 192)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(0.960784, 0.937255, 0.901961, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_offset_y = 4
 theme_override_constants/outline_size = 12
+theme_override_constants/shadow_outline_size = 4
 theme_override_fonts/font = ExtResource("1_qmwms")
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_colbl")
 text = "Buy 12 upgrades if you feel like it!
 Lvl 1: this thing Lvl 2: that thing
 Lvl 3: another thing 
 Lvl 4: ooooyeah"
+horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 justification_flags = 162

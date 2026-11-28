@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="MetaUpgradeData" load_steps=3 format=3 uid="uid://cl2d2t52bpgpk"]
 
-[ext_resource type="Texture2D" uid="uid://bjp5g6vkq5ohd" path="res://Assets/PNGs/UpgradeIcons/PrincipalPulpIcon.png" id="1_hn1fg"]
+[ext_resource type="Texture2D" uid="uid://csxh8041yrsy8" path="res://Assets/Icons/snake_chart_logo.png" id="1_hn1fg"]
 [ext_resource type="Script" uid="uid://clsq0vy65pfyx" path="res://Scripts/MetaUpgradeData.gd" id="1_rtx26"]
 
 [resource]

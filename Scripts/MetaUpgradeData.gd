@@ -7,7 +7,7 @@ class_name MetaUpgradeData extends Resource
 @export var display_name: String = ""
 @export_multiline var description: String = ""
 @export var icon: Texture2D
-@export_enum("Slot", "Aesthetic", "Tickers", "Luck", "Economy") var type: String = "Slot"
+@export_enum("Slot", "Aesthetic", "Tickers", "Luck", "Economy", "Loop") var type: String = "Slot"
 
 @export_category("Progression/Balance")
 @export var costs: Array[int] = []

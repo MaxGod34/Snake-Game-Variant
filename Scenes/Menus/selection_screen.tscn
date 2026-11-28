@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ckt66paabxg4k"]
+[gd_scene load_steps=15 format=3 uid="uid://ckt66paabxg4k"]
 
 [ext_resource type="Script" uid="uid://cuabka8c5vfyj" path="res://Scripts/selection_screen.gd" id="1_hrnev"]
 [ext_resource type="Texture2D" uid="uid://bss143c0o8jtj" path="res://Assets/Templates/basic_square_with_border.png" id="2_akwka"]
@@ -6,26 +6,10 @@
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="4_dlmdu"]
 [ext_resource type="StyleBox" uid="uid://dlfl1jfmqdeth" path="res://Assets/Styles/block_buttons/yellow_resume_button_hover.tres" id="5_jfxvm"]
 [ext_resource type="Texture2D" uid="uid://dqkem6rp8x468" path="res://Assets/PNGs/RotatingItemIcons/handicap_icon.png" id="5_yklmt"]
+[ext_resource type="Texture2D" uid="uid://dq1tlvoqn7udo" path="res://Assets/questionicon.png" id="6_8eoh0"]
 [ext_resource type="StyleBox" uid="uid://cff583opi7pth" path="res://Assets/Styles/block_buttons/block_button_disabled.tres" id="6_yklmt"]
 [ext_resource type="StyleBox" uid="uid://dmh4fpjetbw13" path="res://Assets/Styles/block_buttons/yellow_resume_block_normal.tres" id="7_8eoh0"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dlmdu"]
-bg_color = Color(0.152941, 0, 0.176471, 1)
-border_width_left = 16
-border_width_top = 16
-border_width_right = 16
-border_width_bottom = 16
-border_blend = true
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jfxvm"]
-bg_color = Color(0.152941, 0, 0.176471, 1)
-border_width_left = 16
-border_width_top = 16
-border_width_right = 16
-border_width_bottom = 16
-border_blend = true
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jfxvm"]
+[ext_resource type="PackedScene" uid="uid://bdqnq8u7m75ue" path="res://Scenes/UI/description_panel.tscn" id="9_yklmt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yklmt"]
 bg_color = Color(0.152941, 0, 0.176471, 1)
@@ -35,6 +19,26 @@ border_width_right = 16
 border_width_bottom = 16
 border_blend = true
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8eoh0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jfxvm"]
+bg_color = Color(0.152941, 0, 0.176471, 1)
+border_width_left = 16
+border_width_top = 16
+border_width_right = 16
+border_width_bottom = 16
+border_blend = true
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2uw0e"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_blend = true
+expand_margin_left = 20.0
+expand_margin_right = 18.0
+
 [node name="SelectionScreen" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -43,6 +47,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hrnev")
+placeholder_icon = ExtResource("6_8eoh0")
 
 [node name="Background" type="TextureRect" parent="."]
 modulate = Color(0.113725, 0.113725, 0.113725, 0.509804)
@@ -60,29 +65,33 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -10.0
-offset_bottom = 10.0
+offset_right = 12.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="MainLayout" type="HBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
-[node name="ClassRosterPanel" type="PanelContainer" parent="MarginContainer/MainLayout"]
+[node name="DifficultyPactPanel" type="PanelContainer" parent="MarginContainer/MainLayout"]
 layout_mode = 2
-size_flags_horizontal = 3
 size_flags_stretch_ratio = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_dlmdu")
+theme_override_styles/panel = SubResource("StyleBoxFlat_yklmt")
 
-[node name="ClassNameLabel" type="Label" parent="MarginContainer/MainLayout/ClassRosterPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel"]
+custom_minimum_size = Vector2(640, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="ClassNameLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 custom_minimum_size = Vector2(256, 128)
 layout_mode = 2
 size_flags_vertical = 0
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_colors/font_color = Color(0, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_offset_x = 8
+theme_override_constants/shadow_offset_y = 6
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("4_dlmdu")
 theme_override_font_sizes/font_size = 42
@@ -91,113 +100,242 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="ClassGrid" type="GridContainer" parent="MarginContainer/MainLayout/ClassRosterPanel"]
+[node name="ClassGrid" type="GridContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/h_separation = 16
+theme_override_constants/h_separation = 24
 theme_override_constants/v_separation = 32
-columns = 4
+columns = 5
 
-[node name="MulliganNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="MulliganNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("5_yklmt")
+vertical_icon_alignment = 1
+
+[node name="TycoonNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="PuristNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="GhostNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="LarryNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="DoublesNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="PhoenixCoilNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="GobbleNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="TycoonNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="PuristNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="DayTraderNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="LarryNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="ManagerNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="PhoenixCoilNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="CalculatorNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="DayTraderNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="GhostNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="ManagerNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="SpaceNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="CalculatorNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="BlinkerNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="SpaceNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="PsychicNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="BlinkerNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="DoublesNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="PsychicNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="ComboisseurNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="ComboisseurNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="SniperNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="SniperNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="MineralNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="MineralNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="GobbleNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="GlutsNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="GlutsNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="GrooveNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="GrooveNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="AlchemistNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/ClassGrid" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(96, 96)
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 icon = ExtResource("5_yklmt")
 
-[node name="AlchemistNode" parent="MarginContainer/MainLayout/ClassRosterPanel/ClassGrid" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
 layout_mode = 2
-icon = ExtResource("5_yklmt")
+theme_override_constants/separation = 48
+theme_override_styles/separator = SubResource("StyleBoxFlat_8eoh0")
+
+[node name="TierLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = 8
+theme_override_constants/shadow_offset_y = 6
+theme_override_constants/shadow_outline_size = 12
+theme_override_fonts/font = ExtResource("4_dlmdu")
+theme_override_font_sizes/font_size = 48
+text = "Tier"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TierRow" type="GridContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/h_separation = 48
+theme_override_constants/v_separation = 32
+columns = 5
+
+[node name="Tier0Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Tier1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Tier2Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Tier3Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+
+[node name="Tier4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
+
+[node name="Tier5Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
+
+[node name="Tier6Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
+
+[node name="Tier7Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
+
+[node name="Tier8Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
+
+[node name="Tier9Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/TierRow" instance=ExtResource("3_u6nc0")]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 7
+size_flags_vertical = 5
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 32
+theme_override_styles/separator = SubResource("StyleBoxFlat_8eoh0")
 
 [node name="LoadoutDisplayPanel" type="PanelContainer" parent="MarginContainer/MainLayout"]
 layout_mode = 2
@@ -206,20 +344,34 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_jfxvm")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainLayout/LoadoutDisplayPanel"]
 layout_mode = 2
+alignment = 2
 
-[node name="ClassArtwork" type="TextureRect" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+[node name="ClassTopRow" type="HBoxContainer" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="ClassInfoCol" type="VBoxContainer" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ClassTopRow"]
+layout_mode = 2
+alignment = 1
+
+[node name="ClassArtwork" type="TextureRect" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ClassTopRow/ClassInfoCol"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
-
-[node name="ClassNameLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
 size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+size_flags_vertical = 4
+texture = ExtResource("6_8eoh0")
+
+[node name="ClassNameLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ClassTopRow/ClassInfoCol"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("4_dlmdu")
@@ -229,71 +381,103 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="HSeparator2" type="HSeparator" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+[node name="ClassDescriptionLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ClassTopRow"]
+custom_minimum_size = Vector2(320, 256)
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_jfxvm")
-
-[node name="ClassDescriptionLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 160)
-layout_mode = 2
-size_flags_horizontal = 4
 size_flags_vertical = 1
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 12
+theme_override_constants/shadow_offset_x = -3
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 6
 theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 20
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="HSeparator4" type="HSeparator" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_jfxvm")
-
-[node name="DifficultyNameLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 112)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 12
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 32
+theme_override_font_sizes/font_size = 18
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="HSeparator3" type="HSeparator" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+[node name="HSeparator4" type="HSeparator" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_jfxvm")
+theme_override_constants/separation = 16
+theme_override_styles/separator = SubResource("StyleBoxFlat_2uw0e")
 
-[node name="DifficultyDescriptionLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 196)
+[node name="DifficultyNameLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+custom_minimum_size = Vector2(256, 64)
 layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 1
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 1, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
+theme_override_constants/shadow_offset_x = -4
 theme_override_constants/shadow_offset_y = 4
 theme_override_constants/shadow_outline_size = 12
 theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 20
-text = "
+theme_override_font_sizes/font_size = 32
+text = "Juice Box"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
-"
+[node name="DifficultyDescriptionLabel" type="Label" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+custom_minimum_size = Vector2(480, 384)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/line_spacing = 12
+theme_override_constants/shadow_offset_x = -3
+theme_override_constants/shadow_offset_y = 2
+theme_override_constants/shadow_outline_size = 6
+theme_override_fonts/font = ExtResource("4_dlmdu")
+theme_override_font_sizes/font_size = 20
+text = "1 Move Faster
+2
+3
+4
+5
+6
+7
+8
+9"
 horizontal_alignment = 1
 autowrap_mode = 3
 
-[node name="BeginRunButton" type="Button" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+[node name="ButtonRow" type="HBoxContainer" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 72
+alignment = 1
+
+[node name="ExitButton" type="Button" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ButtonRow"]
+modulate = Color(0.870588, 0.372549, 0.870588, 1)
+custom_minimum_size = Vector2(128, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_colors/font_disabled_color = Color(0.937255, 0.937255, 0, 1)
+theme_override_colors/font_hover_pressed_color = Color(0.937255, 0.937255, 0, 1)
+theme_override_colors/font_hover_color = Color(0.937255, 0.937255, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_color = Color(0.938874, 0.938874, 1.54018e-06, 1)
+theme_override_colors/font_focus_color = Color(0.937255, 0.937255, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.937255, 0.937255, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("4_dlmdu")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/focus = ExtResource("5_jfxvm")
+theme_override_styles/disabled = ExtResource("6_yklmt")
+theme_override_styles/hover_pressed = ExtResource("5_jfxvm")
+theme_override_styles/hover = ExtResource("5_jfxvm")
+theme_override_styles/pressed = ExtResource("5_jfxvm")
+theme_override_styles/normal = ExtResource("7_8eoh0")
+text = "Exit
+"
+
+[node name="BeginRunButton" type="Button" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer/ButtonRow"]
 custom_minimum_size = Vector2(256, 104)
 layout_mode = 2
 size_flags_horizontal = 4
@@ -317,170 +501,10 @@ theme_override_styles/normal = ExtResource("7_8eoh0")
 text = "Start Run
 "
 
-[node name="DifficultyPactPanel" type="PanelContainer" parent="MarginContainer/MainLayout"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_yklmt")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel"]
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/MainLayout/LoadoutDisplayPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 16
-alignment = 1
-
-[node name="ClassNameLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 96)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 12
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 42
-text = "Create Pact"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
-
-[node name="BasePactLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 12
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 32
-text = "Base Pact 1-5"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
-
-[node name="BasePactRow" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 32
-alignment = 1
-
-[node name="Pact1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-
-[node name="Pact2Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-
-[node name="Pact3Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/BasePactRow" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 48
-
-[node name="Pact4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer3" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-size_flags_horizontal = 7
-size_flags_vertical = 5
-
-[node name="Pact5Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer3" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-size_flags_horizontal = 7
-size_flags_vertical = 5
-
-[node name="SealsRowLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 12
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 32
-text = "Seals"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 32
-alignment = 1
-
-[node name="TrialoftheHarvestNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
-layout_mode = 2
-
-[node name="TrialoftheCoreNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
-layout_mode = 2
-
-[node name="TrialoftheRedlineNode" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer" instance=ExtResource("3_u6nc0")]
-layout_mode = 2
-
-[node name="CursedPactRowLabel" type="Label" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 8
-theme_override_colors/font_color = Color(0.843137, 1, 0.678431, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-theme_override_constants/line_spacing = 12
-theme_override_constants/shadow_offset_x = 4
-theme_override_constants/shadow_offset_y = 4
-theme_override_constants/shadow_outline_size = 12
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 32
-text = "Cursed Pact 1-5"
-horizontal_alignment = 1
-vertical_alignment = 1
-autowrap_mode = 3
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 32
-alignment = 1
-
-[node name="CursedPact1Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(112, 112)
-layout_mode = 2
-
-[node name="CursedPact2Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(112, 112)
-layout_mode = 2
-
-[node name="CursedPact3Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer2" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(112, 112)
-layout_mode = 2
-
-[node name="HBoxContainer4" type="HBoxContainer" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_constants/separation = 48
-alignment = 1
-
-[node name="CursedPact4Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(112, 112)
-layout_mode = 2
-
-[node name="CursedPact5Node" parent="MarginContainer/MainLayout/DifficultyPactPanel/VBoxContainer/HBoxContainer4" instance=ExtResource("3_u6nc0")]
-custom_minimum_size = Vector2(112, 112)
-layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_8eoh0")
 
 [node name="DebugPanel" type="PanelContainer" parent="."]
 visible = false
@@ -496,26 +520,21 @@ grow_vertical = 0
 [node name="VBoxContainer" type="VBoxContainer" parent="DebugPanel"]
 layout_mode = 2
 
-[node name="UnlockNextPactButton" type="Button" parent="DebugPanel/VBoxContainer"]
+[node name="UnlockNextTierButton" type="Button" parent="DebugPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_dlmdu")
 theme_override_font_sizes/font_size = 24
-text = "Unlock Next Pact"
-
-[node name="CompleteSealsButton" type="Button" parent="DebugPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 24
-text = "Complete All Seals"
-
-[node name="UnlockNextCursedPactButton" type="Button" parent="DebugPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("4_dlmdu")
-theme_override_font_sizes/font_size = 24
-text = "Unlock Next Cursed Pact"
+text = "Unlock Next Tier"
 
 [node name="ResetSaveButton" type="Button" parent="DebugPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_dlmdu")
 theme_override_font_sizes/font_size = 24
 text = "RESET ALL PROGRESS"
+
+[node name="DescriptionPanel" parent="." instance=ExtResource("9_yklmt")]
+visible = false
+
+[node name="TooltipTimer" type="Timer" parent="."]
+wait_time = 0.15
+one_shot = true

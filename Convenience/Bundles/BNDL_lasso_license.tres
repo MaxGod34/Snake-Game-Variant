@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="PulpBundleData" load_steps=3 format=3 uid="uid://cuu1pholex7s8"]
+
+[ext_resource type="Texture2D" uid="uid://ucuwdtmhkmmj" path="res://Assets/PNGs/RotatingItemIcons/LassoLicenseIcon.png" id="1_wnrjg"]
+[ext_resource type="Script" uid="uid://cmyc2yjcq4uh4" path="res://Scripts/PulpBundleData.gd" id="2_wg0ng"]
+
+[resource]
+script = ExtResource("2_wg0ng")
+id = &"Lasso License"
+display_name = "Lasso License"
+description = "Max out Lasso Larry!
+Gain 9 charges."
+icon = ExtResource("1_wnrjg")
+tier = 2
+upgrade_deltas = {}
+unlocks = Array[String]([])
+max_out_upgrades = Array[String](["Lasso Larry"])
+ability_slot_delta = 0
+special_effect = 0
+exclude_larry = false
+min_difficulty_tier = -1
+unique_per_run = false
+metadata/_custom_type_script = "uid://cmyc2yjcq4uh4"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="DifficultyData" load_steps=2 format=3 uid="uid://dx54fdvkj5csr"]
+
+[ext_resource type="Script" uid="uid://fhivwwke6i6x" path="res://Scripts/difficulty_template.gd" id="1_cfm8q"]
+
+[resource]
+script = ExtResource("1_cfm8q")
+display_name = "Kidney Stone"
+description = "Spawn a rock on level-up"
+icon_path = "res://Assets/PNGs/Dice/snake_dice_128_dice_6.png"
+tier = 8
+juice_cost_modifier = 0
+speed_multiplier = 1.0
+start_slots = 0
+start_juice = 0
+campaign_length = 9
+has_rock_modifier = false
+locked_paths = Array[String]([])
+start_upgrades = {}
+xp_multiplier = 1.0
+metadata/_custom_type_script = "uid://fhivwwke6i6x"
