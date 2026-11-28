@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_d8tl8")
 display_name = "Groove"
-description = "A jack-of-all-trades who combines speed and passive income."
+description = "A jack-of-all-trades.
+Leverage skill for passive growth."
 artwork_path = "res://Assets/ClassIcons/GrooveClassIcon.png"
 icon_path = "res://Assets/ClassIcons/GrooveClassIcon.png"
 fang_cost = 100
@@ -14,7 +15,6 @@ speed_upgrade_mod = 0.9
 start_upgrades = {
 "Get Rich Quick": 1,
 "Juke N Jive": 1,
-"Mulligan Munchie": 1,
 "Snake Clicker": 3
 }
 start_stats = {}

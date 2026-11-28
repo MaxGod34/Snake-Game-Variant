@@ -5,13 +5,15 @@
 [resource]
 script = ExtResource("1_dqas0")
 display_name = "Mineral"
-description = "Master of the immovable. Make the rocks work for you!"
+description = "Master of the immovable. 
+Make the rocks work for you!"
 artwork_path = "res://Assets/ClassIcons/MineralClassIcon.png"
 icon_path = "res://Assets/ClassIcons/MineralClassIcon.png"
 fang_cost = 100
 start_speed = 0.3
 speed_upgrade_mod = 0.9
 start_upgrades = {
+"Calculated Risk": 1,
 "Geological Survey": 1
 }
 start_stats = {

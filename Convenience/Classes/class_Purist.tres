@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_g6bqb")
 display_name = "Purist"
-description = "A master of the garden with a disdain for RNG."
+description = "A master of pure Snake!
+Purity requires no RNG.
+Only patience..."
 artwork_path = "res://Assets/ClassIcons/PuristClassIcon.png"
 icon_path = "res://Assets/ClassIcons/PuristClassIcon.png"
 fang_cost = 100

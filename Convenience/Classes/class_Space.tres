@@ -5,7 +5,10 @@
 [resource]
 script = ExtResource("1_u088t")
 display_name = "Space"
-description = "Master of design and speed."
+description = "Developer's Custom #1
+Increase speed 100% 
+Never run out of room
+Have fun :)"
 artwork_path = "res://Assets/ClassIcons/SpaceClassIcon.png"
 icon_path = "res://Assets/ClassIcons/SpaceClassIcon.png"
 fang_cost = 100

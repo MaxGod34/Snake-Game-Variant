@@ -302,15 +302,18 @@ func _on_description_delay_timer_timeout():
 	var mouse_position = get_viewport().get_mouse_position()
 
 	if mouse_position.x < viewport_size.x / 2.0:
-		description_panel.position.x = mouse_position.x + 128
+		description_panel.position.x = mouse_position.x + 32
 	else:
-		description_panel.position.x = mouse_position.x - description_panel.size.x - 128
+		description_panel.position.x = mouse_position.x - description_panel.size.x - 32
 
-	description_panel.position.y = clamp(
-		mouse_position.y - (description_panel.size.y / 2.0),
-		20,
-		viewport_size.y - description_panel.size.y - 20
-	)
+	if mouse_position.y < viewport_size.y / 2.0:
+		description_panel.position.y = mouse_position.y - 64
+	else:
+		description_panel.position.y = mouse_position.y - description_panel.size.y
+	#description_panel.position.y = clamp(
+		#mouse_position.y - (description_panel.size.y/2.0),
+		#20,
+		#viewport_size.y - description_panel.size.y - 20
 	description_panel.visible = true
 
 func _on_new_game_s_plus_pressed():

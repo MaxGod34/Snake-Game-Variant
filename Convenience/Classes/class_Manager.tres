@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_0gksl")
 display_name = "Manager"
-description = "The pulp enjoyer!"
+description = "The pulp enjoyer!
+Pay a 20% Juice Tax at the shop."
 artwork_path = "res://Assets/ClassIcons/ManagerClassIcon.png"
 icon_path = "res://Assets/ClassIcons/ManagerClassIcon.png"
 fang_cost = 100

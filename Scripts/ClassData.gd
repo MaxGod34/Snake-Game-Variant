@@ -2,7 +2,7 @@ class_name ClassData extends Resource
 
 @export_category("Flavor_Intro")
 @export var display_name: String = "McName Missing"
-@export var description: String = "N/A"
+@export_multiline var description: String = "N/A"
 @export var artwork_path: String = ""
 @export var icon_path: String = ""
 

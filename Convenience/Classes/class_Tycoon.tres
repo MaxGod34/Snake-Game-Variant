@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_o1hy2")
 display_name = "Tycoon"
-description = "A master of passive income."
+description = "Why eat the fruits?
+Why even play the game?
+40% juice tax after each Garden."
 artwork_path = "res://Assets/ClassIcons/TycoonClassIcon.png"
 icon_path = "res://Assets/ClassIcons/TycoonClassIcon.png"
 fang_cost = 0

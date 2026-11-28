@@ -1,17 +1,17 @@
 [gd_resource type="Resource" script_class="UpgradeData" load_steps=3 format=3 uid="uid://cvjo1llhr5xug"]
 
-[ext_resource type="Texture2D" uid="uid://kq5s56v31o0r" path="res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png" id="1_8d0ky"]
-[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_obnhh"]
+[ext_resource type="Texture2D" uid="uid://kq5s56v31o0r" path="res://Assets/PNGs/UpgradeIcons/PassiveIncomeIcon.png" id="1_uo5qu"]
+[ext_resource type="Script" uid="uid://cufh03jas3moe" path="res://Scripts/UpgradeData.gd" id="2_6gr1v"]
 
 [resource]
-script = ExtResource("2_obnhh")
+script = ExtResource("2_6gr1v")
 id = "Passive Income"
 display_name = "Passive Income"
 description = "Every bet won results in a +1 to fruit reward.
 Get on it!"
-icon = ExtResource("1_8d0ky")
+icon = ExtResource("1_uo5qu")
 path = "Snake Eyes"
-sub_path = "Passive"
+sub_path = "Gamba"
 type = "Passive"
 costs = Array[int]([13])
 level_values = Array[float]([])

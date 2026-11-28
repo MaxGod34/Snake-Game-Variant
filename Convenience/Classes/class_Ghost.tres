@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_3xyq2")
 display_name = "Ghost"
-description = "Steer into your ectoplasmic agenda!"
+description = "Steer into your 
+ectoplasmic agenda!"
 artwork_path = "res://Assets/ClassIcons/GhostClassIcon.png"
 icon_path = "res://Assets/ClassIcons/GhostClassIcon.png"
 fang_cost = 0

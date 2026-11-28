@@ -5,7 +5,10 @@
 [resource]
 script = ExtResource("1_q8p8m")
 display_name = "Doubles"
-description = "A pure gambler who thrives on risk and gets faster with every failure."
+description = "A pure gambler. No planning necessary.
+Every bet won scales fruit reward.
+Every bet lost increases speed.
+"
 artwork_path = "res://Assets/ClassIcons/DoublesClassIcon.png"
 icon_path = "res://Assets/ClassIcons/DoublesClassIcon.png"
 fang_cost = 0

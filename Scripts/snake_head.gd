@@ -194,23 +194,10 @@ func _on_head_area_area_entered(area):
 			if GameManager.geode_cracker_unlocked:
 				GameManager.juice += 1
 				GameManager.total_juice_earned_this_run += 1
-		
-		
-		var chosen_path = GameManager.rockeater_type
-		if chosen_path != "":
-			main.destroy_obstacle(area)
-			match chosen_path:
-				"Rockmuncher":
-					print("ROCKMUNCHER! Gained +2 growth")
-					main.grow_snake(2)
-				"Geode Cracker":
-					GameManager.juice += 1
-					GameManager.total_juice_earned_this_run += 1
-					main.update_hud()
-					print("GEODE CRACKER! Gained + 1 SP")
+				main.update_hud()
 			return
-
 		
+
 		var tenderizer_data = GameManager.ability_charges.get("Tenderizer")
 		if tenderizer_data and tenderizer_data.current > 0:
 			tenderizer_data.current -= 1

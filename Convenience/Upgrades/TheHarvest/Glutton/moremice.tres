@@ -7,7 +7,7 @@
 script = ExtResource("2_cc0br")
 id = "More Mice"
 display_name = "More Mice"
-description = "Increase Fruit Reward +1"
+description = "Increase Max Fruits +1"
 icon = ExtResource("1_w8f6r")
 path = "The Harvest"
 sub_path = "Glutton"

@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_0eeuk")
 display_name = "Sniper"
-description = "A focused predator who lives for the thrill of the hunt."
+description = "Live for the thrill of the hunt.
+Start with extra fruits and toys.
+Illusionist Tree in shop disabled."
 artwork_path = "res://Assets/ClassIcons/SniperClassIcon.png"
 icon_path = "res://Assets/ClassIcons/SniperClassIcon.png"
 fang_cost = 0
@@ -13,6 +15,7 @@ start_speed = 0.3
 speed_upgrade_mod = 0.9
 start_upgrades = {
 "Banana Bounty": 2,
+"Lasso Larry": 2,
 "More Mice": 4
 }
 start_stats = {

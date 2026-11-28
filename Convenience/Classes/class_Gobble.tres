@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_x755u")
 display_name = "Gobble"
-description = "Utilize the ingredients to outpace your peers."
+description = "Utilize the terrain!
+Embrace the mineral!"
 artwork_path = "res://Assets/ClassIcons/GobbleClassIcon.png"
 icon_path = "res://Assets/ClassIcons/GobbleClassIcon.png"
 fang_cost = 0

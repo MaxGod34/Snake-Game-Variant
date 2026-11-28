@@ -10,7 +10,7 @@ class_name UpgradeData extends Resource
 @export_enum("The Core", "The Harvest", "The Redline", "The Ssscale", "Snake Eyes")
 var path: String = "The Core"
 
-@export_enum("Idle", "Planner", "Ledger", "Glutton", "Wrangler", "Geode", "Acrobat", "Frenzy", "Survivor", "Illusionist", "Architect", "Passive")
+@export_enum("Idle", "Planner", "Ledger", "Glutton", "Wrangler", "Geode", "Acrobat", "Frenzy", "Survivor", "Illusionist", "Architect", "Gamba")
 var sub_path: String = "Idle"
 
 @export_enum("Passive", "Active Ability", "In-Active Ability", "Keystone", "Keystone Ability", "Boost", "Passive/Ability", "On-Death Ability")

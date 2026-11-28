@@ -8,27 +8,21 @@ extends Control
 @onready var level_label = $MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer/CurrentLevelLabel
 @onready var cost_label = $MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer/CostLabel
 @onready var description_label = $MarginC/PanelContainer/VboxMain/BottomRow/DescriptionLabel
-
 @onready var prereq_section = $MarginC/PanelContainer/VboxMain/PrereqSection
 @onready var prereq_label = $MarginC/PanelContainer/VboxMain/PrereqSection/PrereqLabel
-
-
 const PULP_TIER_META: Dictionary = {
 	PulpBundleData.Tier.COMMON: {"name": "Common", "hex": "#d9d9d9"},
 	PulpBundleData.Tier.RARE: {"name": "Rare", "hex": "#4da6ff"},
 	PulpBundleData.Tier.LEGENDARY: {"name": "Legendary", "hex": "#ffd700"},
 	PulpBundleData.Tier.CURSE: {"name": "Curse", "hex": "#ff4d4d"},
 }
-
-
-
+##==================================================================================================
 func _ready():
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	custom_minimum_size = Vector2(448, 320)
 	size = custom_minimum_size
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
-	
 
 func _get_prop(source, prop_name: String, default_val = null):
 	if source == null:
@@ -37,7 +31,6 @@ func _get_prop(source, prop_name: String, default_val = null):
 		return source.get(prop_name, default_val)
 	var val = source.get(prop_name)
 	return val if val != null else default_val
-
 
 # This is the master function that main.gd will call.
 func show_info(rules, current_level: int, cost: int, currency_unit: String) -> void:
@@ -62,6 +55,7 @@ func show_info(rules, current_level: int, cost: int, currency_unit: String) -> v
 		tree_label.text = "Type: %s" % _get_prop(rules, "type", "Unlockable")
 	
 	# Lvl Cost
+	level_label.visible = true
 	var max_level: int = _get_prop(rules, "max_level", 1)
 	if current_level >= max_level and max_level > 0:
 		level_label.text = "(MAX)"
@@ -91,10 +85,10 @@ func show_info(rules, current_level: int, cost: int, currency_unit: String) -> v
 		icon_display.texture = null
 		icon_display.modulate = Color.WHITE
 	
+	_update_prerequisites(rules)
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	reset_size()
 	size = Vector2(max(size.x, 448.0), max(size.y, 320))
-
 
 func _update_prerequisites(rules) -> void:
 	if not is_instance_valid(prereq_section) or not is_instance_valid(prereq_label):
@@ -105,13 +99,18 @@ func _update_prerequisites(rules) -> void:
 		prereq_section.visible = false
 		return
 
-	var lines: Array[String] = ["[b]Requires:[/b]"]
+	var lines: Array[String] = []
+	var all_met: bool = true
+
 	for req_key in prereqs:
 		if typeof(req_key) != TYPE_STRING:
 			continue
 		var req_level: int = int(prereqs[req_key])
 		var owned_level: int = GameManager.get_upgrade_level_from_key(req_key)
 		var met: bool = owned_level >= req_level
+		if not met:
+			all_met = false
+
 		var color_hex: String = "#69D2A3" if met else "#FF5555"
 		var mark: String = "✓" if met else "✗"
 
@@ -120,10 +119,16 @@ func _update_prerequisites(rules) -> void:
 		else:
 			lines.append("[color=%s]%s %s[/color]" % [color_hex, mark, req_key])
 
+	if lines.is_empty():
+		prereq_section.visible = false
+		return
+	
+	## Set the header back at the top AFTER checking if all_met
+	var header_hex: String = "#69D2A3" if all_met else "#FF5555"
+	lines.push_front("[color=%s][b]Requires:[/b][/color]" % header_hex)
+	#fom
 	prereq_label.text = "\n".join(lines)
-	prereq_section.visible = (lines.size() > 1)
-
-
+	prereq_section.visible = true
 
 func show_simple_info(title: String, description: String, footer: String = "", icon_path: String = "", subtitle: String = "") -> void:
 	name_label.text = "[center]%s[/center]" % title
@@ -148,7 +153,6 @@ func show_simple_info(title: String, description: String, footer: String = "", i
 	set_anchors_preset(Control.PRESET_TOP_LEFT)
 	reset_size()
 	size = Vector2(max(size.x, 448.0), max(size.y, 260.0))
-
 
 func show_pulp_bundle(bundle: PulpBundleData, status_text: String = "") -> void:
 	if bundle == null:

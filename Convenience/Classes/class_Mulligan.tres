@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_fqdh7")
 display_name = "Mulligan"
-description = "Balanced, default experience. Start with an extra life."
+description = "Balanced, default experience. 
+Start with an extra life and fruit."
 artwork_path = "res://Assets/ClassIcons/MulliganClassIcon.png"
 icon_path = "res://Assets/ClassIcons/MulliganClassIcon.png"
 fang_cost = 0

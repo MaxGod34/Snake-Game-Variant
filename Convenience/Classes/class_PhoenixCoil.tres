@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_rtjxf")
 display_name = "Phoenix Coil"
-description = "Worldly wealth or eternal life?"
+description = "Worldly wealth or eternal life?
+Scale the more you die!
+Muahahaha-blarg"
 artwork_path = "res://Assets/ClassIcons/PhoenixCoilIcon.png"
 icon_path = "res://Assets/ClassIcons/PhoenixCoilIcon.png"
 fang_cost = 100

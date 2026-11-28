@@ -1,0 +1,203 @@
+[gd_scene load_steps=5 format=3 uid="uid://bp8q7h4sg3dgp"]
+
+[ext_resource type="Texture2D" uid="uid://dq1tlvoqn7udo" path="res://Assets/questionicon.png" id="2_8x7io"]
+[ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="3_itvdu"]
+[ext_resource type="Texture2D" uid="uid://bh8oa7fr2w80f" path="res://Assets/PNGs/RotatingItemIcons/rerollicon.png" id="4_55put"]
+
+[sub_resource type="GDScript" id="GDScript_8x7io"]
+script/source = "extends Control
+
+signal stand_updated
+
+enum StandState { HIDDEN, REVEALED, CURSED, CLAIMED }
+
+const TIER_COLORS: Dictionary = {
+	PulpBundleData.Tier.COMMON: \"#d9d9d9\",
+	PulpBundleData.Tier.RARE: \"#4da6ff\",
+	PulpBundleData.Tier.LEGENDARY: \"#ffd700\",
+	PulpBundleData.Tier.CURSE: \"#ff4d4d\",
+}
+
+@export var mystery_question_icon: Texture2D
+@export var reroll_pulp_cost: int = 1000
+
+@onready var item_icon: TextureRect = %ItemIcon
+@onready var title_label: RichTextLabel = %TitleLabel
+@onready var action_button: Button = %ActionButton
+@onready var reroll_button: Button = %RerollButton
+
+var pool := PulpStandPool.new()
+var state: StandState = StandState.HIDDEN
+var current_bundle: PulpBundleData = null
+
+func _ready() -> void:
+	pool.load_all_bundles()
+	action_button.pressed.connect(_on_action_pressed)
+	reroll_button.pressed.connect(_on_reroll_pressed)
+
+func reset_for_new_garden() -> void:
+	current_bundle = null
+	state = StandState.HIDDEN
+	_refresh_ui()
+
+func refresh_affordability() -> void:
+	if state == StandState.REVEALED:
+		reroll_button.disabled = GameManager.pulp < reroll_pulp_cost
+
+func _on_action_pressed() -> void:
+	match state:
+		StandState.HIDDEN:
+			_do_roll()
+		StandState.REVEALED:
+			var claimed := current_bundle
+			state = StandState.CLAIMED
+			_apply_bundle(claimed)
+			_refresh_ui()
+			stand_updated.emit()
+
+func _on_reroll_pressed() -> void:
+	if state != StandState.REVEALED:
+		return
+	if not GameManager.spend_pulp(reroll_pulp_cost):
+		return
+
+	_do_roll(current_bundle.id)
+	stand_updated.emit()
+
+func _do_roll(exclude_id: StringName = &\"\") -> void:
+	current_bundle = pool.roll_bundle(GameManager, exclude_id)
+	if current_bundle == null:
+		title_label.text = \"[b]Sold Out![/b]\"
+		action_button.disabled = true
+		reroll_button.disabled = true
+		return
+
+	if current_bundle.tier == PulpBundleData.Tier.CURSE:
+		state = StandState.CURSED
+		_apply_bundle(current_bundle)
+		stand_updated.emit()
+	else:
+		state = StandState.REVEALED
+
+	_refresh_ui()
+
+func _apply_bundle(bundle: PulpBundleData) -> void:
+	GameManager.record_pulp_bundle_for_stats_tab(bundle)
+
+	for upg_key in bundle.upgrade_deltas:
+		GameManager.add_upgrade_level(upg_key, bundle.upgrade_deltas[upg_key])
+
+	for upg_key in bundle.unlocks:
+		GameManager.unlock_upgrade(upg_key)
+
+	for upg_key in bundle.max_out_upgrades:
+		GameManager.max_out_upgrade(upg_key)
+
+	if bundle.ability_slot_delta != 0:
+		GameManager.modify_ability_slots(bundle.ability_slot_delta)
+
+	match bundle.special_effect:
+		PulpBundleData.SpecialEffect.JUICE_EQUAL_GARDEN:
+			GameManager.add_juice(GameManager.current_garden)
+		PulpBundleData.SpecialEffect.GO_BACK_GARDEN:
+			GameManager.travel_back_one_garden_immediately()
+		PulpBundleData.SpecialEffect.DOUBLE_JUICE:
+			GameManager.add_juice(GameManager.juice)
+		PulpBundleData.SpecialEffect.REVERSE_CONTROLS:
+			GameManager.apply_reverse_controls()
+		PulpBundleData.SpecialEffect.BLOCK_MARKET_RECESSION:
+			GameManager.trigger_market_recession()
+		PulpBundleData.SpecialEffect.DISABLE_CHROMA_SCALES:
+			GameManager.chroma_scales_enabled = false
+
+func _refresh_ui() -> void:
+	match state:
+		StandState.HIDDEN:
+			item_icon.texture = mystery_question_icon
+			title_label.text = \"[center][b]Mystery Pulp Roll[/b]\\nRoll free to see what's behind the curtain.[/center]\"
+			action_button.text = \"Free Roll\"
+			action_button.disabled = false
+			reroll_button.text = \"Reroll (%d mg)\" % reroll_pulp_cost
+			reroll_button.disabled = true
+
+		StandState.REVEALED:
+			var hex: String = TIER_COLORS.get(current_bundle.tier, \"#ffffff\")
+			item_icon.texture = current_bundle.icon
+			title_label.text = \"[center][color=%s][b]%s[/b][/color]\\n%s[/center]\" % [
+				hex, current_bundle.display_name, current_bundle.description
+			]
+			action_button.text = \"Claim\"
+			action_button.disabled = false
+			reroll_button.text = \"Reroll (%d mg)\" % reroll_pulp_cost
+			reroll_button.disabled = GameManager.pulp < reroll_pulp_cost
+
+		StandState.CURSED:
+			item_icon.texture = current_bundle.icon
+			title_label.text = \"[center][color=#ff4d4d][b]CURSED: %s[/b][/color]\\n%s[/center]\" % [
+				current_bundle.display_name, current_bundle.description
+			]
+			action_button.text = \"Cursed!\"
+			action_button.disabled = true
+			reroll_button.text = \"Reroll Locked\"
+			reroll_button.disabled = true
+
+		StandState.CLAIMED:
+			var hex: String = TIER_COLORS.get(current_bundle.tier, \"#ffffff\")
+			item_icon.texture = current_bundle.icon
+			title_label.text = \"[center][color=%s][b]%s[/b][/color]\\nClaimed![/center]\" % [
+				hex, current_bundle.display_name
+			]
+			action_button.text = \"Claimed\"
+			action_button.disabled = true
+			reroll_button.disabled = true
+"
+
+[node name="StandMachine" type="Control"]
+custom_minimum_size = Vector2(320, 160)
+layout_mode = 3
+anchors_preset = 0
+script = SubResource("GDScript_8x7io")
+mystery_question_icon = ExtResource("2_8x7io")
+
+[node name="TitleLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ItemIcon" type="TextureRect" parent="HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_8x7io")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(128, 64)
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/shadow_offset_x = -2
+theme_override_constants/shadow_outline_size = 3
+theme_override_fonts/normal_font = ExtResource("3_itvdu")
+theme_override_font_sizes/normal_font_size = 20
+text = "10000
+mg"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RerollButton" type="Button" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+icon = ExtResource("4_55put")
+expand_icon = true

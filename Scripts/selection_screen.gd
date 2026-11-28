@@ -345,20 +345,21 @@ func _on_tooltip_timer_timeout() -> void:
 		var footer = "Click to Select" if unlocked else "Locked"
 		tooltip_panel.show_simple_info(data.display_name, data.description, footer, data.icon_path, "Class Bio")
 	
-	#tooltip is a little annoying at times
-	#elif hovered_type == "difficulty":
-		#var data = GameManager.difficulty_data.get(hovered_key)
-		#if not data:
-			#return
-		#var footer = "Adds to all lower tiers"
-		#if selected_class_key == "":
-			#footer = "Select a Class first"
-		#elif difficulty_nodes[hovered_key].disabled:
-			#footer = "Locked — Clear Tier %d with %s" % [data.tier - 1, selected_class_key]
-		#tooltip_panel.show_simple_info(data.display_name, data.description, footer, data.icon_path, "Tier %d" % data.tier)
+	
 
 	var viewport_size = get_viewport().get_visible_rect().size
-	var mouse_pos = get_viewport().get_mouse_position()
-	tooltip_panel.position.x = mouse_pos.x + 64 if mouse_pos.x < viewport_size.x / 2.5 else mouse_pos.x - tooltip_panel.size.x - 64
-	tooltip_panel.position.y = clamp(mouse_pos.y - tooltip_panel.size.y, 20, viewport_size.y - tooltip_panel.size.y - 20)
+	var mouse_position = get_viewport().get_mouse_position()
+	if mouse_position.x < viewport_size.x / 2.5:
+		tooltip_panel.position.x = mouse_position.x + 32
+	else:
+		tooltip_panel.position.x = mouse_position.x - tooltip_panel.size.x - 32
+	if mouse_position.y < viewport_size.y / 2.0:
+		tooltip_panel.position.y = mouse_position.y - 64
+	else:
+		tooltip_panel.position.y = mouse_position.y - tooltip_panel.size.y
+	#description_panel.position.y = clamp(
+		#mouse_position.y - (description_panel.size.y/2.0),
+		#20,
+		#viewport_size.y - description_panel.size.y - 20
+	#)description_panel.visible = true
 	tooltip_panel.visible = true

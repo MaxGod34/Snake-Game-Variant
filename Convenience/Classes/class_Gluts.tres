@@ -5,13 +5,17 @@
 [resource]
 script = ExtResource("1_sxxbd")
 display_name = "Gluts"
-description = "Growth >>>"
+description = "Growth >>>
+Double all fruit rewards.
+Start with Banana Bounty x3"
 artwork_path = "res://Assets/ClassIcons/GlutsClassIcon.png"
 icon_path = "res://Assets/ClassIcons/GlutsClassIcon.png"
 fang_cost = 100
 start_speed = 0.3
 speed_upgrade_mod = 0.9
-start_upgrades = {}
+start_upgrades = {
+"Banana Bounty": 3
+}
 start_stats = {
 "fruit_reward_multiplier": 2.0,
 "max_fruits_cap": 1

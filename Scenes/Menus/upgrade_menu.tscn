@@ -119,6 +119,8 @@ expand_margin_left = 5.0
 expand_margin_top = 12.0
 expand_margin_right = 5.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sc3ha"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_le8vw"]
 content_margin_left = 40.0
 content_margin_top = 20.0
@@ -162,8 +164,6 @@ expand_margin_right = 8.0
 expand_margin_bottom = 8.0
 shadow_color = Color(0.133333, 0.133333, 0.133333, 0.447059)
 shadow_size = 1
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sc3ha"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_p1goc"]
 
@@ -293,10 +293,11 @@ theme_override_styles/tab_selected = SubResource("StyleBoxFlat_m70ya")
 theme_override_styles/tab_hovered = ExtResource("3_mpwqm")
 theme_override_styles/tab_unselected = ExtResource("3_2hr16")
 tab_alignment = 1
-current_tab = 0
+current_tab = 5
 deselect_enabled = true
 
 [node name="Stats" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
+visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")
@@ -309,15 +310,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 64
-alignment = 1
+theme_override_constants/separation = 8
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sc3ha")
 
 [node name="StatsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 4
 theme_override_constants/separation = 12
 alignment = 1
 
 [node name="ClassLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox"]
+custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -332,6 +338,7 @@ text = "Class:"
 horizontal_alignment = 1
 
 [node name="DifficultyLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox"]
+custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -346,6 +353,7 @@ text = "Difficulty:"
 horizontal_alignment = 1
 
 [node name="LevelLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/StatsHBox"]
+custom_minimum_size = Vector2(256, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -485,6 +493,68 @@ theme_override_constants/shadow_outline_size = 3
 theme_override_fonts/font = ExtResource("13_ojj7b")
 theme_override_font_sizes/font_size = 28
 text = "Next Garden at:"
+
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sc3ha")
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_sc3ha")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 96
+alignment = 1
+
+[node name="EssentialsLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.843137, 1, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_x = -4
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/outline_size = 14
+theme_override_constants/shadow_outline_size = 3
+theme_override_fonts/font = ExtResource("13_ojj7b")
+theme_override_font_sizes/font_size = 42
+text = "Essentials"
+horizontal_alignment = 1
+
+[node name="EssentialElephantSizedPortionsNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/HBoxContainer" instance=ExtResource("12_hesgk")]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+icon = ExtResource("28_kbnfh")
+
+[node name="EssentialMoreMiceNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/HBoxContainer" instance=ExtResource("12_hesgk")]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+icon = ExtResource("29_1t1dk")
+
+[node name="EssentialLiquidAssetsNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/HBoxContainer" instance=ExtResource("12_hesgk")]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+icon = ExtResource("20_f675g")
+
+[node name="EssentialSnakeClickerNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/HBoxContainer" instance=ExtResource("12_hesgk")]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+
+[node name="EssentialEdgeLordNode" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs/Stats/VBoxContainer/HBoxContainer" instance=ExtResource("12_hesgk")]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+icon = ExtResource("75_i7e00")
 
 [node name="The Core" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
 visible = false
@@ -1334,7 +1404,6 @@ width = 3.0
 default_color = Color(0.556863, 1, 0, 1)
 
 [node name="SnakeEyes" type="Panel" parent="CenterContainer/PanelContainer/VBoxContainer/TopTabs"]
-visible = false
 custom_minimum_size = Vector2(1280, 640)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("5_m70ya")

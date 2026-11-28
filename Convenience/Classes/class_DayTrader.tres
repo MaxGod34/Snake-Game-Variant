@@ -5,14 +5,16 @@
 [resource]
 script = ExtResource("1_v736f")
 display_name = "Day Trader"
-description = "Pure economic velocity."
+description = "Pure economic velocity.
+Gain extra Juice on level up.
+Gain Juice/rock after each garden."
 artwork_path = "res://Assets/ClassIcons/DayTraderClassIcon.png"
 icon_path = "res://Assets/ClassIcons/DayTraderClassIcon.png"
 fang_cost = 100
 start_speed = 0.3
 speed_upgrade_mod = 0.9
 start_upgrades = {
-"Fast Track": 1,
+"Geological Survey": 1,
 "Liquid Assets": 3
 }
 start_stats = {

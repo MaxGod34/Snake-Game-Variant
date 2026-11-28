@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_lrco3")
 display_name = "Alchemist"
-description = "Does not gain Juice from leveling up. Every fruit has a 25% chance to grant 1 Juice instead."
+description = "Does not gain Juice on lvl up. 
+Every fruit converts 13% of your pulp
+into Juice."
 artwork_path = "res://Assets/ClassIcons/AlchemistClassIcon.png"
 icon_path = "res://Assets/ClassIcons/AlchemistClassIcon.png"
 fang_cost = 1000

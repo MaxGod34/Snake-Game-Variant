@@ -5,7 +5,8 @@
 [resource]
 script = ExtResource("1_ob151")
 display_name = "Calculator"
-description = "Dynamic rewards for dynamic playstyles."
+description = "Dynamic rewards for dynamic playstyles.
+(Fix Description)"
 artwork_path = "res://Assets/ClassIcons/CalculatorClassIcon.png"
 icon_path = "res://Assets/ClassIcons/CalculatorClassIcon.png"
 fang_cost = 100

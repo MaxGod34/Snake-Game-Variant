@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bdqnq8u7m75ue"]
+[gd_scene load_steps=14 format=3 uid="uid://bdqnq8u7m75ue"]
 
 [ext_resource type="Script" uid="uid://dt65jjmqd6rtw" path="res://Scripts/description_panel.gd" id="1_daodf"]
 [ext_resource type="FontFile" uid="uid://cha75a3r45es6" path="res://Assets/Fonts/easvhs.ttf" id="1_qmwms"]
@@ -12,7 +12,7 @@ border_width_left = 8
 border_width_top = 8
 border_width_right = 8
 border_width_bottom = 8
-border_color = Color(1, 1, 1, 1)
+border_color = Color(0.960784, 0.937255, 0.901961, 1)
 border_blend = true
 corner_radius_top_left = 8
 corner_radius_top_right = 8
@@ -24,7 +24,7 @@ content_margin_bottom = 4.0
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
 border_width_left = 24
 border_width_top = 24
-border_width_right = 24
+border_width_right = 16
 border_width_bottom = 24
 border_color = Color(0.960784, 0.937255, 0.901961, 1)
 border_blend = true
@@ -32,15 +32,14 @@ corner_radius_top_left = 8
 corner_radius_bottom_right = 2
 expand_margin_left = 8.0
 expand_margin_top = 8.0
+expand_margin_right = 2.0
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_knrs3"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_vywvx"]
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_knrs3"]
-bg_color = Color(0.960784, 0.937255, 0.901961, 0.823529)
+bg_color = Color(0.960784, 0.937255, 0.901961, 1)
 border_width_top = 8
-border_width_bottom = 6
+border_width_bottom = 2
 border_color = Color(0.960784, 0.937255, 0.901961, 1)
 border_blend = true
 corner_radius_top_left = 2
@@ -48,15 +47,23 @@ corner_radius_top_right = 2
 corner_radius_bottom_right = 2
 corner_radius_bottom_left = 2
 expand_margin_left = 8.0
+expand_margin_top = 5.0
 expand_margin_right = 8.0
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_fnpmw"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ri5h"]
+bg_color = Color(0.156863, 0.156863, 0.156863, 1)
+border_color = Color(0.960784, 0.937255, 0.901961, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a0khq"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_colbl"]
+content_margin_top = 4.0
 content_margin_bottom = 4.0
 bg_color = Color(0.156863, 0.156863, 0.156863, 1)
 border_color = Color(0.960784, 0.937255, 0.901961, 1)
 border_blend = true
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_a0khq"]
 
 [node name="DescriptionPanel" type="Control"]
 custom_minimum_size = Vector2(448, 320)
@@ -129,12 +136,8 @@ size_flags_vertical = 4
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vywvx")
-
 [node name="UpgradeNameLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
-custom_minimum_size = Vector2(128, 64)
+custom_minimum_size = Vector2(128, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/default_color = Color(0.960784, 0.937255, 0.901961, 1)
@@ -149,11 +152,12 @@ theme_override_fonts/mono_font = ExtResource("1_qmwms")
 theme_override_fonts/italics_font = ExtResource("1_qmwms")
 theme_override_fonts/bold_italics_font = ExtResource("1_qmwms")
 theme_override_fonts/bold_font = ExtResource("4_fnpmw")
-theme_override_font_sizes/normal_font_size = 20
+theme_override_font_sizes/normal_font_size = 28
 theme_override_styles/normal = ExtResource("5_fnpmw")
 bbcode_enabled = true
 text = "Elephant-Sized Portions"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TreeLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
 custom_minimum_size = Vector2(128, 32)
@@ -173,8 +177,9 @@ bbcode_enabled = true
 text = "Tree: Glutton"
 
 [node name="CurrentLevelLabel" type="Label" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
-custom_minimum_size = Vector2(128, 32)
+custom_minimum_size = Vector2(224, 0)
 layout_mode = 2
+size_flags_horizontal = 8
 theme_override_colors/font_color = Color(0.960784, 0.937255, 0.901961, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -188,12 +193,8 @@ theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = ExtResource("5_fnpmw")
 text = "Lvl 0 / 10"
 
-[node name="HSeparator2" type="HSeparator" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
-layout_mode = 2
-theme_override_styles/separator = SubResource("StyleBoxEmpty_vywvx")
-
 [node name="CostLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/TopRow/VBoxContainer"]
-custom_minimum_size = Vector2(128, 32)
+custom_minimum_size = Vector2(128, 36)
 layout_mode = 2
 theme_override_colors/default_color = Color(1, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
@@ -212,23 +213,27 @@ theme_override_styles/normal = ExtResource("5_fnpmw")
 bbcode_enabled = true
 text = "Cost: 12 L Juice"
 horizontal_alignment = 1
-vertical_alignment = 2
 
 [node name="HSeparator" type="HSeparator" parent="MarginC/PanelContainer/VboxMain"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 0
 theme_override_styles/separator = SubResource("StyleBoxFlat_knrs3")
 
-[node name="PrereqSection" type="HBoxContainer" parent="MarginC/PanelContainer/VboxMain"]
-visible = false
+[node name="HSeparator2" type="HSeparator" parent="MarginC/PanelContainer/VboxMain"]
 layout_mode = 2
+theme_override_styles/separator = SubResource("StyleBoxEmpty_fnpmw")
+
+[node name="PrereqSection" type="HBoxContainer" parent="MarginC/PanelContainer/VboxMain"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_vertical = 4
 
 [node name="PrereqLabel" type="RichTextLabel" parent="MarginC/PanelContainer/VboxMain/PrereqSection"]
-custom_minimum_size = Vector2(256, 128)
+custom_minimum_size = Vector2(256, 64)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
-theme_override_colors/default_color = Color(0.902855, 0.902855, 7.70092e-07, 1)
+theme_override_colors/default_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 12
@@ -237,12 +242,13 @@ theme_override_constants/shadow_offset_x = -3
 theme_override_constants/shadow_outline_size = 4
 theme_override_constants/line_separation = 8
 theme_override_fonts/normal_font = ExtResource("1_qmwms")
+theme_override_fonts/bold_font = ExtResource("1_qmwms")
 theme_override_font_sizes/normal_font_size = 20
-theme_override_styles/normal = SubResource("StyleBoxFlat_colbl")
+theme_override_font_sizes/bold_font_size = 20
+theme_override_styles/normal = SubResource("StyleBoxFlat_0ri5h")
 bbcode_enabled = true
 text = "Requires:
-Diet Slith: lvl 8
-Meditate: lvl 1"
+Diet Slith lvl 1"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 1
@@ -251,6 +257,7 @@ justification_flags = 162
 
 [node name="BottomRow" type="HBoxContainer" parent="MarginC/PanelContainer/VboxMain"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="VSeparator" type="VSeparator" parent="MarginC/PanelContainer/VboxMain/BottomRow"]
 layout_mode = 2
@@ -258,9 +265,10 @@ theme_override_constants/separation = 4
 theme_override_styles/separator = SubResource("StyleBoxEmpty_a0khq")
 
 [node name="DescriptionLabel" type="Label" parent="MarginC/PanelContainer/VboxMain/BottomRow"]
-custom_minimum_size = Vector2(256, 192)
+custom_minimum_size = Vector2(256, 64)
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 1
 theme_override_colors/font_color = Color(0.960784, 0.937255, 0.901961, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)

@@ -5,7 +5,9 @@
 [resource]
 script = ExtResource("1_gqjxs")
 display_name = "Psychic"
-description = "A master of foresight whose power creates a dangerous feedback loop."
+description = "A master of foresight.
+See where the next fruit locates.
+Speed increases with each Fruit"
 artwork_path = "res://Assets/ClassIcons/PsychicClassIcon.png"
 icon_path = "res://Assets/ClassIcons/PsychicClassIcon.png"
 fang_cost = 100

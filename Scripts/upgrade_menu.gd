@@ -156,18 +156,24 @@ func _process(delta):
 
 
 func _build_node_dictionary():
-	all_upgrade_nodes.clear() # Clear it out for safety
-	# We loop through our master data source in GameManager.
+	all_upgrade_nodes.clear()
 	for upgrade_key in GameManager.upgrades:
-		# We build the node name from the key (e.g., "Liquid Assets" -> "LiquidAssetsNode")
 		var clean_key = upgrade_key.replace(" ", "").replace("'", "").replace("-", "")
 		var node_name = clean_key.to_pascal_case() + "Node"
-		var node = find_child(node_name, true, false)
-		if is_instance_valid(node):
-			all_upgrade_nodes[upgrade_key] = node
+		var matches: Array = []
+
+		var main_node = find_child(node_name, true, false)
+		if is_instance_valid(main_node):
+			matches.append(main_node)
 		else:
-			# This warning is very helpful for debugging any naming mismatches!
 			print_debug("Warning: Could not find node %s for upgrade ID %s" % [node_name, upgrade_key])
+
+		var essential_node = find_child("Essential" + node_name, true, false)
+		if is_instance_valid(essential_node):
+			matches.append(essential_node)
+
+		if not matches.is_empty():
+			all_upgrade_nodes[upgrade_key] = matches
 
 
 # This is our master function for setting up all connections.
@@ -179,11 +185,11 @@ func _connect_all_signals():
 	
 	# Now, connect the signals from every single UpgradeNode we found.
 	for upgrade_key in all_upgrade_nodes:
-		var node = all_upgrade_nodes[upgrade_key]
-		# We connect the button's own 'pressed' signal, not a custom one.
-		node.pressed.connect(_on_any_node_pressed.bind(upgrade_key))
-		node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
-		node.mouse_exited.connect(_on_any_node_mouse_exited)
+		for node in all_upgrade_nodes[upgrade_key]:
+			# We connect the button's own 'pressed' signal, not a custom one.
+			node.pressed.connect(_on_any_node_pressed.bind(upgrade_key))
+			node.mouse_entered.connect(_on_any_node_mouse_entered.bind(upgrade_key))
+			node.mouse_exited.connect(_on_any_node_mouse_exited)
 	#---CONNECT ALL SNAKEEYES WAGER STUFF---
 	snake_coin_wager_slider.value_changed.connect(_on_snake_coin_slider_changed)
 	snake_coin_heads_button.pressed.connect(_on_snake_coin_flip_pressed.bind("Heads"))
@@ -226,7 +232,6 @@ func update_all_displays():
 			top_tabs.set_tab_hidden(i, false)
 			
 	for upgrade_key in all_upgrade_nodes:
-		var node = all_upgrade_nodes[upgrade_key]
 		var rules = GameManager.get_upgrade_rules(upgrade_key)
 		if not rules: 
 			continue
@@ -234,8 +239,13 @@ func update_all_displays():
 		var current_level = GameManager.get_upgrade_level_from_key(upgrade_key)
 		var prereqs_met = GameManager.check_prerequisites(upgrade_key)
 		var theme_colors = get_theme_colors(rules)
+		var path_disabled = (rules.path in disabled_paths) or (rules.sub_path in disabled_paths)
 			
-		node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
+		for node in all_upgrade_nodes[upgrade_key]:
+			node.visible = not path_disabled
+			node.update_display(upgrade_key, current_level, rules.max_level, prereqs_met, theme_colors.main, theme_colors.accent, "Default")
+	
+	
 	update_snake_eyes_tab()
 	
 func get_theme_colors(rules: UpgradeData) -> Dictionary:
@@ -246,7 +256,7 @@ func get_theme_colors(rules: UpgradeData) -> Dictionary:
 		"The Harvest": colors.main = Color("7ED321")
 		"The Redline": colors.main = Color("D0021B")
 		"The Ssscale": colors.main = Color("BD10E2")
-		"Snake Eyes": colors.main = Color("fdf5e6")
+		"Snake Eyes": colors.main = Color("8B572A")
 		
 	match rules.sub_path:
 		"Idle": colors.accent = Color("69D2A3")
@@ -260,7 +270,7 @@ func get_theme_colors(rules: UpgradeData) -> Dictionary:
 		"Survivor": colors.accent = Color("8E8E93")
 		"Illusionist": colors.accent = Color("50E3C2")
 		"Architect": colors.accent = Color("4A90E2")
-		"Passives": colors.accent = Color("ffffff")
+		"Gamba": colors.accent = Color("f5a623")
 		
 	return colors
 
@@ -319,12 +329,16 @@ func _on_description_delay_timer_timeout():
 		description_panel.position.x = mouse_position.x + 32
 	else:
 		description_panel.position.x = mouse_position.x - description_panel.size.x - 32
-
-	description_panel.position.y = clamp(
-		mouse_position.y - (description_panel.size.y) + 32,
-		20,
-		viewport_size.y - description_panel.size.y - 20
-	)
+	
+	if mouse_position.y < viewport_size.y / 2.0:
+		description_panel.position.y = mouse_position.y - 64
+	else:
+		description_panel.position.y = mouse_position.y - description_panel.size.y
+	#description_panel.position.y = clamp(
+		#mouse_position.y - (description_panel.size.y/2.0),
+		#20,
+		#viewport_size.y - description_panel.size.y - 20
+	#)
 	description_panel.visible = true
 
 
@@ -372,8 +386,8 @@ func update_snake_eyes_tab():
 	update_block_market_display()
 
 func update_juice_and_pulp_label():
-	juice_label.text = "Juice: " + str(GameManager.juice) + " L"
-	pulp_label.text = "Pulp: " + str(GameManager.pulp) + " mg"
+	juice_label.text = str(GameManager.juice) + " L"
+	pulp_label.text = str(GameManager.pulp) + " mg"
 
 
 # --- SIGNAL HANDLER FUNCTIONS ---
